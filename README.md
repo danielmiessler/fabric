@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/asset/file/c752ba82-450a-4433-9f9f-b02329138b72/favric-logo-miessler.png?t=1704523555" alt="fabriclogo" width="400" height="400"/>
+<img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/asset/file/03e7617a-5d8e-411c-8fcc-63e43270dbb4/fabric-logo-miessler.png?t=1704524902" alt="fabriclogo" width="400" height="400"/>
 
 # `fabric`
 
