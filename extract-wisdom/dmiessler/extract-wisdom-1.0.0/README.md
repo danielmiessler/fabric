@@ -15,18 +15,26 @@
 
 </div>
 
-> **NOTE**
-> This is not the correct instructions yet, so hold off until this note is removed.
+<br />
+
+> **NOTE**<br />
+> These are not the correct instructions yet, so hold off until this note is removed.
 
 ## Description
 
-`extract-wisdom` is a [Fabric](https://github.com/danielmiessler/fabric) pattern that _extracts wisdom_ from any text. For example:
+`extract-wisdom` is _extracts wisdom_ from any content that can be turned into a text format. For example:
 
 - Podcast transcripts
 - Academic papers
 - Essays
 - Blog posts
-- Anything you can get into text!
+- Etc…
+
+Really, anything you can get into text!
+
+### Problem
+
+The problem that `extractwisdom` is addressing is the fact that there's **too much content** out there. Too many YouTube videos, too many podcasts, too many academic papers, too many blog posts, and so on.
 
 ## Installation
 
