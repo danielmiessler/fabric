@@ -22,9 +22,11 @@
 
 ## Description
 
-**`extractwisdom` addresses the problem of there being **too much content** out there, as well as it taking too long to take manual notes on the content you do actually read, watch, or listen to.**
+**`extractwisdom` addresses the problem of **too much content** and too little time.**
 
-The tool _extracts wisdom_ from any content that can be translated into text. Some examples of content include:
+Not only that, but it's also too easy to forget the stuff do read, watch, or listen to.
+
+The tool _extracts wisdom_ from any content that can be translated into text, for example:
 
 - Podcast transcripts
 - Academic papers
@@ -34,7 +36,7 @@ The tool _extracts wisdom_ from any content that can be translated into text. So
 
 ## Functionality
 
-When you use `extractwisdom`, it pulls the following content out of the input.
+When you use `extractwisdom`, it pulls the following content from the input.
 
 - `IDEAS`
   - Extracts the best ideas from the content, i.e., what you might have taken notes on if you were doing so manually.
@@ -49,8 +51,12 @@ When you use `extractwisdom`, it pulls the following content out of the input.
 
 ## Use cases
 
-1. **Decision Support:** Allows you to quickly learn what's in a particular piece of content so you can decide if you want to consume the full source material or not.
-2. **Note Taking:** Can also be used as your note taker. It's designed to replicate the type of capture that you might have done if you took notes manually.
+The output can help you in multiple ways, including:
+
+1. **Decision Support:**
+   Allows you to quickly learn what's in a particular piece of content so you can decide if you want to consume the full source material or not.
+2. **Note Taking:**
+   Can also be used as your note taker. It's designed to replicate the type of capture that you might have done if you took notes manually.
 
 ## Examples
 
