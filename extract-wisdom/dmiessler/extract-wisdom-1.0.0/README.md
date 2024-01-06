@@ -9,7 +9,8 @@
 [Description](#description) •
 [Functionality](#functionality) •
 [Installation](#installation) •
-[Example Output](#example) •
+[Usage](#usage) •
+[Examples](#examples) •
 [Meta](#meta)
 
 </div>
@@ -56,7 +57,17 @@ When you use `extractwisdom`, it pulls the following content from the input.
 2. `Note Taking`<br />
    Can be used as a substitute for taking time-consuming, manual notes on the content.
 
-## Example Output
+## Usage
+
+One key feature of `fabric` and its Markdown-based format is the ability to reference (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
+
+As an example, here is the direct location of the **system** prompt for the `extractwisdom` pattern.
+
+```sh
+https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0/system.md
+```
+
+## Examples
 
 Here's an abridged ouptut example from `extractwisdom` (limited to only 10 items per section).
 
