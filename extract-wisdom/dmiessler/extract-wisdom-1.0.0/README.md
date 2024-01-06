@@ -143,5 +143,5 @@ curl -sS https://raw.githubusercontent.com/danielmiessler/fabric/main/install.sh
 
 ## Meta
 
-- Author: Daniel Miessler
-- Published: January 5, 2024
+- **Author**: Daniel Miessler
+- **Published**: January 5, 2024
