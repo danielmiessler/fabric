@@ -60,13 +60,13 @@ When you use `extractwisdom`, it pulls the following content from the input.
 
 You can reference the `extractwisdom` **system** and **user** content directly like so.
 
-### System
+### Pull the _system_ prompt directly
 
 ```sh
 curl -sS https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0/system.md
 ```
 
-### System
+### Pull the _user_ prompt directly
 
 ```sh
 curl -sS https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0/user.md
