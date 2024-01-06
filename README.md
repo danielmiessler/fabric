@@ -48,9 +48,9 @@ There are patterns for all sorts of life and work activities, including:
 - The optional server-side functionality of `fabric` is called the **Mill**.
 - The optional client-side scripts within `fabric` are called **Looms**.
 
-## Structure
+## Functionality
 
-`fabric`'s main point is to make '**Patterns** available to everyone, but it also includes two other components that make it possible to _build your own Personal AI Ecosystem_.
+`fabric`'s main point is to make **Patterns** available to everyone in an open ecosystem, but it also includes two other components that make it possible to _build your own Personal AI Ecosystem_.
 
 _In other words you can have your own server, with your own copy of `fabric`, running your own specific combination of **Patterns** for your specific use cases._
 
@@ -60,33 +60,9 @@ Here are the three ecosystem pieces that work together.
 - **Patterns** are the actual AI use cases.
 - **Looms** are the modular, client-side apps that call a specific **Pattern\* hosted by a **Mill\*\*.
 
-## Functionality
-
-When you use `fabric`, it pulls the following content from the input.
-
-- `IDEAS`
-  - Extracts the best ideas from the content, i.e., what you might have taken notes on if you were doing so manually.
-- `QUOTES`
-  - Some of the best quotes from the content.
-- `REFERENCES`
-  - External writing, art, and other content referenced positively during the content that might be worth following up on.
-- `HABITS`
-  - Habits of the speakers that could be worth replicating.
-- `RECOMMENDATIONS`
-  - A list of things that the content recommends Habits of the speakers.
-
-## Usage
-
-`extractwisdom` output can help you in multiple ways, including:
-
-1. `Time Filtering`<br />
-   Allows you to quickly see if content is worth an in-depth review or not.
-2. `Note Taking`<br />
-   Can be used as a substitute for taking time-consuming, manual notes on the content.
-
 ## Examples
 
-Here's an abridged ouptut example from `extractwisdom` (limited to only 10 items per section).
+Here's an abridged ouptut example from the <a href="https://github.com/danielmiessler/fabric/tree/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0">`extractwisdom`</a> pattern (limited to only 10 items per section).
 
 ```markdown
 ## SUMMARY:
