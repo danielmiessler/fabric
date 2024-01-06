@@ -6,12 +6,6 @@
 
 `extract-wisdom` is a [Fabric](https://github.com/danielmiessler/fabric) pattern that _extracts wisdom_ from any text.
 
-[![crates.io][crates.io-badge]][crates.io]
-[![Downloads][downloads-badge]][releases]
-[![Built with Nix][builtwithnix-badge]][builtwithnix]
-
-[![Github All Releases](https://img.shields.io/github/downloads/danielmiessler/fabric/total.svg)]()
-
 <br />
 
 [Description](#description) •
