@@ -61,11 +61,13 @@ When you use `extractwisdom`, it pulls the following content from the input.
 
 One key feature of `fabric` and its Markdown-based format is the ability to reference (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
 
-As an example, here is the direct location of the **system** prompt for the `extractwisdom` pattern.
+As an example, heres how to call _the direct location_ of the **system** prompt for the `extractwisdom` pattern.
 
 ```sh
 https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0/system.md
 ```
+
+This means you can cleanly, and directly reference any pattern within `fabric`, for use in a web-based AI app, your own programming, or wherever!
 
 ## Examples
 
