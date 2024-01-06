@@ -62,7 +62,7 @@ You can reference the `extractwisdom` **system** and **user** content directly l
 
 ### System
 
-````sh
+```sh
 curl -sS https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0/system.md
 ```
 
@@ -160,4 +160,7 @@ curl -sS https://raw.githubusercontent.com/danielmiessler/fabric/main/install.sh
 - **Author**: Daniel Miessler
 - **Version Information**: Main version.
 - **Published**: January 5, 2024
-````
+
+```
+
+```
