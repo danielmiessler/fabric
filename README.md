@@ -4,7 +4,7 @@
 
 # `fabric`
 
-<h4><code>fabric</code> is an ecosystem of AI prompt modules called <em>patterns</em> that help people integrate AI into their lives and work.</h4>
+<h4><code>fabric</code> is an open AI ecosystem that help people integrate AI into their lives and work.</h4>
 
 [Description](#description) •
 [Naming](#naming) •
@@ -25,7 +25,7 @@
 
 We all have AI prompts that are useful, but it's hard to manage them, discover new ones, and track the different versions of the ones we like.
 
-<code>fabric</code> helps people collect and integrate modular AI functionality, which we called _patterns_, into various parts of their lives.
+<code>fabric</code> helps people collect and integrate modular AI functionality, which we call _Patterns_, into various parts of their lives.
 
 There are patterns for all sorts of life and work activities, including:
 
