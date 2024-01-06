@@ -20,7 +20,7 @@
 
 ## Description
 
-`extract-wisdom` (`extwis`) is a [Fabric](https://github.com/danielmiessler/fabric) pattern that _extracts wisdom_ from any text. For example:
+`extract-wisdom` is a [Fabric](https://github.com/danielmiessler/fabric) pattern that _extracts wisdom_ from any text. For example:
 
 - Podcast transcripts
 - Academic papers
