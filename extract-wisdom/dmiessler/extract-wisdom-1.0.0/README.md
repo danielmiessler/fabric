@@ -18,7 +18,7 @@
 
 <br />
 
-> **⚠️ NOTE:** These are not the correct instructions yet, so hold off until this note is removed.
+> ⚠️ These are not the correct instructions yet, so hold off until this note is removed.
 
 ## Description
 
