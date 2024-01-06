@@ -147,20 +147,8 @@ The content features a conversation between two individuals discussing various t
 10. Nietzsche's walks
 ```
 
-## Installation
-
-You can install `extractwisdom` by executing this command.
-
-```sh
-curl -sS https://raw.githubusercontent.com/danielmiessler/fabric/main/install.sh | bash
-```
-
 ## Meta
 
 - **Author**: Daniel Miessler
-- **Version Information**: Main version.
+- **Version Information**: Daniel's main `extractwisdom` version.
 - **Published**: January 5, 2024
-
-```
-
-```
