@@ -1,10 +1,8 @@
-# `/extractwisdom`
-
-<p align="center">
-<img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/asset/file/2012aa7c-a939-4262-9647-7ab614e02601/extwis-logo-miessler.png?t=1704502975" alt="extwislogo" width="400" height="400"/>
-</p>
-
 <div align="center">
+
+    # `/extractwisdom`
+
+<img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/asset/file/2012aa7c-a939-4262-9647-7ab614e02601/extwis-logo-miessler.png?t=1704502975" alt="extwislogo" width="400" height="400"/>
 
 `extract-wisdom` (`extwis`) is a [Fabric](https://github.com/danielmiessler/fabric) pattern that _extracts wisdom_ from any text.
 
@@ -12,7 +10,7 @@
 [![Downloads][downloads-badge]][releases]
 [![Built with Nix][builtwithnix-badge]][builtwithnix]
 
-`extract-wisdom` (`extwis`) is a [Fabric](https://github.com/danielmiessler/fabric) pattern that _extracts wisdom_ from any text.
+<br />
 
 [Description](#description) •
 [Installation](#installation) •
