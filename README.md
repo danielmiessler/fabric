@@ -147,6 +147,6 @@ curl -sS https://raw.githubusercontent.com/danielmiessler/fabric/main/install.sh
 
 ## Meta
 
-- **Author**: Daniel Miessler
-- **Version Information**: Main version.
-- **Published**: January 5, 2024
+`fabric` was created by Daniel Miessler. Special thanks to the following people for inspiration and contributions.
+
+- _Joel Parish_ for super useful input on the project's Github directory structure.
