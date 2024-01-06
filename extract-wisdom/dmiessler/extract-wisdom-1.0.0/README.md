@@ -15,7 +15,8 @@
 
 </div>
 
-(NOTE: This is sample readme.md content below. Do not do anything with this yet.)
+> ** :caution NOTE**
+> This is not the correct instructions yet, so hold off until this note is removed.
 
 ## Description
 
