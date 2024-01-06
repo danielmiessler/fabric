@@ -49,12 +49,12 @@ When you use `extractwisdom`, it pulls the following content from the input.
 
 ## Use cases
 
-The output can help you in multiple ways, including:
+`extractwisdom` output can help you in multiple ways, including:
 
-1. `Decision Support`<br />
-   Allows you to quickly learn what's in a particular piece of content so you can decide if you want to consume the full source material or not.
+1. `Time Filtering`<br />
+   Allows you to quickly see if content is worth an in-depth review or not.
 2. `Note Taking`<br />
-   Can also be used as your note taker. It's designed to replicate the type of capture that you might have done if you took notes manually.
+   Can be used as a substitute for taking time-consuming, manual notes on the content.
 
 ## Example Output
 
