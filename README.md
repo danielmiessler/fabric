@@ -139,9 +139,11 @@ The content features a conversation between two individuals discussing various t
 
 ## Meta
 
-`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a>. Special thanks to the following people for inspiration and contributions.
+`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a>.
 
-- _Joel Parish_ for super useful input on the project's Github directory structure.
+Special thanks to the following people for inspiration and contributions.
+
+- **Joel Parish** for super useful input on the project's Github directory structure.
 
 ```
 
