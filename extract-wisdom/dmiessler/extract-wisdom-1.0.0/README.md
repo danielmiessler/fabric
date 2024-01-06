@@ -58,7 +58,11 @@ Read more about the matching algorithm [here][algorithm-matching].
 
 ## Installation
 
-zoxide can be installed in 4 easy steps:
+> ```sh
+> curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+> ```
+>
+> zoxide can be installed in 4 easy steps:
 
 1. **Install binary**
 
