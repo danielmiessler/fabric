@@ -4,7 +4,7 @@
 
 # `/extractwisdom`
 
-<h4><code>extractwisdom</code> is a <a href="https://github.com/danielmiessler/fabric" target="_blank">fabric</a> pattern that <em>extracts wisdom</em> from any text.</h4>
+<h4><code>extractwisdom</code> is a <a href="https://github.com/danielmiessler/fabric" target="_blank">Fabric</a> pattern that <em>extracts wisdom</em> from any text.</h4>
 
 [Description](#description) •
 [Functionality](#functionality) •
