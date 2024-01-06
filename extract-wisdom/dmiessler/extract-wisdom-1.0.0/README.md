@@ -22,7 +22,7 @@
 
 **`extractwisdom` addresses the problem of **too much content** and too little time.**
 
-Not only that, but it's also too easy to forget the stuff do read, watch, or listen to.
+**Not only that, but it's also too easy to forget the stuff do read, watch, or listen to.**
 
 The tool _extracts wisdom_ from any content that can be translated into text, for example:
 
