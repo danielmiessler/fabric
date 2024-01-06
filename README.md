@@ -4,7 +4,7 @@
 
 # `fabric`
 
-<h4><code>fabric</code> is an open AI ecosystem that help people integrate AI into their lives and work.</h4>
+<h4><code>fabric</code> is an open AI ecosystem that helps people integrate AI into their lives and work.</h4>
 
 [Description](#description) •
 [Naming](#naming) •
