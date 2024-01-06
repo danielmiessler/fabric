@@ -8,9 +8,8 @@
 
 [Description](#description) •
 [Functionality](#functionality) •
-[Installation](#installation) •
 [Usage](#usage) •
-[Examples](#examples) •
+[Output](#output) •
 [Meta](#meta)
 
 </div>
@@ -48,7 +47,7 @@ When you use `extractwisdom`, it pulls the following content from the input.
 - `RECOMMENDATIONS`
   - A list of things that the content recommends Habits of the speakers.
 
-## Use cases
+### Use cases
 
 `extractwisdom` output can help you in multiple ways, including:
 
@@ -59,19 +58,20 @@ When you use `extractwisdom`, it pulls the following content from the input.
 
 ## Usage
 
-One key feature of `fabric` and its Markdown-based format is the ability to reference (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
+You can reference the `extractwisdom` **system** and **user** content directly like so.
 
-As an example, heres how to call _the direct location_ of the **system** prompt for the `extractwisdom` pattern.
+### System
+
+````sh
+curl -sS https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0/system.md
+
+### System
 
 ```sh
-https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0/system.md
-```
+curl -sS https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0/user.md
+````
 
-This means you can cleanly, and directly reference any pattern within `fabric`, for use in a web-based AI app, your own programming, or wherever!
-
-Even better, you can also have your [Mill](https://github.com/danielmiessler/fabric/tree/main#naming) functionality directly call **system** and **user** prompts from `fabric`, meaning you can have your personal AI ecosystem automatically kept up to date with the latest version of your favorite [Patterns](https://github.com/danielmiessler/fabric/tree/main#naming).
-
-## Examples
+## Output
 
 Here's an abridged ouptut example from `extractwisdom` (limited to only 10 items per section).
 
