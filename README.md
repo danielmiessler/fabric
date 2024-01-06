@@ -50,11 +50,13 @@ There are patterns for all sorts of life and work activities, including:
 
 ## Functionality
 
-`fabric`'s main point is to make **Patterns** available to everyone in an open ecosystem, but it also includes two other components that make it possible to _build your own Personal AI Ecosystem_.
+`fabric`'s main function is to make **Patterns** available to everyone in an open ecosystem, i.e., to allow people to share and fork prompts in a transparent, scalable, and dependable way.
+
+But it also includes two other components that make it possible for AI enthusiasts and developers to _build your own Personal AI Ecosystem_.
 
 _In other words you can have your own server, with your own copy of `fabric`, running your own specific combination of **Patterns** for your specific use cases._
 
-Here are the three ecosystem pieces that work together.
+Here are the three `fabric` ecosystem pieces, and how they work together.
 
 - The **Mill** is the (optional) server that makes **Patterns** available.
 - **Patterns** are the actual AI use cases.
