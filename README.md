@@ -19,7 +19,7 @@
 
 <br />
 
-## ⚠️ This project is currently pre-launch, but any published patterns can be used in the meantime.
+## ⚠️ This project is currently pre-launch, but any published patterns can be used in the meantime.⚠️
 
 ## Description
 
