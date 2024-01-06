@@ -1,6 +1,6 @@
 <div align="center">
 
-    # `/extractwisdom`
+# `/extractwisdom`
 
 <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/asset/file/2012aa7c-a939-4262-9647-7ab614e02601/extwis-logo-miessler.png?t=1704502975" alt="extwislogo" width="400" height="400"/>
 
