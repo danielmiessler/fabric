@@ -60,7 +60,7 @@ The output can help you in multiple ways, including:
 
 ## Example Output
 
-Here's an abridged ouptut from `extractwisdom`.
+Here's an abridged ouptut example from `extractwisdom` (limited to only 10 items per section).
 
 ```markdown
 ## SUMMARY:
@@ -144,4 +144,5 @@ curl -sS https://raw.githubusercontent.com/danielmiessler/fabric/main/install.sh
 ## Meta
 
 - **Author**: Daniel Miessler
+- **Version Information**: Main version.
 - **Published**: January 5, 2024
