@@ -16,8 +16,6 @@
 
 <br />
 
-> ⚠️ These are not the correct instructions yet, so hold off until this note is removed.
-
 ## Description
 
 **`extractwisdom` addresses the problem of **too much content** and too little time.**
