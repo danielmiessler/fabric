@@ -53,9 +53,9 @@ When you use `extractwisdom`, it pulls the following content from the input.
 
 The output can help you in multiple ways, including:
 
-1. **Decision Support:**
+1. **Decision Support:**<br />
    Allows you to quickly learn what's in a particular piece of content so you can decide if you want to consume the full source material or not.
-2. **Note Taking:**
+2. **Note Taking:**<br />
    Can also be used as your note taker. It's designed to replicate the type of capture that you might have done if you took notes manually.
 
 ## Examples
