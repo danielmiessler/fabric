@@ -6,7 +6,7 @@
 
 <br />
 
-`extract-wisdom` is a [Fabric](https://github.com/danielmiessler/fabric) pattern that _extracts wisdom_ from any text.
+<h4>`extract-wisdom` is a [Fabric](https://github.com/danielmiessler/fabric) pattern that _extracts wisdom_ from any text.</h4>
 
 <br />
 
