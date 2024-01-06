@@ -20,7 +20,7 @@
 
 ## Description
 
-**`extractwisdom` addresses the problem of **too much content** and too little time.**
+_`extractwisdom` addresses the problem of **too much content** and too little time._
 
 **Not only that, but it's also too easy to forget the stuff do read, watch, or listen to.**
 
