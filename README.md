@@ -4,12 +4,15 @@
 
 # `fabric`
 
-<h4><code>fabric</code> is a shared ecosystem of AI patterns that help people integrate AI into their lives and work.</h4>
+<h4><code>fabric</code> is an ecosystem of AI prompt modules called <em>patterns</em> that help people integrate AI into their lives and work.</h4>
 
 [Description](#description) •
+[Naming](#naming) •
+[Structure](#structure) •
 [Functionality](#functionality) •
 [Installation](#installation) •
-[Example Output](#example) •
+[Usage](#usage) •
+[Examples](#examples) •
 [Meta](#meta)
 
 </div>
@@ -20,21 +23,46 @@
 
 ## Description
 
-**`extractwisdom` addresses the problem of **too much content** and too little time.**
+We all have AI prompts that are useful, but it's hard to manage them, discover new ones, and track the different versions of the ones we like.
 
-_Not only that, but it's also too easy to forget the stuff do read, watch, or listen to._
+<code>fabric</code> helps people collect and integrate modular AI functionality, which we called _patterns_, into various parts of their lives.
 
-The tool _extracts wisdom_ from any content that can be translated into text, for example:
+There are patterns for all sorts of life and work activities, including:
 
-- Podcast transcripts
-- Academic papers
-- Essays
-- Blog posts
-- Really, anything you can get into text!
+- Extracting the most interesting parts of YouTube videos and podcasts
+- Summarizing opaque academic papers
+- Creating perfectly matched AI art prompts for a piece of writing
+- Rating the quality of content to see if you want to read/watch the whole thing
+- Getting summaries of long, boring content
+- Write a full essay in a particular voice, given an idea as input
+- Create social media posts from any content input
+- And a million more…
+
+## Naming
+
+`fabric` is themed off of, um…_fabric_. So, think blankets, quilts, patterns, etc. Here's the structure:
+
+- The project itself is called **Fabric**, and it's the parent concept.
+- Individual AI modules (think prompts) are called **Patterns**.
+- Chaining together _Patterns_ to create advanced functionality is called a **Stitch**.
+- The optional server-side functionality of `fabric` is called the **Mill**.
+- The optional client-side scripts within `fabric` are called **Looms**.
+
+## Structure
+
+`fabric`'s main point is to make '**Patterns** available to everyone, but it also includes two other components that make it possible to _build your own Personal AI Ecosystem_.
+
+_In other words you can have your own server, with your own copy of `fabric`, running your own specific combination of **Patterns** for your specific use cases._
+
+Here are the three ecosystem pieces that work together.
+
+- The **Mill** is the (optional) server that makes **Patterns** available.
+- **Patterns** are the actual AI use cases.
+- **Looms** are the modular, client-side apps that call a specific **Pattern\* hosted by a **Mill\*\*.
 
 ## Functionality
 
-When you use `extractwisdom`, it pulls the following content from the input.
+When you use `fabric`, it pulls the following content from the input.
 
 - `IDEAS`
   - Extracts the best ideas from the content, i.e., what you might have taken notes on if you were doing so manually.
@@ -47,7 +75,7 @@ When you use `extractwisdom`, it pulls the following content from the input.
 - `RECOMMENDATIONS`
   - A list of things that the content recommends Habits of the speakers.
 
-## Use cases
+## Usage
 
 `extractwisdom` output can help you in multiple ways, including:
 
@@ -56,7 +84,7 @@ When you use `extractwisdom`, it pulls the following content from the input.
 2. `Note Taking`<br />
    Can be used as a substitute for taking time-consuming, manual notes on the content.
 
-## Example Output
+## Examples
 
 Here's an abridged ouptut example from `extractwisdom` (limited to only 10 items per section).
 
