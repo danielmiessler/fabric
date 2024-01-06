@@ -69,6 +69,8 @@ https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmiessler/extr
 
 This means you can cleanly, and directly reference any pattern within `fabric`, for use in a web-based AI app, your own programming, or wherever!
 
+Even better, you can also have your [Mill](https://github.com/danielmiessler/fabric/tree/main#naming) functionality directly call **system** and **user** prompts from `fabric`, meaning you can have your personal AI ecosystem automatically kept up to date with the latest version of your favorite [Patterns](https://github.com/danielmiessler/fabric/tree/main#naming).
+
 ## Examples
 
 Here's an abridged ouptut example from `extractwisdom` (limited to only 10 items per section).
