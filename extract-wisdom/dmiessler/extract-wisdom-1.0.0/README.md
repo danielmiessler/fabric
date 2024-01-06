@@ -22,19 +22,33 @@
 
 ## Description
 
-`extract-wisdom` is _extracts wisdom_ from any content that can be turned into a text format. For example:
+**`extractwisdom` addresses the problem of **too much content** out there for us to consume.**
+
+`extract-wisdom` _extracts wisdom_ from any content that can be translated into text. Some examples include:
 
 - Podcast transcripts
 - Academic papers
 - Essays
 - Blog posts
-- Etc…
+- Really, anything you can get into text!
 
-Really, anything you can get into text!
+It pulls multiple types of value out of any content it's provided, including:
 
-### Problem
+- _IDEAS_: The best ideas from the content, i.e., what you might have taken notes on if you were taking manual notes
+- _QUOTES_: Some of the best quotes from the content
+- _HABITS_: Habits of the speakers that could be worth replicating
+- _RECOMMENDATIONS_: A list of things that the content recommends
 
-The problem that `extractwisdom` is addressing is the fact that there's **too much content** out there. Too many YouTube videos, too many podcasts, too many academic papers, too many blog posts, and so on.
+## Use cases
+
+1. **Decision Support:** `extractwisdom` allows you to quickly learn what's in a particular piece of content so you can decide if you want to consume the full source material or not.
+2. **Note Taking:** `extractwisdom` can also be used as your note taker. It's designed to
+
+It can also be used as a set of notes.
+
+## Examples
+
+Here are some examples of how to use `extractwisdom`.
 
 ## Installation
 
@@ -43,10 +57,6 @@ You can install `extractwisdom` by executing this command.
 ```sh
 curl -sS https://raw.githubusercontent.com/danielmiessler/fabric/main/install.sh | bash
 ```
-
-## Examples
-
-Here are some examples of how to use `extractwisdom`.
 
 ```sh
 z foo              # cd into highest ranked directory matching foo
