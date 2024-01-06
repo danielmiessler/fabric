@@ -19,7 +19,7 @@
 
 <br />
 
-> ⚠️ These are not the correct instructions yet, so hold off until this note is removed.
+## ⚠️ This project is currently pre-launch, but any published patterns can be used in the meantime.
 
 ## Description
 
@@ -137,12 +137,6 @@ The content features a conversation between two individuals discussing various t
 10. Nietzsche's walks
 ```
 
-## Installation
-
-You can install `extractwisdom` by executing this command.
-
-```sh
-curl -sS https://raw.githubusercontent.com/danielmiessler/fabric/main/install.sh | bash
 ```
 
 ## Meta
@@ -150,3 +144,4 @@ curl -sS https://raw.githubusercontent.com/danielmiessler/fabric/main/install.sh
 `fabric` was created by Daniel Miessler. Special thanks to the following people for inspiration and contributions.
 
 - _Joel Parish_ for super useful input on the project's Github directory structure.
+```
