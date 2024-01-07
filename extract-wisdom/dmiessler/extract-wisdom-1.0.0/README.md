@@ -20,9 +20,9 @@
 
 **`extractwisdom` addresses the problem of **too much content** and too little time.**
 
-_Not only that, but it's also too easy to forget the stuff do read, watch, or listen to._
+_Not only that, but it's also too easy to forget the stuff read, watch, or listen to._
 
-The tool _extracts wisdom_ from any content that can be translated into text, for example:
+This pattern _extracts wisdom_ from any content that can be translated into text, for example:
 
 - Podcast transcripts
 - Academic papers
@@ -144,6 +144,8 @@ The content features a conversation between two individuals discussing various t
 9. Bertrand Russell's definition of philosophy
 10. Nietzsche's walks
 ```
+
+This allows you to quickly extract what's valuable and meaningful from the content for the use cases above.
 
 ## Meta
 
