@@ -161,6 +161,7 @@ The content features a conversation between two individuals discussing various t
 
 Special thanks to the following people for inspiration and contributions.
 
+- **Caleb Sima** for pushing me over the edge of whether to make this a public project or not.
 - **Joel Parish** for super useful input on the project's Github directory structure.
 
 ```
