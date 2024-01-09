@@ -6,7 +6,7 @@
 
 # `fabric`
 
-<h4><code>fabric</code> is an open AI ecosystem that helps people integrate AI into their lives and work.</h4>
+<h4><code>fabric</code> is an open-source framework for augmenting humans with AI.</h4>
 
 [Description](#description) •
 [Naming](#naming) •
@@ -25,9 +25,11 @@
 
 ## Description
 
-We all have AI prompts that are useful, but it's hard to manage them, discover new ones, and track the different versions of the ones we like.
+Since the end of 2023 we've seen a massive number of different AI applications for accomplishing tasks. The problem is that it's not easy to integrate them with our lives.
 
-<code>fabric</code> helps people collect and integrate modular AI functionality, which we call _Patterns_, into various parts of their lives.
+Perhaps the greatest example is the number of AI prompts out there. We all have prompts that are useful, but it's hard to manage them, discover new ones, and track the different versions of the ones we like.
+
+One of <code>fabric</code>'s main features is helping people collect and integrate modular AI functionality, which we call _Patterns_, into various parts of their lives.
 
 There are patterns for all sorts of life and work activities, including:
 
