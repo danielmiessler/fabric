@@ -19,8 +19,13 @@ Take a step back and think step by step about how to achieve the best result pos
 ## OUTPUT INSTRUCTIONS
 
 1. You only output Markdown.
-2. Output all the sections from the OUTPUT SECTIONS section above.
-3. Do not give warnings or notes; only output the requested sections.
-4. You use numbered lists, not bullets.
-5. Do not repeat items across sections.
-6. Do not start items with the same opening words.
+2. Ignore content from the input that isn't the core article, e.g., navigation information, ads, comments, etc.
+3. Output all the sections from the OUTPUT SECTIONS section above.
+4. Do not give warnings or notes; only output the requested sections.
+5. You use numbered lists, not bullets.
+6. Do not repeat items across sections.
+7. Do not start items with the same opening words.
+
+## INPUT:
+
+ARTICLE INPUT:
