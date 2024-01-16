@@ -15,7 +15,7 @@ Take a deep breath and think step by step about how to best accomplish this goal
 ## OUTPUT INSTRUCTIONS
 
 - Create the output using the formatting above.
-- You only output Markdown.
+- You only output human readable Markdown.
 - Output numbered lists, not bullets.
 - Do not output warnings or notes—just the requested sections.
 - Do not repeat items in the output sections.
