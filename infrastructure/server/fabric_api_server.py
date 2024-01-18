@@ -26,6 +26,14 @@ app = Flask(__name__)
 ## Set authentication on your APIs
 ## Let's at least have some kind of auth
 
+# Load your OpenAI API key from a file
+with open("openai.key", "r") as key_file:
+    api_key = key_file.read().strip()
+
+## Define our own client
+client = openai.OpenAI(api_key = api_key)
+
+
 # Read API tokens from the apikeys.json file
 with open("fabric_api_keys.json", "r") as tokens_file:
     valid_tokens = json.load(tokens_file)
@@ -84,10 +92,6 @@ def fetch_content_from_url(url):
         return str(e)
 
 
-# Set your OpenAI API key
-with open("openai.key", "r") as key_file:
-    openai.api_key = key_file.read().strip()
-
 ## APIs
 
 
@@ -117,7 +121,7 @@ def extwis():
     user_message = {"role": "user", "content": user_file_content + "\n" + input_data}
     messages = [system_message, user_message]
     try:
-        response = openai.ChatCompletion.create(
+        response = openai.chat.completions.create(
             model="gpt-4-1106-preview",
             messages=messages,
             temperature=0.0,
@@ -125,91 +129,10 @@ def extwis():
             frequency_penalty=0.1,
             presence_penalty=0.1,
         )
-        assistant_message = response["choices"][0]["message"]["content"]
+        assistant_message = response.choices[0].message.content
         return jsonify({"response": assistant_message})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-# /labelandrate
-@app.route("/labelandrate", methods=["POST"])
-def labelandrate():
-    data = request.get_json()
-
-    if "input" not in data:
-        return jsonify({"error": "Missing input parameter"}), 400
-
-    input_data = data["input"]
-    system_message = {
-        "role": "system",
-        "content": """
-
-You are an ultra-wise and brilliant classifier and judge of content. You label content with a a comma-separated list of single-word labels and then give it a quality rating.
-
-Take a deep breath and think step by step about how to perform the following to get the best outcome.
-
-STEPS:
-
-1. You label the content with up to 20 single-word labels, such as: cybersecurity, philosophy, nihilism, poetry, writing, etc. You can use any labels you want, but they must be single words and you can't use the same word twice. This goes in a section called LABELS:.
-
-2. You then rate the content based on the number of ideas in the input (below ten is bad, between 11 and 20 is good, and above 25 is excellent) combined with how well it matches the THEMES of: human meaning, the future of AI, mental models, abstract thinking, unconvential thinking, meaning in a post-ai world, continuous improvement, reading, art, books, and related topics.
-
-You use the following rating levels:
-
-S Tier (Must Consume Original Content Immediately): 18+ ideas and/or STRONG theme matching with the themes in STEP #2.
-A Tier (Should Consume Original Content): 15+ ideas and/or GOOD theme matching with the THEMES in STEP #2.
-B Tier (Consume Original When Time Allows): 12+ ideas and/or DECENT theme matching with the THEMES in STEP #2.
-C Tier (Maybe Skip It): 10+ ideas and/or SOME theme matching with the THEMES in STEP #2.
-D Tier (Definitely Skip It): Few quality ideas and/or little theme matching with the THEMES in STEP #2.
-
-Also provide a score between 1 and 100 for the overall quality ranking, where 100 is a perfect match with the highest number of high quality ideas, and 1 is the worst match with a low number of the worst ideas.
-
-The output should look like the following:
-
-LABELS:
-
-Cybersecurity, Writing, Running, Copywriting 
-
-RATING:
-
-S Tier: (Must Consume Original Content Immediately)
-
-Explanation: $$Explanation in 5 short bullets for why you gave that rating.$$
-
-QUALITY SCORE:
-
-$$The 1-100 quality score$$
-
-Explanation: $$Explanation in 5 short bullets for why you gave that score.$$
-
-""",
-    }
-    user_message = {
-        "role": "user",
-        "content": """
-
-CONTENT:
-
-        """,
-    }
-
-    messages = [system_message, {"role": "user", "content": input_data}]
-
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4-1106-preview",
-            messages=messages,
-            temperature=0.0,
-            top_p=1,
-            frequency_penalty=0.1,
-            presence_penalty=0.1,
-        )
-
-        assistant_message = response["choices"][0]["message"]["content"]
-        return jsonify({"response": assistant_message})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 
 # Run the application
 if __name__ == "__main__":
