@@ -6,14 +6,12 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 # OUTPUT SECTIONS
 
-- Create a prompt that can be sent to an AI image generator for a simple and elegant logo that captures and incorporates the meaning of the input sent.
-- Keep the logo simple with relatively few elements.
-
-- Don't set up the description in the output, just describe it as if someone was taking notes on its attributes and the way it makes people feel.
+- Output a prompt that can be sent to an AI image generator for a simple and elegant logo that captures and incorporates the meaning of the input sent. The prompt should take the input and create a simple, vector graphic logo description for the AI to generate.
 
 # OUTPUT INSTRUCTIONS
 
 - You only output human readable Markdown.
+- Do not output anything other than the raw image description that will be sent to the image generator.
 - Do not output warnings or notes—just the requested sections.
 
 # INPUT:
