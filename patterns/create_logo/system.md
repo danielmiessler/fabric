@@ -10,8 +10,9 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 # OUTPUT INSTRUCTIONS
 
-- You only output human readable Markdown.
+- Ensure the description asks for a simple, vector graphic logo
 - Do not output anything other than the raw image description that will be sent to the image generator.
+- You only output human readable Markdown.
 - Do not output warnings or notes—just the requested sections.
 
 # INPUT:
