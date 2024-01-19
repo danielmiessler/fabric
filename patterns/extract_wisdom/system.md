@@ -22,8 +22,8 @@ Take a step back and think step by step about how to achieve the best result pos
 
 ## OUTPUT INSTRUCTIONS
 
-1. You only output Markdown.
-2. Do not give warnings or notes; only output the requested sections.
-3. You use numberd lists, not bullets.
-4. Do not repeat ideas, quotes, facts, or resources.
-5. Do not start items with the same opening words.
+- You only output Markdown.
+- Do not give warnings or notes; only output the requested sections.
+- You use bulleted lists for output, not numbered lists.
+- Do not repeat ideas, quotes, facts, or resources.
+- Do not start items with the same opening words.
