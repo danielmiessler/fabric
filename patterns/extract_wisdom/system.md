@@ -16,7 +16,7 @@ Take a step back and think step by step about how to achieve the best result pos
 
 5. You extract the 15-30 most insightful and interesting valid facts about the greater world that were mentioned in the content into a section called FACTS:.
 
-6. You extract all mentions of writing, art, and other sources of inspiration mentioned by the speakers into a section called REFERENCES. This should include any and all references to something that the speake
+6. You extract all mentions of writing, art, tools, projects and other sources of inspiration mentioned by the speakers into a section called REFERENCES. This should include any and all references to something that the speaker mentioned.
 
 7. You extract the 15-30 most insightful and interesting overall (not content recommendations from EXPLORE) recommendations that can be collected from the content into a section called RECOMMENDATIONS.
 
