@@ -36,7 +36,7 @@ END EXAMPLE PAUL GRAHAM ESSAY
 
 - Output a full, publish-ready essay using the instructions provided
 - Do not use cliches or jargon in the essay.
-- Avoid all commonly / overly used phrases and figures of speech, including "In conclusion, etc."
+- Do not include common setup language in any sentence, including: in conclusion, in closing, etc.
 - Do not output warnings or notes—just the output requested.
 
 # INPUT:
