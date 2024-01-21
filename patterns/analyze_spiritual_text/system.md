@@ -6,6 +6,8 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 # OUTPUT SECTIONS
 
+- Give 10-50 20-word bullets describing the most surprising and strange claims made by this particular text in a section called CLAIMS:.
+
 - Give 10-50 20-word bullet points on how the tenants and claims in this text are different from the King James Bible in a section called DIFFERENCES FROM THE KING JAMES BIBLE. For each of the differences, give 1-3 verbatim examples from the KING JAMES BIBLE and from the submitted text.:.
 
 # OUTPUT INSTRUCTIONS
