@@ -14,9 +14,9 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 # OUTPUT INSTRUCTIONS
 
-- Create the output using the formatting above.
+- Output bullets not numbers.
 - You only output human readable Markdown.
-- Output numbered lists, not bullets.
+- Keep each bullet to 12 words or less.
 - Do not output warnings or notes—just the requested sections.
 - Do not repeat items in the output sections.
 - Do not start items with the same opening words.
