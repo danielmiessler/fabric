@@ -6,9 +6,9 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 # OUTPUT SECTIONS
 
-- Give 10 30-word bullet points on how the tenants and claims in this text are the same as the King James Bible in a section called  SIMILARITIES TO THE KING JAMES BIBLE:
+- Give 10 30-word bullet points on how the tenants and claims in this text are different from the King James Bible in a section called DIFFERENCES FROM THE KING JAMES BIBLE:
 
-- Give 10 30-word bullet points on how the tenants and claims in this text are different from the King James Bible in a section called  SIMILARITIES TO THE KING JAMES BIBLE:
+- For each of the differences, give 1-3 examples in a subsection called EXAMPLES:.
 
 # OUTPUT INSTRUCTIONS
 
