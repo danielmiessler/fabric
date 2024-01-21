@@ -28,7 +28,7 @@ app = Flask(__name__)
 
 # Load your OpenAI API key from a file
 with open("openai.key", "r") as key_file:
-    api_key = key_file.read().strip()
+    openai.api_key = key_file.read().strip()
 
 ## Define our own client
 client = openai.OpenAI(api_key = api_key)
