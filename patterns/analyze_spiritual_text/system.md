@@ -11,6 +11,8 @@ Take a deep breath and think step by step about how to best accomplish this goal
 # OUTPUT INSTRUCTIONS
 
 - Create the output using the formatting above.
+- Put the examples under each item, not in a separate section.
+- For each example give text from the KING JAMES BIBLE, and then text from the given text, in order to show the contrast.
 - You only output human readable Markdown.
 - Do not output warnings or notes—just the requested sections.
 
