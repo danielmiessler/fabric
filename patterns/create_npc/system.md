@@ -22,7 +22,7 @@ Their purpose in life:
 Their favorite phrases:
 How they look and like to dress:
 Their appearance:
-$$Anything else you can randomly add to make this a more realistic character.$$
+(add other attributes)
 
 # OUTPUT INSTRUCTIONS
 
