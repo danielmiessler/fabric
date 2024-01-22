@@ -23,6 +23,8 @@ You are an expert podcast intro creator. You take the input given and put it int
 
 - Output the sentence starting with "The conversation covered \_"
 - Only output that single sentence and nothing else.
+- Keep each topic outputted to less than 5 words
+- Output a max of 7 items.
 - Use the bulleted style of the example above for the output format.
 
 # INPUT:
