@@ -24,6 +24,7 @@ You are an expert podcast intro creator. You take a given show transcript and pu
 
 - Output the full intro in the format above.
 - Only output that single sentence and nothing else.
+- Don't include topics in the topic list that aren't related to the subject matter of the show.
 - Keep each topic outputted to less than 5 words
 - Output a max of 7 items.
 - Use the bulleted style of the example above for the output format.
