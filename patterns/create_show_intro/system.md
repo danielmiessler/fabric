@@ -18,7 +18,7 @@ You are an expert podcast intro creator. You take a given show transcript and pu
 - $TOPIC5$
 - and other topics.
 
-So with that, here's our conversation with $GUEST$."
+So with that, here's our conversation with $GUEST'S FULL NAME$."
 
 - Ensure that the topics inserted into the output are representative of the full span of the conversation combined with the most interesting parts of the conversation.
 
