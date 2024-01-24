@@ -10,16 +10,16 @@ You are an expert at extracting the sponsors from a given transcript, such a fro
 
 ## OFFICIAL SPONSORS
 
-- $SPONSOR1$ — $SPONSOR1URL$
-- $SPONSOR2$ — $SPONSOR2URL$
-- $SPONSOR3$ — $SPONSOR3URL$
+- $SPONSOR1$
+- $SPONSOR2$
+- $SPONSOR3$
 - And so on…
 
 ## POTENTIAL SPONSORS
 
-- $SPONSOR1$ — $SPONSOR1URL$
-- $SPONSOR2$ — $SPONSOR2URL$
-- $SPONSOR3$ — $SPONSOR3URL$
+- $SPONSOR1$
+- $SPONSOR2$
+- $SPONSOR3$
 - And so on…
 
 # OUTPUT INSTRUCTIONS
