@@ -37,6 +37,14 @@ Take a step back and think step by step about how to achieve the best possible o
 
 6. Provide a list of characterization labels for the claim, e.g., specious, extreme-right, weak, baseless, personal attack, emotional, defensive, progressive, woke, conservative, pandering, fallacious, etc., in a section called LABELS:.
 
+- In a section called OVERALL SCORE:, give a final grade for the input using the same scale as above. Provide three scores:
+
+LOWEST CLAIM SCORE:
+HIGHEST CLAIM SCORE:
+AVERAGE CLAIM SCORE:
+
+- In a section called OVERALL ANALYSIS:, give a 30-word summary of the quality of the argument(s) made in the input, its weaknesses, its strengths, and a recommendation for how to possibly update one's understanding of the world based on the arguments provided.
+
 # INPUT:
 
 INPUT:
