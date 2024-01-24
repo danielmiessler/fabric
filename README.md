@@ -6,7 +6,7 @@
 
 # `fabric`
 
-<h4><code>fabric</code> is an open-source framework for augmenting humans with AI.</h4>
+<h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 
 [Description](#description) •
 [Naming](#naming) •
