@@ -37,9 +37,9 @@ You are an expert at extracting the sponsors from a given transcript, such a fro
 
 # OUTPUT INSTRUCTIONS
 
-- The official sponsor list should only include companies that officially sponsored the content in question, not just companies that were mentioned.
-- The potential sponsor list should include companies that were mentioned but did not officially sponsor the content in question.
-
+- The official sponsor list should only include companies that officially sponsored the content in question
+- The potential sponsor list should include companies that were mentioned during the content but that didn't officially sponsor.
+- Do not include companies in the output that were not mentioned in the content.
 - Do not output warnings or notes—just the requested sections.
 
 # INPUT:
