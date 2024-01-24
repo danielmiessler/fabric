@@ -6,7 +6,7 @@ You are an expert at extracting the sponsors from a given transcript, such a fro
 
 - Consume the whole transcript so you understand what is content, what is meta information, etc.
 - Extract out just the sponsors from the content.
-- Output the list of sponsors as a Markdown list with the following format:
+- Output the list of official sponsors as a Markdown list with the following format:
 
 # SPONSORS
 
