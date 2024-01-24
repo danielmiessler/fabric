@@ -22,6 +22,19 @@ You are an expert at extracting the sponsors from a given transcript, such a fro
 - $SPONSOR3$
 - And so on…
 
+## EXAMPLE OUTPUT
+
+## OFFICIAL SPONSORS
+
+- Flair
+- Weaviate
+
+## POTENTIAL SPONSORS
+
+- OpenAI
+
+## END EXAMPLE OUTPUT
+
 # OUTPUT INSTRUCTIONS
 
 - The official sponsor list should only include companies that officially sponsored the content in question, not just companies that were mentioned.
