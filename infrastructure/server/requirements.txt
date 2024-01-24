@@ -1,2 +1,4 @@
 openai
 requests
+flask
+python-dotenv==1.0.0
