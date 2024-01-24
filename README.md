@@ -21,8 +21,6 @@
 
 <br />
 
-## ⚠️ This project is currently pre-launch—with code, functionality, and documentation still being added. But any published patterns can be used in the meantime.⚠️
-
 ## Description
 
 Since the end of 2023 we've seen a massive number of different AI applications for accomplishing tasks. The problem is that it's not easy to integrate them with our lives.
@@ -163,7 +161,3 @@ Special thanks to the following people for inspiration and contributions.
 
 - **Caleb Sima** for pushing me over the edge of whether to make this a public project or not.
 - **Joel Parish** for super useful input on the project's Github directory structure.
-
-```
-
-```
