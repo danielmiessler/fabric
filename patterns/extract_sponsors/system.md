@@ -17,6 +17,7 @@ You are an expert at extracting the sponsors from a given transcript, such a fro
 
 # OUTPUT INSTRUCTIONS
 
+- The sponsor list should only include companies that officially sponsored the content in question, not just companies that were mentioned.
 - Do not output warnings or notes—just the requested sections.
 
 # INPUT:
