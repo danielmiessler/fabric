@@ -70,8 +70,8 @@ One key feature of `fabric` and its Markdown-based format is the ability to refe
 
 As an example, heres how to call _the direct location_ of the **system** prompt for the `extractwisdom` pattern.
 
-```sh
-https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0/system.md
+```
+https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
 ```
 
 This means you can cleanly, and directly reference any pattern within `fabric`, for use in a web-based AI app, your own programming, or wherever!
@@ -80,7 +80,7 @@ Even better, you can also have your [Mill](https://github.com/danielmiessler/fab
 
 ## Examples
 
-Here's an abridged ouptut example from the <a href="https://github.com/danielmiessler/fabric/tree/main/extract-wisdom/dmiessler/extract-wisdom-1.0.0">`extractwisdom`</a> pattern (limited to only 10 items per section).
+Here's an abridged ouptut example from the <a href="https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md">`extractwisdom`</a> pattern (limited to only 10 items per section).
 
 ```markdown
 ## SUMMARY:
