@@ -21,6 +21,8 @@
 
 <br />
 
+> 👋This is a very early release and _lots_ more documentation and functionality is currently being added.
+
 ## Description
 
 Since the end of 2023 we've seen a massive number of different AI applications for accomplishing tasks. The problem is that it's not easy to integrate them with our lives.
