@@ -161,3 +161,4 @@ Special thanks to the following people for inspiration and contributions.
 
 - **Caleb Sima** for pushing me over the edge of whether to make this a public project or not.
 - **Joel Parish** for super useful input on the project's Github directory structure.
+- **Jonathan Dunn** for spectacular work on the soon-to-be-released standalone client.
