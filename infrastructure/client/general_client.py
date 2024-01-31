@@ -4,6 +4,19 @@ import argparse
 import json
 import requests
 import sys
+import os
+from pathlib import Path
+
+
+def list_patterns():
+    # Gets the location of this script and ensures we resolve the right pattern path
+    pattern_directory = f"{Path(__file__).resolve().parent}/../../patterns"  
+    try:
+        return os.listdir(pattern_directory)
+    except FileNotFoundError:
+        print("Pattern directory not found.")
+        return []
+
 
 def send_request(prompt, pattern):
     """sends a pattern and the associated prompt to our general api
@@ -30,13 +43,15 @@ def send_request(prompt, pattern):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Send a request to the API.')
     parser.add_argument('-p', '--pattern', default='extract_wisdom', help='Specify the pattern to use')
-    parser.add_argument('prompt', nargs='?', default=sys.stdin, help='The prompt to send to the API')
+    parser.add_argument('-l', '--list', action='store_true', help='List all available patterns')
     
     args = parser.parse_args()
 
-    if args.prompt == sys.stdin:
-        prompt = sys.stdin.read()
+    if args.list:
+        patterns = list_patterns()
+        print("Available patterns:")
+        for pattern in patterns:
+            print(pattern)
     else:
-        prompt = args.prompt
-    
-    send_request(prompt, args.pattern)
+        prompt = sys.stdin.read()
+        send_request(prompt, args.pattern)
