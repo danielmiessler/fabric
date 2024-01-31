@@ -12,7 +12,7 @@ def list_patterns():
     # Gets the location of this script and ensures we resolve the right pattern path
     pattern_directory = f"{Path(__file__).resolve().parent}/../../patterns"  
     try:
-        return os.listdir(pattern_directory)
+        return sorted(os.listdir(pattern_directory))
     except FileNotFoundError:
         print("Pattern directory not found.")
         return []
