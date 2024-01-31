@@ -31,7 +31,7 @@ with open("openai.key", "r") as key_file:
     openai.api_key = key_file.read().strip()
 
 ## Define our own client
-client = openai.OpenAI(api_key = api_key)
+client = openai.OpenAI(api_key = openai.api_key)
 
 
 # Read API tokens from the apikeys.json file
