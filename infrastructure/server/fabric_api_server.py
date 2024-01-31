@@ -93,6 +93,48 @@ def fetch_content_from_url(url):
 
 
 ## APIs
+# /general
+@app.route("/general", methods=["POST"])
+@auth_required  # Require authentication
+def general():
+    data = request.get_json()
+
+    # Warn if there's no input
+    if "input" not in data:
+        return jsonify({"error": "Missing input parameter"}), 400
+
+    # Get data from client
+    input_data = data["input"]
+    
+    # parse pattern type for submitted client request
+    pattern = data["pattern"]
+    # user_url ="extract_wisdom"
+
+    # Set the system and user URLs
+    system_url = f"https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/{pattern}/system.md"
+    user_url = "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/{pattern}}/user.md"
+
+    # Fetch the prompt content
+    system_content = fetch_content_from_url(system_url)
+    user_file_content = fetch_content_from_url(user_url)
+
+    # Build the API call
+    system_message = {"role": "system", "content": system_content}
+    user_message = {"role": "user", "content": user_file_content + "\n" + input_data}
+    messages = [system_message, user_message]
+    try:
+        response = openai.chat.completions.create(
+            model="gpt-4-1106-preview",
+            messages=messages,
+            temperature=0.0,
+            top_p=1,
+            frequency_penalty=0.1,
+            presence_penalty=0.1,
+        )
+        assistant_message = response.choices[0].message.content
+        return jsonify({"response": assistant_message})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # /extwis
@@ -136,4 +178,4 @@ def extwis():
 
 # Run the application
 if __name__ == "__main__":
-    app.run(host="1.1.1.1", port=13337, debug=True)
+    app.run(host="localhost", port=13337, debug=True)
