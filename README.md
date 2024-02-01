@@ -82,7 +82,7 @@ Even better, you can also have your [Mill](https://github.com/danielmiessler/fab
 
 ## Examples
 
-Here's an abridged ouptut example from the <a href="https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md">`extractwisdom`</a> pattern (limited to only 10 items per section).
+Here's an abridged output example from the <a href="https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md">`extractwisdom`</a> pattern (limited to only 10 items per section).
 
 ```markdown
 ## SUMMARY:
