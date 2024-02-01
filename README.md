@@ -64,7 +64,7 @@ Here are the three `fabric` ecosystem pieces, and how they work together.
 
 - The **Mill** is the (optional) server that makes **Patterns** available.
 - **Patterns** are the actual AI use cases.
-- **Looms** are the modular, client-side apps that call a specific **Pattern** hosted by a **Mill\*\*.
+- **Looms** are the modular, client-side apps that call a specific **Pattern** hosted by a **Mill**.
 
 ## Usage
 
