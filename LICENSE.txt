@@ -2,7 +2,7 @@ MIT License
 
 Copyright (c) 2012-2024 Scott Chacon and others
 
-Permission is hereby granted, free of charge, to any person obtaining
+Permission is therefore granted, free of charge, to any individual obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
 without limitation the rights to use, copy, modify, merge, publish,
