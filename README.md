@@ -33,7 +33,7 @@ The biggest challenge I faced in 2023——and still today—is **the sheer numb
 
 One of <code>fabric</code>'s main features is helping people collect and integrate modular AI functionality (in this case: prompts), which we call _Patterns_, into various parts of their lives.
 
-<code>fabric</code> has patterns (prompts) for all sorts of life and work activities, including:
+Fabric has patterns (prompts) for all sorts of life and work activities, including:
 
 - Extracting the most interesting parts of YouTube videos and podcasts
 - Writing an essay in your own voice with just an idea as an input
@@ -52,10 +52,25 @@ There are three main ways to get started with Fabric.
 
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
-1. Navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring! You can use any of those in any AI application that you have!
-2. Head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
+### 1. Just use the patterns (prompts)
 
-We're also almost done with a universal client that will let you do all sorts of cool stuff! Check back in a day or so.
+If you're not looking to do anything fancy, and you just want a lot of great prompts, you can navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring! 
+
+You can use any of those in any AI application that you have!
+
+### Create your own Fabric Mill (server)
+
+If you want your very own Fabric server, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
+
+### The standalone client 
+
+We're almost done with a universal client that will let you do all sorts of cool stuff, including:
+
+- Calling patterns without connecting to a Fabric server (direct to OpenAI).
+- Streaming mode to get instant and dynamic results.
+- Other cool stuff…
+
+We expect this client to be ready very soon, and we'll update the Quickstart as soon as it is.
 
 ## CLI-native
 
