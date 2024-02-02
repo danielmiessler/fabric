@@ -34,12 +34,6 @@ You can use the client in three different modes:
 6. Copy your OpenAI API key to the `.env` file in your `nvim ~/.config/fabric/` directory (or create that file and put it in)
    `OPENAI_API_KEY=[Your_API_Key]`
 
-# Server installation
-
-2. From the application root:
-   `cd server`
-   `flask --app run.py init-db`
-
 ## Usage
 
 To use `fabric`, call it with your desired options:
@@ -51,9 +45,6 @@ Options include:
 --stream, -s: Stream output to another application.
 --output, -o: Save the response to a file.
 --copy, -c: Copy the response to the clipboard.
---server, -S: Enable server mode.
---domain, -d: Specify the domain in server mode.
---port, -P: Specify the port in server mode.
 
 Example:
 
@@ -61,6 +52,7 @@ Example:
 # Pasting in an article about LLMs
 pbpaste | fabric --pattern extract_wisdom --output wisdom.txt | fabric --pattern summarize --stream
 ```
+
 ```markdown
 ONE SENTENCE SUMMARY:
 
@@ -76,18 +68,8 @@ TAKEAWAYS:
 
 1. It's possible to use LLMs for multiple AI use cases.
 2. It's important to validate that the results you're receiving are correct.
-2. The field of AI is moving faster than ever as a result of GenAI breakthroughs.
+3. The field of AI is moving faster than ever as a result of GenAI breakthroughs.
 ```
-
-# Server Mode
-
-1. Running `fabric --server --domain [domain] --port [port]` will start a Gunicorn server, allowing you to create a personal instance of Fabric. This server uses both traditional API endpoints and websockets for an enhanced experience. Use cases include iPhone shortcuts and creating an API for your own web site. The server is Gunicorn with Python flask.
-2. Update the JWT in the `config.yaml` file.
-
-# Remote mode
-
-1. If you make a `config.yaml` file in the directory root, the tool will now be in remote mode. Instead of directly querying OpenAI, you can query a remote Fabric server (including your own server if you have one configured).
-2. NOTE: if you are accessing a server behind SSL (https) you need to change `self.summarizestream = f"ws://{domain}:{port}"` to `self.summarizestream = f"wss://{domain}:{port}"`
 
 ## Contributing
 
@@ -95,4 +77,4 @@ We welcome contributions to Fabric, including improvements and feature additions
 
 ## Credits
 
-The `fabric` client was created by Jonathan Dunn (@xssdoctor).
+The `fabric` client was created by Jonathan Dunn and Daniel Meissler.

@@ -1,8 +1,0 @@
-flask
-flask_sqlalchemy
-flask_login
-flask_jwt_extended
-python-dotenv
-openai
-flask-socketio
-flask-sock
