@@ -70,7 +70,7 @@ We're almost done with a universal client that will let you do all sorts of cool
 - Streaming mode to get instant and dynamic results.
 - Other cool stuff…
 
-We expect this client to be ready very soon, and we'll update the Quickstart as soon as it is.
+We expect this client to be ready very within a day or two, and we'll update the Quickstart as soon as it is.
 
 ## CLI-native
 
