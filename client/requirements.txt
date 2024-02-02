@@ -1,0 +1,16 @@
+pyyaml
+requests
+pyperclip
+python-socketio
+websocket-client
+flask
+flask_sqlalchemy
+flask_login
+flask_jwt_extended
+python-dotenv
+openai
+flask-socketio
+flask-sock
+gunicorn
+gevent
+httpx

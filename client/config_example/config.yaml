@@ -1,0 +1,8 @@
+# Make your own .yaml file with domain name, port number, etc.
+
+server:
+  domain: "127.0.0.1"
+  port: 5000
+  username: "username"
+  password: "password"
+  jwt: "eyJhcGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcwNjM1OTMwNiwianRpIjoiN2M2OGEwZDYtNzU3OS00ZDk5LTgxMDMtYWYxMjUwN2ZlYmI2IiwidHlwZSI6ImFjY1VzcyIsInN1YiI8InVzZXJuYW1lIiwibmJmIjoxNzA2MzU5MzA2LCJjc3JmIjoiOWU2NTkzOWYtMmQyYi00OTdjLWJiZDItM2FmN2MxMmRlNjY3IiwiZXhwIjoxNzA2NDQ1NzA2fQ.4j5Uwyz0mOvbpVfhq7u1hFNgg3VjzmQ3jA1vR1kNx6I"
