@@ -71,7 +71,7 @@ class Standalone:
 
     def sendMessage(self, input_data: str):
         wisdomFilePath = os.path.join(
-            config_directory, f"paterns/{self.pattern}/system.md")
+            config_directory, f"patterns/{self.pattern}/system.md")
         user_message = {"role": "user", "content": f"{input_data}"}
         wisdom_File = os.path.join(
             current_directory, wisdomFilePath)
