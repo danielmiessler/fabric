@@ -1,10 +1,10 @@
-# The `fabric` Client
+# The `fabric` client
 
-This is the primary `fabric` client.
+This is the primary `fabric` client, which has multiple modes of operation.
 
 ## Client modes
 
-You can use the client in three different modes.
+You can use the client in three different modes:
 
 1. **Local Only:** You can use the client without a server, and it will use patterns it's downloaded from this repository, or ones that you specify.
 2. **Local Server:** You can run your own version of a Fabric Mill locally (on a private IP), which you can then connect to and use.
