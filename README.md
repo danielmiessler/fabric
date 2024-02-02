@@ -33,21 +33,22 @@ Perhaps the best way to see why we created Fabric is to watch me talk about its 
 
 [![bombal_video](https://github.com/danielmiessler/fabric/assets/50654/f4124a17-6e3b-42fc-8af8-ca45398f8697)](https://danielmiessler.com/p/fabric-origin-story)
 
-
 ### Too many prompts
 
-Perhaps the greatest example of this is the number of AI prompts out there. We all have prompts that are useful, but it's hard to manage them, discover new ones, and track the different versions of the ones we like.
+The biggest challenge I faced in 2023——and still today—is **the sheer number of AI prompts out there**. We all have prompts that are useful, but it's hard to manage them, discover new ones, _and manage the different versions of the ones we like_.
 
-One of <code>fabric</code>'s main features is helping people collect and integrate modular AI functionality (prompts), which we call _Patterns_, into various parts of their lives.
+One of <code>fabric</code>'s main features is helping people collect and integrate modular AI functionality (in this case: prompts), which we call _Patterns_, into various parts of their lives.
 
-<code>fabric</code> has patterns for all sorts of life and work activities, including:
+<code>fabric</code> has patterns (prompts) for all sorts of life and work activities, including:
 
 - Extracting the most interesting parts of YouTube videos and podcasts
+- Writing an essay in your own voice with just an idea as an input
 - Summarizing opaque academic papers
 - Creating perfectly matched AI art prompts for a piece of writing
 - Rating the quality of content to see if you want to read/watch the whole thing
 - Getting summaries of long, boring content
-- Write a full essay in a particular voice, given an idea as input
+- Explaining code to you
+- Turning bad documentation into usable documentation
 - Create social media posts from any content input
 - And a million more…
 
