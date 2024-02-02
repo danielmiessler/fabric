@@ -5,7 +5,6 @@
 # `fabric`
 
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
-  [![HitCount](https://hits.dwyl.com/danielmiessler/fabric.svg?style=flat-square)](http://hits.dwyl.com/danielmiessler/fabric)
 
 [Description](#description) •
 [Quickstart](#quickstart) •
