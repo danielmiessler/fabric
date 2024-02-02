@@ -1,7 +1,5 @@
 <div align="center">
 
-<!-- <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/asset/file/971f362a-f3fa-427f-b619-7e04cc135d17/fabric-logo-miessler-transparent.png?t=1704525002" alt="fabriclogo" width="400" height="400"/> -->
-
 <img src="./images/fabric-logo-gif.gif" alt="fabriclogo" width="400" height="400"/>
 
 # `fabric`
@@ -9,6 +7,7 @@
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 
 [Description](#description) •
+[Quickstart](#quickstart) •
 [CLI-Native](#cli-native) •
 [Naming](#naming) •
 [Structure](#structure) •
@@ -27,12 +26,6 @@
 Since the end of 2023 we've seen a massive number of AI applications for accomplishing tasks. The problem is that it's not easy to integrate them with our lives.
 
 _Basically, AI doesn't have a capabilities problem. It has an integration problem._
-
-### Fabric's origin story and philosophy
-
-Perhaps the best way to see why we created Fabric is to watch me talk about its origin on Dave Bombal's podcast.
-
-[![bombal_video](https://github.com/danielmiessler/fabric/assets/50654/f4124a17-6e3b-42fc-8af8-ca45398f8697)](https://danielmiessler.com/p/fabric-origin-story)
 
 ### Too many prompts
 
@@ -53,11 +46,20 @@ One of <code>fabric</code>'s main features is helping people collect and integra
 - Create social media posts from any content input
 - And a million more…
 
+## Quickstart
+
+There are three main ways to get started with Fabric.
+
+1. Navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/patterns) directory and start exploring! You can use any of those in any AI application that you have!
+2. Head over to the [`/server/`](https://github.com/danielmiessler/fabric/server) directory and set up your own Fabric Mill with your own patterns running! You can then use the `standalone_client_examples` to connect to it.
+
+We're also working on a universal client that will let you do all sorts of cool stuff!
+
 ## CLI-native
 
-One of the coolest parts of `fabric` is that it's command-line native!
+One of the coolest parts of the project is that it's **command-line native**!
 
-Each `fabric` pattern (prompt) you see in the `/patterns` directory can be used in any AI application you use, but you can also set up your own server using the `/infrastructure/server` code and then call APIs directly!
+Each pattern (prompt) you see in the `/patterns` directory can be used in any AI application you use, but you can also set up your own server using the `/infrastructure/server` code and then call APIs directly!
 
 ```bash
 # Take any idea from `stdin` and send it to the `/write_essay` API!
@@ -66,7 +68,7 @@ cat "An idea that coding is like speaking with rules." | write_essay
 
 ## Naming
 
-`fabric` is themed off of, um…_fabric_. So, think blankets, quilts, patterns, etc. Here's the structure:
+Fabric is themed off of, well… _fabric_—as in…woven materials. So, think blankets, quilts, patterns, etc. Here's the concept and structure:
 
 - The project itself is called **Fabric**, and it's the parent concept.
 - Individual AI modules (think prompts) are called **Patterns**.
