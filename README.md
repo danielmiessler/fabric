@@ -58,11 +58,11 @@ If you're not looking to do anything fancy, and you just want a lot of great pro
 
 You can use any of those in any AI application that you have!
 
-### Create your own Fabric Mill (server)
+### 2. Create your own Fabric Mill (server)
 
 If you want your very own Fabric server, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
 
-### The standalone client 
+### 3. The standalone client 
 
 We're almost done with a universal client that will let you do all sorts of cool stuff, including:
 
