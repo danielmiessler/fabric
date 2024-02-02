@@ -8,12 +8,10 @@
 
 [Description](#description) •
 [Quickstart](#quickstart) •
-[Examples](#examples) •
 [Usage](#usage) •
-[CLI-Native](#cli-native) •
-[Naming](#naming) •
+[Examples](#examples) •
 [Structure](#structure) •
-[Functionality](#functionality) •
+[Naming](#naming) •
 [Meta](#meta)
 
 </div>
@@ -72,6 +70,20 @@ We're almost done with a universal client that will let you do all sorts of cool
 We expect this client to be ready very within a day or two, and we'll update the Quickstart as soon as it is.
 
 ## Usage
+
+`fabric`'s main function is to make **Patterns** available to everyone in an open ecosystem, i.e., to allow people to share and fork prompts in a transparent, scalable, and dependable way.
+
+But it also includes two other components that make it possible for AI enthusiasts and developers to _build your own Personal AI Ecosystem_.
+
+_In other words you can have your own server, with your own copy of `fabric`, running your own specific combination of **Patterns** for your specific use cases._
+
+### Components
+
+Here are the three `fabric` ecosystem pieces, and how they work together.
+
+- The **Mill** is the (optional) server that makes **Patterns** available.
+- **Patterns** are the actual AI use cases.
+- **Looms** are the modular, client-side apps that call a specific **Pattern** hosted by a **Mill**.
 
 One key feature of `fabric` and its Markdown-based format is the ability to ** directly reference** (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
 
@@ -199,19 +211,6 @@ Fabric is themed off of, well… _fabric_—as in…woven materials. So, think b
 - The optional server-side functionality of `fabric` is called the **Mill**.
 - The optional client-side scripts within `fabric` are called **Looms**.
 
-## Functionality
-
-`fabric`'s main function is to make **Patterns** available to everyone in an open ecosystem, i.e., to allow people to share and fork prompts in a transparent, scalable, and dependable way.
-
-But it also includes two other components that make it possible for AI enthusiasts and developers to _build your own Personal AI Ecosystem_.
-
-_In other words you can have your own server, with your own copy of `fabric`, running your own specific combination of **Patterns** for your specific use cases._
-
-Here are the three `fabric` ecosystem pieces, and how they work together.
-
-- The **Mill** is the (optional) server that makes **Patterns** available.
-- **Patterns** are the actual AI use cases.
-- **Looms** are the modular, client-side apps that call a specific **Pattern** hosted by a **Mill**.
 
 
 ## More Documentation
