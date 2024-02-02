@@ -37,6 +37,7 @@ if __name__ == "__main__":
         with open(env_file, 'w') as f:
             f.write(f'OPENAI_API_KEY={args.apikey}')
         print(f'OpenAI API key set to {args.apikey}')
+        sys.exit()
     if not os.path.exists(env_file):
         print('No API key found. Use the --apikey option to set the key')
         sys.exit()
