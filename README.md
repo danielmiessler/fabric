@@ -92,7 +92,7 @@ Here are the three `fabric` ecosystem pieces, and how they work together.
 
 One key feature of `fabric` and its Markdown-based format is the ability to ** directly reference** (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
 
-As an example, here's how to call _the direct location_ of the **system** prompt for the `extractwisdom` pattern.
+As an example, here's how to call _the direct location_ of the **system** prompt for the `extract_wisdom` pattern.
 
 ```
 https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
@@ -104,7 +104,7 @@ Even better, you can also have your [Mill](https://github.com/danielmiessler/fab
 
 ## Examples
 
-Here's an abridged output example from the <a href="https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md">`extractwisdom`</a> pattern (limited to only 10 items per section).
+Here's an abridged output example from the <a href="https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md">`extract_wisdom`</a> pattern (limited to only 10 items per section).
 
 ```bash
 # Paste in the transcript of a YouTube video of Riva Tez on David Perrel's podcast
