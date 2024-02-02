@@ -212,9 +212,11 @@ Fabric is themed off of, well… _fabric_—as in…woven materials. So, think b
 - The optional client-side scripts within `fabric` are called **Looms**.
 
 
-
 ## More Documentation
 
+# Important Notices <!-- omit in toc -->
+
+> [!IMPORTANT]\
 > 👋 We are pushing hard to add lots more functionality and documentation. Please be patient and let us know what you'd like to see in Issues. Thank you!
 
 ## Meta
