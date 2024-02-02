@@ -53,16 +53,17 @@ There are three main ways to get started with Fabric.
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
 1. Navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring! You can use any of those in any AI application that you have!
-2. Head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own patterns running! You can then use the `standalone_client_examples` to connect to it.
+2. Head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
 
-We're also working on a universal client that will let you do all sorts of cool stuff!
+We're also almost done with a universal client that will let you do all sorts of cool stuff! Check back in a day or so.
 
 ## CLI-native
 
 One of the coolest parts of the project is that it's **command-line native**!
 
-Each pattern (prompt) you see in the `/patterns` directory can be used in any AI application you use, but you can also set up your own server using the `/infrastructure/server` code and then call APIs directly!
+Each pattern (prompt) you see in the `/patterns` directory can be used in any AI application you use, but you can also set up your own server using the `/server` code and then call APIs directly!
 
+Once you're set up, you can do things like:
 ```bash
 # Take any idea from `stdin` and send it to the `/write_essay` API!
 cat "An idea that coding is like speaking with rules." | write_essay
