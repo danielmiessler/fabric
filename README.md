@@ -60,8 +60,8 @@ One of the coolest parts of `fabric` is that it's command-line native!
 Each `fabric` pattern (prompt) you see in the `/patterns` directory can be used in any AI application you use, but you can also set up your own server using the `/infrastructure/server` code and then call APIs directly!
 
 ```bash
-# Take any idea from `stdin` and send it to the `/essay` API!
-cat "An idea that coding is like speaking with rules." | essay
+# Take any idea from `stdin` and send it to the `/write_essay` API!
+cat "An idea that coding is like speaking with rules." | write_essay
 ```
 
 ## Naming
@@ -90,15 +90,15 @@ Here are the three `fabric` ecosystem pieces, and how they work together.
 
 ## Usage
 
-One key feature of `fabric` and its Markdown-based format is the ability to reference (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
+One key feature of `fabric` and its Markdown-based format is the ability to ** directly reference** (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
 
-As an example, heres how to call _the direct location_ of the **system** prompt for the `extractwisdom` pattern.
+As an example, here's how to call _the direct location_ of the **system** prompt for the `extractwisdom` pattern.
 
 ```
 https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
 ```
 
-This means you can cleanly, and directly reference any pattern within `fabric`, for use in a web-based AI app, your own programming, or wherever!
+This means you can cleanly, and directly reference any pattern for use in a web-based AI app, your own code, or wherever!
 
 Even better, you can also have your [Mill](https://github.com/danielmiessler/fabric/tree/main#naming) functionality directly call **system** and **user** prompts from `fabric`, meaning you can have your personal AI ecosystem automatically kept up to date with the latest version of your favorite [Patterns](https://github.com/danielmiessler/fabric/tree/main#naming).
 
@@ -182,12 +182,14 @@ The content features a conversation between two individuals discussing various t
 10. Nietzsche's walks
 ```
 
+## Structure
+
 ## Meta
 
-`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a>.
+`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024.
 
 Special thanks to the following people for inspiration and contributions.
 
 - **Caleb Sima** for pushing me over the edge of whether to make this a public project or not.
 - **Joel Parish** for super useful input on the project's Github directory structure.
-- **Jonathan Dunn** for spectacular work on the soon-to-be-released standalone client.
+- **Jonathan Dunn** for spectacular work on the soon-to-be-released universal client.
