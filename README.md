@@ -184,6 +184,20 @@ The content features a conversation between two individuals discussing various t
 
 ## Structure
 
+<img width="2070" alt="fabric_mill_architecture" src="https://github.com/danielmiessler/fabric/assets/50654/ec3bd9b5-d285-483d-9003-7a8e6d842584">
+
+There are multiple ways to use `fabric`.
+
+1. You can just use the `/patterns` in other AI applications/websites.
+2. You can build your own server and host these patterns there (plus your own) using the Mill code in `/infrastructure/server`.
+3. You can use the `fabric` client to switch between these (coming soon)!
+
+If you are self-hosting your own Mill, the image above shows you what's going on. Basically, you are sending your input to your Fabric Mill, and your Fabric Mill then sends the input and the pattern on to OpenAI. Local model options also being added soon.
+
+## More Documentation
+
+> 👋 We are pushing hard to add lots more functionality and documentation. Please be patient and let us know what you'd like to see in Issues. Thank you!
+
 ## Meta
 
 `fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024.
