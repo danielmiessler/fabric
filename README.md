@@ -6,7 +6,7 @@
 
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 
-[Description](#description) •
+[What and Why](#whatandwhy) •
 [Quickstart](#quickstart) •
 [Usage](#usage) •
 [Examples](#examples) •
@@ -18,15 +18,17 @@
 
 <br />
 
-## Description
+## What and Why
 
-Since the end of 2023 we've seen a massive number of AI applications for accomplishing tasks. The problem is that it's not easy to integrate them with our lives.
+Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but **it's not easy to integrate this functionality into our lives.**
 
-_Basically, AI doesn't have a capabilities problem. It has an integration problem._
+_In other words, AI doesn't have a capabilities problem—it has an **integration** problem._
+
+Fabric was created to address that problem by allowing everyone to leverage AI throughout our life and work.
 
 ### Too many prompts
 
-The biggest challenge I faced in 2023——and still today—is **the sheer number of AI prompts out there**. We all have prompts that are useful, but it's hard to manage them, discover new ones, _and manage the different versions of the ones we like_.
+The biggest challenge I faced in 2023——and still have today—is **the sheer number of AI prompts out there**. We all have prompts that are useful, but it's hard to manage them, discover new ones, _and manage the different versions of the ones we like_.
 
 One of <code>fabric</code>'s main features is helping people collect and integrate modular AI functionality (in this case: prompts), which we call _Patterns_, into various parts of their lives.
 
