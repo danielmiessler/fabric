@@ -21,17 +21,26 @@
 
 <br />
 
-> 👋This is a very early release and _lots_ more documentation and functionality is currently being added.
-
 ## Description
 
-Since the end of 2023 we've seen a massive number of different AI applications for accomplishing tasks. The problem is that it's not easy to integrate them with our lives.
+Since the end of 2023 we've seen a massive number of AI applications for accomplishing tasks. The problem is that it's not easy to integrate them with our lives.
 
-Perhaps the greatest example is the number of AI prompts out there. We all have prompts that are useful, but it's hard to manage them, discover new ones, and track the different versions of the ones we like.
+_Basically, AI doesn't have a capabilities problem. It has an integration problem._
 
-One of <code>fabric</code>'s main features is helping people collect and integrate modular AI functionality, which we call _Patterns_, into various parts of their lives.
+### Fabric's origin story and philosophy
 
-There are patterns for all sorts of life and work activities, including:
+Perhaps the best way to see why we created Fabric is to watch me talk about its origin on Dave Bombal's podcast.
+
+[![bombal_video](https://github.com/danielmiessler/fabric/assets/50654/f4124a17-6e3b-42fc-8af8-ca45398f8697)](https://danielmiessler.com/p/fabric-origin-story)
+
+
+### Too many prompts
+
+Perhaps the greatest example of this is the number of AI prompts out there. We all have prompts that are useful, but it's hard to manage them, discover new ones, and track the different versions of the ones we like.
+
+One of <code>fabric</code>'s main features is helping people collect and integrate modular AI functionality (prompts), which we call _Patterns_, into various parts of their lives.
+
+<code>fabric</code> has patterns for all sorts of life and work activities, including:
 
 - Extracting the most interesting parts of YouTube videos and podcasts
 - Summarizing opaque academic papers
