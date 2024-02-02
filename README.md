@@ -9,6 +9,7 @@
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 
 [Description](#description) •
+[CLI-Native](#cli-native) •
 [Naming](#naming) •
 [Structure](#structure) •
 [Functionality](#functionality) •
@@ -52,6 +53,17 @@ One of <code>fabric</code>'s main features is helping people collect and integra
 - Create social media posts from any content input
 - And a million more…
 
+## CLI-native
+
+One of the coolest parts of `fabric` is that it's command-line native!
+
+Each `fabric` pattern (prompt) you see in the `/patterns` directory can be used in any AI application you use, but you can also set up your own server using the `/infrastructure/server` code and then call APIs directly!
+
+```bash
+# Take any idea from `stdin` and send it to the `/essay` API!
+cat "An idea that coding is like speaking with rules." | essay
+```
+
 ## Naming
 
 `fabric` is themed off of, um…_fabric_. So, think blankets, quilts, patterns, etc. Here's the structure:
@@ -93,6 +105,11 @@ Even better, you can also have your [Mill](https://github.com/danielmiessler/fab
 ## Examples
 
 Here's an abridged output example from the <a href="https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md">`extractwisdom`</a> pattern (limited to only 10 items per section).
+
+```bash
+# Paste in the transcript of a YouTube video of Riva Tez on David Perrel's podcast
+pbpaste | extract_wisdom
+```
 
 ```markdown
 ## SUMMARY:
