@@ -12,7 +12,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/danielmiessler/fabric)
 
 <p class="align center">
-<h3><code>fabric</code> is an open-source framework for augmenting humans using AI.</h3>
+<h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 </p>
 
 [What and Why](#whatandwhy) •
