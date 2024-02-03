@@ -43,20 +43,19 @@ Fabric was created to address this by enabling everyone to granularly apply AI t
 
 > AI isn't a thing; it's a _magnifier_ of a thing. And that thing is **human creativity**.
 
-### Breaking challenges into components
+We believe the purpose of technology is to help humans flourish, so when we talk about AI we start with the **human** problems we want to solve.
+
+### Breaking problems into components
+
+Our approach is to break problems into components (see below) and then apply AI to them one at a time.
 
 <img width="2078" alt="augmented_challenges" src="https://github.com/danielmiessler/fabric/assets/50654/31997394-85a9-40c2-879b-b347e4701f06">
 
-
-
-We don't start with technology. We start with human problems.
-
-
 ### Too many prompts
 
-The biggest challenge I faced in 2023——and still have today—is **the sheer number of AI prompts out there**. We all have prompts that are useful, but it's hard to manage them, discover new ones, _and manage the different versions of the ones we like_.
+Prompts are good for this, but the biggest challenge I faced in 2023——and that still exists today—is **the sheer number of AI prompts out there**. We all have prompts that are useful, but it's hard to discover new ones, know if they are good or not, _and manage different versions of the ones we like_.
 
-One of <code>fabric</code>'s main features is helping people collect and integrate modular AI functionality (in this case: prompts), which we call _Patterns_, into various parts of their lives.
+One of <code>fabric</code>'s primary features is helping people collect and integrate prompts, which we call _Patterns_, into various parts of their lives.
 
 Fabric has patterns (prompts) for all sorts of life and work activities, including:
 
@@ -71,15 +70,31 @@ Fabric has patterns (prompts) for all sorts of life and work activities, includi
 - Create social media posts from any content input
 - And a million more…
 
+### Our approach to prompting
+
+Fabric _Patterns_ are different than most prompts you'll see. 
+
+- **First, we use `Markdown` to help ensure maximum readability and editability**. This not only helps the creator make a good one, but also anyone who wants to deeply understand what it does. _Importantly, this also includes the AI you're sending it to!_
+
+Here's an example of a Fabric Pattern.
+
+<img width="1461" alt="pattern-example" src="https://github.com/danielmiessler/fabric/assets/50654/b910c551-9263-405f-9735-71ca69bbab6d">
+
+- **Next, we are extremely clear in our instructions**, and we use the Markdown structure to emphasize what we want the AI to do, and in what order.
+
+- **And finally, we tend to use the System section of the prompt almost exclusively**. In over a year of being heads-down with this stuff, we've just seen more efficacy from doing that. If that changes, or we're shown data that says otherwise, we will adjust.
+
 ## Quickstart
 
-There are three main ways to get started with Fabric.
+There are three (3) main ways to get started with Fabric.
 
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
 ### 1. Just use the patterns (prompts)
 
 If you're not looking to do anything fancy, and you just want a lot of great prompts, you can navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring!
+
+We hope that if you used nothing else from Fabric, the patterns themselves would be worth the project existing on its own. 
 
 You can use any of those in any AI application that you have!
 
