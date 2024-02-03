@@ -290,10 +290,6 @@ The content features a conversation between two individuals discussing various t
 
 ## Meta
 
-`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024. 
-<br />
-<a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
-
 > [!NOTE]  
 > Special thanks to the following people for their inspiration and contributions!
 
@@ -307,5 +303,7 @@ The content features a conversation between two individuals discussing various t
 <a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/9218431?v=4" title="Jonathan Dunn" width="50" height="50"></a>
 <a href="https://github.com/danielmiessler"><img src="https://avatars.githubusercontent.com/u/688589?v=4" title="Scott Behrens" width="50" height="50"></a>
 
-
+`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024. 
+<br /><br />
+<a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
 
