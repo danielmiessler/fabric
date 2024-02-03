@@ -131,7 +131,7 @@ The Fabric ecosystem has three primary components, all named within this textile
 
 - The **Mill** is the (optional) server that makes **Patterns** available.
 - **Patterns** are the actual granular AI use cases (prompts).
-- **Stitch** are chained together _Patterns_ that create advanced functionality (see below).
+- **Stitches** are chained together _Patterns_ that create advanced functionality (see below).
 - **Looms** are the client-side apps that call a specific **Pattern** hosted by a **Mill**.
 
 ### CLI-native
