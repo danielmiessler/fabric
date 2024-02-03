@@ -18,9 +18,8 @@
 [What and Why](#whatandwhy) •
 [Philosophy](#philosophy) •
 [Quickstart](#quickstart) •
+[Structure](#structureandnaming) •
 [Examples](#examples) •
-[Structure](#structure) •
-[Naming](#naming) •
 [Meta](#meta)
 
 </div>
@@ -125,7 +124,7 @@ We expect this client to be ready very within a week or so, and we'll update the
 
 Fabric is themed off of, well… _fabric_—as in…woven materials. So, think blankets, quilts, patterns, etc. Here's the concept and structure:
 
-## Components
+### Components
 
 The Fabric ecosystem has three primary components, all named within this textile theme.
 
