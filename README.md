@@ -106,6 +106,8 @@ The wisdom of crowds for the win.
 
 <img width="2070" alt="fabric_mill_architecture" src="https://github.com/danielmiessler/fabric/assets/50654/ec3bd9b5-d285-483d-9003-7a8e6d842584">
 
+<br />
+
 But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure! 
 
 To get started, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own Patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
