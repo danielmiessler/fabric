@@ -8,7 +8,8 @@
 ![Static Badge](https://img.shields.io/badge/mission-ai%20augmentation-blue)
 <br />
 ![GitHub top language](https://img.shields.io/github/languages/top/danielmiessler/fabric)
-
+<br />
+![GitHub last commit](https://img.shields.io/github/last-commit/danielmiessler/fabric)
 
 <p class="align center">
 <h5><code>fabric</code> is an open-source framework for augmenting humans using AI.</h5>
