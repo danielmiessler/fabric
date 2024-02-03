@@ -8,9 +8,7 @@
 ![Static Badge](https://img.shields.io/badge/mission-ai%20augmentation-blue)
 <br />
 ![GitHub top language](https://img.shields.io/github/languages/top/danielmiessler/fabric)
-<br />
 ![GitHub last commit](https://img.shields.io/github/last-commit/danielmiessler/fabric)
-<br />
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 <p class="align center">
