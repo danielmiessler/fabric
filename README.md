@@ -12,6 +12,7 @@
 </p>
 
 [What and Why](#whatandwhy) •
+[Philosophy](#philosophy) •
 [Quickstart](#quickstart) •
 [Usage](#usage) •
 [Examples](#examples) •
@@ -21,7 +22,9 @@
 
 </div>
 
-<br />
+![GitHub Repo stars](https://img.shields.io/github/stars/danielmiessler/fabric)
+![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)
+
 
 ## What and Why
 
@@ -37,6 +40,9 @@ Fabric was created to address this by enabling everyone to granularly apply AI t
 
 <img width="2078" alt="augmented_challenges" src="https://github.com/danielmiessler/fabric/assets/50654/31997394-85a9-40c2-879b-b347e4701f06">
 
+> AI isn't a thing. It's a magnifier of a thing. And that thing is human creativity.
+
+We don't start with technology. We start with human problems.
 
 
 ### Too many prompts
