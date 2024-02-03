@@ -299,4 +299,20 @@ The content features a conversation between two individuals discussing various t
 - **Joel Parish** for super useful input on the project's Github directory structure.
 - **Jonathan Dunn** for spectacular work on the soon-to-be-released universal client.
 
+### Contributors
+
+## Contributors
+
+<!---
+npx contributor-faces --exclude "*bot*" --limit 70 --repo "https://github.com/amplication/amplication"
+
+change the height and width for each of the contributors from 80 to 50.
+--->
+
+[//]: contributor-faces
+<a href="https://github.com/sbehrens"><img src="https://avatars.githubusercontent.com/u/43705455?v=4" title="yuval-hazaz" width="50" height="50"></a>
+<a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/12671072?v=4" title="iddan" width="50" height="50"></a>
+
+[//]: contributor-faces
+
 <a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
