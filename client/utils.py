@@ -4,6 +4,8 @@ from openai import OpenAI
 import pyperclip
 import sys
 from dotenv import load_dotenv
+from requests.exceptions import HTTPError
+from tqdm import tqdm
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
@@ -12,7 +14,8 @@ env_file = os.path.join(config_directory, ".env")
 
 class Standalone:
     def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
-        env_file = os.path.expanduser(env_file)  # Expand the tilde to the full path
+        # Expand the tilde to the full path
+        env_file = os.path.expanduser(env_file)
         load_dotenv(env_file)
         try:
             apikey = os.environ["OPENAI_API_KEY"]
@@ -116,43 +119,86 @@ class Standalone:
 
 class Update:
     def __init__(self):
-        # Initialize with the root API URL
         self.root_api_url = "https://api.github.com/repos/danielmiessler/fabric/contents/patterns?ref=main"
         self.config_directory = os.path.expanduser("~/.config/fabric")
-        self.pattern_directory = os.path.join(self.config_directory, "patterns")
-        # Ensure local directory exists
+        self.pattern_directory = os.path.join(
+            self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
-        self.get_github_directory_contents(self.root_api_url, self.pattern_directory)
+        self.update_patterns()  # Call the update process from a method.
+
+    def update_patterns(self):
+        try:
+            self.progress_bar = tqdm(desc="Downloading files", unit="file")
+            self.get_github_directory_contents(
+                self.root_api_url, self.pattern_directory)
+            # Close progress bar on success before printing the message.
+            self.progress_bar.close()
+        except HTTPError as e:
+            # Ensure progress bar is closed on HTTPError as well.
+            self.progress_bar.close()
+            if e.response.status_code == 403:
+                print("GitHub API rate limit exceeded. Please wait before trying again.")
+                sys.exit()
+            else:
+                print(f"Failed to download patterns due to an HTTP error: {e}")
+            sys.exit()  # Exit after handling the error.
 
     def download_file(self, url, local_path):
-        """
-        Download a file from a URL to a local path.
-        """
-        response = requests.get(url)
-        response.raise_for_status()  # This will raise an exception for HTTP error codes
-        with open(local_path, "wb") as f:
-            f.write(response.content)
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            with open(local_path, "wb") as f:
+                f.write(response.content)
+            self.progress_bar.update(1)
+        except HTTPError as e:
+            print(f"Failed to download file {url}. HTTP error: {e}")
+            sys.exit()
 
     def process_item(self, item, local_dir):
-        """
-        Process an individual item, downloading if it's a file, or processing further if it's a directory.
-        """
         if item["type"] == "file":
-            print(f"Downloading file: {item['name']} to {local_dir}")
-            self.download_file(
-                item["download_url"], os.path.join(local_dir, item["name"])
-            )
+            self.download_file(item["download_url"],
+                               os.path.join(local_dir, item["name"]))
         elif item["type"] == "dir":
             new_dir = os.path.join(local_dir, item["name"])
             os.makedirs(new_dir, exist_ok=True)
             self.get_github_directory_contents(item["url"], new_dir)
 
     def get_github_directory_contents(self, api_url, local_dir):
-        """
-        Fetches the contents of a directory in a GitHub repository and downloads files, recursively handling directories.
-        """
-        response = requests.get(api_url)
-        response.raise_for_status()  # This will raise an exception for HTTP error codes
-        jsonList = response.json()
-        for item in jsonList:
-            self.process_item(item, local_dir)
+        try:
+            response = requests.get(api_url)
+            response.raise_for_status()
+            jsonList = response.json()
+            for item in jsonList:
+                self.process_item(item, local_dir)
+        except HTTPError as e:
+            if e.response.status_code == 403:
+                print("GitHub API rate limit exceeded. Please wait before trying again.")
+                self.progress_bar.close()  # Ensure the progress bar is cleaned up properly
+            else:
+                print(
+                    f"Failed to fetch directory contents due to an HTTP error: {e}")
+
+
+class Setup:
+    def __init__(self):
+        self.config_directory = os.path.expanduser("~/.config/fabric")
+        self.pattern_directory = os.path.join(
+            self.config_directory, "patterns")
+        os.makedirs(self.pattern_directory, exist_ok=True)
+        self.env_file = os.path.join(self.config_directory, ".env")
+
+    def api_key(self, api_key):
+        if not os.path.exists(self.env_file):
+            with open(self.env_file, "w") as f:
+                f.write(f"OPENAI_API_KEY={api_key}")
+            print(f"OpenAI API key set to {api_key}")
+
+    def patterns(self):
+        Update()
+        sys.exit()
+
+    def run(self):
+        print("Welcome to Fabric. Let's get started.")
+        apikey = input("Please enter your OpenAI API key\n")
+        self.api_key(apikey.strip())
+        self.patterns()
