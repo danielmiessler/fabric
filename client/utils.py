@@ -28,7 +28,7 @@ class UserConfig:
 class Standalone:
     def __init__(self, args, pattern=''):
         try:
-            c = UserConfig.from_env_file(env_file).openai_api_key
+            c = UserConfig.from_env_file(env_file)
             self.client = OpenAI(api_key=c.openai_api_key)
         except FileNotFoundError:
             print("No API key found. Use the --apikey option to set the key")
