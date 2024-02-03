@@ -122,7 +122,7 @@ We're almost done with a `fabric` client that will let you do all sorts of cool 
 
 We expect this client to be ready very within a week or so, and we'll update the Quickstart as soon as it is.
 
-## Structure and naming
+## Structure
 
 Fabric is themed off of, well… _fabric_—as in…woven materials. So, think blankets, quilts, patterns, etc. Here's the concept and structure:
 
