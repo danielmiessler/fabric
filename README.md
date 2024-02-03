@@ -3,7 +3,9 @@
 <img src="./images/fabric-logo-gif.gif" alt="fabriclogo" width="400" height="400"/>
 
 # `fabric`
-https://img.shields.io/badge/mission-ai%20augmentation-blue
+
+![Static Badge](https://img.shields.io/badge/mission-ai%20augmentation-blue)
+
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 
 [What and Why](#whatandwhy) •
