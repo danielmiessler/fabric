@@ -22,9 +22,13 @@
 
 Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but **it's not easy to integrate this functionality into our lives.**
 
-_In other words, AI doesn't have a capabilities problem—it has an **integration** problem._
+```markdown
+<p align="center">
+<h4></h4>_In other words, AI doesn't have a capabilities problem—it has an **integration** problem._</h4>
+</p>
+```
 
-Fabric was created to address that problem by allowing everyone to leverage AI throughout our life and work.
+Fabric was created to address this by enabling everyone to granularly apply AI to everyday challenges.
 
 ### Too many prompts
 
@@ -53,7 +57,7 @@ There are three main ways to get started with Fabric.
 
 ### 1. Just use the patterns (prompts)
 
-If you're not looking to do anything fancy, and you just want a lot of great prompts, you can navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring! 
+If you're not looking to do anything fancy, and you just want a lot of great prompts, you can navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring!
 
 You can use any of those in any AI application that you have!
 
@@ -61,7 +65,7 @@ You can use any of those in any AI application that you have!
 
 If you want your very own Fabric server, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
 
-### 3. The standalone client 
+### 3. The standalone client
 
 We're almost done with a universal client that will let you do all sorts of cool stuff, including:
 
@@ -198,6 +202,7 @@ One of the coolest parts of the project is that it's **command-line native**!
 Each pattern (prompt) you see in the `/patterns` directory can be used in any AI application you use, but you can also set up your own server using the `/server` code and then call APIs directly!
 
 Once you're set up, you can do things like:
+
 ```bash
 # Take any idea from `stdin` and send it to the `/write_essay` API!
 cat "An idea that coding is like speaking with rules." | write_essay
@@ -212,7 +217,6 @@ Fabric is themed off of, well… _fabric_—as in…woven materials. So, think b
 - Chaining together _Patterns_ to create advanced functionality is called a **Stitch**.
 - The optional server-side functionality of `fabric` is called the **Mill**.
 - The optional client-side scripts within `fabric` are called **Looms**.
-
 
 ## More Documentation
 
