@@ -28,7 +28,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--stream",
         "-s",
-        help="Use this option if you are piping output to another app. The output will not be streamed",
+        help="Use this option if you want to see the results in realtime. NOTE: You will not be able to pipe the output into another command.",
         action="store_true",
     )
     parser.add_argument(
