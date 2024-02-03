@@ -290,7 +290,8 @@ The content features a conversation between two individuals discussing various t
 
 ## Meta
 
-`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024. <a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
+`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024. 
+<a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
 
 > [!NOTE]  
 > Special thanks to the following people for their inspiration and contributions!
