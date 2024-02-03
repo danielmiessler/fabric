@@ -7,7 +7,9 @@
 ![Static Badge](https://img.shields.io/badge/mission-human_flourishing-green)
 ![Static Badge](https://img.shields.io/badge/mission-ai%20augmentation-blue)
 
-<h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
+<p class="align center">
+<h5><code>fabric</code> is an open-source framework for augmenting humans using AI.</h5>
+</p>
 
 [What and Why](#whatandwhy) •
 [Quickstart](#quickstart) •
