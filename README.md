@@ -4,7 +4,7 @@
 
 # `fabric`
 
-![Static Badge](https://img.shields.io/badge/mission-human_flourishing-green)
+![Static Badge](https://img.shields.io/badge/mission-human_flourishing-purple)
 ![Static Badge](https://img.shields.io/badge/mission-ai%20augmentation-blue)
 
 <p class="align center">
