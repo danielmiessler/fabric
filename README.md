@@ -45,7 +45,7 @@ We believe the purpose of technology is to help humans flourish, so when we talk
 
 ### Breaking problems into components
 
-Our approach is to break problems into components (see below) and then apply AI to them one at a time. See below for some examples.
+Our approach is to break problems into individual pieces (see below) and then apply AI to them one at a time. See below for some examples.
 
 <img width="2078" alt="augmented_challenges" src="https://github.com/danielmiessler/fabric/assets/50654/31997394-85a9-40c2-879b-b347e4701f06">
 
