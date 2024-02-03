@@ -69,7 +69,7 @@ Fabric has Patterns for all sorts of life and work activities, including:
 
 ### Our approach to prompting
 
-Fabric _Patterns_ are different than most prompts you'll see. 
+Fabric _Patterns_ are different than most prompts you'll see.
 
 - **First, we use `Markdown` to help ensure maximum readability and editability**. This not only helps the creator make a good one, but also anyone who wants to deeply understand what it does. _Importantly, this also includes the AI you're sending it to!_
 
@@ -97,7 +97,7 @@ If you're not looking to do anything fancy, and you just want a lot of great pro
 
 We hope that if you used nothing else from Fabric, the Patterns by themselves will make the project useful.
 
-You can use any of the Patterns you see there in any AI application that you have, whether that's ChatGPT or some other app or website. Our plan and prediction is that people will soon be sharing many more than those we've published, and they will be way better than ours. 
+You can use any of the Patterns you see there in any AI application that you have, whether that's ChatGPT or some other app or website. Our plan and prediction is that people will soon be sharing many more than those we've published, and they will be way better than ours.
 
 The wisdom of crowds for the win.
 
@@ -107,7 +107,7 @@ The wisdom of crowds for the win.
 
 <br />
 
-But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure! 
+But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure!
 
 To get started, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own Patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
 
@@ -303,7 +303,6 @@ The content features a conversation between two individuals discussing various t
 <a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/9218431?v=4" title="Jonathan Dunn" width="50" height="50"></a>
 <a href="https://github.com/danielmiessler"><img src="https://avatars.githubusercontent.com/u/688589?v=4" title="Scott Behrens" width="50" height="50"></a>
 
-`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024. 
+`fabric` was created by <a href="https://danielmiessler.com/subscribe" target="_blank">Daniel Miessler</a> in January of 2024.
 <br /><br />
 <a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
-
