@@ -6,6 +6,9 @@
 
 ![Static Badge](https://img.shields.io/badge/mission-human_flourishing-purple)
 ![Static Badge](https://img.shields.io/badge/mission-ai%20augmentation-blue)
+![GitHub Repo stars](https://img.shields.io/github/stars/danielmiessler/fabric)
+![GitHub top language](https://img.shields.io/github/languages/top/danielmiessler/fabric)
+
 
 <p class="align center">
 <h5><code>fabric</code> is an open-source framework for augmenting humans using AI.</h5>
@@ -22,8 +25,8 @@
 
 </div>
 
-![GitHub Repo stars](https://img.shields.io/github/stars/danielmiessler/fabric)
-![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)
+
+
 
 
 ## What and Why
@@ -247,3 +250,5 @@ Special thanks to the following people for inspiration and contributions.
 - **Caleb Sima** for pushing me over the edge of whether to make this a public project or not.
 - **Joel Parish** for super useful input on the project's Github directory structure.
 - **Jonathan Dunn** for spectacular work on the soon-to-be-released universal client.
+
+![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)
