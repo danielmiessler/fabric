@@ -290,7 +290,7 @@ The content features a conversation between two individuals discussing various t
 
 ## Meta
 
-`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024.
+`fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024. <a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
 
 > [!NOTE]  
 > Special thanks to the following people for their inspiration and contributions!
@@ -299,12 +299,11 @@ The content features a conversation between two individuals discussing various t
 - **Joel Parish** for super useful input on the project's Github directory structure.
 - **Jonathan Dunn** for spectacular work on the soon-to-be-released universal client.
 
-### Contributors
+### Primary contributors
 
-[//]: contributor-faces
-<a href="https://github.com/sbehrens"><img src="https://avatars.githubusercontent.com/u/688589?v=4" title="yuval-hazaz" width="50" height="50"></a>
-<a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/9218431?v=4" title="iddan" width="50" height="50"></a>
+<a href="https://github.com/sbehrens"><img src="https://avatars.githubusercontent.com/u/50654?v=4" title="Daniel Miessler" width="50" height="50"></a>
+<a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/9218431?v=4" title="Jonathan Dunn" width="50" height="50"></a>
+<a href="https://github.com/danielmiessler"><img src="https://avatars.githubusercontent.com/u/688589?v=4" title="Scott Behrens" width="50" height="50"></a>
 
-[//]: contributor-faces
 
-<a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
+
