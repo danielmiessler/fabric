@@ -18,7 +18,7 @@
 [What and Why](#whatandwhy) •
 [Philosophy](#philosophy) •
 [Quickstart](#quickstart) •
-[Structure](#structureandnaming) •
+[Structure](#structure) •
 [Examples](#examples) •
 [Meta](#meta)
 
