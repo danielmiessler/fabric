@@ -78,6 +78,10 @@ Fabric _Patterns_ are different than most prompts you'll see.
 
 Here's an example of a Fabric Pattern.
 
+```bash
+https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
+```
+
 <img width="1461" alt="pattern-example" src="https://github.com/danielmiessler/fabric/assets/50654/b910c551-9263-405f-9735-71ca69bbab6d">
 
 - **Next, we are extremely clear in our instructions**, and we use the Markdown structure to emphasize what we want the AI to do, and in what order.
