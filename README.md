@@ -6,7 +6,7 @@
 
 ![Static Badge](https://img.shields.io/badge/mission-human_flourishing-purple)
 ![Static Badge](https://img.shields.io/badge/mission-ai%20augmentation-blue)
-![GitHub Repo stars](https://img.shields.io/github/stars/danielmiessler/fabric)
+<br />
 ![GitHub top language](https://img.shields.io/github/languages/top/danielmiessler/fabric)
 
 
