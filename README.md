@@ -4,7 +4,7 @@
 
 # `fabric`
 
-![Static Badge](https://img.shields.io/badge/mission-human_flourishing_via_ai_augmentation-purple)
+![Static Badge](https://img.shields.io/badge/mission-human_flourishing_via_AI_augmentation-purple)
 <br />
 ![GitHub top language](https://img.shields.io/github/languages/top/danielmiessler/fabric)
 ![GitHub last commit](https://img.shields.io/github/last-commit/danielmiessler/fabric)
