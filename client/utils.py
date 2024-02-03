@@ -13,7 +13,7 @@ class Standalone:
     def __init__(self, args, pattern=''):
         try:
             with open(env_file, "r") as f:
-                apikey = f.read().split("=")[1]
+                apikey = f.read().split("=")[1].strip()
                 self.client = OpenAI(api_key=apikey)
         except FileNotFoundError:
             print("No API key found. Use the --apikey option to set the key")
