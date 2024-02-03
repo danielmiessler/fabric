@@ -47,17 +47,17 @@ We believe the purpose of technology is to help humans flourish, so when we talk
 
 ### Breaking problems into components
 
-Our approach is to break problems into components (see below) and then apply AI to them one at a time.
+Our approach is to break problems into components (see below) and then apply AI to them one at a time. See below for some examples.
 
 <img width="2078" alt="augmented_challenges" src="https://github.com/danielmiessler/fabric/assets/50654/31997394-85a9-40c2-879b-b347e4701f06">
 
 ### Too many prompts
 
-Prompts are good for this, but the biggest challenge I faced in 2023——and that still exists today—is **the sheer number of AI prompts out there**. We all have prompts that are useful, but it's hard to discover new ones, know if they are good or not, _and manage different versions of the ones we like_.
+Prompts are good for this, but the biggest challenge I faced in 2023——which still exists today—is **the sheer number of AI prompts out there**. We all have prompts that are useful, but it's hard to discover new ones, know if they are good or not, _and manage different versions of the ones we like_.
 
 One of <code>fabric</code>'s primary features is helping people collect and integrate prompts, which we call _Patterns_, into various parts of their lives.
 
-Fabric has patterns (prompts) for all sorts of life and work activities, including:
+Fabric has Patterns for all sorts of life and work activities, including:
 
 - Extracting the most interesting parts of YouTube videos and podcasts
 - Writing an essay in your own voice with just an idea as an input
@@ -94,17 +94,21 @@ There are three (3) main ways to get started with Fabric.
 
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
-### 1. Just use the patterns (prompts)
+### 1. Just use the Patterns
 
 If you're not looking to do anything fancy, and you just want a lot of great prompts, you can navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring!
 
-We hope that if you used nothing else from Fabric, the patterns themselves would be worth the project existing on its own. 
+We hope that if you used nothing else from Fabric, the Patterns by themselves will make the project useful.
 
-You can use any of those in any AI application that you have!
+You can use any of the Patterns you see there in any AI application that you have, whether that's ChatGPT or some other app or website. Our plan and prediction is that people will soon be sharing many more than those we've published, and they will be way better than ours. 
 
-### 2. Create your own Fabric Mill (server)
+The wisdom of crowds for the win.
 
-If you want your very own Fabric server, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
+### 2. Create your own Fabric Mill (Server)
+
+But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure! 
+
+To get started, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own Patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
 
 ### 3. The standalone client
 
@@ -116,33 +120,74 @@ We're almost done with a universal client that will let you do all sorts of cool
 
 We expect this client to be ready very within a day or two, and we'll update the Quickstart as soon as it is.
 
-## Usage
+### Components and naming
 
-`fabric`'s main function is to make **Patterns** available to everyone in an open ecosystem, i.e., to allow people to share and fork prompts in a transparent, scalable, and dependable way.
-
-But it also includes two other components that make it possible for AI enthusiasts and developers to _build your own Personal AI Ecosystem_.
-
-_In other words you can have your own server, with your own copy of `fabric`, running your own specific combination of **Patterns** for your specific use cases._
-
-### Components
-
-Here are the three `fabric` ecosystem pieces and how they work together.
+The Fabric ecosystem has three primary components, all named within the textile theme.
 
 - The **Mill** is the (optional) server that makes **Patterns** available.
-- **Patterns** are the actual AI use cases.
+- **Patterns** are the actual granular AI use cases (prompts).
 - **Looms** are the modular, client-side apps that call a specific **Pattern** hosted by a **Mill**.
+
+### Directly calling Patterns
 
 One key feature of `fabric` and its Markdown-based format is the ability to ** directly reference** (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
 
-As an example, here's how to call _the direct location_ of the **system** prompt for the `extract_wisdom` pattern.
+As an example, here's how to call _the direct location_ of the `extract_wisdom` pattern.
 
-```
+```bash
 https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
 ```
 
 This means you can cleanly, and directly reference any pattern for use in a web-based AI app, your own code, or wherever!
 
 Even better, you can also have your [Mill](https://github.com/danielmiessler/fabric/tree/main#naming) functionality directly call **system** and **user** prompts from `fabric`, meaning you can have your personal AI ecosystem automatically kept up to date with the latest version of your favorite [Patterns](https://github.com/danielmiessler/fabric/tree/main#naming).
+
+Here's what that looks like in code:
+
+```bash
+https://github.com/danielmiessler/fabric/blob/main/server/fabric_api_server.py
+```
+
+```python
+# /extwis
+@app.route("/extwis", methods=["POST"])
+@auth_required  # Require authentication
+def extwis():
+    data = request.get_json()
+
+    # Warn if there's no input
+    if "input" not in data:
+        return jsonify({"error": "Missing input parameter"}), 400
+
+    # Get data from client
+    input_data = data["input"]
+
+    # Set the system and user URLs
+    system_url = "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/system.md"
+    user_url = "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/user.md"
+
+    # Fetch the prompt content
+    system_content = fetch_content_from_url(system_url)
+    user_file_content = fetch_content_from_url(user_url)
+
+    # Build the API call
+    system_message = {"role": "system", "content": system_content}
+    user_message = {"role": "user", "content": user_file_content + "\n" + input_data}
+    messages = [system_message, user_message]
+    try:
+        response = openai.chat.completions.create(
+            model="gpt-4-1106-preview",
+            messages=messages,
+            temperature=0.0,
+            top_p=1,
+            frequency_penalty=0.1,
+            presence_penalty=0.1,
+        )
+        assistant_message = response.choices[0].message.content
+        return jsonify({"response": assistant_message})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+```
 
 ## Examples
 
