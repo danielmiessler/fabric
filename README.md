@@ -301,17 +301,9 @@ The content features a conversation between two individuals discussing various t
 
 ### Contributors
 
-## Contributors
-
-<!---
-npx contributor-faces --exclude "*bot*" --limit 70 --repo "https://github.com/amplication/amplication"
-
-change the height and width for each of the contributors from 80 to 50.
---->
-
 [//]: contributor-faces
-<a href="https://github.com/sbehrens"><img src="https://avatars.githubusercontent.com/u/43705455?v=4" title="yuval-hazaz" width="50" height="50"></a>
-<a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/12671072?v=4" title="iddan" width="50" height="50"></a>
+<a href="https://github.com/sbehrens"><img src="https://avatars.githubusercontent.com/u/688589?v=4" title="yuval-hazaz" width="50" height="50"></a>
+<a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/9218431?v=4" title="iddan" width="50" height="50"></a>
 
 [//]: contributor-faces
 
