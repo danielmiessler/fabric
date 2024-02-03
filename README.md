@@ -292,7 +292,8 @@ The content features a conversation between two individuals discussing various t
 
 `fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024.
 
-Special thanks to the following people for inspiration and contributions.
+> [!NOTE]  
+> Special thanks to the following people for their inspiration and contributions!
 
 - **Caleb Sima** for pushing me over the edge of whether to make this a public project or not.
 - **Joel Parish** for super useful input on the project's Github directory structure.
