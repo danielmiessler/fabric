@@ -27,9 +27,9 @@
 
 Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but **it's not easy to integrate this functionality into our lives.**
 
-<p class="align center">
+<div align="center">
 <h5>In other words, AI doesn't have a capabilities problem—it has an <em>integration</em> problem.</h5>
-</p>
+</div>
 
 Fabric was created to address this by enabling everyone to granularly apply AI to everyday challenges.
 
