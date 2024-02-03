@@ -18,7 +18,6 @@
 [What and Why](#whatandwhy) •
 [Philosophy](#philosophy) •
 [Quickstart](#quickstart) •
-[Usage](#usage) •
 [Examples](#examples) •
 [Structure](#structure) •
 [Naming](#naming) •
@@ -106,27 +105,47 @@ The wisdom of crowds for the win.
 
 ### 2. Create your own Fabric Mill (Server)
 
+<img width="2070" alt="fabric_mill_architecture" src="https://github.com/danielmiessler/fabric/assets/50654/ec3bd9b5-d285-483d-9003-7a8e6d842584">
+
 But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure! 
 
 To get started, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own Patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
 
 ### 3. The standalone client
 
-We're almost done with a universal client that will let you do all sorts of cool stuff, including:
+We're almost done with a `fabric` client that will let you do all sorts of cool stuff, including:
 
 - Calling patterns without connecting to a Fabric server (direct to OpenAI).
 - Streaming mode to get instant and dynamic results.
 - Other cool stuff…
 
-We expect this client to be ready very within a day or two, and we'll update the Quickstart as soon as it is.
+We expect this client to be ready very within a week or so, and we'll update the Quickstart as soon as it is.
 
-### Components and naming
+## Structure and naming
 
-The Fabric ecosystem has three primary components, all named within the textile theme.
+Fabric is themed off of, well… _fabric_—as in…woven materials. So, think blankets, quilts, patterns, etc. Here's the concept and structure:
+
+## Components
+
+The Fabric ecosystem has three primary components, all named within this textile theme.
 
 - The **Mill** is the (optional) server that makes **Patterns** available.
 - **Patterns** are the actual granular AI use cases (prompts).
-- **Looms** are the modular, client-side apps that call a specific **Pattern** hosted by a **Mill**.
+- **Stitch** are chained together _Patterns_ that create advanced functionality (see below).
+- **Looms** are the client-side apps that call a specific **Pattern** hosted by a **Mill**.
+
+### CLI-native
+
+One of the coolest parts of the project is that it's **command-line native**!
+
+Each Pattern you see in the `/patterns` directory can be used in any AI application you use, but you can also set up your own server using the `/server` code and then call APIs directly!
+
+Once you're set up, you can do things like:
+
+```bash
+# Take any idea from `stdin` and send it to the `/write_essay` API!
+cat "An idea that coding is like speaking with rules." | write_essay
+```
 
 ### Directly calling Patterns
 
@@ -269,46 +288,6 @@ The content features a conversation between two individuals discussing various t
 10. Nietzsche's walks
 ```
 
-## Structure
-
-<img width="2070" alt="fabric_mill_architecture" src="https://github.com/danielmiessler/fabric/assets/50654/ec3bd9b5-d285-483d-9003-7a8e6d842584">
-
-There are multiple ways to use `fabric`.
-
-1. You can just use the `/patterns` in other AI applications/websites.
-2. You can build your own server and host these patterns there (plus your own) using the Mill code in `/infrastructure/server`.
-3. You can use the `fabric` client to switch between these (coming soon)!
-
-If you are self-hosting your own Mill, the image above shows you what's going on. Basically, you are sending your input to your Fabric Mill, and your Fabric Mill then sends the input and the pattern on to OpenAI. Local model options also being added soon.
-
-## CLI-native
-
-One of the coolest parts of the project is that it's **command-line native**!
-
-Each pattern (prompt) you see in the `/patterns` directory can be used in any AI application you use, but you can also set up your own server using the `/server` code and then call APIs directly!
-
-Once you're set up, you can do things like:
-
-```bash
-# Take any idea from `stdin` and send it to the `/write_essay` API!
-cat "An idea that coding is like speaking with rules." | write_essay
-```
-
-## Naming
-
-Fabric is themed off of, well… _fabric_—as in…woven materials. So, think blankets, quilts, patterns, etc. Here's the concept and structure:
-
-- The project itself is called **Fabric**, and it's the parent concept.
-- Individual AI modules (think prompts) are called **Patterns**.
-- Chaining together _Patterns_ to create advanced functionality is called a **Stitch**.
-- The optional server-side functionality of `fabric` is called the **Mill**.
-- The optional client-side scripts within `fabric` are called **Looms**.
-
-## More Documentation
-
-> [!IMPORTANT]\
-> We are pushing hard to add lots more functionality and documentation. Please be patient and let us know what you'd like to see in Issues. Thank you!
-
 ## Meta
 
 `fabric` was created by <a href="https://danielmiessler.com/" target="_blank">Daniel Miessler</a> in January of 2024.
@@ -319,4 +298,4 @@ Special thanks to the following people for inspiration and contributions.
 - **Joel Parish** for super useful input on the project's Github directory structure.
 - **Jonathan Dunn** for spectacular work on the soon-to-be-released universal client.
 
-![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)
+<a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
