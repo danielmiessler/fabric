@@ -3,6 +3,7 @@ import os
 from openai import OpenAI
 import pyperclip
 import sys
+from dotenv import load_dotenv
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
@@ -10,11 +11,16 @@ env_file = os.path.join(config_directory, ".env")
 
 
 class Standalone:
-    def __init__(self, args, pattern=""):
+    def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
+        env_file = os.path.expanduser(env_file)  # Expand the tilde to the full path
+        load_dotenv(env_file)
         try:
-            with open(env_file, "r") as f:
-                apikey = f.read().split("=")[1]
-                self.client = OpenAI(api_key=apikey)
+            apikey = os.environ["OPENAI_API_KEY"]
+            self.client = OpenAI()
+            self.client.api_key = apikey
+        except KeyError:
+            print("OPENAI_API_KEY not found in environment variables.")
+
         except FileNotFoundError:
             print("No API key found. Use the --apikey option to set the key")
             sys.exit()
@@ -42,7 +48,7 @@ class Standalone:
             messages = [user_message]
         try:
             stream = self.client.chat.completions.create(
-                model="gpt-4-turbo-preview",
+                model="gpt-4",
                 messages=messages,
                 temperature=0.0,
                 top_p=1,
@@ -63,6 +69,7 @@ class Standalone:
                 sys.stdout.flush()
         except Exception as e:
             print(f"Error: {e}")
+            print(e)
         if self.args.copy:
             pyperclip.copy(buffer)
         if self.args.output:
@@ -88,16 +95,18 @@ class Standalone:
             messages = [user_message]
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4-turbo-preview",
+                model="gpt-4",
                 messages=messages,
                 temperature=0.0,
                 top_p=1,
                 frequency_penalty=0.1,
                 presence_penalty=0.1,
             )
+            print(response)
             print(response.choices[0].message.content)
         except Exception as e:
             print(f"Error: {e}")
+            print(e)
         if self.args.copy:
             pyperclip.copy(response.choices[0].message.content)
         if self.args.output:
