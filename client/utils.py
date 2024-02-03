@@ -1,20 +1,35 @@
-import requests
+import configparser
 import os
-from openai import OpenAI
-import pyperclip
 import sys
+from dataclasses import dataclass
+from typing import Self
+
+import pyperclip
+import requests
+from openai import OpenAI
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
-env_file = os.path.join(config_directory, '.env')
+env_file = os.path.join(config_directory, ".env")
+
+
+@dataclass
+class UserConfig:
+    openai_api_key: str
+
+    @classmethod
+    def from_env_file(cls, filepath: str) -> Self:
+        config = configparser.ConfigParser()
+        with open(env_file) as stream:
+            config.read_string("[DEFAULT]\n" + stream.read())
+        return cls(openai_api_key=config["DEFAULT"]["openai_api_key"])
 
 
 class Standalone:
     def __init__(self, args, pattern=''):
         try:
-            with open(env_file, "r") as f:
-                apikey = f.read().split("=")[1]
-                self.client = OpenAI(api_key=apikey)
+            c = UserConfig.from_env_file(env_file).openai_api_key
+            self.client = OpenAI(api_key=c.openai_api_key)
         except FileNotFoundError:
             print("No API key found. Use the --apikey option to set the key")
             sys.exit()
