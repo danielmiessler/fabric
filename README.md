@@ -3,7 +3,7 @@
 <img src="./images/fabric-logo-gif.gif" alt="fabriclogo" width="400" height="400"/>
 
 # `fabric`
-
+https://img.shields.io/badge/mission-ai%20augmentation-blue
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 
 [What and Why](#whatandwhy) •
@@ -22,13 +22,17 @@
 
 Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but **it's not easy to integrate this functionality into our lives.**
 
-```markdown
 <p align="center">
-<h4></h4>_In other words, AI doesn't have a capabilities problem—it has an **integration** problem._</h4>
+<h4>_In other words, AI doesn't have a capabilities problem—it has an **integration** problem._</h4>
 </p>
-```
 
 Fabric was created to address this by enabling everyone to granularly apply AI to everyday challenges.
+
+### Breaking challenges into components
+
+<img width="2078" alt="augmented_challenges" src="https://github.com/danielmiessler/fabric/assets/50654/31997394-85a9-40c2-879b-b347e4701f06">
+
+
 
 ### Too many prompts
 
