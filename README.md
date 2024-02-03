@@ -26,8 +26,6 @@
 
 </div>
 
-
-
 > [!NOTE]  
 > We're still working on both code and documentation. Please be patient with us as we roll things out in the next week.
 
@@ -41,11 +39,15 @@ Since the start of 2023 and GenAI we've seen a massive number of AI applications
 
 Fabric was created to address this by enabling everyone to granularly apply AI to everyday challenges.
 
+## Philosophy
+
+> AI isn't a thing; it's a _magnifier_ of a thing. And that thing is **human creativity**.
+
 ### Breaking challenges into components
 
 <img width="2078" alt="augmented_challenges" src="https://github.com/danielmiessler/fabric/assets/50654/31997394-85a9-40c2-879b-b347e4701f06">
 
-> AI isn't a thing. It's a magnifier of a thing. And that thing is human creativity.
+
 
 We don't start with technology. We start with human problems.
 
