@@ -28,10 +28,10 @@
 
 
 
+> [!NOTE]  
+> We're still working on both code and documentation. Please be patient with us as we roll things out in the next week.
 
-
-## What and Why
-<hr>
+## What and why
 
 Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but **it's not easy to integrate this functionality into our lives.**
 
@@ -105,7 +105,7 @@ _In other words you can have your own server, with your own copy of `fabric`, ru
 
 ### Components
 
-Here are the three `fabric` ecosystem pieces, and how they work together.
+Here are the three `fabric` ecosystem pieces and how they work together.
 
 - The **Mill** is the (optional) server that makes **Patterns** available.
 - **Patterns** are the actual AI use cases.
