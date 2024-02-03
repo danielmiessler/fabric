@@ -58,7 +58,7 @@ if __name__ == "__main__":
         sys.exit()
     if args.update:
         Update()
-        print("patterns updated:")
+        print("Your Patterns have been updated.")
         sys.exit()
     standalone = Standalone(args, args.pattern)
     if args.list:
