@@ -10,6 +10,8 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/danielmiessler/fabric)
 <br />
 ![GitHub last commit](https://img.shields.io/github/last-commit/danielmiessler/fabric)
+<br />
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 <p class="align center">
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
