@@ -165,7 +165,7 @@ The client, by default, runs Fabric patterns without needing a server (the Patte
 
 1. Run the `summarize` Pattern based on input from `stdin`. In this case, the body of an article.
 ```bash
-pbpaste | fabric -pattern summarize
+pbpaste | fabric --pattern summarize
 ```
 2. Run the `analyze_claims` Pattern with the `--stream` option to get immediate and streaming results.
 ```bash
