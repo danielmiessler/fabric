@@ -128,8 +128,49 @@ echo 'alias fabric="~/Development/fabric/client/fabric" >> .zshrc'
 
 Once you have it all set up, here's how to use it.
 
+1. Check out the options
+`fabric -h`
 
 
+```bash
+ge: fabric [-h] [--text TEXT] [--copy] [--output [OUTPUT]] [--stream] [--list]
+              [--update] [--pattern PATTERN] [--setup]
+
+An open-source framework for augmenting humans using AI.
+
+options:
+  -h, --help            show this help message and exit
+  --text TEXT, -t TEXT  Text to extract summary from
+  --copy, -c            Copy the response to the clipboard
+  --output [OUTPUT], -o [OUTPUT]
+                        Save the response to a file
+  --stream, -s          Use this option if you want to see the results in realtime.
+                        NOTE: You will not be able to pipe the output into another
+                        command.
+  --list, -l            List available patterns
+  --update, -u          Update patterns
+  --pattern PATTERN, -p PATTERN
+                        The pattern (prompt) to use
+  --setup               Set up your fabric instance
+```
+2. Set up the client
+```bash
+fabric --setup
+```
+You'll be asked to enter your OpenAI API key, which will be written to `~/.config/fabric/.env`. Patterns will then be downloaded from Github, which will take a few moments.
+
+### Example commands
+
+The client, by default, runs Fabric patterns without needing a server (the Patterns were downloaded during setup). This means the client connects directly to OpenAI using the input given and the Fabric pattern used.
+
+1. Run the `summarize` Pattern based on input from `stdin`. In this case, the body of an article.
+```bash
+pbpaste | fabric -pattern summarize
+```
+2. Run the `analyze_claims` Pattern with the `--stream` option to get immediate and streaming results.
+```bash
+pbpaste | fabric --stream --pattern analyze_claims
+```
 
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
