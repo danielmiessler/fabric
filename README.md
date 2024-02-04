@@ -171,10 +171,14 @@ pbpaste | fabric -pattern summarize
 ```bash
 pbpaste | fabric --stream --pattern analyze_claims
 ```
+> [!NOTE]  
+> More examples coming in the next few days, including a demo video!
+
+### 2. Just use the Patterns
 
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
-### 2. Just use the Patterns
+<br />
 
 If you're not looking to do anything fancy, and you just want a lot of great prompts, you can navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring!
 
@@ -360,8 +364,6 @@ The content features a conversation between two individuals discussing various t
 9. Bertrand Russell's definition of philosophy
 10. Nietzsche's walks
 ```
-> [!NOTE]  
-> We're still working on both code and documentation. Please be patient with us as we roll things out in the next week.
 
 ## Meta
 
