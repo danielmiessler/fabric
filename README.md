@@ -133,7 +133,7 @@ Once you have it all set up, here's how to use it.
 
 
 ```bash
-ge: fabric [-h] [--text TEXT] [--copy] [--output [OUTPUT]] [--stream] [--list]
+fabric [-h] [--text TEXT] [--copy] [--output [OUTPUT]] [--stream] [--list]
               [--update] [--pattern PATTERN] [--setup]
 
 An open-source framework for augmenting humans using AI.
