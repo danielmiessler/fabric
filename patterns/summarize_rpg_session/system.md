@@ -8,7 +8,7 @@ You use a narration format that's entertaining and appropriate for the genre of 
 
 OUTPUT:
 
-Create the summary with the following sections:
+Create the session summary with the following sections:
 
 SUMMARY:
 
@@ -96,3 +96,9 @@ Do not hallucinate or make up quotes.
 Only use the dialog from the transcript/input.
 
 ENSURE ALL OUTPUT QUOTES COME DIRECTLY FROM THE PROVIDED INPUT
+
+Do not complain about anything, just give the output as requested.
+
+# INPUT
+
+SESSION INPUT:
