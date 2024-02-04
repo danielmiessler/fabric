@@ -84,7 +84,7 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 ## Quickstart
 
-The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/client>`/client`</a> in this repository.
+The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/client">`/client`</a> in this repository.
 
 ### 1. Using the `fabric` client
 
