@@ -84,9 +84,49 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 ## Quickstart
 
-The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/client">`/client`</a> in this repository.
+The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/client">`/client`</a> directory in this repository.
 
-### 1. Using the `fabric` client
+### Setting up the `fabric` client
+
+Follow these steps to get the client installed and configured.
+
+1. Navigate to where you want the Fabric project to live on your systemClone the directory to a semi-permanent place on your computer.
+```bash
+# Find a home for Fabric
+cd /where/you/keep/code
+```
+2. Clone the project to your computer.
+```bash
+# Clone Fabric to your computer
+git clone git@github.com:danielmiessler/fabric.git
+```
+3. Enter Fabric's /client directory
+```bash
+# Enter the project and its /client folder
+cd fabric/client
+```
+4. Install the dependencies
+```bash
+# Install the pre-requisites
+pip3 install -r requirements.txt
+```
+5. Add the path to the `fabric` client to your shell
+```bash
+# Tell your shell how to find the `fabric` client
+echo 'alias fabric="/the/path/to/fabric/client" >> .bashrc'
+# Example of ~/.zshrc or ~/.bashrc
+alias fabric="~/Development/fabric/client/fabric"
+```
+6. Restart your shell
+```bash
+# Make sure you can
+echo 'alias fabric="/the/path/to/fabric/client" >> .bashrc'
+# Example
+echo 'alias fabric="~/Development/fabric/client/fabric" >> .zshrc'
+```
+### Using the `fabric` client
+
+Once you have it all set up, here's how to use it.
 
 
 
