@@ -23,9 +23,6 @@
 
 </div>
 
-> [!NOTE]  
-> We're still working on both code and documentation. Please be patient with us as we roll things out in the next week.
-
 ## What and why
 
 Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but **it's not easy to integrate this functionality into our lives.**
@@ -87,11 +84,16 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 ## Quickstart
 
-There are three (3) main ways to get started with Fabric.
+The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/client>`/client`</a> in this repository.
+
+### 1. Using the `fabric` client
+
+
+
 
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
-### 1. Just use the Patterns
+### 2. Just use the Patterns
 
 If you're not looking to do anything fancy, and you just want a lot of great prompts, you can navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring!
 
@@ -101,7 +103,7 @@ You can use any of the Patterns you see there in any AI application that you hav
 
 The wisdom of crowds for the win.
 
-### 2. Create your own Fabric Mill (Server)
+### 3. Create your own Fabric Mill (Server)
 
 <img width="2070" alt="fabric_mill_architecture" src="https://github.com/danielmiessler/fabric/assets/50654/ec3bd9b5-d285-483d-9003-7a8e6d842584">
 
@@ -110,16 +112,6 @@ The wisdom of crowds for the win.
 But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure!
 
 To get started, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own Patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
-
-### 3. The standalone client
-
-We're almost done with a `fabric` client that will let you do all sorts of cool stuff, including:
-
-- Calling patterns without connecting to a Fabric server (direct to OpenAI).
-- Streaming mode to get instant and dynamic results.
-- Other cool stuff…
-
-We expect this client to be ready very within a week or so, and we'll update the Quickstart as soon as it is.
 
 ## Structure
 
@@ -287,6 +279,8 @@ The content features a conversation between two individuals discussing various t
 9. Bertrand Russell's definition of philosophy
 10. Nietzsche's walks
 ```
+> [!NOTE]  
+> We're still working on both code and documentation. Please be patient with us as we roll things out in the next week.
 
 ## Meta
 
