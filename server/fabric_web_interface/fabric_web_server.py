@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import requests
 import json
 from flask import send_from_directory
+import os
 
 ##################################################
 ##################################################
@@ -15,7 +16,7 @@ from flask import send_from_directory
 
 
 def send_request(prompt, endpoint):
-    base_url = "http://hostorip.tld:13337"
+    base_url = "http://127.0.0.1:13337"
     url = f"{base_url}{endpoint}"
     headers = {
         "Content-Type": "application/json",
@@ -54,4 +55,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(host="172.30.0.176", port=13338, debug=True)
+    app.run(host="127.0.0.1", port=13338, debug=True)

@@ -1,4 +1,4 @@
-#!/Users/jonathandunn/myAugmented/.venv/bin/python
+#!/usr/bin/env python3
 
 import pyperclip
 
