@@ -31,7 +31,7 @@
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
 - [Quickstart](#quickstart)
-  - [1. Just use the Patterns (prompts)](#1-just-use-the-patterns-prompts)
+  - [1. Just use the Patterns (prompts)](#1-just-use-the-patterns)
   - [2. Create your own Fabric Mill (Server)](#2-create-your-own-fabric-mill-server)
 - [Structure](#structure)
   - [Components](#components)
@@ -210,7 +210,7 @@ pbpaste | fabric --stream --pattern analyze_claims
 > [!NOTE]  
 > More examples coming in the next few days, including a demo video!
 
-### 2. Just use the Patterns (prompts)
+### 2. Just use the Patterns/Prompts
 
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
@@ -224,7 +224,7 @@ You can use any of the Patterns you see there in any AI application that you hav
 
 The wisdom of crowds for the win.
 
-### 3. Create your own Fabric Mill (Server)
+### 3. Create your own Fabric Mill/Server
 
 <img width="2070" alt="fabric_mill_architecture" src="https://github.com/danielmiessler/fabric/assets/50654/ec3bd9b5-d285-483d-9003-7a8e6d842584">
 
