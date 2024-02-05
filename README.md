@@ -40,12 +40,8 @@
 - [Examples](#examples)
 - [Meta](#meta)
   - [Primary contributors](#primary-contributors)
- 
 
-
-https://github.com/danielmiessler/fabric/assets/50654/3993d838-376b-40d1-b039-21bba2285d2d
-
-
+https://github.com/danielmiessler/fabric/assets/50654/60d5d4b3-af74-4cd7-b27e-3787700e5b49
 
 ## What and why
 
