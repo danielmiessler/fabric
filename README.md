@@ -31,8 +31,8 @@
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
 - [Quickstart](#quickstart)
-  - [1. Just use the Patterns](just-use-the-patterns)
-  - [2. Create your own Fabric Mill](create-your-own-fabric-mill)
+  - [1. Just use the Patterns (Prompts)](just-use-the-patterns)
+  - [2. Create your own Fabric Mill (Server)](create-your-own-fabric-mill)
 - [Structure](#structure)
   - [Components](#components)
   - [CLI-native](#cli-native)
@@ -191,7 +191,7 @@ fabric --setup
 
 You'll be asked to enter your OpenAI API key, which will be written to `~/.config/fabric/.env`. Patterns will then be downloaded from Github, which will take a few moments.
 
-### Example commands
+#### Example commands
 
 The client, by default, runs Fabric patterns without needing a server (the Patterns were downloaded during setup). This means the client connects directly to OpenAI using the input given and the Fabric pattern used.
 
@@ -210,7 +210,7 @@ pbpaste | fabric --stream --pattern analyze_claims
 > [!NOTE]  
 > More examples coming in the next few days, including a demo video!
 
-### 2. Just use the Patterns
+### Just use the Patterns
 
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
@@ -224,7 +224,7 @@ You can use any of the Patterns you see there in any AI application that you hav
 
 The wisdom of crowds for the win.
 
-### 3. Create your own Fabric Mill
+### Create your own Fabric Mill
 
 <img width="2070" alt="fabric_mill_architecture" src="https://github.com/danielmiessler/fabric/assets/50654/ec3bd9b5-d285-483d-9003-7a8e6d842584">
 
