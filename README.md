@@ -31,7 +31,7 @@
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
 - [Quickstart](#quickstart)
-  - [1. Just use the Patterns (prompts)](#just-use-the-patterns)
+  - [1. Just use the Patterns (prompts)](#1-just-use-the-patterns-prompts)
   - [2. Create your own Fabric Mill (Server)](#2-create-your-own-fabric-mill-server)
 - [Structure](#structure)
   - [Components](#components)
@@ -210,7 +210,7 @@ pbpaste | fabric --stream --pattern analyze_claims
 > [!NOTE]  
 > More examples coming in the next few days, including a demo video!
 
-### 2. Just use the Patterns
+### 2. Just use the Patterns (prompts)
 
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
