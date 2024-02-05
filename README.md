@@ -23,6 +23,8 @@
 
 </div>
 
+# Navigation
+
 - [What and why](#what-and-why)
 - [Philosophy](#philosophy)
   - [Breaking problems into components](#breaking-problems-into-components)
