@@ -43,7 +43,7 @@
 
 ## What and why
 
-Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but **it's not easy to integrate this functionality into our lives.**
+Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but _it's not easy to integrate this functionality into our lives._
 
 <div align="center">
 <h4>In other words, AI doesn't have a capabilities problem—it has an <em>integration</em> problem.</h4>
@@ -262,7 +262,7 @@ cat "An idea that coding is like speaking with rules." | write_essay
 
 ### Directly calling Patterns
 
-One key feature of `fabric` and its Markdown-based format is the ability to ** directly reference** (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
+One key feature of `fabric` and its Markdown-based format is the ability to _ directly reference_ (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
 
 As an example, here's how to call _the direct location_ of the `extract_wisdom` pattern.
 
@@ -272,7 +272,7 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 This means you can cleanly, and directly reference any pattern for use in a web-based AI app, your own code, or wherever!
 
-Even better, you can also have your [Mill](https://github.com/danielmiessler/fabric/tree/main#naming) functionality directly call **system** and **user** prompts from `fabric`, meaning you can have your personal AI ecosystem automatically kept up to date with the latest version of your favorite [Patterns](https://github.com/danielmiessler/fabric/tree/main#naming).
+Even better, you can also have your [Mill](https://github.com/danielmiessler/fabric/tree/main#naming) functionality directly call _system_ and _user_ prompts from `fabric`, meaning you can have your personal AI ecosystem automatically kept up to date with the latest version of your favorite [Patterns](https://github.com/danielmiessler/fabric/tree/main#naming).
 
 Here's what that looks like in code:
 
@@ -406,9 +406,9 @@ The content features a conversation between two individuals discussing various t
 > [!NOTE]  
 > Special thanks to the following people for their inspiration and contributions!
 
-- **Caleb Sima** for pushing me over the edge of whether to make this a public project or not.
-- **Joel Parish** for super useful input on the project's Github directory structure.
-- **Jonathan Dunn** for spectacular work on the soon-to-be-released universal client.
+- _Caleb Sima_ for pushing me over the edge of whether to make this a public project or not.
+- _Joel Parish_ for super useful input on the project's Github directory structure.
+- _Jonathan Dunn_ for spectacular work on the soon-to-be-released universal client.
 
 ### Primary contributors
 
