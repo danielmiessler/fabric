@@ -4,6 +4,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Virtual Environments
+client/source/
+client/.zshrc
+
 # C extensions
 *.so
 
