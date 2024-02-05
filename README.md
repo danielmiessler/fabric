@@ -23,7 +23,7 @@
 
 </div>
 
-# Navigation
+## Navigation
 
 - [What and why](#what-and-why)
 - [Philosophy](#philosophy)
