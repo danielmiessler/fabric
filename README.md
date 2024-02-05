@@ -25,21 +25,24 @@
 
 ## Navigation
 
-- [What and why](#what-and-why)
-- [Philosophy](#philosophy)
-  - [Breaking problems into components](#breaking-problems-into-components)
-  - [Too many prompts](#too-many-prompts)
-  - [The Fabric approach to prompting](#our-approach-to-prompting)
-- [Quickstart](#quickstart)
-  - [1. Just use the Patterns (prompts)](#1-just-use-the-patterns-prompts)
-  - [2. Create your own Fabric Mill (Server)](#2-create-your-own-fabric-mill-server)
-- [Structure](#structure)
-  - [Components](#components)
-  - [CLI-native](#cli-native)
-  - [Directly calling Patterns](#directly-calling-patterns)
-- [Examples](#examples)
-- [Meta](#meta)
-  - [Primary contributors](#primary-contributors)
+[What and Why](#what-and-why) •
+[Philosophy](#philosophy) •
+
+- [Breaking problems into components](#breaking-problems-into-components)
+- [Too many prompts](#too-many-prompts)
+- [The Fabric approach to prompting](#the-fabric-approach-to-prompting)
+  [Quickstart](#quickstart) •
+- [Setting up the `fabric` client](#setting-up-the-fabric-client)
+- [Using the `fabric` client](#using-the-fabric-client)
+- [Just use the Patterns (prompts)](#just-use-the-patterns-prompts)
+- [Create your own Fabric Mill (Server)](#create-your-own-fabric-mill-server)
+  [Structure](#structure) •
+- [Components](#components)
+- [CLI-native](#cli-native)
+- [Directly calling Patterns](#directly-calling-patterns)
+  [Examples](#examples) •
+  [Meta](#meta) •
+- [Primary contributors](#primary-contributors)
 
 ## What and why
 
