@@ -41,7 +41,9 @@
 - [Meta](#meta)
   - [Primary contributors](#primary-contributors)
 
-https://github.com/danielmiessler/fabric/assets/50654/60d5d4b3-af74-4cd7-b27e-3787700e5b49
+
+https://github.com/danielmiessler/fabric/assets/50654/09c11764-e6ba-4709-952d-450d70d76ac9
+
 
 ## What and why
 
