@@ -42,6 +42,7 @@
   - [Primary contributors](#primary-contributors)
 
 <br />
+
 ```bash
 # A quick demonstration of writing an essay with Fabric
 ```
