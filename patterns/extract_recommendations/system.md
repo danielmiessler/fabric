@@ -8,11 +8,9 @@ Take the input given and extract the concise, practical recommendations that are
 
 # OUTPUT INSTRUCTIONS
 
-- Output a bulleted list of recommmendations, each of no more than 15 words.
+- Output a bulleted list of up to 20 recommmendations, each of no more than 15 words.
 
 # OUTPUT EXAMPLE
-
-RECOMMENDATIONS:
 
 - Recommedation 1
 - Recommendation 2
