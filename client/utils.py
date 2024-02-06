@@ -118,6 +118,25 @@ class Standalone:
             with open(self.args.output, "w") as f:
                 f.write(response.choices[0].message.content)
 
+    def fetch_available_models(self):
+        headers = {
+            "Authorization": f"Bearer { self.client.api_key }"
+        }
+        
+        response = requests.get("https://api.openai.com/v1/models", headers=headers)
+
+        if response.status_code == 200:
+            models = response.json().get("data", [])
+            # Filter only gpt models
+            gpt_models = [model for model in models if model.get("id", "").startswith(("gpt"))]
+            # Sort the models alphabetically by their ID
+            sorted_gpt_models = sorted(gpt_models, key=lambda x: x.get("id"))
+            
+            for model in sorted_gpt_models:
+                print(model.get("id"))
+        else:
+            print(f"Failed to fetch models: HTTP {response.status_code}")
+
 
 class Update:
     def __init__(self):
@@ -183,29 +202,6 @@ class Update:
                 self.progress_bar.close()  # Ensure the progress bar is cleaned up properly
             else:
                 print(f"Failed to fetch directory contents due to an HTTP error: {e}")
-    def list_models():
-        AVAILABLE_MODELS = [
-            "gpt-4-0125-preview",
-            "gpt-4-turbo-preview",
-            "gpt-4-1106-preview",
-            "gpt-4-vision-preview",
-            "gpt-4",
-            "gpt-4-0613",
-            "gpt-4-32k",
-            "gpt-4-32k-0613",
-            "gpt-3.5-turbo-0125",
-            "gpt-3.5-turbo",
-            "gpt-3.5-turbo-1106",
-            "gpt-3.5-turbo-instruct",
-            "gpt-3.5-turbo-16k",
-            "gpt-3.5-turbo-0613",
-            "gpt-3.5-turbo-16k-0613"
-        ]
-
-        print("Available models:")
-        for model in AVAILABLE_MODELS:
-            print(model)
-
 
 class Setup:
     def __init__(self):

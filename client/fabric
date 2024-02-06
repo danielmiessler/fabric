@@ -77,7 +77,7 @@ if __name__ == "__main__":
             print("No patterns found")
             sys.exit()
     if args.listmodels:
-        Update.list_models()
+        standalone.fetch_available_models()
         sys.exit()
     if args.text is not None:
         text = args.text
