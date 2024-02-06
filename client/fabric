@@ -39,6 +39,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--setup", help="Set up your fabric instance", action="store_true"
     )
+    parser.add_argument(
+        "--model", "-m", help="Select the model to use (GPT-4 by default)", default="gpt-4"
+    )
+    parser.add_argument(
+        "--listmodels", help="List all available models", action="store_true"
+    )
 
     args = parser.parse_args()
     home_holder = os.path.expanduser("~")
@@ -70,6 +76,9 @@ if __name__ == "__main__":
         except FileNotFoundError:
             print("No patterns found")
             sys.exit()
+    if args.listmodels:
+        Update.list_models()
+        sys.exit()
     if args.text is not None:
         text = args.text
     else:
