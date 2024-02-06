@@ -30,6 +30,10 @@ OUTPUT:
 
 The output should look like the following:
 
+ONE SENTENCE SUMMARY:
+
+A one-sentence summary of the content and why it's compelling, in less than 30 words.
+
 LABELS:
 
 Cybersecurity, Writing, Running, Copywriting
@@ -51,6 +55,7 @@ OUPUT FORMAT:
 Your output is ONLY in JSON. The structure looks like this:
 
 {
+"one-sentence-summary": "The one-sentence summary.",
 "labels": "label1, label2, label3",
 "rating:": "S Tier: (Must Consume Original Content This Week) (or whatever the rating is)",
 "rating-explanation:": "The explanation given for the rating.",
