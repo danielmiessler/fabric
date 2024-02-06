@@ -51,7 +51,7 @@ class Standalone:
             messages = [user_message]
         try:
             stream = self.client.chat.completions.create(
-                model="gpt-4",
+                model="",
                 messages=messages,
                 temperature=0.0,
                 top_p=1,
@@ -98,7 +98,7 @@ class Standalone:
             messages = [user_message]
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4",
+                model="gpt-4-turbo-preview",
                 messages=messages,
                 temperature=0.0,
                 top_p=1,
