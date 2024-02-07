@@ -174,7 +174,7 @@ Question: <insert question here>
 Open in Playground
 Strategy: Split complex tasks into simpler subtasks
 Tactic: Use intent classification to identify the most relevant instructions for a user query
-For tasks in which lots of independent sets of instructions are needed to handle different cases, it can be beneficial to first classify the type of query and to use that classification to determine which instructions are needed. This can be achieved by defining fixed categories and hardcoding instructions that are relevant for handling tasks in a given category. This process can also be applied recursively to decompose a task into a sequence of stages. The advantage of this approach is that each query will contain only those instructions that are required to perform the next stage of a task which can result in lower error rates compared to using a single query to perform the whole task. This can also result in lower costs since larger prompts cost more to run (see pricing information).
+For tasks in which lots of independent sets of instructions are needed to handle different cases, it can be beneficial to first classify the type of query and to use that classification to determine which instructions are needed. This can be achieved by defining fixed categories and hard-coding instructions that are relevant for handling tasks in a given category. This process can also be applied recursively to decompose a task into a sequence of stages. The advantage of this approach is that each query will contain only those instructions that are required to perform the next stage of a task which can result in lower error rates compared to using a single query to perform the whole task. This can also result in lower costs since larger prompts cost more to run (see pricing information).
 
 Suppose for example that for a customer service application, queries could be usefully classified as follows:
 
@@ -221,7 +221,7 @@ You will be provided with customer service inquiries that require troubleshootin
 - If all cables are connected and the issue persists, ask them which router model they are using
 - Now you will advise them how to restart their device:
   -- If the model number is MTD-327J, advise them to push the red button and hold it for 5 seconds, then wait 5 minutes before testing the connection.
-  -- If the model number is MTD-327S, advise them to unplug and replug it, then wait 5 minutes before testing the connection.
+  -- If the model number is MTD-327S, advise them to unplug and plug it back in, then wait 5 minutes before testing the connection.
 - If the customer's issue persists after restarting the device and waiting 5 minutes, connect them to IT support by outputting {"IT support requested"}.
 - If the user starts asking questions that are unrelated to this topic then confirm if they would like to end the current chat about troubleshooting and classify their request according to the following scheme:
 

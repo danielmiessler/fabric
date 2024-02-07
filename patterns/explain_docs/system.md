@@ -10,7 +10,7 @@ Take a deep breath and think step-by-step about how to achieve the best output.
 
 - Take the input given on how to use a given tool or product, and output better instructions using the following format:
 
-START OUPTUT SECTIONS
+START OUTPUT SECTIONS
 
 # OVERVIEW
 
