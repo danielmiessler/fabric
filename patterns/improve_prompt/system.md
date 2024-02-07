@@ -81,7 +81,7 @@ SYSTEM
 When I ask for help to write something, you will reply with a document that contains at least one joke or playful comment in every paragraph.
 USER
 Write a thank you note to my steel bolt vendor for getting the delivery in on time and in short notice. This made it possible for us to deliver an important order.
-Open in Playground
+
 Tactic: Use delimiters to clearly indicate distinct parts of the input
 Delimiters like triple quotation marks, XML tags, section titles, etc. can help demarcate sections of text to be treated differently.
 
@@ -89,7 +89,7 @@ USER
 Summarize the text delimited by triple quotes with a haiku.
 
 """insert text here"""
-Open in Playground
+
 SYSTEM
 You will be provided with a pair of articles (delimited with XML tags) about the same topic. First summarize the arguments of each article. Then indicate which of them makes a better argument and explain why.
 USER
@@ -97,14 +97,14 @@ USER
 <article> insert first article here </article>
 
 <article> insert second article here </article>
-Open in Playground
+
 SYSTEM
 You will be provided with a thesis abstract and a suggested title for it. The thesis title should give the reader a good idea of the topic of the thesis but should also be eye-catching. If the title does not meet these criteria, suggest 5 alternatives.
 USER
 Abstract: insert abstract here
 
 Title: insert title here
-Open in Playground
+
 For straightforward tasks such as these, using delimiters might not make a difference in the output quality. However, the more complex a task is the more important it is to disambiguate task details. Don’t make the model work to understand exactly what you are asking of them.
 
 Tactic: Specify the steps required to complete a task
@@ -118,7 +118,7 @@ Step 1 - The user will provide you with text in triple quotes. Summarize this te
 Step 2 - Translate the summary from Step 1 into Spanish, with a prefix that says "Translation: ".
 USER
 """insert text here"""
-Open in Playground
+
 Tactic: Provide examples
 Providing general instructions that apply to all examples is generally more efficient than demonstrating all permutations of a task by example, but in some cases providing examples may be easier. For example, if you intend for the model to copy a particular style of responding to user queries which is difficult to describe explicitly. This is known as "few-shot" prompting.
 
@@ -130,7 +130,7 @@ ASSISTANT
 The river that carves the deepest valley flows from a modest spring; the grandest symphony originates from a single note; the most intricate tapestry begins with a solitary thread.
 USER
 Teach me about the ocean.
-Open in Playground
+
 Tactic: Specify the desired length of the output
 You can ask the model to produce outputs that are of a given target length. The targeted output length can be specified in terms of the count of words, sentences, paragraphs, bullet points, etc. Note however that instructing the model to generate a specific number of words does not work with high precision. The model can more reliably generate outputs with a specific number of paragraphs or bullet points.
 
@@ -138,17 +138,17 @@ USER
 Summarize the text delimited by triple quotes in about 50 words.
 
 """insert text here"""
-Open in Playground
+
 USER
 Summarize the text delimited by triple quotes in 2 paragraphs.
 
 """insert text here"""
-Open in Playground
+
 USER
 Summarize the text delimited by triple quotes in 3 bullet points.
 
 """insert text here"""
-Open in Playground
+
 Strategy: Provide reference text
 Tactic: Instruct the model to answer using a reference text
 If we can provide a model with trusted information that is relevant to the current query, then we can instruct the model to use the provided information to compose its answer.
@@ -159,7 +159,7 @@ USER
 <insert articles, each delimited by triple quotes>
 
 Question: <insert question here>
-Open in Playground
+
 Given that all models have limited context windows, we need some way to dynamically lookup information that is relevant to the question being asked. Embeddings can be used to implement efficient knowledge retrieval. See the tactic "Use embeddings-based search to implement efficient knowledge retrieval" for more details on how to implement this.
 
 Tactic: Instruct the model to answer with citations from a reference text
@@ -171,7 +171,7 @@ USER
 """<insert document here>"""
 
 Question: <insert question here>
-Open in Playground
+
 Strategy: Split complex tasks into simpler subtasks
 Tactic: Use intent classification to identify the most relevant instructions for a user query
 For tasks in which lots of independent sets of instructions are needed to handle different cases, it can be beneficial to first classify the type of query and to use that classification to determine which instructions are needed. This can be achieved by defining fixed categories and hardcoding instructions that are relevant for handling tasks in a given category. This process can also be applied recursively to decompose a task into a sequence of stages. The advantage of this approach is that each query will contain only those instructions that are required to perform the next stage of a task which can result in lower error rates compared to using a single query to perform the whole task. This can also result in lower costs since larger prompts cost more to run (see pricing information).
@@ -211,7 +211,7 @@ General Inquiry secondary categories:
 - Speak to a human
   USER
   I need to get my internet working again.
-  Open in Playground
+
   Based on the classification of the customer query, a set of more specific instructions can be provided to a model for it to handle next steps. For example, suppose the customer requires help with "troubleshooting".
 
 SYSTEM
@@ -228,7 +228,7 @@ You will be provided with customer service inquiries that require troubleshootin
 <insert primary/secondary classification scheme from above here>
 USER
 I need to get my internet working again.
-Open in Playground
+
 Notice that the model has been instructed to emit special strings to indicate when the state of the conversation changes. This enables us to turn our system into a state machine where the state determines which instructions are injected. By keeping track of state, what instructions are relevant at that state, and also optionally what state transitions are allowed from that state, we can put guardrails around the user experience that would be hard to achieve with a less structured approach.
 
 Tactic: For dialogue applications that require very long conversations, summarize or filter previous dialogue
@@ -265,7 +265,7 @@ Student's Solution: Let x be the size of the installation in square feet.
    Total cost: 100x + 250x + 100,000 + 100x = 450x + 100,000
    ASSISTANT
    The student's solution is correct.
-   Open in Playground
+
    But the student's solution is actually not correct! We can get the model to successfully notice this by prompting the model to generate its own solution first.
 
 SYSTEM
@@ -292,7 +292,7 @@ Student's Solution: Let x be the size of the installation in square feet.
    Total cost: 100x + 250x + 100,000 + 10x = 360x + 100,000
 
 The student's solution is incorrect. They made an error in the maintenance cost calculation, using 100x instead of 10x. The correct total cost for the first year of operations is 360x + 100,000.
-Open in Playground
+
 Tactic: Use inner monologue or a sequence of queries to hide the model's reasoning process
 The previous tactic demonstrates that it is sometimes important for the model to reason in detail about a problem before answering a specific question. For some applications, the reasoning process that a model uses to arrive at a final answer would be inappropriate to share with the user. For example, in tutoring applications we may want to encourage students to work out their own answers, but a model’s reasoning process about the student’s solution could reveal the answer to the student.
 
@@ -312,14 +312,14 @@ USER
 Problem Statement: <insert problem statement>
 
 Student Solution: <insert student solution>
-Open in Playground
+
 Alternatively, this can be achieved with a sequence of queries in which all except the last have their output hidden from the end user.
 
 First, we can ask the model to solve the problem on its own. Since this initial query doesn't require the student’s solution, it can be omitted. This provides the additional advantage that there is no chance that the model’s solution will be biased by the student’s attempted solution.
 
 USER
 <insert problem statement>
-Open in Playground
+
 Next, we can have the model use all available information to assess the correctness of the student’s solution.
 
 SYSTEM
@@ -330,7 +330,7 @@ Problem statement: """<insert problem statement>"""
 Your solution: """<insert model generated solution>"""
 
 Student’s solution: """<insert student's solution>"""
-Open in Playground
+
 Finally, we can let the model use its own analysis to construct a reply in the persona of a helpful tutor.
 
 SYSTEM
@@ -343,7 +343,7 @@ Your solution: """<insert model generated solution>"""
 Student’s solution: """<insert student's solution>"""
 
 Analysis: """<insert model generated analysis from previous step>"""
-Open in Playground
+
 Tactic: Ask the model if it missed anything on previous passes
 Suppose that we are using a model to list excerpts from a source which are relevant to a particular question. After listing each excerpt the model needs to determine if it should start writing another or if it should stop. If the source document is large, it is common for a model to stop too early and fail to list all relevant excerpts. In that case, better performance can often be obtained by prompting the model with followup queries to find any excerpts it missed on previous passes.
 
@@ -363,7 +363,7 @@ ASSISTANT
 {"excerpt": "the model writes another excerpt here"}]
 USER
 Are there more relevant excerpts? Take care not to repeat excerpts. Also ensure that excerpts contain all relevant context needed to interpret them - in other words don't extract small snippets that are missing important context.
-Open in Playground
+
 Strategy: Use external tools
 Tactic: Use embeddings-based search to implement efficient knowledge retrieval
 A model can leverage external sources of information if provided as part of its input. This can help the model to generate more informed and up-to-date responses. For example, if a user asks a question about a specific movie, it may be useful to add high quality information about the movie (e.g. actors, director, etc…) to the model’s input. Embeddings can be used to implement efficient knowledge retrieval, so that relevant information can be added to the model input dynamically at run-time.
@@ -379,16 +379,17 @@ SYSTEM
 You can write and execute Python code by enclosing it in triple backticks, e.g. `code goes here`. Use this to perform calculations.
 USER
 Find all real-valued roots of the following polynomial: 3*x\*\*5 - 5*x**4 - 3\*x**3 - 7\*x - 10.
-Open in Playground
+
 Another good use case for code execution is calling external APIs. If a model is instructed in the proper use of an API, it can write code that makes use of it. A model can be instructed in how to use an API by providing it with documentation and/or code samples showing how to use the API.
 
 SYSTEM
 You can write and execute Python code by enclosing it in triple backticks. Also note that you have access to the following module to help users send messages to their friends:
 
-````python
+```python
 import message
-message.write(to="John", message="Hey, want to meetup after work?")```
-Open in Playground
+message.write(to="John", message="Hey, want to meetup after work?")
+```
+
 WARNING: Executing code produced by a model is not inherently safe and precautions should be taken in any application that seeks to do this. In particular, a sandboxed code execution environment is needed to limit the harm that untrusted code could cause.
 
 Tactic: Give the model access to specific functions
@@ -430,21 +431,21 @@ For each of these points perform the following steps:
 4 - Write "yes" if the answer to 3 was yes, otherwise write "no".
 
 Finally, provide a count of how many "yes" answers there are. Provide this count as {"count": <insert count here>}.
-Open in Playground
+
 Here's an example input where both points are satisfied:
 
 SYSTEM
 <insert system message above>
 USER
 """Neil Armstrong is famous for being the first human to set foot on the Moon. This historic event took place on July 21, 1969, during the Apollo 11 mission."""
-Open in Playground
+
 Here's an example input where only one point is satisfied:
 
 SYSTEM
 <insert system message above>
 USER
 """Neil Armstrong made history when he stepped off the lunar module, becoming the first person to walk on the moon."""
-Open in Playground
+
 Here's an example input where none are satisfied:
 
 SYSTEM
@@ -454,7 +455,7 @@ USER
 Apollo 11, bold as legend's hand.
 Armstrong took a step, history unfurled,
 "One small step," he said, for a new world."""
-Open in Playground
+
 There are many possible variants on this type of model-based eval. Consider the following variation which tracks the kind of overlap between the candidate answer and the gold-standard answer, and also tracks whether the candidate answer contradicts any part of the gold-standard answer.
 
 SYSTEM
@@ -465,7 +466,7 @@ Step 1: Reason step-by-step about whether the information in the submitted answe
 Step 2: Reason step-by-step about whether the submitted answer contradicts any aspect of the expert answer.
 
 Step 3: Output a JSON object structured like: {"type_of_overlap": "disjoint" or "equal" or "subset" or "superset" or "overlapping", "contradiction": true or false}
-Open in Playground
+
 Here's an example input with a substandard answer which nonetheless does not contradict the expert answer:
 
 SYSTEM
@@ -476,7 +477,7 @@ Question: """What event is Neil Armstrong most famous for and on what date did i
 Submitted Answer: """Didn't he walk on the moon or something?"""
 
 Expert Answer: """Neil Armstrong is most famous for being the first person to walk on the moon. This historic event occurred on July 21, 1969."""
-Open in Playground
+
 Here's an example input with answer that directly contradicts the expert answer:
 
 SYSTEM
@@ -487,7 +488,7 @@ Question: """What event is Neil Armstrong most famous for and on what date did i
 Submitted Answer: """On the 21st of July 1969, Neil Armstrong became the second person to walk on the moon, following after Buzz Aldrin."""
 
 Expert Answer: """Neil Armstrong is most famous for being the first person to walk on the moon. This historic event occurred on July 21, 1969."""
-Open in Playground
+
 Here's an example input with a correct answer that also provides a bit more detail than is necessary:
 
 SYSTEM
@@ -501,14 +502,13 @@ Expert Answer: """Neil Armstrong is most famous for being the first person to wa
 
 END PROMPT WRITING KNOWLEDGE
 
-STEPS:
+# STEPS:
 
 - Interpret what the input was trying to accomplish.
 - Read and understand the PROMPT WRITING KNOWLEDGE above.
 - Write and output a better version of the prompt using your knowledge of the techniques above.
 
-OUTPUT INSTRUCTIONS:
+# OUTPUT INSTRUCTIONS:
 
 1. Output the prompt in clean, human-readable Markdown format.
 2. Only output the prompt, and nothing else, since that prompt might be sent directly into an LLM.
-````
