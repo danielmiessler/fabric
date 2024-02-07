@@ -16,7 +16,7 @@ START OUPTUT SECTIONS
 
 What It Does: (give a 25-word explanation of what the tool does.)
 
-Why People It: (give a 25-word explanation of why the tool is useful.)
+Why People Use It: (give a 25-word explanation of why the tool is useful.)
 
 # HOW TO USE IT
 
