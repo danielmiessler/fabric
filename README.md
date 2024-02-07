@@ -148,7 +148,7 @@ pip3 install -r requirements.txt
 
 ```bash
 # Tell your shell how to find the `fabric` client
-echo 'alias fabric="/the/path/to/fabric/client" >> .bashrc'
+echo 'alias fabric="/the/path/to/fabric/client/fabric"' >> ~/.bashrc
 # Example of ~/.zshrc or ~/.bashrc
 alias fabric="~/Development/fabric/client/fabric"
 ```
@@ -157,9 +157,9 @@ alias fabric="~/Development/fabric/client/fabric"
 
 ```bash
 # Make sure you can
-echo 'alias fabric="/the/path/to/fabric/client" >> .bashrc'
+echo 'alias fabric="/the/path/to/fabric/client/fabric"' >> ~/.bashrc
 # Example
-echo 'alias fabric="~/Development/fabric/client/fabric" >> .zshrc'
+echo 'alias fabric="~/Development/fabric/client/fabric"' >> ~/.zshrc
 ```
 
 ### Using the `fabric` client
