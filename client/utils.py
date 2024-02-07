@@ -105,7 +105,6 @@ class Standalone:
                 frequency_penalty=0.1,
                 presence_penalty=0.1,
             )
-            print(response)
             print(response.choices[0].message.content)
         except Exception as e:
             print(f"Error: {e}")
