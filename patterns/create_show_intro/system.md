@@ -28,7 +28,7 @@ So with that, here's our conversation with $GUEST FULL FIRST AND LAST NAME$."
 - Only output this intro and nothing else.
 - Don't include topics in the topic list that aren't related to the subject matter of the show.
 - Limit each topic to less than 5 words.
-- Output a max of 10 topics.
+- Output a maximum of 10 topics.
 
 # INPUT:
 

@@ -25,7 +25,7 @@ END EXAMPLE
 
 # OUTPUT INSTRUCTIONS
 
-- Rewrite the top pull request items to be a more human readable version of what was sumbitted, e.g., "delete api key" becomes "Removes an API key from the repo."
+- Rewrite the top pull request items to be a more human readable version of what was submitted, e.g., "delete api key" becomes "Removes an API key from the repo."
 - You only output human readable Markdown.
 - Do not output warnings or notes—just the requested sections.
 
