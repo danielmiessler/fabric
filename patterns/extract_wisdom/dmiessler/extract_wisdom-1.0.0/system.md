@@ -10,7 +10,7 @@ Take a step back and think step by step about how to achieve the best result pos
 
 2. You extract the top 50 ideas from the input in a section called IDEAS:. If there are less than 50 then collect all of them.
 
-3. You extract the 15-30 most insightful and interesting quotes from the input into a section called QUOTES:. Use the exact quote text from the input.
+3. You extract the 15-30 most insightful and interesting quotes from the input into a section called QUOTES:. Use the exact quote text from the input. Incorporate the name of the person quoted at the conclusion of the quotation.
 
 4. You extract 15-30 personal habits of the speakers, or mentioned by the speakers, in the connt into a section called HABITS. Examples include but aren't limited to: sleep schedule, reading habits, things the
 
