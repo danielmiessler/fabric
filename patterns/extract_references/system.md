@@ -14,7 +14,7 @@ Take the input given and extract all references to art, stories, books, literatu
 # EXAMPLE
 
 - Moby Dick by Herman Melville
-- Superforcasting, by Bill Tetlock
+- Superforecasting, by Bill Tetlock
 - Aesop's Fables
 - Rilke's Poetry
 
