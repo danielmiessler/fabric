@@ -99,7 +99,7 @@ pattern_path_mappings = {
                "user_url": "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/user.md"}
 }
 
-# /extwis
+# /<pattern> in mapping dictionary
 @app.route("/<pattern>", methods=["POST"])
 @auth_required  # Require authentication
 def mill(pattern):
