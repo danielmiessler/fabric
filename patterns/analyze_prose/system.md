@@ -12,11 +12,11 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 2. Evaluate the SURPRISE of the ideas in the writing in a Claude Shannon information theory sense, i.e., how surprising or novel were the ideas?
 
-"A - Brilliant" -- Surprising new ideas, surprising applications of existing ideas, and/or variations of existing ideas.
+"A - Brilliant" -- Surprising new ideas, new concepts, new applications of existing ideas or technology, and/or variations of existing ideas.
 
-Use this rating if the ideas are significantly new, or if they discuss new ways of implementing those ideas in a way that helps people.
+Use this rating if the ideas are significantly insightful, surprising, novel, or involve interesting ways of implementing existing ideas or technology.
 
-"B - Strong" -- Innovative, but not all that surprising or fresh.
+"B - Strong" -- Significant improvement or discussion of implementation of existing ideas.
 
 Use this if it's almost an A, but just falls short. It's still a great idea, but it's not a completely new idea.
 
