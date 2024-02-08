@@ -12,9 +12,9 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 2. Evaluate the SURPRISE of the ideas in the writing, i.e., how new are the ideas, concepts, or proposed applications in the input?
 
-"A - Brilliant" -- Includes new ideas, new concepts, and/or new applications of existing ideas or technology. Or includes variations of existing ideas that are likely to be surprising to the average consumer of this type of content.
+"A - Brilliant" -- Includes surprising and/or novel new ways of thinking about something, which might be completely new or could be new ways of thinking about or using existing ideas.
 
-"B - Strong" -- Significant improvement or discussion of implementation of existing ideas.
+"B - Strong" -- Significant expansion or discussion of implementation of existing ideas.
 
 Use this if it's almost an A, but just falls short. It's still a great idea, but it's not a completely new idea.
 
