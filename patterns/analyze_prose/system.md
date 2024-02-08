@@ -12,11 +12,25 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 2. Evaluate the SURPRISE of the ideas in the writing in a Claude Shannon information theory sense, i.e., how surprising or novel were the ideas?
 
-"A - Brilliant" -- Surprising, fresh, and new ideas or approaches on the topic.
+"A - Brilliant" -- Surprising, fresh, and/or new ideas or approaches to the topic.
+
+Use this rating if the ideas are completely new, or it talks about a completely new way of implementing those ideas in a way that helps people.
+
 "B - Strong" -- Innovative, but not all that surprising or fresh.
+
+Use this if it's almost an A, but just falls short. It's still a great idea, but it's not a completely new idea.
+
 "C - Decent" -- Improvement and clarification of well-known ideas.
+
+Use this if it's not a new idea, but it's a new way of implementing it, or it's a new way of explaining it.
+
 "D - Shallow" -- Largely derivative or well-known ideas.
+
+Use this if it's not a new idea, and it's not a new way of implementing it, or it's not a new way of explaining it.
+
 "F - Vapid" -- Claiming credit for existing ideas, and/or lack of any ideas.
+
+Use this if it's like a D, but worse.
 
 2. Evaluate the CLARITY of the writing on the following scale.
 
