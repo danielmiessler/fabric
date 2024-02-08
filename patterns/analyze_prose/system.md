@@ -12,9 +12,9 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 2. Evaluate the SURPRISE or NOVELTY of the ideas in the writing, i.e., is it proposing anything new? Is it describing a vision of the future?
 
-"A - Brilliant" -- Relatively new ideas, and/or visionary ideas describing how to think about something, and/ or describing what will happen in the future. Can discuss existing ideas, but does so in a new way.
+"A - Surprising" -- Significant new ideas or applications of existing ideas. Or involves a vision of the future.
 
-"B - Good" -- Good expansion of known ideas, but no vision of the future, or description of how the ideas can be applied.
+"B - Good" -- Expansion of known ideas, but no vision of the future, or description of how the ideas might be applied.
 
 "C - Decent" -- Improvement and/or clarification of well-known ideas.
 
