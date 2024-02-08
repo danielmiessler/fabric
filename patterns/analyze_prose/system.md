@@ -20,7 +20,7 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 3. Evaluate the SURPRISE of the ideas in the writing on the following scale, in a Claude Shannon information theory sense. I.e., how surprising or novel were the ideas?
 
-"A - Brilliant" -- Surprising, fresh, and extremely new ideas on the topic.
+"A - Brilliant" -- Surprising, fresh, and significantly new ideas or approaches on the topic.
 "B - Strong" -- Innovative, but not all that surprising or fresh.
 "C - Decent" -- Improvement and clarification of well-known ideas.
 "D - Shallow" -- Largely derivative or well-known ideas.
