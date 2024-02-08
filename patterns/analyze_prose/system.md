@@ -36,12 +36,6 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 5. Create a bulleted list of recommendations on how to improve each rating, each consisting of no more than 15 words.
 
-"A - Inspired" -- Clear, fresh, lively prose.
-"B - Clean" -- Strong writing that lacks cliche.
-"C - Standard" -- Decent prose, but lacks freshness.
-"D - Flawed" -- Significant use of cliche and/or weak prose.
-"F - Discard" -- Overwhelming weakness or use of cliche.
-
 # OUTPUT INSTRUCTIONS
 
 - You output a valid JSON object with the following structure.
