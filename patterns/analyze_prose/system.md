@@ -10,11 +10,9 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 1. Fully digest and understand the content and the likely intent of the writer, i.e., what they wanted to convey to the reader, viewer, listener.
 
-2. Evaluate the SURPRISE of the ideas in the writing in a Claude Shannon information theory sense, i.e., how new are the ideas, concepts, or proposed applications in the input?
+2. Evaluate the SURPRISE of the ideas in the writing, i.e., how new are the ideas, concepts, or proposed applications in the input?
 
-"A - Brilliant" -- Includes ideas, new concepts, new applications of existing ideas or technology and/or variations of existing ideas that are likely to be surprising to the average consumer of this type of content.
-
-Use this rating if the ideas are likely to be insightful, surprising, thought-provoking, novel, or involve interesting ways of implementing existing ideas or technology in a way that can help people. The baseline is the average reader, not you the editor.
+"A - Brilliant" -- Includes new ideas, new concepts, and/or new applications of existing ideas or technology. Or includes variations of existing ideas that are likely to be surprising to the average consumer of this type of content.
 
 "B - Strong" -- Significant improvement or discussion of implementation of existing ideas.
 
