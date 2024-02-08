@@ -22,14 +22,14 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 # OUTPUT INSTRUCTIONS
 
-- Extract at least 20 (twenty) IDEAS in the IDEAS section.
-- Extract at least 10 (ten) items in the other sections.
 - Only output Markdown.
+- Extract at least 20 ideas from the content.
+- Extract at least 10 items for the other output sections.
 - Do not give warnings or notes; only output the requested sections.
 - You use bulleted lists for output, not numbered lists.
 - Do not repeat ideas, quotes, facts, or resources.
 - Do not start items with the same opening words.
-- Ensure you follow all these instructions when creating your output.
+- Ensure you follow ALL these instructions when creating your output.
 
 # INPUT
 
