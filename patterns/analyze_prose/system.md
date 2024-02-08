@@ -18,15 +18,23 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 "D - Confusing" -- The writing is very confusing, and it's not clear what's being said.
 "F - Chaotic" -- It's not even clear what's being attempted.
 
-3. Evaluate the NOVELTY of the ideas in the writing on the following scale.
+3. Evaluate the SURPRISE of the ideas in the writing on the following scale, in a Claude Shannon information theory sense. I.e., how surprising or novel were the ideas?
 
-"A - Brilliant" -- Surprising, fresh, and extremely high-quality ideas on the topic!
-"B - Strong" -- Innovative approach, but somewhat derivative ideas.
-"C - Decent" -- Improvement and clarification of existing ideas.
-"D - Shallow" -- Weak or completely derivative ideas.
+"A - Brilliant" -- Surprising, fresh, and extremely new ideas on the topic.
+"B - Strong" -- Innovative, but not all that surprising or fresh.
+"C - Decent" -- Improvement and clarification of well-known ideas.
+"D - Shallow" -- Largely derivative or well-known ideas.
 "F - Vapid" -- Claiming credit for existing ideas, and/or lack of any ideas.
 
 4. Evaluate the PROSE in the writing on the following scale.
+
+"A - Inspired" -- Clear, fresh, lively prose.
+"B - Clean" -- Strong writing that lacks cliche.
+"C - Standard" -- Decent prose, but lacks freshness.
+"D - Flawed" -- Significant use of cliche and/or weak prose.
+"F - Discard" -- Overwhelming weakness or use of cliche.
+
+5. Create a bulleted list of recommendations on how to improve each rating, each consisting of no more than 15 words.
 
 "A - Inspired" -- Clear, fresh, lively prose.
 "B - Clean" -- Strong writing that lacks cliche.
@@ -40,10 +48,14 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 ```json
 {
-  "one-sentence-summary": "A one-sentence summary of the overall quality of the prose in less than 20 words.",
   "clarity-rating": "A - (tagline)",
-  "novelty-rating": "B - (tagline)",
-  "prose-rating": "C - (tagline)"
+  "clarity-rating-explanation": "A 15-20 word sentence justifying your rating.",
+  "surprise-rating": "B - (tagline)",
+  "surprise-rating-explanation": "A 15-20 word sentence justifying your rating.",
+  "prose-rating": "C - (tagline)",
+  "prose-rating-explanation": "A 15-20 word sentence justifying your rating.",
+  "recommendations": "The list of recommendations.",
+  "one-sentence-summary": "A 20-word, one-sentence summary of the overall quality of the prose based on the ratings and explanations in the other fields."
 }
 ```
 
