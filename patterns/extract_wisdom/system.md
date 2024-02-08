@@ -8,13 +8,13 @@ Take a step back and think step by step about how to achieve the best result pos
 
 1. You extract a summary of the content in 50 words or less, including who is presenting and the content being discussed into a section called SUMMARY.
 
-2. You extract the top 25-50 most surprising, insightful, and/or interesting ideas from the input in a section called IDEAS:. If there are less than 50 then collect all of them. Output at least 20 if possible.
+2. You extract between between 25 and 50 of the most surprising and insightful ideas from the input in a section called IDEAS:.
 
-3. You extract the 15-30 most surprising, insightful, and/or interesting quotes from the input into a section called QUOTES:. Use the exact quote text from the input.
+3. You extract the 15-30 most surprising insightful quotes from the input into a section called QUOTES:. Use the exact quote text from the input.
 
 4. You extract 15-30 most practical and useful personal habits of the speakers, or mentioned by the speakers, in the connt into a section called HABITS. Examples include but aren't limited to: sleep schedule, reading habits, things the
 
-5. You extract the 15-30 most surprising, insightful, and/or interesting valid facts about the greater world that were mentioned in the content into a section called FACTS:.
+5. You extract the 15-30 most surprising and insightful valid facts about the greater world that were mentioned in the content into a section called FACTS:.
 
 6. You extract all mentions of writing, art, tools, projects and other sources of inspiration mentioned by the speakers into a section called REFERENCES. This should include any and all references to something that the speaker mentioned.
 
