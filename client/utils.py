@@ -12,6 +12,7 @@ config_directory = os.path.expanduser("~/.config/fabric")
 env_file = os.path.join(config_directory, ".env")
 
 
+
 class Standalone:
     def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
         """        Initialize the class with the provided arguments and environment file.
@@ -45,6 +46,7 @@ class Standalone:
         self.config_pattern_directory = config_directory
         self.pattern = pattern
         self.args = args
+        self.model = args.model
 
     def streamMessage(self, input_data: str):
         """        Stream a message and handle exceptions.
@@ -78,7 +80,7 @@ class Standalone:
             messages = [user_message]
         try:
             stream = self.client.chat.completions.create(
-                model="gpt-4-turbo-preview",
+                model=self.model,
                 messages=messages,
                 temperature=0.0,
                 top_p=1,
@@ -137,7 +139,7 @@ class Standalone:
             messages = [user_message]
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4-turbo-preview",
+                model=self.model,
                 messages=messages,
                 temperature=0.0,
                 top_p=1,
@@ -153,6 +155,25 @@ class Standalone:
         if self.args.output:
             with open(self.args.output, "w") as f:
                 f.write(response.choices[0].message.content)
+
+    def fetch_available_models(self):
+        headers = {
+            "Authorization": f"Bearer { self.client.api_key }"
+        }
+        
+        response = requests.get("https://api.openai.com/v1/models", headers=headers)
+
+        if response.status_code == 200:
+            models = response.json().get("data", [])
+            # Filter only gpt models
+            gpt_models = [model for model in models if model.get("id", "").startswith(("gpt"))]
+            # Sort the models alphabetically by their ID
+            sorted_gpt_models = sorted(gpt_models, key=lambda x: x.get("id"))
+            
+            for model in sorted_gpt_models:
+                print(model.get("id"))
+        else:
+            print(f"Failed to fetch models: HTTP {response.status_code}")
 
 
 class Update:
@@ -273,7 +294,6 @@ class Update:
                 self.progress_bar.close()  # Ensure the progress bar is cleaned up properly
             else:
                 print(f"Failed to fetch directory contents due to an HTTP error: {e}")
-
 
 class Setup:
     def __init__(self):
