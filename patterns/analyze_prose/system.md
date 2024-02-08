@@ -12,29 +12,15 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 2. Evaluate the SURPRISE or NOVELTY of the ideas in the writing, i.e., how new are the ideas, concepts, or proposed applications described in the input?
 
-"A - Brilliant" -- Includes at least one of the following:
+"A - Brilliant" -- A new idea or a new way of thinking about or applying existing ideas.
 
-- A relatively new or surprising idea or concept from the perspective of an average reader
-- A relatively novel application of an existing idea
-- A new way of explaining an existing idea
-- A new way of thinking about an existing idea
-- A new way of applying existing ideas to real life
+"B - Strong" -- Good expansion of known ideas, but no novel applications of the ideas.
 
-"B - Strong" -- Good expansion of ideas, but no novel applications of the ideas
+"C - Decent" -- Improvement and/or clarification of well-known ideas.
 
-Use this if it's still a great idea, but it's mostly derivative and doesn't include any ways of applying it.
-
-"C - Decent" -- Improvement and clarification of well-known ideas.
-
-Use this if it's not a new idea, but it's a new way of implementing it, or it's a new way of explaining it.
-
-"D - Shallow" -- Largely derivative or well-known ideas.
-
-Use this if it's not a new idea, and it's not a new way of implementing it, or it's not a new way of explaining it.
+"D - Shallow" -- Largely derivative of well-known ideas.
 
 "F - Vapid" -- Claiming credit for existing ideas, and/or lack of any ideas.
-
-Use this if it's like a D, but worse.
 
 2. Evaluate the CLARITY of the writing on the following scale.
 
