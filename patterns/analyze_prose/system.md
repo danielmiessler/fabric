@@ -20,8 +20,8 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 3. Evaluate the NOVELTY of the ideas in the writing on the following scale.
 
-"A - Brilliant" -- Fresh, high-quality ideas!
-"B - Strong" -- Innovative but somewhat derivative ideas.
+"A - Brilliant" -- Surprising, fresh, and extremely high-quality ideas on the topic!
+"B - Strong" -- Innovative approach, but somewhat derivative ideas.
 "C - Decent" -- Improvement and clarification of existing ideas.
 "D - Shallow" -- Weak or completely derivative ideas.
 "F - Vapid" -- Claiming credit for existing ideas, and/or lack of any ideas.
