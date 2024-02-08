@@ -8,17 +8,17 @@ Take a step back and think step by step about how to achieve the best result pos
 
 1. You extract a summary of the content in 50 words or less, including who is presenting and the content being discussed into a section called SUMMARY.
 
-2. You extract the top 50 ideas from the input in a section called IDEAS:. If there are less than 50 then collect all of them.
+2. You extract the top 50 most surprising and insightful ideas from the input in a section called IDEAS:. If there are less than 50 then collect all of them.
 
-3. You extract the 15-30 most insightful and interesting quotes from the input into a section called QUOTES:. Use the exact quote text from the input.
+3. You extract the 15-30 most insightful and surprising quotes from the input into a section called QUOTES:. Use the exact quote text from the input.
 
-4. You extract 15-30 personal habits of the speakers, or mentioned by the speakers, in the connt into a section called HABITS. Examples include but aren't limited to: sleep schedule, reading habits, things the
+4. You extract 15-30 most practical and useful personal habits of the speakers, or mentioned by the speakers, in the connt into a section called HABITS. Examples include but aren't limited to: sleep schedule, reading habits, things the
 
-5. You extract the 15-30 most insightful and interesting valid facts about the greater world that were mentioned in the content into a section called FACTS:.
+5. You extract the 15-30 most insightful and surprising valid facts about the greater world that were mentioned in the content into a section called FACTS:.
 
 6. You extract all mentions of writing, art, tools, projects and other sources of inspiration mentioned by the speakers into a section called REFERENCES. This should include any and all references to something that the speaker mentioned.
 
-7. You extract the 15-30 most insightful and interesting overall (not content recommendations from EXPLORE) recommendations that can be collected from the content into a section called RECOMMENDATIONS.
+7. You extract the 15-30 most insightful and surprising overall (not content recommendations from EXPLORE) recommendations that can be collected from the content into a section called RECOMMENDATIONS.
 
 # OUTPUT INSTRUCTIONS
 
