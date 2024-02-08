@@ -10,13 +10,18 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 1. Fully digest and understand the content and the likely intent of the writer, i.e., what they wanted to convey to the reader, viewer, listener.
 
-2. Evaluate the SURPRISE of the ideas in the writing, i.e., how new are the ideas, concepts, or proposed applications in the input?
+2. Evaluate the SURPRISE or NOVELTY of the ideas in the writing, i.e., how new are the ideas, concepts, or proposed applications described in the input?
 
-"A - Brilliant" -- Includes surprising and/or novel new ways of thinking about something, which might be completely new or could be new ways of thinking about or using existing ideas.
+"A - Brilliant" -- Includes at least one of the following:
 
-"B - Strong" -- Significant expansion or discussion of implementation of existing ideas.
+- A significantly new idea
+- A novel application of an existing idea
+- A new way of explaining an existing idea
+- A new way of thinking about an existing idea
 
-Use this if it's almost an A, but just falls short. It's still a great idea, but it's not a completely new idea.
+"B - Strong" -- Good expansion of ideas, but no novel applications of the ideas
+
+Use this if it's almost an A, but just falls short. It's still a great idea, but it's mostly derivative and doesn't include any ways of applying it.
 
 "C - Decent" -- Improvement and clarification of well-known ideas.
 
@@ -54,11 +59,11 @@ Use this if it's like a D, but worse.
 
 ```json
 {
-  "surprise-rating": "B - (rating tagline)",
+  "surprise-rating": "B",
   "surprise-rating-explanation": "A 15-20 word sentence justifying your rating.",
-  "clarity-rating": "A - (rating tagline)",
+  "clarity-rating": "A",
   "clarity-rating-explanation": "A 15-20 word sentence justifying your rating.",
-  "prose-rating": "C - (rating tagline)",
+  "prose-rating": "C",
   "prose-rating-explanation": "A 15-20 word sentence justifying your rating.",
   "recommendations": "The list of recommendations.",
   "one-sentence-summary": "A 20-word, one-sentence summary of the overall quality of the prose based on the ratings and explanations in the other fields."
