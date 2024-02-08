@@ -41,8 +41,32 @@ with open("fabric_api_keys.json", "r") as tokens_file:
 
 # The function to check if the token is valid
 def auth_required(f):
+    """    Decorator function to check if the token is valid.
+
+    Args:
+        f: The function to be decorated
+
+    Returns:
+        The decorated function
+    """
+
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        """        Decorated function to handle authentication token and API endpoint.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            Result of the decorated function.
+
+        Raises:
+            KeyError: If 'Authorization' header is not found in the request.
+            TypeError: If 'Authorization' header value is not a string.
+            ValueError: If the authentication token is invalid or expired.
+        """
+
         # Get the authentication token from request header
         auth_token = request.headers.get("Authorization", "")
 
@@ -65,6 +89,16 @@ def auth_required(f):
 
 # Check for a valid token/user for the given route
 def check_auth_token(token, route):
+    """    Check if the provided token is valid for the given route and return the corresponding user.
+
+    Args:
+        token (str): The token to be checked for validity.
+        route (str): The route for which the token validity is to be checked.
+
+    Returns:
+        str: The user corresponding to the provided token and route if valid, otherwise returns "Unauthorized: You are not authorized for this API".
+    """
+
     # Check if token is valid for the given route and return corresponding user
     if route in valid_tokens and token in valid_tokens[route]:
         return valid_tokens[route][token]
@@ -78,11 +112,32 @@ ALLOWLIST_PATTERN = re.compile(r"^[a-zA-Z0-9\s.,;:!?\-]+$")
 
 # Sanitize the content, sort of. Prompt injection is the main threat so this isn't a huge deal
 def sanitize_content(content):
+    """    Sanitize the content by removing characters that do not match the ALLOWLIST_PATTERN.
+
+    Args:
+        content (str): The content to be sanitized.
+
+    Returns:
+        str: The sanitized content.
+    """
+
     return "".join(char for char in content if ALLOWLIST_PATTERN.match(char))
 
 
 # Pull the URL content's from the GitHub repo
 def fetch_content_from_url(url):
+    """    Fetches content from the given URL.
+
+    Args:
+        url (str): The URL from which to fetch content.
+
+    Returns:
+        str: The sanitized content fetched from the URL.
+
+    Raises:
+        requests.RequestException: If an error occurs while making the request to the URL.
+    """
+
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -99,6 +154,15 @@ def fetch_content_from_url(url):
 @app.route("/extwis", methods=["POST"])
 @auth_required  # Require authentication
 def extwis():
+    """    Extract wisdom from user input using OpenAI's GPT-4 model.
+
+    Returns:
+        JSON: A JSON response containing the generated response or an error message.
+
+    Raises:
+        Exception: If there is an error during the API call.
+    """
+
     data = request.get_json()
 
     # Warn if there's no input
