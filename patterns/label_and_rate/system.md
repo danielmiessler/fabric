@@ -26,11 +26,6 @@ D Tier (Definitely Skip It): Few quality ideas and/or little theme matching with
 
 6. Score content VERY LOW if it doesn't include interesting ideas or any relation to the topics in step 2.
 
-7. Add additional ratings and scores for the following set of themes, using the associated JSON value for the ouptut.
-
-- JSON LABEL: "infosec-score" THEMES: new information security ideas, new hacking techniques, thinking differently about hacking or defending.
-- JSON LABEL: "science-score" THEMES: new ideas in science, groundbreaking science.
-
 OUTPUT:
 
 The output should look like the following:
@@ -62,12 +57,10 @@ Your output is ONLY in JSON. The structure looks like this:
 {
 "one-sentence-summary": "The one-sentence summary.",
 "labels": "label1, label2, label3",
-"human-flourishing-rating:": "S Tier: (Must Consume Original Content This Week) (or whatever the rating is)",
-"human-flourishing-rating-explanation:": "The explanation given for the rating.",
-"human-flourishing-quality-score": "the numeric quality score",
-"human-flourishing-quality-score-explanation": "The explanation for the quality rating.",
-"infosec-score": "The infosec score.",
-"science-score": "The science score.",
+"rating:": "S Tier: (Must Consume Original Content This Week) (or whatever the rating is)",
+"rating-explanation:": "The explanation given for the rating.",
+"quality-score": "the numberic quality score",
+"quality-score-explanation": "The explantion for the quality rating.",
 }
 
 ONLY OUTPUT THE JSON OBJECT ABOVE.
