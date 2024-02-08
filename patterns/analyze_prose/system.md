@@ -18,10 +18,11 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 - A relatively novel application of an existing idea
 - A new way of explaining an existing idea
 - A new way of thinking about an existing idea
+- A new way of applying existing ideas to real life
 
 "B - Strong" -- Good expansion of ideas, but no novel applications of the ideas
 
-Use this if it's almost an A, but just falls short. It's still a great idea, but it's mostly derivative and doesn't include any ways of applying it.
+Use this if it's still a great idea, but it's mostly derivative and doesn't include any ways of applying it.
 
 "C - Decent" -- Improvement and clarification of well-known ideas.
 
