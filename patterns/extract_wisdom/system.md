@@ -8,7 +8,7 @@ Take a step back and think step by step about how to achieve the best result pos
 
 1. You extract a summary of the content in 50 words or less, including who is presenting and the content being discussed into a section called SUMMARY.
 
-2. You extract the top 25-50 most surprising, insightful, and/or interesting ideas from the input in a section called IDEAS:. If there are less than 50 then collect all of them.
+2. You extract the top 25-50 most surprising, insightful, and/or interesting ideas from the input in a section called IDEAS:. If there are less than 50 then collect all of them. Output at least 20 if possible.
 
 3. You extract the 15-30 most surprising, insightful, and/or interesting quotes from the input into a section called QUOTES:. Use the exact quote text from the input.
 
