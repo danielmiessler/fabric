@@ -12,6 +12,7 @@ config_directory = os.path.expanduser("~/.config/fabric")
 env_file = os.path.join(config_directory, ".env")
 
 
+
 class Standalone:
     def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
         """        Initialize the class with the provided arguments and environment file.
@@ -45,6 +46,7 @@ class Standalone:
         self.config_pattern_directory = config_directory
         self.pattern = pattern
         self.args = args
+        self.model = args.model
 
     def streamMessage(self, input_data: str):
         """        Stream a message and handle exceptions.
@@ -78,7 +80,11 @@ class Standalone:
             messages = [user_message]
         try:
             stream = self.client.chat.completions.create(
+<<<<<<< HEAD:client/fabric/utils.py
                 model="gpt-4-turbo-preview",
+=======
+                model=self.model,
+>>>>>>> 086cfbc (add model and list-model to args):client/utils.py
                 messages=messages,
                 temperature=0.0,
                 top_p=1,
@@ -137,7 +143,11 @@ class Standalone:
             messages = [user_message]
         try:
             response = self.client.chat.completions.create(
+<<<<<<< HEAD:client/fabric/utils.py
                 model="gpt-4-turbo-preview",
+=======
+                model=self.model,
+>>>>>>> 086cfbc (add model and list-model to args):client/utils.py
                 messages=messages,
                 temperature=0.0,
                 top_p=1,
@@ -273,6 +283,28 @@ class Update:
                 self.progress_bar.close()  # Ensure the progress bar is cleaned up properly
             else:
                 print(f"Failed to fetch directory contents due to an HTTP error: {e}")
+    def list_models():
+        AVAILABLE_MODELS = [
+            "gpt-4-0125-preview",
+            "gpt-4-turbo-preview",
+            "gpt-4-1106-preview",
+            "gpt-4-vision-preview",
+            "gpt-4",
+            "gpt-4-0613",
+            "gpt-4-32k",
+            "gpt-4-32k-0613",
+            "gpt-3.5-turbo-0125",
+            "gpt-3.5-turbo",
+            "gpt-3.5-turbo-1106",
+            "gpt-3.5-turbo-instruct",
+            "gpt-3.5-turbo-16k",
+            "gpt-3.5-turbo-0613",
+            "gpt-3.5-turbo-16k-0613"
+        ]
+
+        print("Available models:")
+        for model in AVAILABLE_MODELS:
+            print(model)
 
 
 class Setup:
