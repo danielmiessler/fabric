@@ -12,9 +12,9 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 2. Evaluate the SURPRISE or NOVELTY of the ideas in the writing, i.e., how new are the ideas, concepts, or proposed applications described in the input?
 
-"A - Brilliant" -- A new idea or a new way of thinking about or applying existing ideas.
+"A - Brilliant" -- Significantly new or visionary ideas describing how to think about something, or describing what will happen in the future.
 
-"B - Strong" -- Good expansion of known ideas, but no novel applications of the ideas.
+"B - Strong" -- Good expansion of known ideas, but nothing new or novel in concept or application.
 
 "C - Decent" -- Improvement and/or clarification of well-known ideas.
 
