@@ -14,8 +14,8 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 "A - Brilliant" -- Includes at least one of the following:
 
-- A significantly new idea
-- A novel application of an existing idea
+- A relatively new or surprising idea or concept from the perspective of an average reader
+- A relatively novel application of an existing idea
 - A new way of explaining an existing idea
 - A new way of thinking about an existing idea
 
