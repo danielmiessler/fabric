@@ -16,6 +16,19 @@ import os
 
 
 def send_request(prompt, endpoint):
+    """    Send a request to the specified endpoint of an HTTP-only server.
+
+    Args:
+        prompt (str): The input prompt for the request.
+        endpoint (str): The endpoint to which the request will be sent.
+
+    Returns:
+        str: The response from the server.
+
+    Raises:
+        KeyError: If the response JSON does not contain the expected "response" key.
+    """
+
     base_url = "http://127.0.0.1:13337"
     url = f"{base_url}{endpoint}"
     headers = {
@@ -37,6 +50,15 @@ app.secret_key = "your_secret_key"
 
 @app.route("/favicon.ico")
 def favicon():
+    """    Send the favicon.ico file from the static directory.
+
+    Returns:
+        Response object with the favicon.ico file
+
+    Raises:
+         -
+    """
+
     return send_from_directory(
         os.path.join(app.root_path, "static"),
         "favicon.ico",
@@ -46,6 +68,12 @@ def favicon():
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    """    Process the POST request and send a request to the specified API endpoint.
+
+    Returns:
+        str: The rendered HTML template with the response data.
+    """
+
     if request.method == "POST":
         prompt = request.form.get("prompt")
         endpoint = request.form.get("api")
