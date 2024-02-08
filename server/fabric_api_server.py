@@ -1,13 +1,23 @@
-# Imports
-import openai
+import jwt
 import json
+import openai
 from flask import Flask, request, jsonify
 from functools import wraps
 import re
 import requests
+import os
+from dotenv import load_dotenv
 
-## Define Flask app
 app = Flask(__name__)
+
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "The requested resource was not found."}), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return jsonify({"error": "An internal server error occurred."}), 500
+
 
 ##################################################
 ##################################################
@@ -25,10 +35,8 @@ app = Flask(__name__)
 
 ## Set authentication on your APIs
 ## Let's at least have some kind of auth
-
-# Load your OpenAI API key from a file
-with open("openai.key", "r") as key_file:
-    openai.api_key = key_file.read().strip()
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 ## Define our own client
 client = openai.OpenAI(api_key = openai.api_key)
@@ -37,6 +45,11 @@ client = openai.OpenAI(api_key = openai.api_key)
 # Read API tokens from the apikeys.json file
 with open("fabric_api_keys.json", "r") as tokens_file:
     valid_tokens = json.load(tokens_file)
+
+
+# Read users from the users.json file
+with open("users.json", "r") as users_file:
+    users = json.load(users_file)
 
 
 # The function to check if the token is valid
@@ -101,7 +114,7 @@ def check_auth_token(token, route):
 
     # Check if token is valid for the given route and return corresponding user
     if route in valid_tokens and token in valid_tokens[route]:
-        return valid_tokens[route][token]
+        return users[valid_tokens[route][token]]
     else:
         return "Unauthorized: You are not authorized for this API"
 
@@ -196,8 +209,47 @@ def extwis():
         assistant_message = response.choices[0].message.content
         return jsonify({"response": assistant_message})
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        app.logger.error(f"Error occurred: {str(e)}")
+        return jsonify({"error": "An error occurred while processing the request."}), 500
 
-# Run the application
+
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.get_json()
+
+    username = data["username"]
+    password = data["password"]
+
+    if username in users:
+        return jsonify({"error": "Username already exists"}), 400
+
+    new_user = {
+        "username": username,
+        "password": password
+    }
+
+    users[username] = new_user
+
+    token = jwt.encode({"username": username}, os.getenv("JWT_SECRET"), algorithm="HS256")
+
+    return jsonify({"token": token.decode("utf-8")})
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+
+    username = data["username"]
+    password = data["password"]
+
+    if username in users and users[username]["password"] == password:
+        # Generate a JWT token
+        token = jwt.encode({"username": username}, os.getenv("JWT_SECRET"), algorithm="HS256")
+
+        return jsonify({"token": token.decode("utf-8")})
+
+    return jsonify({"error": "Invalid username or password"}), 401
+
+
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=13337, debug=True)

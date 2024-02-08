@@ -33,19 +33,23 @@ def send_request(prompt, endpoint):
     url = f"{base_url}{endpoint}"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "eJ4f1e0b-25wO-47f9-97ec-6b5335b2",
+        "Authorization": f"Bearer {session['token']}",
     }
     data = json.dumps({"input": prompt})
     response = requests.post(url, headers=headers, data=data, verify=False)
 
     try:
-        return response.json()["response"]
-    except KeyError:
-        return f"Error: You're not authorized for this application."
+        response = requests.post(url, headers=headers, data=data)
+        response.raise_for_status()  # raises HTTPError if the response status isn't 200
+    except requests.ConnectionError:
+        return "Error: Unable to connect to the server."
+    except requests.HTTPError as e:
+        return f"Error: An HTTP error occurred: {str(e)}"
+
 
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 
 @app.route("/favicon.ico")
