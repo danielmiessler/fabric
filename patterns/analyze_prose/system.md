@@ -42,10 +42,10 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 ```json
 {
-  "clarity-rating": "A - (tagline)",
-  "clarity-rating-explanation": "A 15-20 word sentence justifying your rating.",
   "surprise-rating": "B - (tagline)",
   "surprise-rating-explanation": "A 15-20 word sentence justifying your rating.",
+  "clarity-rating": "A - (tagline)",
+  "clarity-rating-explanation": "A 15-20 word sentence justifying your rating.",
   "prose-rating": "C - (tagline)",
   "prose-rating-explanation": "A 15-20 word sentence justifying your rating.",
   "recommendations": "The list of recommendations.",
