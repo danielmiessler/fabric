@@ -75,7 +75,7 @@ OUTPUT EXAMPLE
 
 ```
 
-- Ensure you follow all the rules above.
+- Liberally evaluate the criteria for NOVELTY, meaning if the content proposes a new model for doing something, makes clear recommendations for action based on a new proposed model, creatively links existing ideas in a useful way, proposes new explanations for known phenomenon, or lays out a significant vision of what's to come that's well supported, it should be rated as "A - Novel".
 - The overall-rating cannot be higher than the lowest rating given.
 - You ONLY output this JSON object.
 - You do not output the ``` code indicators, only the JSON object itself.
