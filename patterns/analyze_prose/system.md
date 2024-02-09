@@ -48,8 +48,8 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 ```json
 {
-  "surprise-rating": "(computed rating)",
-  "surprise-rating-explanation": "A 15-20 word sentence justifying your rating.",
+  "novelty-rating": "(computed rating)",
+  "novelty-rating-explanation": "A 15-20 word sentence justifying your rating.",
   "clarity-rating": "(computed rating)",
   "clarity-rating-explanation": "A 15-20 word sentence justifying your rating.",
   "prose-rating": "(computed rating)",
@@ -62,8 +62,8 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 OUTPUT EXAMPLE
 
 {
-"surprise-rating": "A - Novel",
-"surprise-rating-explanation": "Combines multiple existing ideas and adds new ones to construct a vision of the future.",
+"novelty-rating": "A - Novel",
+"novelty-rating-explanation": "Combines multiple existing ideas and adds new ones to construct a vision of the future.",
 "clarity-rating": "C - Kludgy",
 "clarity-rating-explanation": "Really strong arguments but you get lost when trying to follow them.",
 "prose-rating": "A - Inspired",
