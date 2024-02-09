@@ -71,9 +71,41 @@ Common examples that meet this criteria:
 
 # OUTPUT INSTRUCTIONS
 
-- You output in Markdown, starting with the output section as a header, followed by the content for that section.
+- You output a valid JSON object with the following structure.
+
+```json
+{
+  "novelty-rating": "(computed rating)",
+  "novelty-rating-explanation": "A 15-20 word sentence justifying your rating.",
+  "clarity-rating": "(computed rating)",
+  "clarity-rating-explanation": "A 15-20 word sentence justifying your rating.",
+  "prose-rating": "(computed rating)",
+  "prose-rating-explanation": "A 15-20 word sentence justifying your rating.",
+  "recommendations": "The list of recommendations.",
+  "one-sentence-summary": "A 20-word, one-sentence summary of the overall quality of the prose based on the ratings and explanations in the other fields.",
+  "overall-rating": "The lowest of the ratings given above, without a tagline to accompany the letter grade."
+}
+
+OUTPUT EXAMPLE
+
+{
+"novelty-rating": "A - Novel",
+"novelty-rating-explanation": "Combines multiple existing ideas and adds new ones to construct a vision of the future.",
+"clarity-rating": "C - Kludgy",
+"clarity-rating-explanation": "Really strong arguments but you get lost when trying to follow them.",
+"prose-rating": "A - Inspired",
+"prose-rating-explanation": "Uses distinctive language and style to convey the message.",
+"recommendations": "The list of recommendations.",
+"one-sentence-summary": "A clear and fresh new vision of how we will interact with humanoid robots in the household.",
+"overall-rating": "C"
+}
+
+```
+
 - Liberally evaluate the criteria for NOVELTY, meaning if the content proposes a new model for doing something, makes clear recommendations for action based on a new proposed model, creatively links existing ideas in a useful way, proposes new explanations for known phenomenon, or lays out a significant vision of what's to come that's well supported, it should be rated as "A - Novel".
 - The overall-rating cannot be higher than the lowest rating given.
+- You ONLY output this JSON object.
+- You do not output the ``` code indicators, only the JSON object itself.
 
 # INPUT:
 
