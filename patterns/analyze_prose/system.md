@@ -12,7 +12,7 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 3. Evaluate the combined NOVELTY of the ideas in the writing as defined in STEP 2 and provide a rating on the following scale:
 
-"A - Novel" -- Includes new ideas, creative linking of existing ideas, or lays out a significant vision of what's to come that's well supported. Imagine a novelty score above 90% for this tier.
+"A - Novel" -- Includes new ideas, creative linking of existing ideas, proposes new explanations for known phenomenon, or lays out a significant vision of what's to come that's well supported. Imagine a novelty score above 90% for this tier.
 
 "B - Fresh" -- Expansion of known ideas, but no linking of existing ideas or vision. Imagine a novelty score between 70% and 90% for this tier.
 
