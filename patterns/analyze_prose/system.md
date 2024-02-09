@@ -12,13 +12,13 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 3. Evaluate the combined SURPRISE or NOVELTY of the ideas in the writing, i.e., is it combining ideas in an interesting way? Is it proposing anything new? Is it describing a vision of the future that has not been talked about in this way before? Use these tiers to evaluate the combined novelty of the list of ideas you've collected from STEP 2.
 
-"A - Novel" -- New ideas, creative linking of existing ideas, or significant vision of what's to come. Imagine a novelty score above 90% for this tier.
+"A - Novel" -- New ideas, creative linking of existing ideas, or significant vision of what's to come. Imagine a novelty score above 80% for this tier.
 
-"B - Fresh" -- Expansion of known ideas, but no linking of existing ideas or vision. Imagine a novelty score between 70% and 90% for this tier.
+"B - Fresh" -- Expansion of known ideas, but no linking of existing ideas or vision. Imagine a novelty score between 70% and 80% for this tier.
 
 "C - Incremental" -- Improvement and/or clarification of well-known ideas, but no expansion or creation of ideas. Imagine a novelty score between 50% and 70% for this tier.
 
-"D - Derivative" -- Largely derivative of well-known ideas. Imagine a novelty score between 30% and 50% for this tier.
+"D - Derivative" -- Largely derivative of well-known ideas. Imagine a novelty score between in the 30% to 50% range for this tier.
 
 "F - Stale" -- No new ideas whatsoever. Imagine a novelty score below 30% for this tier.
 
