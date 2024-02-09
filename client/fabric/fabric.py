@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
-
-from utils import Standalone, Update, Setup
+from .utils import Standalone, Update, Setup
 import argparse
 import sys
 import os
@@ -8,8 +6,7 @@ import os
 
 script_directory = os.path.dirname(os.path.realpath(__file__))
 
-
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(
         description="An open source framework for augmenting humans using AI."
     )
@@ -87,3 +84,6 @@ if __name__ == "__main__":
         standalone.streamMessage(text)
     else:
         standalone.sendMessage(text)
+
+if __name__ == "__main__":
+    main()
