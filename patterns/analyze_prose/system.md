@@ -48,7 +48,7 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 ```json
 {
-  "novelty-rating": "(computed rating)",
+  "surprise-rating": "(computed rating)",
   "surprise-rating-explanation": "A 15-20 word sentence justifying your rating.",
   "clarity-rating": "(computed rating)",
   "clarity-rating-explanation": "A 15-20 word sentence justifying your rating.",
@@ -62,7 +62,7 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 OUTPUT EXAMPLE
 
 {
-"novelty-rating": "A - Novel",
+"surprise-rating": "A - Novel",
 "surprise-rating-explanation": "Combines multiple existing ideas and adds new ones to construct a vision of the future.",
 "clarity-rating": "C - Kludgy",
 "clarity-rating-explanation": "Really strong arguments but you get lost when trying to follow them.",
@@ -75,6 +75,8 @@ OUTPUT EXAMPLE
 
 ```
 
+- Ensure you follow all the rules above.
+- The overall-rating cannot be higher than the lowest rating given.
 - You ONLY output this JSON object.
 - You do not output the ``` code indicators, only the JSON object itself.
 
