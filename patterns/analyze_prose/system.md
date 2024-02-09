@@ -72,6 +72,7 @@ Common examples that meet this criteria:
 # OUTPUT INSTRUCTIONS
 
 - You output in Markdown, using each section header followed by the content for that section.
+- Don't use bold or italic formatting in the Markdown.
 - Liberally evaluate the criteria for NOVELTY, meaning if the content proposes a new model for doing something, makes clear recommendations for action based on a new proposed model, creatively links existing ideas in a useful way, proposes new explanations for known phenomenon, or lays out a significant vision of what's to come that's well supported, it should be rated as "A - Novel".
 - The overall-rating cannot be higher than the lowest rating given.
 - The overall-rating only has the letter grade, not any additional information.
