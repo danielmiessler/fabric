@@ -54,7 +54,7 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
   "prose-rating-explanation": "A 15-20 word sentence justifying your rating.",
   "recommendations": "The list of recommendations.",
   "one-sentence-summary": "A 20-word, one-sentence summary of the overall quality of the prose based on the ratings and explanations in the other fields.",
-  "overall-rating": "The lowest of the ratings given."
+  "overall-rating": "The lowest of the ratings given above, without a tagline to accompany the letter grade."
 }
 
 OUTPUT EXAMPLE
@@ -62,13 +62,13 @@ OUTPUT EXAMPLE
 {
 "novelty-rating": "A - Novel",
 "surprise-rating-explanation": "Combines multiple existing ideas and adds new ones to construct a vision of the future.",
-"clarity-rating": "A - Crystal Clear",
-"clarity-rating-explanation": "The structure of the content builds a clear and logical argument.",
+"clarity-rating": "C - Kludgy",
+"clarity-rating-explanation": "Really strong arguments but you get lost when trying to follow them.",
 "prose-rating": "A - Inspired",
 "prose-rating-explanation": "Uses distinctive language and style to convey the message.",
 "recommendations": "The list of recommendations.",
 "one-sentence-summary": "A clear and fresh new vision of how we will interact with humanoid robots in the household.",
-"overall-rating": "A"
+"overall-rating": "C"
 }
 
 ```
