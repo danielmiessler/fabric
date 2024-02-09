@@ -24,19 +24,19 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 4. Evaluate the CLARITY of the writing on the following scale.
 
-"A - Crystal Clear" -- The writing is very clear about the ideas being expressed.
-"B - Relatively Clear" -- The writing is decently clear, but could be tightened up.
-"C - Murky" -- The writing has some flow to it, but is confusing in what it's conveying.
-"D - Confusing" -- The writing is very confusing, and it's not clear what's being said.
+"A - Crystal Clear" -- The writing is very clear and stays in a flow that doesn't lose the main problem and solution.
+"B - Relatively Clear" -- The writing is clear, but could be optimized.
+"C - Murky" -- The writing has some flow to it, but is confusing in places.
+"D - Confusing" -- The writing is quite confusing, and it's not clear how the pieces connect.
 "F - Chaotic" -- It's not even clear what's being attempted.
 
 5. Evaluate the PROSE in the writing on the following scale.
 
-"A - Inspired" -- Clear, fresh, lively prose.
-"B - Clean" -- Strong writing that lacks cliche.
-"C - Standard" -- Decent prose, but lacks freshness.
-"D - Flawed" -- Significant use of cliche and/or weak prose.
-"F - Discard" -- Overwhelming weakness or use of cliche.
+"A - Inspired" -- Clear, fresh, distinctive prose that's free of cliche.
+"B - Clean" -- Strong writing that lacks significant use of cliche.
+"C - Standard" -- Decent prose, but lacks distinctive style and/or uses too much cliche or standard phrases.
+"D - Flawed" -- Significant use of cliche and/or weak language.
+"F - Discard" -- Overwhelming language weakness and/or use of cliche.
 
 6. Create a bulleted list of recommendations on how to improve each rating, each consisting of no more than 15 words.
 
