@@ -24,9 +24,9 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 4. Evaluate the CLARITY of the writing on the following scale.
 
-"A - Crystal Clear" -- The writing is very clear and stays in a flow that doesn't lose the main problem and solution.
-"B - Relatively Clear" -- The arguments and are very clear, but it could be more concise and optimized.
-"C - Kludgy" -- The writing has good ideas, but the flow of the argument is sometimes confusing or disjointed.
+"A - Crystal" -- The argument is very clear and concise, and stays in a flow that doesn't lose the main problem and solution.
+"B - Clean" -- The argument is clear and concise, but it needs minor optimizations.
+"C - Kludgy" -- Has good ideas, but the argument sometimes takes too long or loses the problem and solution.
 "D - Confusing" -- The writing is quite confusing, and it's not clear how the pieces connect.
 "F - Chaotic" -- It's not even clear what's being attempted.
 
