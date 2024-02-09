@@ -12,15 +12,15 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 2. Evaluate the SURPRISE or NOVELTY of the ideas in the writing, i.e., is it proposing anything new? Is it describing a vision of the future?
 
-"A - Surprising" -- Significant new ideas or applications of existing ideas. Or involves a vision of the future.
+"A - Novel" -- New ideas, creative linking of existing ideas, or significant vision of what's to come.
 
-"B - Good" -- Expansion of known ideas, but no vision of the future, or description of how the ideas might be applied.
+"B - Fresh" -- Expansion of known ideas, but no linking of existing ideas or vision.
 
-"C - Decent" -- Improvement and/or clarification of well-known ideas.
+"C - Incremental" -- Improvement and/or clarification of well-known ideas, but no expansion or creation of ideas.
 
-"D - Shallow" -- Largely derivative of well-known ideas.
+"D - Derivative" -- Largely derivative of well-known ideas.
 
-"F - Vapid" -- Claiming credit for existing ideas, and/or lack of any ideas.
+"F - Stale" -- No new ideas whatsoever.
 
 2. Evaluate the CLARITY of the writing on the following scale.
 
