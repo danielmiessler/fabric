@@ -40,6 +40,8 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 6. Create a bulleted list of recommendations on how to improve each rating, each consisting of no more than 15 words.
 
+7. Give an overall rating that's the lowest rating of 3, 4, and 5. So if they were B, C, and A, the overall-rating would be "C".
+
 # OUTPUT INSTRUCTIONS
 
 - You output a valid JSON object with the following structure.
