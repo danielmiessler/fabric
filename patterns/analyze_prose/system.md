@@ -46,11 +46,11 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 ```json
 {
-  "surprise-rating": "B",
+  "novelty-rating": "(computed rating)",
   "surprise-rating-explanation": "A 15-20 word sentence justifying your rating.",
-  "clarity-rating": "A",
+  "clarity-rating": "(computed rating)",
   "clarity-rating-explanation": "A 15-20 word sentence justifying your rating.",
-  "prose-rating": "C",
+  "prose-rating": "(computed rating)",
   "prose-rating-explanation": "A 15-20 word sentence justifying your rating.",
   "recommendations": "The list of recommendations.",
   "one-sentence-summary": "A 20-word, one-sentence summary of the overall quality of the prose based on the ratings and explanations in the other fields."
