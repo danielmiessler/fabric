@@ -33,10 +33,10 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 5. Evaluate the PROSE in the writing on the following scale.
 
 "A - Inspired" -- Clear, fresh, distinctive prose that's free of cliche.
-"B - Clean" -- Strong writing that lacks significant use of cliche.
+"B - Distinctive" -- Strong writing that lacks significant use of cliche.
 "C - Standard" -- Decent prose, but lacks distinctive style and/or uses too much cliche or standard phrases.
-"D - Flawed" -- Significant use of cliche and/or weak language.
-"F - Discard" -- Overwhelming language weakness and/or use of cliche.
+"D - Stale" -- Significant use of cliche and/or weak language.
+"F - Weak" -- Overwhelming language weakness and/or use of cliche.
 
 6. Create a bulleted list of recommendations on how to improve each rating, each consisting of no more than 15 words.
 
