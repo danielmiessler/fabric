@@ -17,6 +17,7 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 Common examples that meet this criteria:
 
 - Introduction of new ideas.
+- Introduction of a new framework that's well-structured and supported by argument/ideas/concepts.
 - Introduction of new models for understanding the world.
 - Makes a clear prediction that's backed by strong concepts and/or data.
 - Introduction of a new vision of the future.
