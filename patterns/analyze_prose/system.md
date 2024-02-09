@@ -18,6 +18,7 @@ Common examples that meet this criteria:
 
 - Introduction of new ideas.
 - Introduction of new models for understanding the world.
+- Makes a clear prediction that's backed by strong concepts and/or data.
 - Introduction of a new vision of the future.
 - Introduction of a new way of thinking about reality.
 - Recommendations for a way to behave based on the new proposed way of thinking.
