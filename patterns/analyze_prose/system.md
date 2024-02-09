@@ -14,13 +14,38 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 "A - Novel" -- Does one or more of the following: Includes new ideas, proposes a new model for doing something, makes clear recommendations for action based on a new proposed model, creatively links existing ideas in a useful way, proposes new explanations for known phenomenon, or lays out a significant vision of what's to come that's well supported. Imagine a novelty score above 90% for this tier.
 
+Common examples that meet this criteria:
+
+- Introduction of new ideas.
+- Introduction of new models for understanding the world.
+- Introduction of a new vision of the future.
+- Introduction of a new way of thinking about reality.
+- Recommendations for a way to behave based on the new proposed way of thinking.
+
 "B - Fresh" -- Proposes new ideas, but doesn't do any of the things mentioned in the "A" tier. Imagine a novelty score between 80% and 90% for this tier.
+
+Common examples that meet this criteria:
+
+- Minor expansion on existing ideas, but in a way that's useful.
 
 "C - Incremental" -- Useful expansion or improvement of existing ideas, or a useful description of the past, but no expansion or creation of new ideas. Imagine a novelty score between 50% and 80% for this tier.
 
+Common examples that meet this criteria:
+
+- Valuable collections of resources
+- Descriptions of the past with offered observations and takeaways
+
 "D - Derivative" -- Largely derivative of well-known ideas. Imagine a novelty score between in the 20% to 50% range for this tier.
 
+Common examples that meet this criteria:
+
+- Contains ideas or facts, but they're not new in any way.
+
 "F - Stale" -- No new ideas whatsoever. Imagine a novelty score below 20% for this tier.
+
+Common examples that meet this criteria:
+
+- Random ramblings that say nothing new.
 
 4. Evaluate the CLARITY of the writing on the following scale.
 
