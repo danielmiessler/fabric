@@ -54,7 +54,7 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
   "prose-rating-explanation": "A 15-20 word sentence justifying your rating.",
   "recommendations": "The list of recommendations.",
   "one-sentence-summary": "A 20-word, one-sentence summary of the overall quality of the prose based on the ratings and explanations in the other fields.",
-  "overall-rating": "The average rating of all the ratings above, rounding down."
+  "overall-rating": "The lowest of the ratings given."
 }
 
 OUTPUT EXAMPLE
