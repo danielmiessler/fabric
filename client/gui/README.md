@@ -11,14 +11,10 @@ Fabric is not just a tool; it's a transformative step towards integrating the po
 
 ## Installation
 
-1. Clone the repository:
-   `git clone git@github.com:xssdoctor/fabric_electron.git`
-2. Navigate to the tool's directory:
-   `cd fabric_electron`
-3. Install dependencies:
-    `npm install`
-4. Start the application:
-    `npm start`
+1. Install dependencies:
+   `npm install`
+2. Start the application:
+   `npm start`
 
 Contributing
 
