@@ -55,6 +55,20 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
   "recommendations": "The list of recommendations.",
   "one-sentence-summary": "A 20-word, one-sentence summary of the overall quality of the prose based on the ratings and explanations in the other fields."
 }
+
+OUTPUT EXAMPLE
+
+{
+"novelty-rating": "A - Novel",
+"surprise-rating-explanation": "Combines multiple existing ideas and adds new ones to construct a vision of the future.",
+"clarity-rating": "A - Crystal Clear",
+"clarity-rating-explanation": "The structure of the content builds a clear and logical argument.",
+"prose-rating": "A - Inspired",
+"prose-rating-explanation": "Uses distinctive language and style to convey the message.",
+  "recommendations": "The list of recommendations.",
+  "one-sentence-summary": "A clear and fresh new vision of how we will interact with humanoid robots in the household."
+}
+
 ```
 
 - You ONLY output this JSON object.
