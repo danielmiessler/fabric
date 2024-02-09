@@ -1,0 +1,16 @@
+{
+  "name": "fabric_electron",
+  "version": "1.0.0",
+  "description": "a fabric electron app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.4.1",
+    "electron": "^28.2.2",
+    "openai": "^4.27.0"
+  }
+}
