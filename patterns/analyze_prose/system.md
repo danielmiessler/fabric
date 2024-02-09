@@ -14,9 +14,9 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 "A - Novel" -- Includes new ideas, creative linking of existing ideas, proposes new explanations for known phenomenon, or lays out a significant vision of what's to come that's well supported. Imagine a novelty score above 90% for this tier.
 
-"B - Fresh" -- Expansion of known ideas, but no linking of existing ideas or description of a future vision. Imagine a novelty score between 80% and 90% for this tier.
+"B - Fresh" -- Significant expansion of known ideas, but no linking of multiple existing ideas or description of a future vision. Imagine a novelty score between 80% and 90% for this tier.
 
-"C - Incremental" -- Improvement and/or clarification of well-known ideas, but no expansion or creation of ideas. Imagine a novelty score between 60% and 80% for this tier.
+"C - Incremental" -- Improvement and/or clarification of well-known ideas, or a useful description of the past, but no expansion or creation of new ideas. Imagine a novelty score between 60% and 80% for this tier.
 
 "D - Derivative" -- Largely derivative of well-known ideas. Imagine a novelty score between in the 30% to 60% range for this tier.
 
