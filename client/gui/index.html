@@ -9,7 +9,13 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="#">Fabric</a>
+      <a class="navbar-brand" href="#">
+        <img
+          src="static/images/fabric-logo-gif.gif"
+          alt="Fabric Logo"
+          height="40"
+        />
+      </a>
       <button id="configButton" class="btn btn-outline-success my-2 my-sm-0">
         Config
       </button>
@@ -17,7 +23,7 @@
         class="navbar-toggler"
         type="button"
         data-toggle="collapse"
-        data-target="#navbarCollapse"
+        data-target="#navbarCollap  se"
         aria-controls="navbarCollapse"
         aria-expanded="false"
         aria-label="Toggle navigation"
@@ -32,7 +38,12 @@
     <main>
       <div class="container" id="my-form">
         <select class="form-control" id="patternSelector"></select>
-        <textarea rows="5" class="form-control" id="userInput"></textarea>
+        <textarea
+          rows="5"
+          class="form-control"
+          id="userInput"
+          placeholder="start typing or drag a file (.txt, .svg, .pdf and .doc are currently supported)"
+        ></textarea>
         <button class="btn btn-primary" id="submit">Submit</button>
       </div>
       <div id="configSection" class="container hidden">

@@ -8,6 +8,70 @@ document.addEventListener("DOMContentLoaded", async function () {
   const configSection = document.getElementById("configSection");
   const saveApiKeyButton = document.getElementById("saveApiKey");
   const apiKeyInput = document.getElementById("apiKeyInput");
+  const originalPlaceholder = userInput.placeholder;
+  const copyButton = document.getElementById("copyButton");
+
+  async function submitQuery(userInputValue) {
+    userInput.value = ""; // Clear the input after submitting
+    systemCommand = await window.electronAPI.invoke(
+      "get-pattern-content",
+      patternSelector.value
+    );
+    responseContainer.innerHTML = ""; // Clear previous responses
+    responseContainer.classList.remove("hidden");
+    window.electronAPI.send(
+      "start-query-openai",
+      systemCommand,
+      userInputValue
+    );
+  }
+
+  function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    function copyToClipboard() {
+      try {
+        if (responseContainer.textContent) {
+          text = responseContainer.textContent;
+        }
+        if (navigator.clipboard) {
+          navigator.clipboard
+            .writeText(text)
+            .then(function () {
+              console.log("Text successfully copied to clipboard");
+            })
+            .catch(function (err) {
+              console.error("Error in copying text: ", err);
+              // Optionally, use fallback method here
+            });
+        } else {
+          fallbackCopyTextToClipboard(text);
+        }
+      } catch (err) {
+        console.error("Error in copying text: ", err);
+      }
+    }
+
+    try {
+      const successful = document.execCommand("copy");
+      const msg = successful ? "successful" : "unsuccessful";
+      console.log("Fallback: Copying text command was " + msg);
+    } catch (err) {
+      console.error("Fallback: Oops, unable to copy", err);
+    }
+
+    document.body.removeChild(textArea);
+  }
 
   // Load patterns on startup
   try {
@@ -28,27 +92,23 @@ document.addEventListener("DOMContentLoaded", async function () {
     responseContainer.innerHTML += formattedMessage; // Append new data as it arrives
   });
 
+  window.electronAPI.on("file-response", (message) => {
+    if (message.startsWith("Error")) {
+      alert(message);
+      return;
+    }
+    submitQuery(message);
+  });
+
   // Submit button click handler
   submitButton.addEventListener("click", async () => {
-    responseContainer.innerHTML = ""; // Clear previous responses
-    responseContainer.classList.remove("hidden");
-    const selectedPattern = patternSelector.value;
-    const systemCommand = await window.electronAPI.invoke(
-      "get-pattern-content",
-      selectedPattern
-    );
     const userInputValue = userInput.value;
-    window.electronAPI.send(
-      "start-query-openai",
-      systemCommand,
-      userInputValue
-    );
+    submitQuery(userInputValue);
   });
 
   // Theme changer click handler
   themeChanger.addEventListener("click", function (e) {
     e.preventDefault();
-    console.log("Theme changer clicked");
     document.body.classList.toggle("light-theme");
     themeChanger.innerText =
       themeChanger.innerText === "Dark" ? "Light" : "Dark";
@@ -86,4 +146,53 @@ document.addEventListener("DOMContentLoaded", async function () {
     );
     // Use systemCommand as part of the input for querying OpenAI
   });
+
+  userInput.addEventListener("dragover", (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    // Add some visual feedback
+    userInput.classList.add("drag-over");
+    userInput.placeholder = "Drop file here";
+  });
+
+  userInput.addEventListener("dragleave", (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    // Remove visual feedback
+    userInput.classList.remove("drag-over");
+    userInput.placeholder = originalPlaceholder;
+  });
+
+  userInput.addEventListener("drop", (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    userInput.classList.remove("drag-over");
+    userInput.placeholder = originalPlaceholder;
+    processFile(file);
+  });
+
+  function processFile(file) {
+    const fileType = file.type;
+    const reader = new FileReader();
+    let content = "";
+
+    reader.onload = (event) => {
+      content = event.target.result;
+      userInput.value = content;
+      submitQuery(content);
+    };
+
+    if (fileType === "text/plain" || fileType === "image/svg+xml") {
+      reader.readAsText(file);
+    } else if (
+      fileType === "application/pdf" ||
+      fileType.match(/wordprocessingml/)
+    ) {
+      // For PDF and DOCX, we need to handle them in the main process due to complexity
+      window.electronAPI.send("process-complex-file", file.path);
+    } else {
+      console.error("Unsupported file type");
+    }
+  }
 });

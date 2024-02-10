@@ -1,4 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const pdfParse = require("pdf-parse");
+const mammoth = require("mammoth");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
@@ -23,6 +25,36 @@ function createWindow() {
     win = null;
   });
 }
+ipcMain.on("process-complex-file", (event, filePath) => {
+  const extension = path.extname(filePath).toLowerCase();
+  let fileProcessPromise;
+
+  if (extension === ".pdf") {
+    const dataBuffer = fs.readFileSync(filePath);
+    fileProcessPromise = pdfParse(dataBuffer).then((data) => data.text);
+  } else if (extension === ".docx") {
+    fileProcessPromise = mammoth
+      .extractRawText({ path: filePath })
+      .then((result) => result.value)
+      .catch((err) => {
+        console.error("Error processing DOCX file:", err);
+        throw new Error("Error processing DOCX file.");
+      });
+  } else {
+    event.reply("file-response", "Error: Unsupported file type");
+    return;
+  }
+
+  fileProcessPromise
+    .then((extractedText) => {
+      // Sending the extracted text back to the frontend.
+      event.reply("file-response", extractedText);
+    })
+    .catch((error) => {
+      // Handling any errors during file processing and sending them back to the frontend.
+      event.reply("file-response", `Error processing file: ${error.message}`);
+    });
+});
 
 ipcMain.on("start-query-openai", (event, system, user) => {
   if (system == null || user == null) {
