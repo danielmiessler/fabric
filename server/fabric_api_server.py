@@ -161,13 +161,19 @@ def fetch_content_from_url(url):
 
 
 ## APIs
+# Make path mapping flexible and scalable
+pattern_path_mappings = {
+    "extwis": {"system_url": "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/system.md",
+               "user_url": "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/user.md"},
+    "summarise": {"system_url": "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/summarize/system.md",
+                  "user_url": "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/summarize/user.md"}
+} # Add more pattern with your desire path as a key in this dictionary
 
-
-# /extwis
-@app.route("/extwis", methods=["POST"])
+# /<pattern>
+@app.route("/<pattern>", methods=["POST"])
 @auth_required  # Require authentication
-def extwis():
-    """    Extract wisdom from user input using OpenAI's GPT-4 model.
+def milling(pattern):
+    """    Combine fabric pattern with input from user and send to OpenAI's GPT-4 model.
 
     Returns:
         JSON: A JSON response containing the generated response or an error message.
@@ -186,8 +192,8 @@ def extwis():
     input_data = data["input"]
 
     # Set the system and user URLs
-    system_url = "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/system.md"
-    user_url = "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/user.md"
+    urls = pattern_path_mappings[pattern]
+    system_url, user_url = urls["system_url"], urls["user_url"]
 
     # Fetch the prompt content
     system_content = fetch_content_from_url(system_url)
