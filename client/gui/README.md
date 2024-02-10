@@ -16,6 +16,6 @@ Fabric is not just a tool; it's a transformative step towards integrating the po
 2. Start the application:
    `npm start`
 
-Contributing
+## Contributors
 
-We welcome contributions to Fabric! For details on our code of conduct and the process for submitting pull requests, please read the CONTRIBUTING.md.
+- Credit to Jonathan Dunn (@xssdoctor) for the first version of the GUI client.
