@@ -140,8 +140,18 @@ cd fabric/client
 4. Install the dependencies
 
 ```bash
-# Install the pre-requisites
-pip3 install -r requirements.txt
+# Install python poetry on your OS
+pip3 install poetry
+
+# Install the CLI dependencies from the `client` folder
+poetry install
+
+# Enable the virtual environment
+poetry shell
+
+# Determine the path of your fabric CLI for the next step
+# It should be something like /home/thanos/.cache/pypoetry/virtualenvs/fabric--_h0wFFW-py3.10/bin/fabric
+which fabric
 ```
 
 5. Add the path to the `fabric` client to your shell
