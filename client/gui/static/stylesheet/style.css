@@ -127,7 +127,7 @@ body.light-theme .navbar-toggler-icon {
   position: relative; /* Needed for absolute positioning of the child button */
 }
 
-.copy-button {
+#copyButton {
   position: absolute;
   top: 10px; /* Adjust as needed */
   right: 10px; /* Adjust as needed */
@@ -146,11 +146,15 @@ body.light-theme .navbar-toggler-icon {
   transition: background-color 0.3s ease;
 }
 
-.copy-button:hover {
+#copyButton:hover {
   background-color: rgba(
     0,
     123,
     255,
     0.8
   ); /* Slightly less transparent on hover */
+}
+
+#copyButton:focus {
+  outline: none;
 }

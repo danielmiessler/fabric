@@ -9,7 +9,33 @@ document.addEventListener("DOMContentLoaded", async function () {
   const saveApiKeyButton = document.getElementById("saveApiKey");
   const apiKeyInput = document.getElementById("apiKeyInput");
   const originalPlaceholder = userInput.placeholder;
-  const copyButton = document.getElementById("copyButton");
+  const copyButton = document.createElement("button");
+  copyButton.textContent = "Copy";
+  copyButton.id = "copyButton";
+  document.addEventListener("click", function (e) {
+    if (e.target && e.target.id === "copyButton") {
+      // Your copy to clipboard function
+      copyToClipboard();
+    }
+  });
+
+  function htmlToPlainText(html) {
+    // Create a temporary div element to hold the HTML
+    var tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    // Replace <br> tags with newline characters
+    tempDiv.querySelectorAll("br").forEach((br) => br.replaceWith("\n"));
+
+    // Replace block elements like <p> and <div> with newline characters
+    tempDiv.querySelectorAll("p, div").forEach((block) => {
+      block.prepend("\n"); // Add a newline before the block element's content
+      block.replaceWith(...block.childNodes); // Replace the block element with its own contents
+    });
+
+    // Return the text content, trimming leading and trailing newlines
+    return tempDiv.textContent.trim();
+  }
 
   async function submitQuery(userInputValue) {
     userInput.value = ""; // Clear the input after submitting
@@ -18,7 +44,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       patternSelector.value
     );
     responseContainer.innerHTML = ""; // Clear previous responses
-    responseContainer.classList.remove("hidden");
+    if (responseContainer.classList.contains("hidden")) {
+      console.log("contains hidden");
+      responseContainer.classList.remove("hidden");
+      responseContainer.appendChild(copyButton);
+    }
     window.electronAPI.send(
       "start-query-openai",
       systemCommand,
@@ -26,41 +56,42 @@ document.addEventListener("DOMContentLoaded", async function () {
     );
   }
 
+  function copyToClipboard() {
+    const containerClone = responseContainer.cloneNode(true);
+    // Remove the copy button from the clone
+    const copyButtonClone = containerClone.querySelector("#copyButton");
+    if (copyButtonClone) {
+      copyButtonClone.parentNode.removeChild(copyButtonClone);
+    }
+
+    // Convert HTML to plain text, preserving newlines
+    const plainText = htmlToPlainText(containerClone.innerHTML);
+
+    // Use a temporary textarea for copying
+    const textArea = document.createElement("textarea");
+    textArea.style.position = "absolute";
+    textArea.style.left = "-9999px";
+    textArea.setAttribute("aria-hidden", "true");
+    textArea.value = plainText;
+    document.body.appendChild(textArea);
+    textArea.select();
+
+    try {
+      document.execCommand("copy");
+      console.log("Text successfully copied to clipboard");
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+
+    document.body.removeChild(textArea);
+  }
+
   function fallbackCopyTextToClipboard(text) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
-
-    // Avoid scrolling to bottom
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
-
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
-
-    function copyToClipboard() {
-      try {
-        if (responseContainer.textContent) {
-          text = responseContainer.textContent;
-        }
-        if (navigator.clipboard) {
-          navigator.clipboard
-            .writeText(text)
-            .then(function () {
-              console.log("Text successfully copied to clipboard");
-            })
-            .catch(function (err) {
-              console.error("Error in copying text: ", err);
-              // Optionally, use fallback method here
-            });
-        } else {
-          fallbackCopyTextToClipboard(text);
-        }
-      } catch (err) {
-        console.error("Error in copying text: ", err);
-      }
-    }
 
     try {
       const successful = document.execCommand("copy");
@@ -147,6 +178,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Use systemCommand as part of the input for querying OpenAI
   });
 
+  // drag and drop
   userInput.addEventListener("dragover", (event) => {
     event.stopPropagation();
     event.preventDefault();
