@@ -3,6 +3,7 @@ import os
 from openai import OpenAI
 import pyperclip
 import sys
+import platform
 from dotenv import load_dotenv
 from requests.exceptions import HTTPError
 from tqdm import tqdm
@@ -174,6 +175,25 @@ class Standalone:
                 print(model.get("id"))
         else:
             print(f"Failed to fetch models: HTTP {response.status_code}")
+    
+    def get_cli_input(self):
+        """ aided by ChatGPT; uses platform library
+        accepts either piped input or console input
+        from either Windows or Linux
+        
+        Args:
+            none
+        Returns:
+            string from either user or pipe
+        """
+        system = platform.system()
+        if system == 'Windows':
+            if not sys.stdin.isatty():  # Check if input is being piped
+                return sys.stdin.readline().strip()  # Read piped input
+            else:
+                return input("Enter Question: ")  # Prompt user for input from console
+        else:
+            return sys.stdin.read()
 
 
 class Update:

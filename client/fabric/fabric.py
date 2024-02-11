@@ -79,7 +79,7 @@ def main():
     if args.text is not None:
         text = args.text
     else:
-        text = sys.stdin.read()
+        text = standalone.get_cli_input()
     if args.stream:
         standalone.streamMessage(text)
     else:
