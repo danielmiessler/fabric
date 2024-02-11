@@ -7,7 +7,6 @@ import platform
 from dotenv import load_dotenv
 from requests.exceptions import HTTPError
 from tqdm import tqdm
-from youtube_transcript_api import YouTubeTranscriptApi
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
