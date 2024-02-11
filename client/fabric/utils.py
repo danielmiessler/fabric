@@ -7,6 +7,7 @@ import platform
 from dotenv import load_dotenv
 from requests.exceptions import HTTPError
 from tqdm import tqdm
+from youtube_transcript_api import YouTubeTranscriptApi
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
@@ -369,3 +370,35 @@ class Setup:
         apikey = input("Please enter your OpenAI API key\n")
         self.api_key(apikey.strip())
         self.patterns()
+
+        
+class Transcribe:
+    def youtube(video_id):
+        """ 
+        This method gets the transciption
+        of a YouTube video designated with the video_id
+        
+        Input:
+            the video id specifing a YouTube video
+            an example url for a video: https://www.youtube.com/watch?v=vF-MQmVxnCs&t=306s
+            the video id is vF-MQmVxnCs&t=306s
+            
+        Output:
+            a transcript for the video
+            
+        Raises:
+            an exception and prints error
+            
+    
+        """
+        try:
+            transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
+            transcript = ""
+            for segment in transcript_list:
+                transcript += segment['text'] + " "
+            return transcript.strip()
+        except Exception as e:
+            print("Error:", e)
+            return None
+    
+
