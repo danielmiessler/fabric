@@ -120,7 +120,7 @@ The most feature-rich way to use Fabric is to use the `fabric` client, which can
 
 Follow these steps to get the client installed and configured.
 
-1. Navigate to where you want the Fabric project to live on your systemClone the directory to a semi-permanent place on your computer.
+1. Navigate to where you want the Fabric project to live on your system in a semi-permanent place on your computer.
 
 ```bash
 # Find a home for Fabric
