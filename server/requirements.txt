@@ -1,5 +1,0 @@
-openai
-requests
-flask
-python-dotenv
-jwt

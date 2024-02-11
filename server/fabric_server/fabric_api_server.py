@@ -7,6 +7,8 @@ import re
 import requests
 import os
 from dotenv import load_dotenv
+from importlib import resources
+from .fabric_web_interface import main as web_interface
 
 app = Flask(__name__)
 
@@ -43,13 +45,13 @@ client = openai.OpenAI(api_key = openai.api_key)
 
 
 # Read API tokens from the apikeys.json file
-with open("fabric_api_keys.json", "r") as tokens_file:
-    valid_tokens = json.load(tokens_file)
+api_keys = resources.read_text("fabric_server", "fabric_api_keys.json")
+valid_tokens = json.loads(api_keys)
 
 
 # Read users from the users.json file
-with open("users.json", "r") as users_file:
-    users = json.load(users_file)
+users = resources.read_text("fabric_server", "users.json")
+users = json.loads(users)
 
 
 # The function to check if the token is valid
@@ -257,5 +259,15 @@ def login():
     return jsonify({"error": "Invalid username or password"}), 401
 
 
-if __name__ == "__main__":
+def main():
+    """Runs the main fabric API backend server"""
     app.run(host="127.0.0.1", port=13337, debug=True)
+
+
+def run_web_interface():
+    """Runs the web insterface"""
+    web_interface()
+
+
+if __name__ == "__main__":
+    main()
