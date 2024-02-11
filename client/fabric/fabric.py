@@ -1,4 +1,4 @@
-from .utils import Standalone, Update, Setup
+from .utils import Standalone, Update, Setup, Transcribe
 import argparse
 import sys
 import os
@@ -42,6 +42,11 @@ def main():
     parser.add_argument(
         "--listmodels", help="List all available models", action="store_true"
     )
+    parser.add_argument(
+        "--youtube", "-y", help="video id for YouTube transcript"
+    )
+
+    
 
     args = parser.parse_args()
     home_holder = os.path.expanduser("~")
@@ -79,7 +84,10 @@ def main():
     if args.text is not None:
         text = args.text
     else:
-        text = standalone.get_cli_input()
+       if args.youtube is None:
+           text = standalone.get_cli_input()
+       else:
+           text = Transcribe.youtube(args.youtube)    
     if args.stream:
         standalone.streamMessage(text)
     else:
