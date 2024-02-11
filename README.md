@@ -40,6 +40,10 @@
   - [CLI-native](#cli-native)
   - [Directly calling Patterns](#directly-calling-patterns)
 - [Examples](#examples)
+- [Meta](#meta)
+  - [Primary contributors](#primary-contributors)
+
+<br />
 
 ```bash
 # A quick demonstration of writing an essay with Fabric
