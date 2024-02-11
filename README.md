@@ -127,7 +127,7 @@ cd /where/you/keep/code
 
 ```bash
 # Clone Fabric to your computer
-git clone git@github.com:danielmiessler/fabric.git
+git clone https://github.com/danielmiessler/fabric.git
 ```
 
 3. Enter Fabric's /client directory
@@ -141,7 +141,7 @@ cd fabric/client
 
 ```bash
 # Install the pre-requisites
-pip3 install -r requirements.txt
+poetry install
 ```
 
 5. Add the path to the `fabric` client to your shell
