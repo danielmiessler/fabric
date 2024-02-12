@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "fabric"
+version = "0.1.0"
+description = "Fabric client"
+authors = [
+    "Daniel Miessler <https://github.com/danielmiessler>",
+    "Jonathan Dunn <https://github.com/xssdoctor>",
+    "Scott Behrens <https://github.com/sbehrens>",
+]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pyyaml = "^6.0.1"
+requests = "^2.31.0"
+pyperclip = "^1.8.2"
+python-socketio = "^5.11.0"
+websocket-client = "^1.7.0"
+flask = "^3.0.2"
+flask-sqlalchemy = "^3.1.1"
+flask-login = "^0.6.3"
+flask-jwt-extended = "^4.6.0"
+python-dotenv = "^1.0.1"
+openai = "^1.11.0"
+flask-socketio = "^5.3.6"
+flask-sock = "^0.7.0"
+gunicorn = "^21.2.0"
+gevent = "^23.9.1"
+httpx = "^0.26.0"
+tqdm = "^4.66.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# Turns this into a poetry install CLI command
+[tool.poetry.scripts]
+fabric = 'fabric:main'

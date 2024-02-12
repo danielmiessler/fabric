@@ -1,0 +1,23 @@
+{
+  "name": "fabric_electron",
+  "version": "1.0.0",
+  "description": "a fabric electron app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.4.1",
+    "electron": "^28.2.2",
+    "openai": "^4.27.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "mammoth": "^1.6.0",
+    "node-fetch": "^2.6.7",
+    "pdf-parse": "^1.1.1",
+    "unzipper": "^0.10.14"
+  }
+}
