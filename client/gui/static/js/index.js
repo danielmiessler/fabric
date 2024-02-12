@@ -117,7 +117,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.error("Failed to load patterns:", error);
     }
   }
-  loadPatterns();
 
   function fallbackCopyTextToClipboard(text) {
     const textArea = document.createElement("textarea");
