@@ -148,18 +148,21 @@ poetry install
 
 ```bash
 # Tell your shell how to find the `fabric` client
-echo 'alias fabric="/the/path/to/fabric/client/fabric"' >> ~/.bashrc
+echo 'alias fabric="python3 /the/path/to/fabric/client/fabric/fabric.py"' >> ~/.bashrc
 # Example of ~/.zshrc or ~/.bashrc
-alias fabric="~/Development/fabric/client/fabric"
+alias fabric="python3 ~/Development/fabric/client/fabric/fabric.py"
 ```
 
 6. Restart your shell
 
+Restart your shell via 'bash'.
+Enter the poetry shell for access to the installed dependencies.
+
 ```bash
-# Make sure you can
-echo 'alias fabric="/the/path/to/fabric/client/fabric"' >> ~/.bashrc
+# Make sure you can access the help description via the shell
+poetry shell
 # Example
-echo 'alias fabric="~/Development/fabric/client/fabric"' >> ~/.zshrc
+fabric -h
 ```
 
 ### Using the `fabric` client
