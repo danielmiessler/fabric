@@ -31,7 +31,7 @@
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
 - [Quickstart](#quickstart)
-  - [Setting up the fabric client](#setting-up-the-fabric-client)
+  - [Setting up the fabric commands](#setting-up-the-fabric-commands)
   - [Using the fabric client](#using-the-fabric-client)
   - [Just use the Patterns](#just-use-the-patterns)
   - [Create your own Fabric Mill](#create-your-own-fabric-mill)
@@ -116,9 +116,9 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/client">`/client`</a> directory in this repository.
 
-### Setting up the `fabric` client
+### Setting up the fabric commands
 
-Follow these steps to get the client installed and configured.
+Follow these steps to get all fabric related apps installed and configured.
 
 1. Navigate to where you want the Fabric project to live on your system in a semi-permanent place on your computer.
 
@@ -134,37 +134,48 @@ cd /where/you/keep/code
 git clone https://github.com/danielmiessler/fabric.git
 ```
 
-3. Enter Fabric's /client directory
+3. Enter Fabric's main directory
 
 ```bash
-# Enter the project and its /client folder
-cd fabric/client
+# Enter the project folder
+cd fabric
 ```
 
 4. Install the dependencies
 
 ```bash
-# Install the pre-requisites
+# Run this if you do not have already installed python poetry
+pip3 install poetry
+
+# Install the dependencies
 poetry install
 ```
 
-5. Add the path to the `fabric` client to your shell
+5. Run the `setup-aliases.sh` to add the commands as aliases in your OS. It should update both `~/.bashrc` and `/.zshrc` if they are present in your file system.
 
 ```bash
-# Tell your shell how to find the `fabric` client
-echo 'alias fabric="/the/path/to/fabric/client/fabric"' >> ~/.bashrc
-# Example of ~/.zshrc or ~/.bashrc
-alias fabric="~/Development/fabric/client/fabric"
+./setup-aliases.sh
 ```
 
 6. Restart your shell
 
+6. Setup your `OPENAI_API_KEY`.
+
+```bash
+export OPENAI_API_KEY=foobar
+```
+
+7. Check if all command line applications can execute
+
 ```bash
 # Make sure you can
-echo 'alias fabric="/the/path/to/fabric/client/fabric"' >> ~/.bashrc
-# Example
-echo 'alias fabric="~/Development/fabric/client/fabric"' >> ~/.zshrc
+fabric --help
+fabric-api
+fabric-webui
 ```
+
+PS: If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in dictinct terminal windows.
+
 
 ### Using the `fabric` client
 
@@ -245,31 +256,6 @@ The wisdom of crowds for the win.
 But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure!
 
 To get started, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own Patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
-
-#### Installing the server
-
-Similarly to what you did for installing the CLI, now access the `/server` folder and install the dependencies with poetry, then add the alias to the `fabric-server` binary to bash profile and call `fabric-server`:
-```bash
-# access the server directory
-cd server
-
-# install dependencies
-poetry install
-
-# activate virtual environment
-poetry shell
-
-# determine the path to the fabric-server binary
-which fabric-api
-# determine the path to the fabric-webui binary
-which fabric-webui
-
-# create an alias to them
-echo 'alias fabric-server="/the/path/to/fabric/server/fabric-api"' >> ~/.bashrc
-echo 'alias fabric-webui="/the/path/to/fabric/server/fabric-webui"' >> ~/.bashrc
-```
-
-PS: `fabric-api` and `fabric-webui` need to be run in dictinct terminal windows.
 
 ## Structure
 
