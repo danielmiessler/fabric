@@ -49,9 +49,9 @@
 # A quick demonstration of writing an essay with Fabric
 ```
 
-
-
-https://github.com/danielmiessler/fabric/assets/50654/09c11764-e6ba-4709-952d-450d70d76ac9
+<video src="https://github.com/danielmiessler/fabric/assets/50654/09c11764-e6ba-4709-952d-450d70d76ac9" controls>
+  Your browser does not support the video tag.
+</video>
 
 ## What and why
 
@@ -252,6 +252,7 @@ To get started, head over to the [`/server/`](https://github.com/danielmiessler/
 #### Installing the server
 
 Similarly to what you did for installing the CLI, now access the `/server` folder and install the dependencies with poetry, then add the alias to the `fabric-server` binary to bash profile and call `fabric-server`:
+
 ```bash
 # access the server directory
 cd server
