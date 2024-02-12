@@ -31,8 +31,10 @@
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
 - [Quickstart](#quickstart)
-  - [1. Just use the Patterns (Prompts)](#just-use-the-patterns)
-  - [2. Create your own Fabric Mill (Server)](#create-your-own-fabric-mill)
+  - [Setting up the fabric client](#setting-up-the-fabric-client)
+  - [Using the fabric client](#using-the-fabric-client)
+  - [Just use the Patterns](#just-use-the-patterns)
+  - [Create your own Fabric Mill](#create-your-own-fabric-mill)
 - [Structure](#structure)
   - [Components](#components)
   - [CLI-native](#cli-native)
@@ -46,6 +48,8 @@
 ```bash
 # A quick demonstration of writing an essay with Fabric
 ```
+
+
 
 https://github.com/danielmiessler/fabric/assets/50654/09c11764-e6ba-4709-952d-450d70d76ac9
 
@@ -116,7 +120,7 @@ The most feature-rich way to use Fabric is to use the `fabric` client, which can
 
 Follow these steps to get the client installed and configured.
 
-1. Navigate to where you want the Fabric project to live on your systemClone the directory to a semi-permanent place on your computer.
+1. Navigate to where you want the Fabric project to live on your system in a semi-permanent place on your computer.
 
 ```bash
 # Find a home for Fabric
@@ -244,6 +248,31 @@ The wisdom of crowds for the win.
 But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure!
 
 To get started, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own Patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
+
+#### Installing the server
+
+Similarly to what you did for installing the CLI, now access the `/server` folder and install the dependencies with poetry, then add the alias to the `fabric-server` binary to bash profile and call `fabric-server`:
+```bash
+# access the server directory
+cd server
+
+# install dependencies
+poetry install
+
+# activate virtual environment
+poetry shell
+
+# determine the path to the fabric-server binary
+which fabric-api
+# determine the path to the fabric-webui binary
+which fabric-webui
+
+# create an alias to them
+echo 'alias fabric-server="/the/path/to/fabric/server/fabric-api"' >> ~/.bashrc
+echo 'alias fabric-webui="/the/path/to/fabric/server/fabric-webui"' >> ~/.bashrc
+```
+
+PS: `fabric-api` and `fabric-webui` need to be run in dictinct terminal windows.
 
 ## Structure
 
