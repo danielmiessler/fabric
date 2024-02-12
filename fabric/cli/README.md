@@ -20,20 +20,7 @@ You can use the client in three different modes:
 
 ## Installation
 
-1. If you have this repository downloaded, you already have the client.
-   `git clone git@github.com:danielmiessler/fabric.git`
-2. Navigate to the client's directory:
-   `cd client`
-3. Install poetry (if you don't have it already)
-   `pip3 install poetry`
-4. Install the required packages:
-    `poetry install`
-5. Activate the virtual environment:
-   `poetry shell`
-6. Copy to path:
-   `echo export PATH=$PATH:$(pwd) >> ~/.bashrc` # or .zshrc
-7. Copy your OpenAI API key to the `.env` file in your `nvim ~/.config/fabric/` directory (or create that file and put it in)
-   `OPENAI_API_KEY=[Your_API_Key]`
+Please check our main [setting up the fabric commands](./../../README.md#setting-up-the-fabric-commands) section.
 
 ## Usage
 
