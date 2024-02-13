@@ -453,6 +453,7 @@ The content features a conversation between two individuals discussing various t
 - _Caleb Sima_ for pushing me over the edge of whether to make this a public project or not.
 - _Joel Parish_ for super useful input on the project's Github directory structure.
 - _Jonathan Dunn_ for spectacular work on the soon-to-be-released universal client.
+- _Joseph Thacker_ for the idea of a `-c` context flag that adds pre-created context in the `./config/fabric/` directory to all Pattern queries.
 - _Jason Haddix_ for the idea of a stitch (chained Pattern) to filter content using a local model before sending on to a cloud model, i.e., cleaning customer data using `llama2` before sending on to `gpt-4` for analysis.
 
 ### Primary contributors
