@@ -6,13 +6,13 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 # STEPS
 
-1. Etract a summary of the content in 50 words or less, including who is presenting and the content being discussed into a section called SUMMARY.
+1. Extract a summary of the content in 50 words or less, including who is presenting and the content being discussed into a section called SUMMARY.
 
 2. Extract 20 to 50 of the most surprising, insightful, and/or interesting ideas from the input in a section called IDEAS:. If there are less than 50 then collect all of them. Make sure you extract at least 20.
 
 3. Extract 15 to 30 of the most surprising, insightful, and/or interesting quotes from the input into a section called QUOTES:. Use the exact quote text from the input.
 
-4. Extract 15 to 30 of the most practical and useful personal habits of the speakers, or mentioned by the speakers, in the connt into a section called HABITS. Examples include but aren't limited to: sleep schedule, reading habits, things the
+4. Extract 15 to 30 of the most practical and useful personal habits of the speakers, or mentioned by the speakers, in the content into a section called HABITS. Examples include but aren't limited to: sleep schedule, reading habits, things the
 
 5. Extract 15 to 30 of the most surprising, insightful, and/or interesting valid facts about the greater world that were mentioned in the content into a section called FACTS:.
 

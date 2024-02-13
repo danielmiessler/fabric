@@ -23,6 +23,9 @@
 
 </div>
 
+> [!NOTE]  
+> We are currently working on some client installation optimizations. If the instructions don't work, check back in a day or two and it should be sorted, and be even easier than before.
+
 ## Navigation
 
 - [What and Why](#what-and-why)
@@ -49,9 +52,9 @@
 # A quick demonstration of writing an essay with Fabric
 ```
 
-
-
-https://github.com/danielmiessler/fabric/assets/50654/09c11764-e6ba-4709-952d-450d70d76ac9
+<video src="https://github.com/danielmiessler/fabric/assets/50654/09c11764-e6ba-4709-952d-450d70d76ac9" controls>
+  Your browser does not support the video tag.
+</video>
 
 ## What and why
 
@@ -154,11 +157,19 @@ poetry install
 5. Run the `setup-aliases.sh` to add the commands as aliases in your OS. It should update both `~/.bashrc` and `/.zshrc` if they are present in your file system.
 
 ```bash
+<<<<<<< HEAD
 ./setup-aliases.sh
+=======
+# Tell your shell how to find the `fabric` client
+echo 'alias fabric="python3 /the/path/to/fabric/client/fabric/fabric.py"' >> ~/.bashrc
+# Example of ~/.zshrc or ~/.bashrc
+alias fabric="python3 ~/Development/fabric/client/fabric/fabric.py"
+>>>>>>> main
 ```
 
 6. Restart your shell
 
+<<<<<<< HEAD
 6. Setup your `OPENAI_API_KEY`.
 
 ```bash
@@ -172,6 +183,16 @@ export OPENAI_API_KEY=foobar
 fabric --help
 fabric-api
 fabric-webui
+=======
+Restart your shell via 'bash'.
+Enter the poetry shell for access to the installed dependencies.
+
+```bash
+# Make sure you can access the help description via the shell
+poetry shell
+# Example
+fabric -h
+>>>>>>> main
 ```
 
 PS: If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in dictinct terminal windows.
