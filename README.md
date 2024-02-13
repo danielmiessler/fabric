@@ -157,42 +157,24 @@ poetry install
 5. Run the `setup-aliases.sh` to add the commands as aliases in your OS. It should update both `~/.bashrc` and `/.zshrc` if they are present in your file system.
 
 ```bash
-<<<<<<< HEAD
 ./setup-aliases.sh
-=======
-# Tell your shell how to find the `fabric` client
-echo 'alias fabric="python3 /the/path/to/fabric/client/fabric/fabric.py"' >> ~/.bashrc
-# Example of ~/.zshrc or ~/.bashrc
-alias fabric="python3 ~/Development/fabric/client/fabric/fabric.py"
->>>>>>> main
 ```
 
 6. Restart your shell
 
-<<<<<<< HEAD
-6. Setup your `OPENAI_API_KEY`.
+7. Setup your `OPENAI_API_KEY`.
 
 ```bash
 export OPENAI_API_KEY=foobar
 ```
 
-7. Check if all command line applications can execute
+8. Check if all command line applications can execute
 
 ```bash
 # Make sure you can
 fabric --help
 fabric-api
 fabric-webui
-=======
-Restart your shell via 'bash'.
-Enter the poetry shell for access to the installed dependencies.
-
-```bash
-# Make sure you can access the help description via the shell
-poetry shell
-# Example
-fabric -h
->>>>>>> main
 ```
 
 PS: If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in dictinct terminal windows.
