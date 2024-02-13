@@ -6,7 +6,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 # STEPS
 
-1. Etract a summary of the content in 50 words or less, including who is presenting and the content being discussed into a section called SUMMARY.
+1. Extract a summary of the content in 50 words or less, including who is presenting and the content being discussed into a section called SUMMARY.
 
 2. Extract 20 to 50 of the most surprising, insightful, and/or interesting ideas from the input in a section called IDEAS:. If there are less than 50 then collect all of them. Make sure you extract at least 20.
 
