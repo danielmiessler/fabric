@@ -189,7 +189,7 @@ class Standalone:
         system = platform.system()
         if system == 'Windows':
             if not sys.stdin.isatty():  # Check if input is being piped
-                return sys.stdin.readline().strip()  # Read piped input
+                return sys.stdin.read().strip()  # Read piped input
             else:
                 return input("Enter Question: ")  # Prompt user for input from console
         else:
