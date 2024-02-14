@@ -34,13 +34,15 @@ Common examples that meet this criteria:
 
 Common examples that meet this criteria:
 
-- Valuable collections of resources
-- Descriptions of the past with offered observations and takeaways
+- Useful collections of resources.
+- Descriptions of the past with offered observations and takeaways.
+- Minor expansions on existing ideas.
 
 "D - Derivative" -- Largely derivative of well-known ideas. Imagine a novelty score between in the 20% to 50% range for this tier.
 
 Common examples that meet this criteria:
 
+- Restatement of common knowledge or best practices.
 - Rehashes of well-known ideas without any new takes or expansions of ideas.
 - Contains ideas or facts, but they're not new or improved in any significant way.
 
