@@ -207,7 +207,7 @@ class Update:
             OSError: If there is an issue creating the pattern_directory.
         """
 
-        self.root_api_url = "https://api.github.com/repos/danielmiessler/fabric/contents/patterns?ref=main"
+        self.root_api_url = "https://api.github.com/repos/chroakPRO/fabric/contents/patterns?ref=main"
         self.config_directory = os.path.expanduser("~/.config/fabric")
         self.pattern_directory = os.path.join(self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
