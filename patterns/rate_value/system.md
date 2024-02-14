@@ -33,9 +33,7 @@ Take a deep breath and think step-by-step about how best to achieve the best out
 4 - Notable
 5 - Remarkable
 
-- In order for a given piece of content to register as a valid Value Instance, it must satisfy both of the following criteria:
-
-1. Hit the "Notable" level of value on the scale of value above. So it must score a 4/5 in value quality.
+- In order for a given piece of content to register as a valid Value Instance, it must reach or exceed the  "Notable" level of value on the scale of value above. So it must score a 4/5 or a 5/5 in value quality.
 
 2. It must ALSO relate to one or more of the following topics:
 
