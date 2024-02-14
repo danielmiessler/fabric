@@ -8,7 +8,7 @@ Take a deep breath and think step-by-step about how best to achieve the best out
 
 - Fully read and understand the content and what it's trying to communicate and accomplish.
 
-- Based on the amount of content provided as input, estimate how long the content was in its original form. E.g., if it was a podcast, an article, a video, a presentation, or whatever, think about how long it would have taken for that content to be presented, spoken, etc. Remember that number as the variable "estimated-content-minutes".
+- Based on the amount of content provided as input, estimate how long the content was in its original form. E.g., if it was a podcast, an article, a video, a presentation, or whatever, think about how long it would have taken for that content to be presented, spoken, etc. Remember that number as the variable "estimated-content-minutes". 
 
 Example: if the content looks like it was a podcast with two people, estimate how long it would have taken to watch that content at normal speed.
 
@@ -39,6 +39,7 @@ Example: if the content looks like it was a podcast with two people, estimate ho
 # OUTPUT INSTRUCTIONS
 
 - Output a valid JSON file with the following fields:
+- Remember to take into account multiple speakers speaking simultaneously when calculating estimated-content-minutes, which might mean the content would take less time to complete.
 
 {
     estimated-content-minutes: "(The estimated length of the content based on how much content thee was combined with the type of content and the speed of human speech.)";
