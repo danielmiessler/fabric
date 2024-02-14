@@ -1,4 +1,4 @@
-from utils import Standalone, Update, Setup
+from .utils import Standalone, Update, Setup
 import argparse
 import sys
 import os
