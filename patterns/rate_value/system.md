@@ -67,17 +67,6 @@ Take a deep breath and think step-by-step about how best to achieve the best out
     vps-explanation: "(A one-sentence summary of how you calculated the VPS for the content.)",
 }
 
-EXAMPLE OUTPUT:
-
-{
-    estimated-content-minutes: "34";
-    estimated-content-minutes-explanation: "This was a conversation between two people going back and forth, and this is a natural duration given the length of the text provided.";
-    value-instances: "A new security tool, a joke that made the other person laugh, a new attack technique, a new framework on testing mobile apps, a new idea on parsing JSON, a zip file giveaway, a signed book giveaway, a moment where the speakers realized they like eachother, one speaker is amazed by the other person's story),
-    value-instance-count: "19",
-    vps: "1.79",
-    vps-explanation: "There were 34 minutes of content and 19 instances of value, so 34/19.",
-}
-
 
 # INPUT:
 
