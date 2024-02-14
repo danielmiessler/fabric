@@ -23,9 +23,6 @@
 
 </div>
 
-> [!NOTE]  
-> We are currently working on some client installation optimizations. If the instructions don't work, check back in a day or two and it should be sorted, and be even easier than before.
-
 ## Navigation
 
 - [What and Why](#what-and-why)
