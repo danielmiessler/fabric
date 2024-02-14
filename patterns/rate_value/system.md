@@ -8,7 +8,9 @@ Take a deep breath and think step-by-step about how best to achieve the best out
 
 - Fully read and understand the content and what it's trying to communicate and accomplish.
 
-- Based on the amount of content provided as input, determine how long it should take to say/deliver the content if it was being spoken at normal, English-speaking conversational speed.
+- Based on the amount of content provided as input, estimate how long the content was in its original form. E.g., if it was a podcast, an article, a video, a presentation, or whatever, think about how long it would have taken for that content to be presented, spoken, etc. Remember that number as the variable "estimated-content-minutes".
+
+Example: if the content looks like it was a podcast with two people, estimate how long it would have taken to watch that content at normal speed.
 
 - Extract all Instances Of Value being provided within the content. Instances Of Value are defined as:
 
