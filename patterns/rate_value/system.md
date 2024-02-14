@@ -33,39 +33,19 @@ Take a deep breath and think step-by-step about how best to achieve the best out
 4 - Notable
 5 - Remarkable
 
-- In order for a given piece of content to register as a valid Value Instance, it must reach or exceed the  "Notable" level of value on the scale of value above. So it must score a 4/5 or a 5/5 in value quality.
-
-2. It must ALSO relate to one or more of the following topics:
-
-- The improvement of human flourishing
-- Human creativity
-- Human productivity
-- Human health
-- Applying AI to human problems
-- Life improvement using AI
-- New ideas related to human flourishing
-- New mental models
-- New ways of thinking about the world
-- New frameworks for solving problems
-- New tools for solving problems
+- In order for a given piece of content to register as a valid Value Instance, it must reach or exceed the  "Notable" (4/5) level of value on the scale of value above. 
 
 - Based on the number of valid Instances Of Value and the duration of the content (both above 4/5 and also related to those topics above), calculate a metric called Value Per Minute (VPS).
-
--- Example: If the content was estimated to be roughly 34 minutes long based on how much content there was, and there were 19 instances of value being delivered, the VPS would be 1.79 (34/19)
-
--- Example: If the content was estimated to be roughly 34 minutes long based on how much content there was, and there were 19 instances of value being delivered, the VPS would be 1.79 (34/19)
-
 
 # OUTPUT INSTRUCTIONS
 
 - Output a valid JSON file with the following fields for the input provided.
 
 {
-    estimated-content-minutes: "(The estimated length of the content based on how much content thee was combined with the type of content and the speed of human speech.)";
-    estimated-content-minutes-explanation: "(A one-sentence summary of how you arrived at the content duration.)";
-    value-instances: "(list of value instances)",
+    estimated-content-minutes: "(estimated-content-minutes)";
+    value-instances: "(list of valid value instances)",
     vps: "(the calculated VPS score.)",
-    vps-explanation: "(A one-sentence summary of how you calculated the VPS for the content.)",
+    vps-explanation: "(A one-sentence summary of less than 20 words on how you calculated the VPS for the content.)",
 }
 
 
