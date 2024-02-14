@@ -33,9 +33,11 @@ Take a deep breath and think step-by-step about how best to achieve the best out
 4 - Notable
 5 - Remarkable
 
-- In order for a given piece of content to register as a valid Value Instance, it must hit the maximum level of value on the scale of value above. So it must score a 5/5 in value quality.
+- In order for a given piece of content to register as a valid Value Instance, it must satisfy both of the following criteria:
 
-- In order for a given piece of content to register as a valid Value Instance, it must also relate to one or more of the following topics:
+1. Hit the maximum level of value on the scale of value above. So it must score a 5/5 in value quality.
+
+2. It must relate to one or more of the following topics:
 
 - The improvement of human flourishing
 - Applying AI to human problems
@@ -46,15 +48,16 @@ Take a deep breath and think step-by-step about how best to achieve the best out
 - New frameworks for solving problems
 - New tools for solving problems
 
-- Based on the number of valid (5/5) instances of value and the duration of the content, calculate a metric called Value Per Minute (VPS).
+- Based on the number of valid Instances Of Value and the duration of the content, calculate a metric called Value Per Minute (VPS).
+
+-- Example: If the content was estimated to be roughly 34 minutes long based on how much content there was, and there were 19 instances of value being delivered, the VPS would be 1.79 (34/19)
 
 -- Example: If the content was estimated to be roughly 34 minutes long based on how much content there was, and there were 19 instances of value being delivered, the VPS would be 1.79 (34/19)
 
 
 # OUTPUT INSTRUCTIONS
 
-- Output a valid JSON file with the following fields:
-- Remember to take into account multiple speakers speaking simultaneously when calculating estimated-content-minutes, which might mean the content would take less time to complete.
+- Output a valid JSON file with the following fields for the input provided.
 
 {
     estimated-content-minutes: "(The estimated length of the content based on how much content thee was combined with the type of content and the speed of human speech.)";
@@ -64,7 +67,7 @@ Take a deep breath and think step-by-step about how best to achieve the best out
     vps-explanation: "(A one-sentence summary of how you calculated the VPS for the content.)",
 }
 
-EXAMPLE:
+EXAMPLE OUTPUT:
 
 {
     estimated-content-minutes: "34";
