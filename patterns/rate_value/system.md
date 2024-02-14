@@ -33,9 +33,9 @@ Take a deep breath and think step-by-step about how best to achieve the best out
 4 - Notable
 5 - Remarkable
 
-- In order for a given piece of content to register as a Value Instance, it must score at least 4 out of 5 (Notable (4) or Remarkable (5)) on the value scale above.
+- In order for a given piece of content to register as a valid Value Instance, it must hit the maximum level of value on the scale of value above. So it must score a 5/5 in value quality.
 
-- Based on the number of valid (4 or above) instances of value and the duration of the content, calculate a metric called Value Per Minute (VPS).
+- Based on the number of valid (5/5) instances of value and the duration of the content, calculate a metric called Value Per Minute (VPS).
 
 -- Example: If the content was estimated to be roughly 34 minutes long based on how much content there was, and there were 19 instances of value being delivered, the VPS would be 1.79 (34/19)
 
