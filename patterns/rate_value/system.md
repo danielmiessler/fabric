@@ -35,11 +35,14 @@ Take a deep breath and think step-by-step about how best to achieve the best out
 
 - In order for a given piece of content to register as a valid Value Instance, it must satisfy both of the following criteria:
 
-1. Hit the maximum level of value on the scale of value above. So it must score a 5/5 in value quality.
+1. Hit the "Notable" level of value on the scale of value above. So it must score a 4/5 in value quality.
 
-2. It must relate to one or more of the following topics:
+2. It must ALSO relate to one or more of the following topics:
 
 - The improvement of human flourishing
+- Human creativity
+- Human productivity
+- Human health
 - Applying AI to human problems
 - Life improvement using AI
 - New ideas related to human flourishing
@@ -48,7 +51,7 @@ Take a deep breath and think step-by-step about how best to achieve the best out
 - New frameworks for solving problems
 - New tools for solving problems
 
-- Based on the number of valid Instances Of Value and the duration of the content, calculate a metric called Value Per Minute (VPS).
+- Based on the number of valid Instances Of Value and the duration of the content (both above 4/5 and also related to those topics above), calculate a metric called Value Per Minute (VPS).
 
 -- Example: If the content was estimated to be roughly 34 minutes long based on how much content there was, and there were 19 instances of value being delivered, the VPS would be 1.79 (34/19)
 
