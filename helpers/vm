@@ -73,7 +73,7 @@ def main(url, options):
         print("Error: Failed to access YouTube API. Please check your YOUTUBE_API_KEY and ensure it is valid.")
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='vm (video meta) extracts metadata about a video, such as the transcript and the video\'s duration. By Daniel Miessler')
+    parser = argparse.ArgumentParser(description='vm (video meta) extracts metadata about a video, such as the transcript and the video\'s duration. Written by Daniel Miessler.')
     parser.add_argument('url', nargs='?', help='YouTube video URL')
     parser.add_argument('--duration', action='store_true', help='Output only the duration')
     parser.add_argument('--transcript', action='store_true', help='Output only the transcript')
