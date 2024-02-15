@@ -11,21 +11,6 @@ import json
 import isodate
 import argparse
 
-class CustomHelpFormatter(argparse.HelpFormatter):
-    def _format_usage(self, usage, actions, groups, prefix):
-        return ''
-
-    def format_help(self):
-        description = self._root_section.format_help().strip()
-        usage = self._format_usage(
-            self._prog,
-            self._actions,
-            self._mutually_exclusive_groups,
-            self._format_usage
-        )
-        usage = usage.replace(self._prog, '').strip()
-        return f"{description}\n\nUsage: {self._prog} {usage}\n{super().format_help()}"
-
 def get_video_id(url):
     # Extract video ID from URL
     pattern = r'(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
@@ -88,10 +73,7 @@ def main(url, options):
         print("Error: Failed to access YouTube API. Please check your YOUTUBE_API_KEY and ensure it is valid.")
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description='vm (video meta) extracts metadata about a video, such as the transcript and the video\'s duration. By Daniel Miessler',
-        formatter_class=CustomHelpFormatter
-    )
+    parser = argparse.ArgumentParser(description='vm (video meta) extracts metadata about a video, such as the transcript and the video\'s duration. By Daniel Miessler.')
     parser.add_argument('url', nargs='?', help='YouTube video URL')
     parser.add_argument('--duration', action='store_true', help='Output only the duration')
     parser.add_argument('--transcript', action='store_true', help='Output only the transcript')
