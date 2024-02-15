@@ -3,17 +3,27 @@ require("dotenv").config({
   path: require("os").homedir() + "/.config/fabric/.env",
 });
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let openaiClient = null;
+
+// Function to initialize and get the OpenAI client
+function getOpenAIClient() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error(
+      "The OPENAI_API_KEY environment variable is missing or empty."
+    );
+  }
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+}
 
 async function queryOpenAI(system, user, callback) {
+  const openai = getOpenAIClient(); // Ensure the client is initialized here
   const messages = [
     { role: "system", content: system },
     { role: "user", content: user },
   ];
-
   try {
     const stream = await openai.chat.completions.create({
-      model: "gpt-4-1106-preview", // Ensure this model supports streaming.
+      model: "gpt-4-1106-preview", // Adjust the model as necessary.
       messages: messages,
       temperature: 0.0,
       top_p: 1,
@@ -22,7 +32,6 @@ async function queryOpenAI(system, user, callback) {
       stream: true,
     });
 
-    // Handling the stream using async iteration
     for await (const chunk of stream) {
       const message = chunk.choices[0]?.delta?.content || "";
       callback(message); // Process each chunk of data

@@ -9,7 +9,17 @@ document.addEventListener("DOMContentLoaded", async function () {
   const saveApiKeyButton = document.getElementById("saveApiKey");
   const apiKeyInput = document.getElementById("apiKeyInput");
   const originalPlaceholder = userInput.placeholder;
+  const updatePatternsButton = document.getElementById("updatePatternsButton");
   const copyButton = document.createElement("button");
+
+  window.electronAPI.on("patterns-ready", () => {
+    console.log("Patterns are ready. Refreshing the pattern list.");
+    loadPatterns();
+  });
+  window.electronAPI.on("request-api-key", () => {
+    // Show the API key input section or modal to the user
+    configSection.classList.remove("hidden"); // Assuming 'configSection' is your API key input area
+  });
   copyButton.textContent = "Copy";
   copyButton.id = "copyButton";
   document.addEventListener("click", function (e) {
@@ -17,6 +27,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       // Your copy to clipboard function
       copyToClipboard();
     }
+  });
+  window.electronAPI.on("no-api-key", () => {
+    alert("API key is missing. Please enter your OpenAI API key.");
+  });
+
+  window.electronAPI.on("patterns-updated", () => {
+    alert("Patterns updated. Refreshing the pattern list.");
+    loadPatterns();
   });
 
   function htmlToPlainText(html) {
@@ -85,6 +103,20 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     document.body.removeChild(textArea);
   }
+  async function loadPatterns() {
+    try {
+      const patterns = await window.electronAPI.invoke("get-patterns");
+      patternSelector.innerHTML = ""; // Clear existing options first
+      patterns.forEach((pattern) => {
+        const option = document.createElement("option");
+        option.value = pattern;
+        option.textContent = pattern;
+        patternSelector.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Failed to load patterns:", error);
+    }
+  }
 
   function fallbackCopyTextToClipboard(text) {
     const textArea = document.createElement("textarea");
@@ -103,6 +135,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     document.body.removeChild(textArea);
   }
+
+  updatePatternsButton.addEventListener("click", () => {
+    window.electronAPI.send("update-patterns");
+  });
 
   // Load patterns on startup
   try {

@@ -199,7 +199,7 @@ class Standalone:
         system = platform.system()
         if system == 'Windows':
             if not sys.stdin.isatty():  # Check if input is being piped
-                return sys.stdin.readline().strip()  # Read piped input
+                return sys.stdin.read().strip()  # Read piped input
             else:
                 return input("Enter Question: ")  # Prompt user for input from console
         else:
@@ -379,3 +379,35 @@ class Setup:
         apikey = input("Please enter your OpenAI API key\n")
         self.api_key(apikey.strip())
         self.patterns()
+
+        
+class Transcribe:
+    def youtube(video_id):
+        """ 
+        This method gets the transciption
+        of a YouTube video designated with the video_id
+        
+        Input:
+            the video id specifing a YouTube video
+            an example url for a video: https://www.youtube.com/watch?v=vF-MQmVxnCs&t=306s
+            the video id is vF-MQmVxnCs&t=306s
+            
+        Output:
+            a transcript for the video
+            
+        Raises:
+            an exception and prints error
+            
+    
+        """
+        try:
+            transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
+            transcript = ""
+            for segment in transcript_list:
+                transcript += segment['text'] + " "
+            return transcript.strip()
+        except Exception as e:
+            print("Error:", e)
+            return None
+    
+
