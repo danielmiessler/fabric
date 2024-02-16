@@ -141,8 +141,15 @@ git clone https://github.com/danielmiessler/fabric.git
 cd fabric
 ```
 
-4. Run the `setup.sh`, which will do the following:
-  - Installs python's poetry dependency manager using their official installer (ref.: https://python-poetry.org/docs/#installing-with-the-official-installer)
+4. Install poetry
+
+ref.: https://python-poetry.org/docs/#installing-with-the-official-installer
+
+```bash
+curl -sSL https://install.python-poetry.org | python3 -
+```
+
+5. Run the `setup.sh`, which will do the following:
   - Installs python dependencies.
   - Creates aliases in your OS. It should update both `~/.bashrc` and `/.zshrc` if they are present in your file system.
 
