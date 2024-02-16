@@ -20,7 +20,7 @@ You can use the client in three different modes:
 
 ## Installation
 
-Please check our main [setting up the fabric commands](./../../README.md#setting-up-the-fabric-commands) section.
+Please check our main [setting up the fabric commands](./../../../README.md#setting-up-the-fabric-commands) section.
 
 ## Usage
 
