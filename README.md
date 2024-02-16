@@ -141,21 +141,13 @@ git clone https://github.com/danielmiessler/fabric.git
 cd fabric
 ```
 
-4. Install the dependencies
+4. Run the `setup.sh`, which will do the following:
+  - Installs python's poetry dependency manager using their official installer (ref.: https://python-poetry.org/docs/#installing-with-the-official-installer)
+  - Installs python dependencies.
+  - Creates aliases in your OS. It should update both `~/.bashrc` and `/.zshrc` if they are present in your file system.
 
 ```bash
-# Run this if you do not have already installed python poetry
-# Alternatively, check the official poetry docs install instructions at https://python-poetry.org/docs/#installing-with-the-official-installer
-pip3 install poetry
-
-# Install the dependencies
-poetry install
-```
-
-5. Run the `setup-aliases.sh` to add the commands as aliases in your OS. It should update both `~/.bashrc` and `/.zshrc` if they are present in your file system.
-
-```bash
-./setup-aliases.sh
+./setup.sh
 ```
 
 6. Restart your shell
