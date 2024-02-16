@@ -8,7 +8,7 @@ poetry install
 commands=("fabric" "fabric-api" "fabric-webui")
 
 # List of shell configuration files to update
-config_files=(~/.bashrc ~/.zshrc)
+config_files=(~/.bashrc ~/.zshrc ~/.bash_profile)
 
 for config_file in "${config_files[@]}"; do
   # Check if the configuration file exists
