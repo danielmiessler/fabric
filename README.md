@@ -151,7 +151,7 @@ curl -sSL https://install.python-poetry.org | python3 -
 
 5. Run the `setup.sh`, which will do the following:
   - Installs python dependencies.
-  - Creates aliases in your OS. It should update both `~/.bashrc` and `/.zshrc` if they are present in your file system.
+  - Creates aliases in your OS. It should update `~/.bashrc`, `/.zshrc`, and `~/.bash_profile` if they are present in your file system.
 
 ```bash
 ./setup.sh
