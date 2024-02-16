@@ -25,7 +25,7 @@ for config_file in "${config_files[@]}"; do
         echo "Updated alias for $cmd in $config_file."
       else
         # If not, add the alias to the config file
-        echo "alias $cmd='$CMD_PATH'" >> "$config_file"
+        echo -e "\nalias $cmd='$CMD_PATH'" >> "$config_file"
         echo "Added alias for $cmd to $config_file."
       fi
     done
