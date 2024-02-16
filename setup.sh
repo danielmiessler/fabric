@@ -2,7 +2,7 @@
 
 # Installs poetry on Unix
 echo "Installing poetry" 
-curl -sSL https://install.python-poetry.org | python3 -
+
 
 # Installs poetry-based python dependencies
 echo "Installing python dependencies"
@@ -37,3 +37,5 @@ for config_file in "${config_files[@]}"; do
     echo "$config_file does not exist."
   fi
 done
+
+echo "Please close this terminal window to have new alies work."
