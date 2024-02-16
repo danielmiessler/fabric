@@ -34,4 +34,4 @@ for config_file in "${config_files[@]}"; do
   fi
 done
 
-echo "Please close this terminal window to have new alies work."
+echo "Please close this terminal window to have new aliases work."
