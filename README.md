@@ -134,17 +134,18 @@ cd /where/you/keep/code
 git clone https://github.com/danielmiessler/fabric.git
 ```
 
-3. Enter Fabric's main directory
+3. Enter Fabric's `fabric_installer` directory
 
 ```bash
-# Enter the project folder
-cd fabric
+# Enter the project's fabric_installer folder
+cd fabric/fabric_installer
 ```
 
 4. Install the dependencies
 
 ```bash
 # Run this if you do not have already installed python poetry
+# Alternatively, check the official poetry docs install instructions at https://python-poetry.org/docs/#installing-with-the-official-installer
 pip3 install poetry
 
 # Install the dependencies
