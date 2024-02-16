@@ -5,7 +5,7 @@
 # It will create aliases (command nicknames) for the python binaries to be known
 # by your OS
 
-# List of commands to check and add alias for
+# List of commands to check and add or update alias for
 commands=("fabric" "fabric-api" "fabric-webui")
 
 # List of shell configuration files to update
@@ -21,11 +21,13 @@ for config_file in "${config_files[@]}"; do
 
       # Check if the config file contains an alias for the command
       if grep -q "alias $cmd=" "$config_file"; then
-        echo "Alias for $cmd already exists in $config_file."
+        # Replace the existing alias with the new one
+        sed -i "/alias $cmd=/c\alias $cmd='$CMD_PATH'" "$config_file"
+        echo "Updated alias for $cmd in $config_file."
       else
         # If not, add the alias to the config file
-        echo "Adding alias for $cmd to $config_file."
         echo "alias $cmd='$CMD_PATH'" >> "$config_file"
+        echo "Added alias for $cmd to $config_file."
       fi
     done
   else
