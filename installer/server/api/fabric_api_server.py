@@ -35,15 +35,6 @@ def server_error(e):
 
 ## Did I mention this is HTTP only? Don't run this on the public internet.
 
-## Set authentication on your APIs
-## Let's at least have some kind of auth
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-## Define our own client
-client = openai.OpenAI(api_key = openai.api_key)
-
-
 # Read API tokens from the apikeys.json file
 api_keys = resources.read_text("installer.server.api", "fabric_api_keys.json")
 valid_tokens = json.loads(api_keys)
