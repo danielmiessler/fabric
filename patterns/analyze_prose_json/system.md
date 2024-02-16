@@ -30,24 +30,28 @@ Common examples that meet this criteria:
 
 - Minor expansion on existing ideas, but in a way that's useful.
 
-"C - Incremental" -- Useful expansion or improvement of existing ideas, or a useful description of the past, but no expansion or creation of new ideas. Imagine a novelty score between 50% and 80% for this tier.
+"C - Incremental" -- Useful expansion or significant improvement of existing ideas, or a somewhat insightful description of the past, but no expansion on, or creation of, new ideas. Imagine a novelty score between 50% and 80% for this tier.
 
 Common examples that meet this criteria:
 
-- Valuable collections of resources
-- Descriptions of the past with offered observations and takeaways
+- Useful collections of resources.
+- Descriptions of the past with offered observations and takeaways.
+- Minor expansions on existing ideas.
 
 "D - Derivative" -- Largely derivative of well-known ideas. Imagine a novelty score between in the 20% to 50% range for this tier.
 
 Common examples that meet this criteria:
 
-- Contains ideas or facts, but they're not new in any way.
+- Restatement of common knowledge or best practices.
+- Rehashes of well-known ideas without any new takes or expansions of ideas.
+- Contains ideas or facts, but they're not new or improved in any significant way.
 
 "F - Stale" -- No new ideas whatsoever. Imagine a novelty score below 20% for this tier.
 
 Common examples that meet this criteria:
 
-- Random ramblings that say nothing new.
+- Completely trite and unoriginal ideas.
+- Heavily cliche or standard ideas.
 
 4. Evaluate the CLARITY of the writing on the following scale.
 
