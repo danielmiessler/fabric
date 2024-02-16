@@ -134,11 +134,11 @@ cd /where/you/keep/code
 git clone https://github.com/danielmiessler/fabric.git
 ```
 
-3. Enter Fabric's `fabric_installer` directory
+3. Enter Fabric's main directory
 
 ```bash
-# Enter the project's fabric_installer folder
-cd fabric/fabric_installer
+# Enter the project folder (where you cloned it)
+cd fabric
 ```
 
 4. Install the dependencies
