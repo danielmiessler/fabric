@@ -31,7 +31,7 @@
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
 - [Quickstart](#quickstart)
-  - [Setting up the fabric client](#setting-up-the-fabric-client)
+  - [Setting up the fabric commands](#setting-up-the-fabric-commands)
   - [Using the fabric client](#using-the-fabric-client)
   - [Just use the Patterns](#just-use-the-patterns)
   - [Create your own Fabric Mill](#create-your-own-fabric-mill)
@@ -116,9 +116,9 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/client">`/client`</a> directory in this repository.
 
-### Setting up the `fabric` client
+### Setting up the fabric commands
 
-Follow these steps to get the client installed and configured.
+Follow these steps to get all fabric related apps installed and configured.
 
 1. Navigate to where you want the Fabric project to live on your system in a semi-permanent place on your computer.
 
@@ -134,40 +134,48 @@ cd /where/you/keep/code
 git clone https://github.com/danielmiessler/fabric.git
 ```
 
-3. Enter Fabric's /client directory
+3. Enter Fabric's main directory
 
 ```bash
-# Enter the project and its /client folder
-cd fabric/client
+# Enter the project folder (where you cloned it)
+cd fabric
 ```
 
-4. Install the dependencies
+4. Install poetry
+
+ref.: https://python-poetry.org/docs/#installing-with-the-official-installer
 
 ```bash
-# Install the pre-requisites
-poetry install
+curl -sSL https://install.python-poetry.org | python3 -
 ```
 
-5. Add the path to the `fabric` client to your shell
+5. Run the `setup.sh`, which will do the following:
+  - Installs python dependencies.
+  - Creates aliases in your OS. It should update `~/.bashrc`, `/.zshrc`, and `~/.bash_profile` if they are present in your file system.
 
 ```bash
-# Tell your shell how to find the `fabric` client
-echo 'alias fabric="python3 /the/path/to/fabric/client/fabric/fabric.py"' >> ~/.bashrc
-# Example of ~/.zshrc or ~/.bashrc
-alias fabric="python3 ~/Development/fabric/client/fabric/fabric.py"
+./setup.sh
 ```
 
 6. Restart your shell
 
-Restart your shell via 'bash'.
-Enter the poetry shell for access to the installed dependencies.
+7. Setup your `OPENAI_API_KEY`.
 
 ```bash
-# Make sure you can access the help description via the shell
-poetry shell
-# Example
-fabric -h
+export OPENAI_API_KEY=foobar
 ```
+
+8. Check if all command line applications can execute
+
+```bash
+# Make sure you can
+fabric --help
+fabric-api
+fabric-webui
+```
+
+PS: If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in dictinct terminal windows.
+
 
 ### Using the `fabric` client
 
@@ -248,32 +256,6 @@ The wisdom of crowds for the win.
 But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure!
 
 To get started, head over to the [`/server/`](https://github.com/danielmiessler/fabric/tree/main/server) directory and set up your own Fabric Mill with your own Patterns running! You can then use the [`/client/standalone_client_examples`](https://github.com/danielmiessler/fabric/tree/main/client/standalone_client_examples) to connect to it.
-
-#### Installing the server
-
-Similarly to what you did for installing the CLI, now access the `/server` folder and install the dependencies with poetry, then add the alias to the `fabric-server` binary to bash profile and call `fabric-server`:
-
-```bash
-# access the server directory
-cd server
-
-# install dependencies
-poetry install
-
-# activate virtual environment
-poetry shell
-
-# determine the path to the fabric-server binary
-which fabric-api
-# determine the path to the fabric-webui binary
-which fabric-webui
-
-# create an alias to them
-echo 'alias fabric-server="/the/path/to/fabric/server/fabric-api"' >> ~/.bashrc
-echo 'alias fabric-webui="/the/path/to/fabric/server/fabric-webui"' >> ~/.bashrc
-```
-
-PS: `fabric-api` and `fabric-webui` need to be run in dictinct terminal windows.
 
 ## Structure
 
