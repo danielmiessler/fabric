@@ -1,9 +1,12 @@
 #!/bin/bash
 
-# Run this script once you've run `poetry install` for getting dependencies
+# Installs poetry on Unix
+echo "Installing poetry" 
+curl -sSL https://install.python-poetry.org | python3 -
 
-# It will create aliases (command nicknames) for the python binaries to be known
-# by your OS
+# Installs poetry-based python dependencies
+echo "Installing python dependencies"
+poetry install
 
 # List of commands to check and add or update alias for
 commands=("fabric" "fabric-api" "fabric-webui")
