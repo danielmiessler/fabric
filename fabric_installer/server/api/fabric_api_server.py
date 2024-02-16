@@ -45,12 +45,12 @@ client = openai.OpenAI(api_key = openai.api_key)
 
 
 # Read API tokens from the apikeys.json file
-api_keys = resources.read_text("fabric.server.api", "fabric_api_keys.json")
+api_keys = resources.read_text("fabric_installer.server.api", "fabric_api_keys.json")
 valid_tokens = json.loads(api_keys)
 
 
 # Read users from the users.json file
-users = resources.read_text("fabric.server.api", "users.json")
+users = resources.read_text("fabric_installer.server.api", "users.json")
 users = json.loads(users)
 
 

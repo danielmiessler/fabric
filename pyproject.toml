@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fabric"
+name = "fabric-installer"
 version = "0.2.0"
 description = "Fabric - AI framework for human augmentation"
 authors = [
@@ -46,6 +46,6 @@ build-backend = "poetry.core.masonry.api"
 
 # Creates python "binaries"
 [tool.poetry.scripts]
-fabric = 'fabric:cli'
-fabric-api = 'fabric:run_api_server'
-fabric-webui = 'fabric:run_webui_server'
+fabric = 'fabric_installer:cli'
+fabric-api = 'fabric_installer:run_api_server'
+fabric-webui = 'fabric_installer:run_webui_server'
