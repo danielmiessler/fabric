@@ -162,24 +162,25 @@ curl -sSL https://install.python-poetry.org | python3 -
 ./setup.sh
 ```
 
-6. Restart your shell
+6. Restart your shell to reload everything.
 
-7. Setup your `OPENAI_API_KEY`.
+7. Set your `OPENAI_API_KEY`.
 
 ```bash
-export OPENAI_API_KEY=foobar
+fabric --setup
 ```
 
-8. Check if all command line applications can execute
+You'll be asked to enter your OpenAI API key, which will be written to `~/.config/fabric/.env`. Patterns will then be downloaded from Github, which will take a few moments.
+
+8. Now you are up and running! You can test by pulling the help.
 
 ```bash
-# Make sure you can
+# Making sure the paths are set up correctly
 fabric --help
-fabric-api
-fabric-webui
 ```
 
-PS: If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in dictinct terminal windows.
+> [!NOTE]  
+> If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in distinct terminal windows.
 
 
 ### Using the `fabric` client
@@ -210,14 +211,6 @@ options:
                         The pattern (prompt) to use
   --setup               Set up your fabric instance
 ```
-
-2. Set up the client
-
-```bash
-fabric --setup
-```
-
-You'll be asked to enter your OpenAI API key, which will be written to `~/.config/fabric/.env`. Patterns will then be downloaded from Github, which will take a few moments.
 
 #### Example commands
 
