@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Installs poetry on Unix
-echo "Installing poetry" 
-
-
 # Installs poetry-based python dependencies
 echo "Installing python dependencies"
 poetry install
