@@ -453,6 +453,7 @@ The content features a conversation between two individuals discussing various t
 - _Joseph Thacker_ for the idea of a `-c` context flag that adds pre-created context in the `./config/fabric/` directory to all Pattern queries.
 - _Jason Haddix_ for the idea of a stitch (chained Pattern) to filter content using a local model before sending on to a cloud model, i.e., cleaning customer data using `llama2` before sending on to `gpt-4` for analysis.
 - _Dani Goland_ for enhancing the Fabric Server (Mill) infrastructure by migrating to FastAPI, breaking the server into discrete pieces, and Dockerizing the entire thing.
+- _Andre Guerra_ for simplifying installation by getting us onto Poetry for virtual environment and dependency management.
 
 ### Primary contributors
 
