@@ -13,6 +13,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
+litellm = "^1.24.6"
 
 [tool.poetry.group.cli.dependencies]
 pyyaml = "^6.0.1"
