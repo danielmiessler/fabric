@@ -40,6 +40,7 @@
   - [CLI-native](#cli-native)
   - [Directly calling Patterns](#directly-calling-patterns)
 - [Examples](#examples)
+- [LLM Providers / LocalLLMs](#llm-providers--localllms)
 - [Meta](#meta)
   - [Primary contributors](#primary-contributors)
 
@@ -420,6 +421,30 @@ The content features a conversation between two individuals discussing various t
 8. Robert Pirsig's writings
 9. Bertrand Russell's definition of philosophy
 10. Nietzsche's walks
+```
+
+## LLM Providers / LocalLLMs
+`fabric` leverages LiteLLM to enable users to seamlessly utilize a wide array of LLM Providers and Models. With LiteLLM, users can effortlessly switch between different providers and models by specifying the desired provider and model name through command line options. `fabric` utilizes LiteLLM to dynamically load the specified provider and model, empowering users to harness the unique capabilities offered by each LLM provider or model.
+
+> Please ensure that you have configured the appropriate environment variables. For instance, set `HUGGINGFACE_API_KEY` if you intend to utilize the Hugging Face API.
+
+### Usage:
+
+To specify the provider and model when running `fabric`, use the `--model` option followed by the provider and model name.
+
+```shell
+fabric --model <provider>/<model>
+```
+Examples:
+
+```shell
+# Use a Ollama model
+fabric --model ollama/openchat
+```
+
+```shell
+# Use a Hugging Face Model
+fabric --model huggingface/WizardLM/WizardCoder-Python-34B-V1.0
 ```
 
 ## Meta
