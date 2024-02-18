@@ -5,6 +5,8 @@ import os
 
 
 script_directory = os.path.dirname(os.path.realpath(__file__))
+context_file = os.path.join(script_directory, "context.md")
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -31,7 +33,8 @@ def main():
     parser.add_argument(
         "--list", "-l", help="List available patterns", action="store_true"
     )
-    parser.add_argument("--update", "-u", help="Update patterns", action="store_true")
+    parser.add_argument(
+        "--update", "-u", help="Update patterns", action="store_true")
     parser.add_argument("--pattern", "-p", help="The pattern (prompt) to use")
     parser.add_argument(
         "--setup", help="Set up your fabric instance", action="store_true"
@@ -42,6 +45,8 @@ def main():
     parser.add_argument(
         "--listmodels", help="List all available models", action="store_true"
     )
+    parser.add_argument('--context', '-C',
+                        help="Use Context file (context.md) to add context to your pattern", action="store_true")
 
     args = parser.parse_args()
     home_holder = os.path.expanduser("~")
@@ -80,10 +85,19 @@ def main():
         text = args.text
     else:
         text = standalone.get_cli_input()
-    if args.stream:
+    if args.stream and not args.context:
         standalone.streamMessage(text)
+    if args.stream and args.context:
+        with open(context_file, "r") as f:
+            context = f.read()
+            standalone.streamMessage(text, context=context)
+    elif args.context:
+        with open(context_file, "r") as f:
+            context = f.read()
+            standalone.sendMessage(text, context=context)
     else:
         standalone.sendMessage(text)
+
 
 if __name__ == "__main__":
     main()
