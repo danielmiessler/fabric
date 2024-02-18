@@ -14,7 +14,7 @@ def main():
     )
     parser.add_argument("--text", "-t", help="Text to extract summary from")
     parser.add_argument(
-        "--copy", "-c", help="Copy the response to the clipboard", action="store_true"
+        "--copy", "-C", help="Copy the response to the clipboard", action="store_true"
     )
     parser.add_argument(
         "--output",
@@ -45,7 +45,7 @@ def main():
     parser.add_argument(
         "--listmodels", help="List all available models", action="store_true"
     )
-    parser.add_argument('--context', '-C',
+    parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
 
     args = parser.parse_args()
