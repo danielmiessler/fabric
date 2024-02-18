@@ -5,7 +5,6 @@ import os
 
 
 script_directory = os.path.dirname(os.path.realpath(__file__))
-context_file = os.path.join(script_directory, "context.md")
 
 
 def main():
@@ -52,6 +51,7 @@ def main():
     home_holder = os.path.expanduser("~")
     config = os.path.join(home_holder, ".config", "fabric")
     config_patterns_directory = os.path.join(config, "patterns")
+    config_context = os.path.join(config, "context.md")
     env_file = os.path.join(config, ".env")
     if not os.path.exists(config):
         os.makedirs(config)
@@ -68,6 +68,10 @@ def main():
         Update()
         print("Your Patterns have been updated.")
         sys.exit()
+    if args.context:
+        if not os.path.exists(os.path.join(config, "context.md")):
+            print("Please create a context.md file in ~/.config/fabric")
+            sys.exit()
     standalone = Standalone(args, args.pattern)
     if args.list:
         try:
@@ -88,11 +92,11 @@ def main():
     if args.stream and not args.context:
         standalone.streamMessage(text)
     if args.stream and args.context:
-        with open(context_file, "r") as f:
+        with open(config_context, "r") as f:
             context = f.read()
             standalone.streamMessage(text, context=context)
     elif args.context:
-        with open(context_file, "r") as f:
+        with open(config_context, "r") as f:
             context = f.read()
             standalone.sendMessage(text, context=context)
     else:
