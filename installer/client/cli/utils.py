@@ -80,7 +80,11 @@ class Standalone:
                 print("pattern not found")
                 return
         else:
-            messages = [user_message]
+            if context:
+                user_message += {role: "system", content: context}
+                messages = [user_message]
+            else:
+                messages = [user_message]
         try:
             stream = self.client.chat.completions.create(
                 model=self.model,
@@ -142,7 +146,11 @@ class Standalone:
                 print("pattern not found")
                 return
         else:
-            messages = [user_message]
+            if context:
+                user_message += {'role': 'system', 'content': context}
+                messages = [user_message]
+            else:
+                messages = [user_message]
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
