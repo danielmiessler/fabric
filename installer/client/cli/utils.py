@@ -13,7 +13,6 @@ config_directory = os.path.expanduser("~/.config/fabric")
 env_file = os.path.join(config_directory, ".env")
 
 
-
 class Standalone:
     def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
         """        Initialize the class with the provided arguments and environment file.
@@ -49,7 +48,7 @@ class Standalone:
         self.args = args
         self.model = args.model
 
-    def streamMessage(self, input_data: str):
+    def streamMessage(self, input_data: str, context=""):
         """        Stream a message and handle exceptions.
 
         Args:
@@ -71,7 +70,10 @@ class Standalone:
         if self.pattern:
             try:
                 with open(wisdom_File, "r") as f:
-                    system = f.read()
+                    if context:
+                        system = context + '\n\n' + f.read()
+                    else:
+                        system = f.read()
                     system_message = {"role": "system", "content": system}
                 messages = [system_message, user_message]
             except FileNotFoundError:
@@ -109,7 +111,7 @@ class Standalone:
             with open(self.args.output, "w") as f:
                 f.write(buffer)
 
-    def sendMessage(self, input_data: str):
+    def sendMessage(self, input_data: str, context=""):
         """        Send a message using the input data and generate a response.
 
         Args:
@@ -130,7 +132,10 @@ class Standalone:
         if self.pattern:
             try:
                 with open(wisdom_File, "r") as f:
-                    system = f.read()
+                    if context:
+                        system = context + '\n\n' + f.read()
+                    else:
+                        system = f.read()
                     system_message = {"role": "system", "content": system}
                 messages = [system_message, user_message]
             except FileNotFoundError:
@@ -159,28 +164,30 @@ class Standalone:
 
     def fetch_available_models(self):
         headers = {
-            "Authorization": f"Bearer { self.client.api_key }"
+            "Authorization": f"Bearer {self.client.api_key}"
         }
-        
-        response = requests.get("https://api.openai.com/v1/models", headers=headers)
+
+        response = requests.get(
+            "https://api.openai.com/v1/models", headers=headers)
 
         if response.status_code == 200:
             models = response.json().get("data", [])
             # Filter only gpt models
-            gpt_models = [model for model in models if model.get("id", "").startswith(("gpt"))]
+            gpt_models = [model for model in models if model.get(
+                "id", "").startswith(("gpt"))]
             # Sort the models alphabetically by their ID
             sorted_gpt_models = sorted(gpt_models, key=lambda x: x.get("id"))
-            
+
             for model in sorted_gpt_models:
                 print(model.get("id"))
         else:
             print(f"Failed to fetch models: HTTP {response.status_code}")
-    
+
     def get_cli_input(self):
         """ aided by ChatGPT; uses platform library
         accepts either piped input or console input
         from either Windows or Linux
-        
+
         Args:
             none
         Returns:
@@ -191,7 +198,8 @@ class Standalone:
             if not sys.stdin.isatty():  # Check if input is being piped
                 return sys.stdin.read().strip()  # Read piped input
             else:
-                return input("Enter Question: ")  # Prompt user for input from console
+                # Prompt user for input from console
+                return input("Enter Question: ")
         else:
             return sys.stdin.read()
 
@@ -209,7 +217,8 @@ class Update:
 
         self.root_api_url = "https://api.github.com/repos/danielmiessler/fabric/contents/patterns?ref=main"
         self.config_directory = os.path.expanduser("~/.config/fabric")
-        self.pattern_directory = os.path.join(self.config_directory, "patterns")
+        self.pattern_directory = os.path.join(
+            self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
         self.update_patterns()  # Call the update process from a method.
 
@@ -313,7 +322,9 @@ class Update:
                 )
                 self.progress_bar.close()  # Ensure the progress bar is cleaned up properly
             else:
-                print(f"Failed to fetch directory contents due to an HTTP error: {e}")
+                print(
+                    f"Failed to fetch directory contents due to an HTTP error: {e}")
+
 
 class Setup:
     def __init__(self):
@@ -324,7 +335,8 @@ class Setup:
         """
 
         self.config_directory = os.path.expanduser("~/.config/fabric")
-        self.pattern_directory = os.path.join(self.config_directory, "patterns")
+        self.pattern_directory = os.path.join(
+            self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
         self.env_file = os.path.join(self.config_directory, ".env")
 
@@ -370,25 +382,25 @@ class Setup:
         self.api_key(apikey.strip())
         self.patterns()
 
-        
+
 class Transcribe:
     def youtube(video_id):
         """ 
         This method gets the transciption
         of a YouTube video designated with the video_id
-        
+
         Input:
             the video id specifing a YouTube video
             an example url for a video: https://www.youtube.com/watch?v=vF-MQmVxnCs&t=306s
             the video id is vF-MQmVxnCs&t=306s
-            
+
         Output:
             a transcript for the video
-            
+
         Raises:
             an exception and prints error
-            
-    
+
+
         """
         try:
             transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
@@ -399,5 +411,3 @@ class Transcribe:
         except Exception as e:
             print("Error:", e)
             return None
-    
-
