@@ -32,7 +32,8 @@ Options include:
 --pattern, -p: Select the module for analysis.
 --stream, -s: Stream output to another application.
 --output, -o: Save the response to a file.
---copy, -c: Copy the response to the clipboard.
+--copy, -C: Copy the response to the clipboard.
+--context, -c: Use Context file (context.md) to add context to your pattern
 
 Example:
 

@@ -1,0 +1,37 @@
+name: Bug Report
+description: File a bug report.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: "I was doing THIS, when THAT happened. I was expecting THAT_OTHER_THING to happen instead."
+    validations:
+      required: true
+  - type: checkboxes
+    id: version
+    attributes:
+      label: Version check
+      description: Please make sure you were using the latest version of this project available in the `main` branch.
+      options:
+        - label: Yes I was.
+          required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: textarea
+    id: screens
+    attributes:
+      label: Relevant screenshots (optional)
+      description: Please upload any screenshots that may help us reproduce and/or understand the issue.
