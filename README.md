@@ -96,7 +96,7 @@ Fabric has Patterns for all sorts of life and work activities, including:
 - Getting summaries of long, boring content
 - Explaining code to you
 - Turning bad documentation into usable documentation
-- Create social media posts from any content input
+- Creating social media posts from any content input
 - And a million more…
 
 ### Our approach to prompting
