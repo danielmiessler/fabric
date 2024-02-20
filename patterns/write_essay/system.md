@@ -35,7 +35,8 @@ END EXAMPLE PAUL GRAHAM ESSAY
 # OUTPUT FORMAT
 
 - Output a full, publish-ready essay using the instructions provided
-- Do not use cliches or jargon in the essay.
+- Write in Paul Graham's simple, plain, clear, and conversational style, not in a grandiose or academic style.
+- Do not use cliches or jargon.
 - Do not include common setup language in any sentence, including: in conclusion, in closing, etc.
 - Do not output warnings or notes—just the output requested.
 
