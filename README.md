@@ -146,7 +146,13 @@ git clone https://github.com/danielmiessler/fabric.git
 cd fabric
 ```
 
-4. Install poetry
+4. Ensure the `setup.sh` script is executable. If you're not sure, you can make it executable by running the following command:
+
+```bash
+chmod +x setup.sh
+```
+
+5. Install poetry
 
 ref.: https://python-poetry.org/docs/#installing-with-the-official-installer
 
@@ -154,7 +160,7 @@ ref.: https://python-poetry.org/docs/#installing-with-the-official-installer
 curl -sSL https://install.python-poetry.org | python3 -
 ```
 
-5. Run the `setup.sh`, which will do the following:
+6. Run the `setup.sh`, which will do the following:
   - Installs python dependencies.
   - Creates aliases in your OS. It should update `~/.bashrc`, `/.zshrc`, and `~/.bash_profile` if they are present in your file system.
 
@@ -162,9 +168,9 @@ curl -sSL https://install.python-poetry.org | python3 -
 ./setup.sh
 ```
 
-6. Restart your shell to reload everything.
+7. Restart your shell to reload everything.
 
-7. Set your `OPENAI_API_KEY`.
+8. Set your `OPENAI_API_KEY`.
 
 ```bash
 fabric --setup
@@ -172,7 +178,7 @@ fabric --setup
 
 You'll be asked to enter your OpenAI API key, which will be written to `~/.config/fabric/.env`. Patterns will then be downloaded from Github, which will take a few moments.
 
-8. Now you are up and running! You can test by pulling the help.
+9. Now you are up and running! You can test by pulling the help.
 
 ```bash
 # Making sure the paths are set up correctly
