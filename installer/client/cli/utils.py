@@ -223,6 +223,7 @@ class Update:
         self.pattern_directory = os.path.join(
             self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
+        print("Updating patterns...")
         self.update_patterns()  # Start the update process immediately
 
     def update_patterns(self):
