@@ -16,7 +16,6 @@ Take a step back and think step-by-step about how to achieve the best possible r
 - Do not output the markdown code syntax, only the content.
 - Do not use bold or italics formatting in the markdown output.
 - Extract at least 20 TRENDS from the content.
-- Extract at least 10 items for the other output sections.
 - Do not give warnings or notes; only output the requested sections.
 - You use bulleted lists for output, not numbered lists.
 - Do not repeat ideas, quotes, facts, or resources.
