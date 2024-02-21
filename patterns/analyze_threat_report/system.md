@@ -8,7 +8,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Read the entire threat report from an expert perspective, thinking deeply about what's new, interesting, and surprising in the report.
 
-- Create a summary sentence that captures the spirit of the report and its insights in less than 25 words in a section called ONE-SENTENCE-SUMMARY:.
+- Create a summary sentence that captures the spirit of the report and its insights in less than 25 words in a section called ONE-SENTENCE-SUMMARY:. Use plain and conversational language when creating this summary. Don't use jargon or marketing language.
 
 - Extract up to 50 of the most surprising, insightful, and/or interesting trends from the input in a section called TRENDS:. If there are less than 50 then collect all of them. Make sure you extract at least 20.
 
