@@ -161,8 +161,9 @@ curl -sSL https://install.python-poetry.org | python3 -
 ```
 
 6. Run the `setup.sh`, which will do the following:
-  - Installs python dependencies.
-  - Creates aliases in your OS. It should update `~/.bashrc`, `/.zshrc`, and `~/.bash_profile` if they are present in your file system.
+
+- Installs python dependencies.
+- Creates aliases in your OS. It should update `~/.bashrc`, `/.zshrc`, and `~/.bash_profile` if they are present in your file system.
 
 ```bash
 ./setup.sh
@@ -187,7 +188,6 @@ fabric --help
 
 > [!NOTE]  
 > If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in distinct terminal windows.
-
 
 ### Using the `fabric` client
 
@@ -232,6 +232,12 @@ pbpaste | fabric --pattern summarize
 
 ```bash
 pbpaste | fabric --stream --pattern analyze_claims
+```
+
+3. **new** All of the patterns have been added as aliases to your bash (or zsh) config file
+
+```bash
+pbpaste | analyze_claims --stream
 ```
 
 > [!NOTE]  
