@@ -1,6 +1,7 @@
-from .utils import Standalone, Update, Setup
+from .utils import Standalone, Update, Setup, Alias
 import argparse
 import sys
+import time
 import os
 
 
@@ -57,15 +58,18 @@ def main():
         os.makedirs(config)
     if args.setup:
         Setup().run()
+        Alias()
         sys.exit()
     if not os.path.exists(env_file) or not os.path.exists(config_patterns_directory):
         print("Please run --setup to set up your API key and download patterns.")
         sys.exit()
     if not os.path.exists(config_patterns_directory):
         Update()
+        Alias()
         sys.exit()
     if args.update:
         Update()
+        Alias()
         print("Your Patterns have been updated.")
         sys.exit()
     if args.context:

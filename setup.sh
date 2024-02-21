@@ -14,6 +14,7 @@ poetry install
 # List of commands to check and add or update alias for
 commands=("fabric" "fabric-api" "fabric-webui")
 
+
 # List of shell configuration files to update
 config_files=("$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.bash_profile")
 
