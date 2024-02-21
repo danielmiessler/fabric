@@ -13,6 +13,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 # OUTPUT INSTRUCTIONS
 
 - Only output Markdown.
+- Do not output the markdown code syntax, only the content.
 - Extract at least 20 TRENDS from the content.
 - Extract at least 10 items for the other output sections.
 - Do not give warnings or notes; only output the requested sections.
