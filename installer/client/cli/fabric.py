@@ -70,7 +70,6 @@ def main():
     if args.update:
         Update()
         Alias()
-        print("Your Patterns have been updated.")
         sys.exit()
     if args.context:
         if not os.path.exists(os.path.join(config, "context.md")):
