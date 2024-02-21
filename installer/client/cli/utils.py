@@ -273,6 +273,7 @@ class Alias:
                 home_directory, ".bash_profile"))
         self.remove_all_patterns()
         self.add_patterns()
+        print('Aliases added successfully. Please restart your terminal to use them.')
 
     def add(self, name, alias):
         for file in self.config_files:
