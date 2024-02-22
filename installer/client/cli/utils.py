@@ -222,122 +222,104 @@ class Standalone:
 
 class Update:
     def __init__(self):
-        """        Initialize the object with default values and update patterns.
-
-        This method initializes the object with default values for root_api_url, config_directory, and pattern_directory.
-        It then creates the pattern_directory if it does not exist and calls the update_patterns method to update the patterns.
-
-        Raises:
-            OSError: If there is an issue creating the pattern_directory.
-        """
-
-        self.root_api_url = "https://api.github.com/repos/danielmiessler/fabric/contents/patterns?ref=main"
+        """Initialize the object with default values."""
+        self.repo_zip_url = "https://github.com/danielmiessler/fabric/archive/refs/heads/main.zip"
         self.config_directory = os.path.expanduser("~/.config/fabric")
-        self.pattern_directory = os.path.join(self.config_directory, "patterns")
+        self.pattern_directory = os.path.join(
+            self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
-        self.update_patterns()  # Call the update process from a method.
+        print("Updating patterns...")
+        self.update_patterns()  # Start the update process immediately
 
     def update_patterns(self):
-        """        Update the patterns by downloading from the GitHub directory.
-
-        Raises:
-            HTTPError: If there is an HTTP error while downloading patterns.
-        """
-
-        try:
-            self.progress_bar = tqdm(desc="Downloading Patterns…", unit="file")
-            self.get_github_directory_contents(
-                self.root_api_url, self.pattern_directory
-            )
-            # Close progress bar on success before printing the message.
-            self.progress_bar.close()
-        except HTTPError as e:
-            # Ensure progress bar is closed on HTTPError as well.
-            self.progress_bar.close()
-            if e.response.status_code == 403:
-                print(
-                    "GitHub API rate limit exceeded. Please wait before trying again."
-                )
-                sys.exit()
+        """Update the patterns by downloading the zip from GitHub and extracting it."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            zip_path = os.path.join(temp_dir, "repo.zip")
+            self.download_zip(self.repo_zip_url, zip_path)
+            extracted_folder_path = self.extract_zip(zip_path, temp_dir)
+            # The patterns folder will be inside "fabric-main" after extraction
+            patterns_source_path = os.path.join(
+                extracted_folder_path, "fabric-main", "patterns")
+            if os.path.exists(patterns_source_path):
+                # If the patterns directory already exists, remove it before copying over the new one
+                if os.path.exists(self.pattern_directory):
+                    shutil.rmtree(self.pattern_directory)
+                shutil.copytree(patterns_source_path, self.pattern_directory)
+                print("Patterns updated successfully.")
             else:
-                print(f"Failed to download patterns due to an HTTP error: {e}")
-            sys.exit()  # Exit after handling the error.
+                print("Patterns folder not found in the downloaded zip.")
 
-    def download_file(self, url, local_path):
-        """        Download a file from the given URL and save it to the local path.
+    def download_zip(self, url, save_path):
+        """Download the zip file from the specified URL."""
+        response = requests.get(url)
+        response.raise_for_status()  # Check if the download was successful
+        with open(save_path, 'wb') as f:
+            f.write(response.content)
+        print("Downloaded zip file successfully.")
 
-        Args:
-            url (str): The URL of the file to be downloaded.
-            local_path (str): The local path where the file will be saved.
+    def extract_zip(self, zip_path, extract_to):
+        """Extract the zip file to the specified directory."""
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(extract_to)
+        print("Extracted zip file successfully.")
+        return extract_to  # Return the path to the extracted contents
 
-        Raises:
-            HTTPError: If an HTTP error occurs during the download process.
-        """
 
-        try:
-            response = requests.get(url)
-            response.raise_for_status()
-            with open(local_path, "wb") as f:
-                f.write(response.content)
-            self.progress_bar.update(1)
-        except HTTPError as e:
-            print(f"Failed to download file {url}. HTTP error: {e}")
-            sys.exit()
+class Alias:
+    def __init__(self):
+        self.config_files = []
+        home_directory = os.path.expanduser("~")
+        self.patterns = os.path.join(home_directory, ".config/fabric/patterns")
+        if os.path.exists(os.path.join(home_directory, ".bashrc")):
+            self.config_files.append(os.path.join(home_directory, ".bashrc"))
+        if os.path.exists(os.path.join(home_directory, ".zshrc")):
+            self.config_files.append(os.path.join(home_directory, ".zshrc"))
+        if os.path.exists(os.path.join(home_directory, ".bash_profile")):
+            self.config_files.append(os.path.join(
+                home_directory, ".bash_profile"))
+        self.remove_all_patterns()
+        self.add_patterns()
+        print('Aliases added successfully. Please restart your terminal to use them.')
 
-    def process_item(self, item, local_dir):
-        """        Process the given item and save it to the local directory.
+    def add(self, name, alias):
+        for file in self.config_files:
+            with open(file, "a") as f:
+                f.write(f"alias {name}='{alias}'\n")
 
-        Args:
-            item (dict): The item to be processed, containing information about the type, download URL, name, and URL.
-            local_dir (str): The local directory where the item will be saved.
+    def remove(self, pattern):
+        for file in self.config_files:
+            # Read the whole file first
+            with open(file, "r") as f:
+                wholeFile = f.read()
 
-        Returns:
-            None
+            # Determine if the line to be removed is in the file
+            target_line = f"alias {pattern}='fabric --pattern {pattern}'\n"
+            if target_line in wholeFile:
+                # If the line exists, replace it with nothing (remove it)
+                wholeFile = wholeFile.replace(target_line, "")
 
-        Raises:
-            OSError: If there is an issue creating the new directory using os.makedirs.
-        """
+                # Write the modified content back to the file
+                with open(file, "w") as f:
+                    f.write(wholeFile)
 
-        if item["type"] == "file":
-            self.download_file(
-                item["download_url"], os.path.join(local_dir, item["name"])
-            )
-        elif item["type"] == "dir":
-            new_dir = os.path.join(local_dir, item["name"])
-            os.makedirs(new_dir, exist_ok=True)
-            self.get_github_directory_contents(item["url"], new_dir)
+    def remove_all_patterns(self):
+        allPatterns = os.listdir(self.patterns)
+        for pattern in allPatterns:
+            self.remove(pattern)
 
-    def get_github_directory_contents(self, api_url, local_dir):
-        """        Get the contents of a directory from GitHub API and process each item.
+    def find_line(self, name):
+        for file in self.config_files:
+            with open(file, "r") as f:
+                lines = f.readlines()
+            for line in lines:
+                if line.strip("\n") == f"alias ${name}='{alias}'":
+                    return line
 
-        Args:
-            api_url (str): The URL of the GitHub API endpoint for the directory.
-            local_dir (str): The local directory where the contents will be processed.
+    def add_patterns(self):
+        allPatterns = os.listdir(self.patterns)
+        for pattern in allPatterns:
+            self.add(pattern, f"fabric --pattern {pattern}")
 
-        Returns:
-            None
-
-        Raises:
-            HTTPError: If an HTTP error occurs while fetching the directory contents.
-                If the status code is 403, it prints a message about GitHub API rate limit exceeded
-                and closes the progress bar. For any other status code, it prints a message
-                about failing to fetch directory contents due to an HTTP error.
-        """
-
-        try:
-            response = requests.get(api_url)
-            response.raise_for_status()
-            jsonList = response.json()
-            for item in jsonList:
-                self.process_item(item, local_dir)
-        except HTTPError as e:
-            if e.response.status_code == 403:
-                print(
-                    "GitHub API rate limit exceeded. Please wait before trying again."
-                )
-                self.progress_bar.close()  # Ensure the progress bar is cleaned up properly
-            else:
-                print(f"Failed to fetch directory contents due to an HTTP error: {e}")
 
 class Setup:
     def __init__(self):
@@ -378,7 +360,6 @@ class Setup:
         """
 
         Update()
-        sys.exit()
 
     def run(self):
         """        Execute the Fabric program.
@@ -423,4 +404,3 @@ class Transcribe:
         except Exception as e:
             print("Error:", e)
             return None
-    
