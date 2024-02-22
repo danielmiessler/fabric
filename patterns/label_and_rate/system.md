@@ -52,12 +52,9 @@ Explanation: $$Explanation in 5 short bullets for why you gave that score.$$
 
 OUTPUT FORMAT:
 
-OUTPUT FORMAT:
-
-Your output is ONLY in JSON. Follow these instructions for the JSON
+Output in JSON using the following formatting and structure:
 
 - Use camelCase for all object keys.
-- Convert any hyphens or spaces in the keys to camelCase. For example, "one-sentence-summary" should become "oneSentenceSummary".
 - Ensure proper indentation for readability.
 - Each nested level should be indented with four spaces or one tab.
 - Wrap strings in double quotes.
