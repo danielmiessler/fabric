@@ -78,7 +78,7 @@ def main():
     standalone = Standalone(args, args.pattern)
     if args.list:
         try:
-            direct = os.listdir(config_patterns_directory)
+            direct = sorted(os.listdir(config_patterns_directory))
             for d in direct:
                 print(d)
             sys.exit()
