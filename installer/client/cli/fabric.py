@@ -1,4 +1,4 @@
-from .utils import Standalone, Update, Setup, Alias
+from .utils import Standalone, Update, Setup, Alias, Whisper
 import argparse
 import sys
 import time
@@ -30,6 +30,8 @@ def main():
         help="Use this option if you want to see the results in realtime. NOTE: You will not be able to pipe the output into another command.",
         action="store_true",
     )
+    parser.add_argument('--transcribe', '-T',
+                        help="transcribe audio, please enter the path to the audio file, or a url with the audio file")
     parser.add_argument(
         "--list", "-l", help="List available patterns", action="store_true"
     )
@@ -87,6 +89,10 @@ def main():
             sys.exit()
     if args.listmodels:
         standalone.fetch_available_models()
+        sys.exit()
+    if args.transcribe:
+        whisper = Whisper()
+        whisper.process_file(args.transcribe)
         sys.exit()
     if args.text is not None:
         text = args.text

@@ -934,6 +934,17 @@ files = [
 typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
+name = "pydub"
+version = "0.25.1"
+description = "Manipulate audio with an simple and easy high level interface"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pydub-0.25.1-py2.py3-none-any.whl", hash = "sha256:65617e33033874b59d87db603aa1ed450633288aefead953b30bded59cb599a6"},
+    {file = "pydub-0.25.1.tar.gz", hash = "sha256:980a33ce9949cab2a569606b65674d748ecbca4f0796887fd6f46173a7b0d30f"},
+]
+
+[[package]]
 name = "pyjwt"
 version = "2.8.0"
 description = "JSON Web Token implementation in Python"
@@ -1394,4 +1405,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "8aa1e3fe70b9d326a7809abd70f2d78fee286d5106ab40f7d2d61a7feaf359ef"
+content-hash = "b8025aa005b3ad74c5e76f766c9311f2fa0592d4672e7f6e328d5f27001554aa"
