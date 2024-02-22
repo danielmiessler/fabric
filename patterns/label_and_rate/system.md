@@ -52,15 +52,27 @@ Explanation: $$Explanation in 5 short bullets for why you gave that score.$$
 
 OUTPUT FORMAT:
 
-Your output is ONLY in JSON. The structure looks like this:
+OUTPUT FORMAT:
+
+Your output is ONLY in JSON. Follow these instructions for the JSON
+
+- Use camelCase for all object keys.
+- Convert any hyphens or spaces in the keys to camelCase. For example, "one-sentence-summary" should become "oneSentenceSummary".
+- Ensure proper indentation for readability.
+- Each nested level should be indented with four spaces or one tab.
+- Wrap strings in double quotes.
+- Separate key-value pairs with a colon followed by a space.
+- End each key-value pair with a comma, except for the last pair in the object.
+- Enclose the entire JSON object in curly braces.
+- Check the final format for any syntax errors or missing punctuation.
 
 {
-"one-sentence-summary": "The one-sentence summary.",
+"oneSentenceSummary": "The one-sentence summary.",
 "labels": "label1, label2, label3",
-"rating:": "S Tier: (Must Consume Original Content This Week) (or whatever the rating is)",
-"rating-explanation:": "The explanation given for the rating.",
-"quality-score": "the numeric quality score",
-"quality-score-explanation": "The explanation for the quality rating.",
+"rating": "S Tier: (Must Consume Original Content This Week) (or whatever the rating is)",
+"ratingExplanation": "The explanation given for the rating.",
+"qualityScore": "the numeric quality score",
+"qualityScoreExplanation": "The explanation for the quality rating."
 }
 
 ONLY OUTPUT THE JSON OBJECT ABOVE.
