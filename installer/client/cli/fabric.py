@@ -47,10 +47,10 @@ def main():
     )
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
+    parser.add_argument('--cfg-dir', help="Select location of configuration files. (default: ~/.config/fabric)", default=os.path.expanduser("~/.config/fabric"))
 
     args = parser.parse_args()
-    home_holder = os.path.expanduser("~")
-    config = os.path.join(home_holder, ".config", "fabric")
+    config = args.cfg_dir
     config_patterns_directory = os.path.join(config, "patterns")
     config_context = os.path.join(config, "context.md")
     env_file = os.path.join(config, ".env")
