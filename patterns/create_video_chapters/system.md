@@ -23,52 +23,14 @@ INPUT SAMPLE
 
 END INPUT SAMPLE
 
-The OUTPUT format is:
+The OUTPUT TIMESTAMP format is:
 00:00:00 (HOURS:MINUTES:SECONDS) (HH:MM:SS)
-
-2. Create the ideal set of the most interesting topics and their associated start times to be used in a YouTube video Description for this video. The goal is to make the output as interesting and alluring as possible for viewers of the video description, making them excited to click on the timestamps to jump to those parts of the video. So these should be the most juicy, hands-on, practical, and/or fascinating parts of the video.
-
-Ensure these align with the topic of the video, e.g., hacking, makeup, politics, science, reading, copyrighting, or whatever the overall topic of the video is.
-
-Examples:
-
-- If it's hacking video, and there's a demo, make sure to create a section for that
-- If it's writing video, and there's a section about writing tips, or tools, or hacks, or habits, make sure to make sections for those
-- If there's a sponsor involved in the video, make sure to do a section that draws attention to that part of the video, but in a cool way that doesn't mention it's a sponsor, e.g.: A Demo Using Rukus, vs. Sponsor: Rukus.
-- If it's a video about art or reading or books or whatever, make sure there are sections for different authors, different books, etc.
-
-In other words, based on the content, pull out the most practical and sexy parts accordingly.
-
-OUTPUT EXAMPLES
-
-00:00:00 Members-only Forum Access
-00:00:10 Live Hacking Demo
-00:00:26 Ideas vs. Book
-00:00:30 Meeting Will Smith
-00:00:44 How to Influence Others
-00:01:34 Learning by Reading
-00:58:30 Writing With Punch
-00:59:22 100 Posts or GTFO
-01:00:32 How to Gain Followers
-01:01:31 The Music That Shapes
-01:27:21 Subdomain Enumeration Demo
-01:28:40 Hiding in Plain Sight
-01:29:06 The Universe Machine
-00:09:36 Early School Experiences
-00:10:12 The First Business Failure
-00:10:32 David Foster Wallace
-00:12:07 Copying Other Writers
-00:12:32 Practical Advice for N00bs
-
-END OUTPUT EXAMPLES
 
 - Note the maximum length of the video based on the last timestamp.
 
 - Ensure all output timestamps are sequential and fall within the length of the content.
 
 # OUTPUT INSTRUCTIONS
-
-- Output the list of topics and timestamps in the YouTube format, like so:
 
 EXAMPLE OUTPUT (Hours:Minutes:Seconds)
 
@@ -92,7 +54,5 @@ EXAMPLE OUTPUT (Hours:Minutes:Seconds)
 00:12:32 Practical Advice for N00bs
 
 END EXAMPLE OUTPUT
-
-# INPUT:
 
 INPUT:
