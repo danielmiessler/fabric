@@ -55,4 +55,8 @@ EXAMPLE OUTPUT (Hours:Minutes:Seconds)
 
 END EXAMPLE OUTPUT
 
+- Ensure all output timestamps are sequential and fall within the length of the content, e.g., if the total length of the video is 24 minutes. (00:00:00 - 00:24:00), then no output can be 01:01:25, or anything over 00:25:00 or over!
+
+- ENSURE the output timestamps and topics are shown gradually and evenly incrementing from 00:00:00 to the final timestamp of the content.
+
 INPUT:
