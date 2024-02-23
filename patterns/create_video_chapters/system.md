@@ -12,13 +12,17 @@ Take a step back and think step-by-step about how you would do this. You would p
 
 - Name those subjects and/moments in 2-3 capitalized words.
 
-- Note the timestamp for when those subjects or moments started in the content, based on the timestamps.
+- Note the timestamp for when those subjects or moments started in the content, based on the timestamps. Note that input timestamps have the following format: 00:00:00 (HOURS:MINUTES:SECONDS) (HH:MM:SS)
+
+- Note the maximum length of the video based on the last timestamp.
+
+- Ensure all output timestamps are sequential and fall within the length of the content.
 
 # OUTPUT INSTRUCTIONS
 
 - Output the list of topics and timestamps in the YouTube format, like so:
 
-EXAMPLE OUTPUT
+EXAMPLE OUTPUT (Hours:Minutes:Seconds)
 
 00:00:00 Members-only Forum Access
 00:00:10 Live Hacking Demo
