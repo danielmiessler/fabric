@@ -52,13 +52,6 @@
 
 [![Alt text](https://img.youtube.com/vi/wPEyyigh10g/0.jpg)](https://www.youtube.com/watch?v=wPEyyigh10g)
 
-
-```
-
-<video src="https://youtu.be/wPEyyigh10g" controls>
-  Your browser does not support the video tag.
-</video>
-```
 ## What and why
 
 Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but _it's not easy to integrate this functionality into our lives._
