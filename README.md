@@ -45,16 +45,11 @@
 
 <br />
 
-> [!NOTE]  
-> February 16, 2024 — **It's now far easier to install and use Fabric!** Just head to the [Quickstart](#quickstart), install Poetry, and run `setup.sh`, and it'll do all the work for you!
-
-<br />
-
 ```bash
 # A quick demonstration of writing an essay with Fabric
 ```
 
-<video src="https://github.com/danielmiessler/fabric/assets/50654/09c11764-e6ba-4709-952d-450d70d76ac9" controls>
+<video src="https://youtu.be/wPEyyigh10g" controls>
   Your browser does not support the video tag.
 </video>
 
