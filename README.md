@@ -51,11 +51,9 @@
 
 <div align="center">
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/wPEyyigh10g/0.jpg)](https://www.youtube.com/watch?v=wPEyyigh10g)
+[![IntroVideo](https://img.youtube.com/vi/wPEyyigh10g/0.jpg)](https://www.youtube.com/watch?v=wPEyyigh10g)
 
 </div>
-
-[![Alt text](https://img.youtube.com/vi/wPEyyigh10g/0.jpg)](https://www.youtube.com/watch?v=wPEyyigh10g)
 
 ## What and why
 
