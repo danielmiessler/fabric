@@ -63,6 +63,7 @@ class Standalone:
         Raises:
             FileNotFoundError: If the pattern file is not found.
         """
+
         wisdomFilePath = os.path.join(
             config_directory, f"patterns/{self.pattern}/system.md"
         )
@@ -83,8 +84,8 @@ class Standalone:
                 return
         else:
             if context:
-                user_message += {role: "system", content: context}
-                messages = [user_message]
+                messages = [
+                    {"role": "system", "content": context}, user_message]
             else:
                 messages = [user_message]
         try:
@@ -149,8 +150,8 @@ class Standalone:
                 return
         else:
             if context:
-                user_message += {'role': 'system', 'content': context}
-                messages = [user_message]
+                messages = [
+                    {'role': 'system', 'content': context}, user_message]
             else:
                 messages = [user_message]
         try:
