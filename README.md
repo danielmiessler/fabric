@@ -14,6 +14,7 @@
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 </p>
 
+[Introduction Video](#introduction-video) •
 [What and Why](#whatandwhy) •
 [Philosophy](#philosophy) •
 [Quickstart](#quickstart) •
@@ -25,6 +26,7 @@
 
 ## Navigation
 
+- [Introduction Video](#introduction-video)
 - [What and Why](#what-and-why)
 - [Philosophy](#philosophy)
   - [Breaking problems into components](#breaking-problems-into-components)
@@ -45,9 +47,8 @@
 
 <br />
 
-```bash
-# A quick demonstration of writing an essay with Fabric
-```
+````bash
+## Introduction video
 
 <video src="https://youtu.be/wPEyyigh10g" controls>
   Your browser does not support the video tag.
@@ -104,7 +105,7 @@ Here's an example of a Fabric Pattern.
 
 ```bash
 https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
-```
+````
 
 <img width="1461" alt="pattern-example" src="https://github.com/danielmiessler/fabric/assets/50654/b910c551-9263-405f-9735-71ca69bbab6d">
 
