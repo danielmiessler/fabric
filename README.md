@@ -50,7 +50,9 @@
 ## Introduction video
 
 <div align="center">
-
+<a href="https://youtu.be/wPEyyigh10g">
+  <img width="972" alt="fabric_intro_video" src="https://github.com/danielmiessler/fabric/assets/50654/1eb1b9be-0bab-4c77-8ed2-ed265e8a3435">
+</a>
 </div>
 
 ## What and why
