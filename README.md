@@ -51,8 +51,6 @@
 
 <div align="center">
 
-[![IntroVideo](https://img.youtube.com/vi/wPEyyigh10g/0.jpg)](https://www.youtube.com/watch?v=wPEyyigh10g)
-
 </div>
 
 ## What and why
