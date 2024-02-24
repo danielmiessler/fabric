@@ -63,7 +63,6 @@ class Standalone:
         Raises:
             FileNotFoundError: If the pattern file is not found.
         """
-
         wisdomFilePath = os.path.join(
             config_directory, f"patterns/{self.pattern}/system.md"
         )
