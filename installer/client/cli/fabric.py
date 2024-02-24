@@ -94,16 +94,20 @@ def main():
         text = standalone.get_cli_input()
     if args.stream and not args.context:
         standalone.streamMessage(text)
+        sys.exit()
     if args.stream and args.context:
         with open(config_context, "r") as f:
             context = f.read()
             standalone.streamMessage(text, context=context)
+        sys.exit()
     elif args.context:
         with open(config_context, "r") as f:
             context = f.read()
             standalone.sendMessage(text, context=context)
+        sys.exit()
     else:
         standalone.sendMessage(text)
+        sys.exit()
 
 
 if __name__ == "__main__":
