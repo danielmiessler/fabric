@@ -49,7 +49,7 @@
 
 ## Introduction video
 
-[![Alt text](https://img.youtube.com/vi/wPEyyigh10g/0.jpg)](https://www.youtube.com/watch?v=wPEyyigh10g)
+[![Alt text](https://img.youtube.com/vi/wPEyyigh10g/maxresdefault.jpg)](https://www.youtube.com/watch?v=wPEyyigh10g)
 
 ## What and why
 
