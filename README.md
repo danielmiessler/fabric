@@ -50,10 +50,11 @@
 ````bash
 ## Introduction video
 
+```
 <video src="https://youtu.be/wPEyyigh10g" controls>
   Your browser does not support the video tag.
 </video>
-
+```
 ## What and why
 
 Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but _it's not easy to integrate this functionality into our lives._
