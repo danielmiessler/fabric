@@ -50,7 +50,11 @@
 ````bash
 ## Introduction video
 
+[![Alt text](https://img.youtube.com/vi/wPEyyigh10g/0.jpg)](https://www.youtube.com/watch?v=wPEyyigh10g)
+
+
 ```
+
 <video src="https://youtu.be/wPEyyigh10g" controls>
   Your browser does not support the video tag.
 </video>
