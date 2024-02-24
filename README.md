@@ -47,7 +47,6 @@
 
 <br />
 
-````bash
 ## Introduction video
 
 [![Alt text](https://img.youtube.com/vi/wPEyyigh10g/0.jpg)](https://www.youtube.com/watch?v=wPEyyigh10g)
@@ -103,7 +102,7 @@ Here's an example of a Fabric Pattern.
 
 ```bash
 https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
-````
+```
 
 <img width="1461" alt="pattern-example" src="https://github.com/danielmiessler/fabric/assets/50654/b910c551-9263-405f-9735-71ca69bbab6d">
 
