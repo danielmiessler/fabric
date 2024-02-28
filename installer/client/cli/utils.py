@@ -400,3 +400,32 @@ class Transcribe:
         except Exception as e:
             print("Error:", e)
             return None
+
+
+class AgentSetup:
+    def apiKeys(self):
+        """Method to set the API keys in the environment file.
+
+        Returns:
+            None
+        """
+
+        print("Welcome to Fabric. Let's get started.")
+        browserless = input("Please enter your Browserless API key\n")
+        serper = input("Please enter your Serper API key\n")
+
+        # Entries to be added
+        browserless_entry = f"BROWSERLESS_API_KEY={browserless}"
+        serper_entry = f"SERPER_API_KEY={serper}"
+
+        # Check and write to the file
+        with open(env_file, "r+") as f:
+            content = f.read()
+
+            # Determine if the file ends with a newline
+            if content.endswith('\n'):
+                # If it ends with a newline, we directly write the new entries
+                f.write(f"{browserless_entry}\n{serper_entry}\n")
+            else:
+                # If it does not end with a newline, add one before the new entries
+                f.write(f"\n{browserless_entry}\n{serper_entry}\n")
