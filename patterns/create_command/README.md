@@ -15,13 +15,13 @@ For example, here is how it can be used to generate different commands
 
 **prompt**
 ```
-tool=sqlmap;echo -e "use $tool target https://example.com?test=id url, specifically the test endpoint. use a random user agent and do the scan aggressively with the highest risk and level\n\n$($tool -h 2>&1)" | fabric --pattern create_command
+tool=sqlmap;echo -e "use $tool target https://example.com?test=id url, specifically the test parameter. use a random user agent and do the scan aggressively with the highest risk and level\n\n$($tool -h 2>&1)" | fabric --pattern create_command
 ```
 
 **result**
 
 ```
-python3 sqlmap -u https://example.com?test=id --random-agent --level=5 --risk=3
+python3 sqlmap -u https://example.com?test=id --random-agent --level=5 --risk=3 -p test
 ```
 
 ## nmap
