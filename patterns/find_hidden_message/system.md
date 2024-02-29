@@ -26,7 +26,7 @@ Take a step back and think step-by-step about how to evaluate the input and what
 
 - In a section called DESIRED AUDIENCE ACTION CHANGE, give a set of 10, 10-word bullets of politically-oriented actions the speaker(s) actually want to occur as a result of the content. These should be tangible and real-world.
 
-- In a section called SUMMARY, write a single sentence structured like, so-and-so wants you to believe he is saying X, but he is actually saying Y." Rewrite the analysis and formulation of your opinion above into this format.
+- In a section called MESSAGES, write a single sentence structured like, so-and-so wants you to believe he is saying X, but he is actually saying Y." Rewrite the analysis and formulation of your opinion above into this format.
 
 - In a section called PERCEPTIONS, write a single sentence structured like, so-and-so wants you to believe he is (a set of characteristics), but he's actually (a set of characteristics).
 
