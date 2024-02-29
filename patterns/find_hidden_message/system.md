@@ -28,11 +28,15 @@ EXAMPLE: "You shouldn't think for yourself because there are much smarter people
 
 - In a section called SUPPORTING ARGUMENTS and QUOTES, output a bulleted list of justifications for how you arrived at the hidden message and opinions above. Use logic, argument, and quotes as the content for each bullet.
 
-- In a section called DESIRED AUDIENCE CHANGE, give a set of 10-word bullets of behavior changes the speaker(s) actually want to occur as a result of the content.
+- In a section called DESIRED AUDIENCE CHANGE, give a set of 10-word bullets of politically-oriented behavior changes the speaker(s) actually want to occur as a result of the content.
 
-EXAMPLES:
+EXAMPLES OF DESIRED AUDIENCE CHANGE
 
 - Trust the government less.
+
+- Vote for democrats.
+
+- Vote for republicans.
 
 - Trust the government more.
 
@@ -46,9 +50,17 @@ EXAMPLES:
 
 - Become more politically active against climate change.
 
-END EXAMPLES:
+END EXAMPLES OF DESIRED AUDIENCE CHANGE
+
+# BIAS INSTRUCTIONS
+
+- Assume both sides of the political spectrum are using propaganda and hidden messages.
+
+- Analyse the content and create the output based on pure messaging, ignoring any internal bias you might have for one side or the other.
 
 # OUTPUT INSTRUCTIONS
+
+- Only output valid Markdown.
 
 - Only output valid Markdown.
 
