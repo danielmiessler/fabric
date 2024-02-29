@@ -16,7 +16,7 @@ Take a step back and think step-by-step about how to evaluate the input and what
 
 - In a section called OVERT MESSAGE, output a single 15-word sentence that captures the message that the user is OVERTLY talking about.
 
-- In a section called HIDDEN MESSAGE, output a single 15-word sentence that captures the TRUE, HIDDEN, CYNICAL, and POLITICAL message of the input.
+- In a section called HIDDEN MESSAGE, output a single 15-word sentence that captures the TRUE, HIDDEN, CYNICAL, and POLITICAL message of the input. E.g.: "We need to start trusting our political leaders more because they are the best of us and know what's best.", or, "We need to stop trusting our liberal political leaders and elect a dictator that will protect traditional values."
 
 - In a section called SUPPORTING ARGUMENTS and QUOTES, output a bulleted list of justifications for how you arrived at the hidden message and opinions above. Use logic, argument, and quotes as the support content for each bullet.
 
