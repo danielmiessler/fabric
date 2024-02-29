@@ -54,7 +54,9 @@ END EXAMPLES:
 
 - Do not output any asterisks, which are used for italicizing and bolding text.
 
-- Give the most cynical and critical analysis possible, assuming that the true desired message is significantly different from what's actually being said. Think politically. Think manipulation. Think propaganda. Think information warfare.
+- Give the most cynical and critical analysis possible in all output sections, assuming that the true desired message is significantly different from what's actually being said.
+
+- In all section of output, especially the DESIRED CHANGE IN THE AUDIENCE section, be cynical. Think politically. Think manipulation. Think propaganda. Think information warfare.
 
 - Do not output any content other than the sections above.
 
