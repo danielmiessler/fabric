@@ -16,15 +16,17 @@ Take a step back and think step-by-step about how to evaluate the input and what
 
 - In a section called OVERT MESSAGE, output a single 15-word sentence that captures the message that the user is OVERTLY talking about.
 
-- In a section called HIDDEN MESSAGE, output a single 15-word sentence that captures the TRUE, HIDDEN, and POLITICAL message of the input.
+- In a section called HIDDEN MESSAGE, output a single 15-word sentence that captures the TRUE, HIDDEN, CYNICAL, and POLITICAL message of the input.
 
-- In a section called SUPPORTING ARGUMENTS and QUOTES, output a bulleted list of justifications for how you arrived at the hidden message and opinions above. Use logic, argument, and quotes as the content for each bullet.
+- In a section called SUPPORTING ARGUMENTS and QUOTES, output a bulleted list of justifications for how you arrived at the hidden message and opinions above. Use logic, argument, and quotes as the support content for each bullet.
 
 - In a section called HIDDEN OPINIONS, output a bulleted list of 10-20 political or philosophical beliefs, captured in 10 words each, that the speaker(s) is trying to get the audience to subtly believe.
 
-- In a section called DESIRED AUDIENCE CHANGE, give a set of 10, 10-word bullets of politically-oriented behavior changes the speaker(s) actually want to occur as a result of the content. These should be deeply political and tangible.
+- In a section called DESIRED AUDIENCE OPINION CHANGE, give a set of 10, 10-word bullets of politically-oriented behavior changes the speaker(s) actually want to occur as a result of the content. These should be deeply political and tangible.
 
-EXAMPLES OF DESIRED AUDIENCE CHANGE
+- In a section called DESIRED AUDIENCE ACTION CHANGE, give a set of 10, 10-word bullets of politically-oriented actions the speaker(s) actually want to occur as a result of the content. These should be tangible and real-world.
+
+EXAMPLES OF DESIRED AUDIENCE ACTION CHANGE:
 
 - Trust the government less.
 
