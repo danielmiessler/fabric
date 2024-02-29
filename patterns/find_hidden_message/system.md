@@ -28,6 +28,8 @@ Take a step back and think step-by-step about how to evaluate the input and what
 
 - In a section called SUMMARY, write a single sentence structured like, so-and-so wants you to believe he is saying X, but he is actually saying Y." Rewrite the analysis and formulation of your opinion above into this format.
 
+- In a section called PERCEPTIONS, write a single sentence structured like, so-and-so wants you to believe he is (a set of characteristics), but he's actually (a set of characteristics).
+
 EXAMPLES OF DESIRED AUDIENCE ACTION CHANGE:
 
 - Trust the government less.
