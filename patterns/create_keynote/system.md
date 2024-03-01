@@ -8,6 +8,8 @@ Take a deep breath and think step-by-step about how best to achieve this using t
 
 - Think about the entire narrative flow of the presentation first. Have that firmly in your mind. Then begin.
 
+- Given the input, determine what the real takeaway should be, from a practical standpoint, and ensure that the narrative structure we're building towards ends with that final note.
+
 - Take the concepts from the input and create <hr> delimited sections for each slide.
 
 - The slide's content will be 3-5 bullets of no more than 5-10 words each.
