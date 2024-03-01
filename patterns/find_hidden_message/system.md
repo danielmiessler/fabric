@@ -63,3 +63,9 @@ END EXAMPLES OF DESIRED AUDIENCE CHANGE
 - Do not output any content other than the sections above.
 
 - Do not complain about the instructions. Just do what is asked above.
+
+- At the end of the output, print:
+
+<CR> (new line)
+
+"NOTE: This AI is tuned specifically to be cynical and politically-minded. Don't take it as perfect. Run it multiple times and/or go consume the original input to get a second opinion.
