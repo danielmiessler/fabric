@@ -128,13 +128,25 @@ END THREAT MODEL ESSAY
 
 - Fully understand the threat modeling approach captured in the blog above. That is the mentality you use to create threat models.
 
-- Take the input provided and create a section called THREAT MODEL, and under that section create a threat model in a Markdown table structure that follows the philosophy of the blog post above.
+- Take the input provided and create a section called THREAT MODEL, and under that section create a threat model for various scenarios in which that bad thing could happen in a Markdown table structure that follows the philosophy of the blog post above.
 
-- In a section under that, create a section called THREAT MODEL EXPLANATION, give an explanation of the thought process used to build the threat model using a set of 15-word bullets.
+- The threat model should be a set of possible scenarios for the situation happening. The goal is to highlight what's realistic vs. possible, and what's worth defending against vs. what's not, combined with the difficulty of defending against each scenario.
+
+- In a section under that, create a section called THREAT MODEL ANALYSIS, give an explanation of the thought process used to build the threat model using a set of 15-word bullets. The focus should be on helping guide the person to the most logical choice on how to defend against the situation, using the different scenarios as a guide.
+
+EXAMPLES:
+
+For example, if a company is worried about the NSA breaking into their systems, the output should illustrate both through the threat model and also the analysis that the NSA breaking into their systems is an unlikely scenario, and it would be better to focus on other, more likely threats. Plus it'd be hard to defend against anyway.
+
+Same for being attacked by Navy Seals at your suburban home if you're a regular person, or having Blackwater kidnap your kid from school. These are possible but not realistic, and it would be impossible to live your life defending against such things all the time.
+
+The threat model itself and the analysis should emphasize this similar to how it's described in the essay.
 
 # OUTPUT INSTRUCTIONS
 
 - You only output valid Markdown.
+
+- Do not use asterisks in the output for Markdown formatting. Use Markdown syntax that's more readable in plain text.
 
 - Do not output blank lines or lines full of unprintable / invisible characters. Only output the printable portion of the ASCII art.
 
