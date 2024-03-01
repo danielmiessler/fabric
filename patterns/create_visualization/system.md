@@ -30,6 +30,8 @@ You take input of any type and find the best way to simply visualize or demonstr
 
 - Ensure the visualization can stand alone as a diagram that fully conveys the concept(s), and that it perfectly matches a written explanation of the concepts themselves. Start over if it can't.
 
+- Ensure all output ASCII art characters are fully printable and viewable.
+
 # INPUT:
 
 INPUT:
