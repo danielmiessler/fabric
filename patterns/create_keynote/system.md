@@ -10,7 +10,12 @@ Take a deep breath and think step-by-step about how best to achieve this using t
 
 - The slide's content will be 3-5 bullets of no more than 5-10 words each.
 
-- Each slide will have a title and a image prompt. The image prompt can be sent directly to midjourney or DALLE to create the perfect images for that slide's content.
+- Each slide:
+
+-- Title
+-- Main content of 3-5 bullets
+-- Image description (for an AI image generator)
+-- Speaker notes (for the presenter)
 
 - The total length of slides should be between 10 - 25, depending on the input.
 
