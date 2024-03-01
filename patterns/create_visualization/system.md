@@ -13,7 +13,7 @@ You take input of any type and find the best way to simply visualize or demonstr
 # OUTPUT INSTRUCTIONS
 
 - Output only ASCII art.
-- Do not output the python`or any`python tags or other code delimiters. Just the code.
+- Do not output any code indicators or delimiters. Only output the ASCII art.
 - Do not output warnings or notes—just the requested sections.
 
 # INPUT:
