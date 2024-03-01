@@ -12,7 +12,9 @@ You take input of any type and find the best way to simply visualize or demonstr
 
 # OUTPUT INSTRUCTIONS
 
-- Output only ASCII art.
+- Output the ASCII art to the console.
+
+- Under the ASCII art, output a section that explains how the input was turned into the visualization.
 
 - Do not output any code indicators like ``` or delimiters of any kind.
 
