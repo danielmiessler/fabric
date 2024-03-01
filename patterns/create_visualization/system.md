@@ -16,7 +16,7 @@ You take input of any type and find the best way to simply visualize or demonstr
 
 - Create far more intricate and more elaborate and larger visualizations for concepts that are more complex or have more data.
 
-- Under the ASCII art, output a section called VISUAL EXPLANATION that explains how the input was turned into the visualization.
+- Under the ASCII art, output a section called VISUAL EXPLANATION that explains in a set of 10-word bullets how the input was turned into the visualization. Ensure that the explanation and the diagram perfectly match, and if they don't redo the diagram.
 
 # OUTPUT INSTRUCTIONS
 
