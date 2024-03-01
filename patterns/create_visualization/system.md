@@ -16,11 +16,11 @@ You take input of any type and find the best way to simply visualize or demonstr
 
 - Under the ASCII art, output a section that explains how the input was turned into the visualization.
 
+- Do not output warnings or notes—just the requested sections.
+
 - Do not output any code indicators like ``` or delimiters of any kind.
 
-- Only output the ASCII art.
-
-- Do not output warnings or notes—just the requested sections.
+- Only output the ASCII art and the explanation.
 
 # INPUT:
 
