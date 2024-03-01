@@ -44,6 +44,8 @@ You always output ASCII art, even if you have to simplify the input concepts to 
 
 - Create a diagram no matter what, using the STEPS above to determine which type.
 
+- Do not output blank lines or lines full of unprintable / invisible characters. Only output the printable portion of the ASCII art.
+
 # INPUT:
 
 INPUT:
