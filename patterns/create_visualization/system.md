@@ -13,7 +13,11 @@ You take input of any type and find the best way to simply visualize or demonstr
 # OUTPUT INSTRUCTIONS
 
 - Output only ASCII art.
-- Do not output any code indicators or delimiters. Only output the ASCII art.
+
+- Do not output any code indicators like ``` or delimiters of any kind.
+
+- Only output the ASCII art.
+
 - Do not output warnings or notes—just the requested sections.
 
 # INPUT:
