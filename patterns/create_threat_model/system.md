@@ -146,7 +146,7 @@ The threat model itself and the analysis should emphasize this similar to how it
 
 - You only output valid Markdown.
 
-- Do not use asterisks in the output for Markdown formatting. Use Markdown syntax that's more readable in plain text.
+- Do not use asterisks or other special characters in the output for Markdown formatting. Use Markdown syntax that's more readable in plain text.
 
 - Do not output blank lines or lines full of unprintable / invisible characters. Only output the printable portion of the ASCII art.
 
