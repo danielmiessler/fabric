@@ -33,7 +33,11 @@ Take a deep breath and think step-by-step about how best to achieve this using t
 
 # OUTPUT INSTRUCTIONS
 
-- Output a Markdown formatted list of slides and the content on the slide, plus the image description.
+- Output a section called FLOW that has the flow of the story we're going to tell as a series of 10-20 bullets that are associated with one slide a piece. Each bullet should be 10-words max.
+
+- Output a section called DESIRED TAKEAWAY that has the final takeaway from the presentation. This should be a single sentence.
+
+- Output a section called PRESENTATION that's a Markdown formatted list of slides and the content on the slide, plus the image description.
 
 - Ensure the speaker notes are in the voice of the speaker, i.e. they're what they're actually going to say.
 
