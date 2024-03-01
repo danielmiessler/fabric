@@ -32,6 +32,8 @@ You take input of any type and find the best way to simply visualize or demonstr
 
 - Ensure all output ASCII art characters are fully printable and viewable.
 
+- Ensure the diagram will fit within a reasonable width in a large window, so the viewer won't have to reduce the font like 1000 times.
+
 # INPUT:
 
 INPUT:
