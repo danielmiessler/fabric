@@ -132,9 +132,9 @@ END THREAT MODEL ESSAY
 
 - The threat model should be a set of possible scenarios for the situation happening. The goal is to highlight what's realistic vs. possible, and what's worth defending against vs. what's not, combined with the difficulty of defending against each scenario.
 
-- In a section under that, create a section called THREAT MODEL ANALYSIS, give an explanation of the thought process used to build the threat model using a set of 15-word bullets. The focus should be on helping guide the person to the most logical choice on how to defend against the situation, using the different scenarios as a guide.
+- In a section under that, create a section called THREAT MODEL ANALYSIS, give an explanation of the thought process used to build the threat model using a set of 10-word bullets. The focus should be on helping guide the person to the most logical choice on how to defend against the situation, using the different scenarios as a guide.
 
-EXAMPLES:
+# OUTPUT GUIDANCE
 
 For example, if a company is worried about the NSA breaking into their systems, the output should illustrate both through the threat model and also the analysis that the NSA breaking into their systems is an unlikely scenario, and it would be better to focus on other, more likely threats. Plus it'd be hard to defend against anyway.
 
