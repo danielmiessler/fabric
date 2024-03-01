@@ -26,11 +26,9 @@ You take input of any type and find the best way to simply visualize or demonstr
 
 # OUTPUT INSTRUCTIONS
 
-- Output the ASCII art to the console.
+- DO NOT COMPLAIN. Just make an image. If it's too complex for a simple ASCII image, reduce the image's complexity until it can be rendered using ASCII.
 
-- Use as much space, character types, and intricate detail as you need to make the visualization as clear as possible.
-
-- Do not output warnings or notes—just the requested sections.
+- DO NOT COMPLAIN. Make a printable image no matter what.
 
 - Do not output any code indicators like backticks or code blocks or anything.
 
