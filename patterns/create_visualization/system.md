@@ -34,6 +34,8 @@ You take input of any type and find the best way to simply visualize or demonstr
 
 - Ensure the diagram will fit within a reasonable width in a large window, so the viewer won't have to reduce the font like 1000 times.
 
+- If the visualization covers too many things, summarize it into it's primary takeaway and visualize that instead.
+
 # INPUT:
 
 INPUT:
