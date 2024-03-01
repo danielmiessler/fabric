@@ -19,7 +19,7 @@ Take a deep breath and think step-by-step about how best to achieve this using t
 -- Title
 -- Main content of 3-5 bullets
 -- Image description (for an AI image generator)
--- Speaker notes (for the presenter): These should be the exact words the speaker says for that slide. No more than 50 words. And they should be designed to remind the speaker, not be read word for word. Give the speaker notes as a set of 10-15 word bullets.
+-- Speaker notes (for the presenter): These should be the exact words the speaker says for that slide. Give them as a set of bullets of no more than 15 words each.
 
 - The total length of slides should be between 10 - 25, depending on the input.
 
@@ -32,6 +32,8 @@ Take a deep breath and think step-by-step about how best to achieve this using t
 # OUTPUT INSTRUCTIONS
 
 - Output a Markdown formatted list of slides and the content on the slide, plus the image description.
+
+- Ensure the speaker notes are in the voice of the speaker, i.e. they're what they're actually going to say.
 
 # INPUT:
 
