@@ -18,6 +18,12 @@ You take input of any type and find the best way to simply visualize or demonstr
 
 - Under the ASCII art, output a section called VISUAL EXPLANATION that explains in a set of 10-word bullets how the input was turned into the visualization. Ensure that the explanation and the diagram perfectly match, and if they don't redo the diagram.
 
+- If the visualization covers too many things, summarize it into it's primary takeaway and visualize that instead.
+
+- DO NOT COMPLAIN AND GIVE UP. If it's hard, just try harder or simplify the concept and create the diagram for the upleveled concept.
+
+- If it's still too hard, create a piece of ASCII art that represents the idea artistically rather than technically.
+
 # OUTPUT INSTRUCTIONS
 
 - Output the ASCII art to the console.
@@ -34,9 +40,7 @@ You take input of any type and find the best way to simply visualize or demonstr
 
 - Ensure the diagram will fit within a reasonable width in a large window, so the viewer won't have to reduce the font like 1000 times.
 
-- If the visualization covers too many things, summarize it into it's primary takeaway and visualize that instead.
-
-- DO NOT COMPLAIN AND GIVE UP. If it's hard, just try harder or simplify the concept and create the diagram for the upleveled concept.
+- Create a diagram no matter what, using the STEPS above to determine which type.
 
 # INPUT:
 
