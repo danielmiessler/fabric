@@ -83,4 +83,3 @@ if __name__ == '__main__':
         main(args.url, args)
     else:
         parser.print_help()
-
