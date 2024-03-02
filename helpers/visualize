@@ -1,0 +1,35 @@
+#!/usr/bin/env python 
+
+import matplotlib.pyplot as plt
+import base64
+import webbrowser
+from io import BytesIO
+
+# Create a simple plot using matplotlib
+plt.plot([1, 2, 3, 4])
+plt.ylabel('Some numbers')
+
+# Save the plot to a BytesIO object
+img_buffer = BytesIO()
+plt.savefig(img_buffer, format='png')
+img_buffer.seek(0)
+
+# Encode the image as Base64
+img_base64 = base64.b64encode(img_buffer.read()).decode('utf-8')
+
+# Create an HTML file with the embedded image
+html = f"""
+<html>
+    <body>
+        <img src="data:image/png;base64,{img_base64}">
+    </body>
+</html>
+"""
+
+# Write the HTML to a temporary file
+with open('temp_plot.html', 'w') as f:
+    f.write(html)
+
+# Open the HTML file in a browser
+webbrowser.open('temp_plot.html')
+
