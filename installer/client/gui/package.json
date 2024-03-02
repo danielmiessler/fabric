@@ -1,22 +1,71 @@
 {
-  "name": "fabric_electron",
+  "name": "fabric",
   "version": "1.0.0",
   "description": "a fabric electron app",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "author": "",
   "license": "ISC",
+   "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "assets/logo.icns"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "fabric"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
+          "config": {
+            "format": "ULFO",
+            "name": "fabric",
+            "icon": "assets/logo.icns"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
   "devDependencies": {
-    "dotenv": "^16.4.1",
-    "electron": "^28.2.2",
-    "openai": "^4.27.0"
+    "@electron-forge/cli": "^7.3.0",
+    "@electron-forge/maker-deb": "^7.3.0",
+    "@electron-forge/maker-dmg": "^7.3.0",
+    "@electron-forge/maker-rpm": "^7.3.0",
+    "@electron-forge/maker-squirrel": "^7.3.0",
+    "@electron-forge/maker-zip": "^7.3.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.3.0",
+    "@electron-forge/plugin-fuses": "^7.3.0",
+    "electron": "^28.2.2"
   },
   "dependencies": {
     "axios": "^1.6.7",
+    "dotenv": "^16.4.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "fs-extra": "^11.2.0",
     "mammoth": "^1.6.0",
     "node-fetch": "^2.6.7",
+    "openai": "^4.27.0",
     "pdf-parse": "^1.1.1",
     "unzipper": "^0.10.14"
   }

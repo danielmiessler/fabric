@@ -16,6 +16,10 @@ const unzipper = require("unzipper");
 
 let win;
 
+const iconPath = process.platform === 'darwin' ? 'assets/logo.icns' :
+                 process.platform === 'win32' ? 'assets/logo.ico' :
+                 'assets/logo.png';
+
 function promptUserForApiKey() {
   // Create a new window to prompt the user for the API key
   const promptWindow = new BrowserWindow({
@@ -161,6 +165,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
+    icon: path.join(__dirname, iconPath),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
