@@ -13,6 +13,11 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
+crewai = "^0.11.0"
+unstructured = "0.10.25"
+pyowm = "3.3.0"
+tools = "^0.1.9"
+langchain-community = "^0.0.24"
 
 [tool.poetry.group.cli.dependencies]
 pyyaml = "^6.0.1"
@@ -32,7 +37,6 @@ gunicorn = "^21.2.0"
 gevent = "^23.9.1"
 httpx = "^0.26.0"
 tqdm = "^4.66.1"
-
 
 [tool.poetry.group.server.dependencies]
 requests = "^2.31.0"
