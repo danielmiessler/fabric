@@ -16,7 +16,7 @@ def get_video_id(url):
     return match.group(1) if match else None
 
 
-def main(url, options):
+def main_function(url, options):
     # Load environment variables from .env file
     load_dotenv(os.path.expanduser('~/.config/fabric/.env'))
 
@@ -84,7 +84,7 @@ def main():
     args = parser.parse_args()
 
     if args.url:
-        main(args.url, args)
+        main_function(args.url, args)
     else:
         parser.print_help()
 
