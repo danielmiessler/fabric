@@ -18,6 +18,9 @@ unstructured = "0.10.25"
 pyowm = "3.3.0"
 tools = "^0.1.9"
 langchain-community = "^0.0.24"
+google-api-python-client = "^2.120.0"
+isodate = "^0.6.1"
+youtube-transcript-api = "^0.6.2"
 
 [tool.poetry.group.cli.dependencies]
 pyyaml = "^6.0.1"
