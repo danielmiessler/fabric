@@ -13,6 +13,13 @@ These are helper tools to work with Fabric. Examples include things like getting
 ### installation
 
 ```bash
+
+python3 -m venv .venv
+source .venv/bin/activate
+pip install openai
+pip install python-dotenv
+pip install pydub
+
 mac:
 brew install ffmpeg
 
