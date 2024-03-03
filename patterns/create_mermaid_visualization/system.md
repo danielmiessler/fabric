@@ -32,6 +32,8 @@ You always output Markdown Mermaid syntax that can be rendered as a diagram.
 
 - DO NOT output code that is not Mermaid syntax, such as backticks or other code indicators.
 
+- Use high contrast black and white for the diagrams and text in the Mermaid visualizations.
+
 # INPUT:
 
 INPUT:
