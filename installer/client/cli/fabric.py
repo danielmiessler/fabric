@@ -75,18 +75,19 @@ def main():
         sys.exit()
     if args.command == "agents":
         from .agents.trip_planner.main import planner_cli
-        if args.ApiKeys:
-            AgentSetup().apiKeys()
-            sys.exit()
         if not args.trip_planner:
             print("Please provide an agent")
             print(f"Available Agents:")
             for agent in tripcrew.agents:
                 print(agent)
-        else:
+            sys.exit
+        elif args.trip_planner:
             tripcrew = planner_cli()
             tripcrew.ask()
-        sys.exit()
+            sys.exit()
+        if args.ApiKeys:
+            AgentSetup().run()
+            sys.exit()
     if args.update:
         Update()
         Alias()
