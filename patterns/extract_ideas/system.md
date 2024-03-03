@@ -12,6 +12,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Only output Markdown.
 - Extract at least 20 IDEAS from the content.
+- Limit each idea bullet to a maximum of 15 words.
 - Do not give warnings or notes; only output the requested sections.
 - You use bulleted lists for output, not numbered lists.
 - Do not repeat ideas, quotes, facts, or resources.
