@@ -287,7 +287,7 @@ Once you're set up, you can do things like:
 
 ```bash
 # Take any idea from `stdin` and send it to the `/write_essay` API!
-cat "An idea that coding is like speaking with rules." | write_essay
+echo "An idea that coding is like speaking with rules." | write_essay
 ```
 
 ### Directly calling Patterns
