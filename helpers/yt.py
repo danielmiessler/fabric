@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-
-import sys
 import re
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -11,11 +8,13 @@ import json
 import isodate
 import argparse
 
+
 def get_video_id(url):
     # Extract video ID from URL
     pattern = r'(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
     match = re.search(pattern, url)
     return match.group(1) if match else None
+
 
 def main(url, options):
     # Load environment variables from .env file
@@ -51,7 +50,8 @@ def main(url, options):
         # Get video transcript
         try:
             transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
-            transcript_text = ' '.join([item['text'] for item in transcript_list])
+            transcript_text = ' '.join([item['text']
+                                       for item in transcript_list])
             transcript_text = transcript_text.replace('\n', ' ')
         except Exception as e:
             transcript_text = "Transcript not available."
@@ -72,14 +72,22 @@ def main(url, options):
     except HttpError as e:
         print("Error: Failed to access YouTube API. Please check your YOUTUBE_API_KEY and ensure it is valid.")
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='vm (video meta) extracts metadata about a video, such as the transcript and the video\'s duration. By Daniel Miessler.')
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='vm (video meta) extracts metadata about a video, such as the transcript and the video\'s duration. By Daniel Miessler.')
     parser.add_argument('url', nargs='?', help='YouTube video URL')
-    parser.add_argument('--duration', action='store_true', help='Output only the duration')
-    parser.add_argument('--transcript', action='store_true', help='Output only the transcript')
+    parser.add_argument('--duration', action='store_true',
+                        help='Output only the duration')
+    parser.add_argument('--transcript', action='store_true',
+                        help='Output only the transcript')
     args = parser.parse_args()
 
     if args.url:
         main(args.url, args)
     else:
         parser.print_help()
+
+
+if __name__ == "__main__":
+    main()

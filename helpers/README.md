@@ -14,8 +14,6 @@ These are helper tools to work with Fabric. Examples include things like getting
 
 ```bash
 
-pip install -r requirements.txt
-
 mac:
 brew install ffmpeg
 

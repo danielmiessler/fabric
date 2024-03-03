@@ -60,3 +60,5 @@ build-backend = "poetry.core.masonry.api"
 fabric = 'installer:cli'
 fabric-api = 'installer:run_api_server'
 fabric-webui = 'installer:run_webui_server'
+ts = 'helpers.ts:main'
+yt = 'helpers.yt:main'
