@@ -54,7 +54,7 @@ def main_function(url, options):
                                        for item in transcript_list])
             transcript_text = transcript_text.replace('\n', ' ')
         except Exception as e:
-            transcript_text = "Transcript not available."
+            transcript_text = f"Transcript not available. ({e})"
 
         # Output based on options
         if options.duration:
@@ -70,12 +70,12 @@ def main_function(url, options):
             # Print JSON object
             print(json.dumps(output))
     except HttpError as e:
-        print("Error: Failed to access YouTube API. Please check your YOUTUBE_API_KEY and ensure it is valid.")
+        print(f"Error: Failed to access YouTube API. Please check your YOUTUBE_API_KEY and ensure it is valid: {e}")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='vm (video meta) extracts metadata about a video, such as the transcript and the video\'s duration. By Daniel Miessler.')
+        description='yt (video meta) extracts metadata about a video, such as the transcript and the video\'s duration. By Daniel Miessler.')
     parser.add_argument('url', nargs='?', help='YouTube video URL')
     parser.add_argument('--duration', action='store_true',
                         help='Output only the duration')
