@@ -53,8 +53,14 @@ def main():
     )
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
+    parser.add_argument(
+        "--ollama", help="Enable Ollama API mode", action="store_true"
+    )
 
     args = parser.parse_args()
+    if args.ollama and args.model == "gpt-4-turbo-preview":
+        args.model = "mistral"
+        
     home_holder = os.path.expanduser("~")
     config = os.path.join(home_holder, ".config", "fabric")
     config_patterns_directory = os.path.join(config, "patterns")

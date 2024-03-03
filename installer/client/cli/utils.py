@@ -1,6 +1,7 @@
 import requests
 import os
 from openai import OpenAI
+from . import ollama
 import pyperclip
 import sys
 import platform
@@ -36,16 +37,23 @@ class Standalone:
         # Expand the tilde to the full path
         env_file = os.path.expanduser(env_file)
         load_dotenv(env_file)
-        try:
-            apikey = os.environ["OPENAI_API_KEY"]
-            self.client = OpenAI()
-            self.client.api_key = apikey
-        except KeyError:
-            print("OPENAI_API_KEY not found in environment variables.")
+        if not args.ollama:
+            try:
+                apikey = os.environ["OPENAI_API_KEY"]
+                self.client = OpenAI()
+                self.client.api_key = apikey
+            except KeyError:
+                print("OPENAI_API_KEY not found in environment variables.")
 
-        except FileNotFoundError:
-            print("No API key found. Use the --apikey option to set the key")
-            sys.exit()
+            except FileNotFoundError:
+                print("No API key found. Use the --apikey option to set the key")
+                sys.exit()
+        else:
+            try:
+                self.ollama = ollama.Client(host=os.environ["OLLAMA_BASE_URL"])
+            except KeyError:
+                self.ollama = ollama.Client()
+        
         self.config_pattern_directory = config_directory
         self.pattern = pattern
         self.args = args
@@ -89,26 +97,51 @@ class Standalone:
             else:
                 messages = [user_message]
         try:
-            stream = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=0.0,
-                top_p=1,
-                frequency_penalty=0.1,
-                presence_penalty=0.1,
-                stream=True,
-            )
-            for chunk in stream:
-                if chunk.choices[0].delta.content is not None:
-                    char = chunk.choices[0].delta.content
-                    buffer += char
-                    if char not in ["\n", " "]:
-                        print(char, end="")
-                    elif char == " ":
-                        print(" ", end="")  # Explicitly handle spaces
-                    elif char == "\n":
-                        print()  # Handle newlines
-                sys.stdout.flush()
+            if self.args.ollama:   
+                stream = self.ollama.chat(
+                    model=self.model, 
+                    messages=messages,
+                    options = {
+                        "top_p": 1,
+                        "temperature": 0.0,
+                        "frequency_penalty": 0.1,
+                        "presence_penalty": 0.1
+                    },
+                    stream=True) 
+                firstPast = False
+                for chunk in stream:
+                    for char in chunk["message"]["content"]:
+                        buffer += char
+                        if char not in ["\n", " "]:
+                            print(char, end="")
+                        elif char == " ":
+                            if firstPast:
+                                print(" ", end="")  # Explicitly handle spaces
+                            firstPast = True
+                        elif char == "\n":
+                            print()  # Handle newlines
+                    sys.stdout.flush()
+            else:
+                stream = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    temperature=0.0,
+                    top_p=1,
+                    frequency_penalty=0.1,
+                    presence_penalty=0.1,
+                    stream=True,
+                )
+                for chunk in stream:
+                    if chunk.choices[0].delta.content is not None:
+                        char = chunk.choices[0].delta.content
+                        buffer += char
+                        if char not in ["\n", " "]:
+                            print(char, end="")
+                        elif char == " ":
+                            print(" ", end="")  # Explicitly handle spaces
+                        elif char == "\n":
+                            print()  # Handle newlines
+                    sys.stdout.flush()
         except Exception as e:
             print(f"Error: {e}")
             print(e)
@@ -155,44 +188,60 @@ class Standalone:
             else:
                 messages = [user_message]
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=0.0,
-                top_p=1,
-                frequency_penalty=0.1,
-                presence_penalty=0.1,
-            )
-            print(response.choices[0].message.content)
+            if self.args.ollama:    
+                response = self.ollama.chat(
+                    model=self.model, 
+                    messages=messages,
+                    stream=False,
+                    options = {
+                        "top_p": 1,
+                        "temperature": 0.0,
+                        "frequency_penalty": 0.1,
+                        "presence_penalty": 0.1
+                    })
+                responseContent = response['message']['content'][1:]
+            else:
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    temperature=0.0,
+                    top_p=1,
+                    frequency_penalty=0.1,
+                    presence_penalty=0.1,
+                )
+                responseContent = response.choices[0].message.content
+            print(responseContent)    
         except Exception as e:
             print(f"Error: {e}")
             print(e)
         if self.args.copy:
-            pyperclip.copy(response.choices[0].message.content)
+            pyperclip.copy(responseContent)
         if self.args.output:
             with open(self.args.output, "w") as f:
-                f.write(response.choices[0].message.content)
+                f.write(responseContent)
 
     def fetch_available_models(self):
-        headers = {
-            "Authorization": f"Bearer {self.client.api_key}"
-        }
-
-        response = requests.get(
-            "https://api.openai.com/v1/models", headers=headers)
-
-        if response.status_code == 200:
-            models = response.json().get("data", [])
-            # Filter only gpt models
-            gpt_models = [model for model in models if model.get(
-                "id", "").startswith(("gpt"))]
-            # Sort the models alphabetically by their ID
-            sorted_gpt_models = sorted(gpt_models, key=lambda x: x.get("id"))
-
-            for model in sorted_gpt_models:
-                print(model.get("id"))
+        if self.args.ollama:
+            [print(model["name"]) for model in ollama.list()["models"]]
         else:
-            print(f"Failed to fetch models: HTTP {response.status_code}")
+            headers = {
+                "Authorization": f"Bearer {self.client.api_key}"
+            }
+            response = requests.get(
+                "https://api.openai.com/v1/models", headers=headers)
+
+            if response.status_code == 200:
+                models = response.json().get("data", [])
+                # Filter only gpt models
+                gpt_models = [model for model in models if model.get(
+                    "id", "").startswith(("gpt"))]
+                # Sort the models alphabetically by their ID
+                sorted_gpt_models = sorted(gpt_models, key=lambda x: x.get("id"))
+
+                for model in sorted_gpt_models:
+                    print(model.get("id"))
+            else:
+                print(f"Failed to fetch models: HTTP {response.status_code}")
 
     def get_cli_input(self):
         """ aided by ChatGPT; uses platform library
@@ -367,8 +416,10 @@ class Setup:
         """
 
         print("Welcome to Fabric. Let's get started.")
-        apikey = input("Please enter your OpenAI API key\n")
-        self.api_key(apikey.strip())
+        response = input("Do you want to use OpenAI ? [Y/n] ").strip().lower()
+        if response != 'n':
+            apikey = input("Please enter your OpenAI API key\n")
+            self.api_key(apikey.strip())
         self.patterns()
 
 
