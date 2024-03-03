@@ -49,4 +49,42 @@ positional arguments:
 
 options:
   -h, --help  show this help message and exit
+
+## save
+
+`save` is a "tee-like" utility to pipeline saving of content, while keeping the output stream intact. Can optionally generate "frontmatter" for PKM utilities like Obsidian via the
+"FABRIC_FRONTMATTER" environment variable
+
+### Environment Variables
+
+If you'd like to default variables, set them in `~/.config/fabric/.env`. `FABRIC_OUTPUT_PATH` needs to be set so `save` where to write. `FABRIC_FRONTMATTER_TAGS` is optional, but useful for tracking how tags have entered your PKM, if that's important to you.
+
+### usage
+```bash
+usage: save [-h] [-t, TAG] [-n] [-s] [stub]
+
+save: a "tee-like" utility to pipeline saving of content, while keeping the output stream intact. Can optionally generate "frontmatter" for PKM utilities like Obsidian via the
+"FABRIC_FRONTMATTER" environment variable
+
+positional arguments:
+  stub                stub to describe your content. Use quotes if you have spaces. Resulting format is YYYY-MM-DD-stub.md by default
+
+options:
+  -h, --help          show this help message and exit
+  -t, TAG, --tag TAG  add an additional frontmatter tag. Use this argument multiple timesfor multiple tags
+  -n, --nofabric      don't use the fabric tags, only use tags from --tag
+  -s, --silent        don't use STDOUT for output, only save to the file
+```
+### example
+
+```bash
+echo test | save --tag extra-tag stub-for-name
+test
+
+$ cat ~/obsidian/Fabric/2024-03-02-stub-for-name.md
+---
+generation_date: 2024-03-02 10:43
+tags: fabric-extraction stub-for-name extra-tag
+---
+test
 ```

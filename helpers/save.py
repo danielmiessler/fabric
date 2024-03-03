@@ -13,7 +13,7 @@ DATE_FORMAT = "%Y-%m-%d"
 load_dotenv(os.path.expanduser(DEFAULT_CONFIG))
 
 
-def main(tag, tags, fabric):
+def main(tag, tags, silent, fabric):
     out = os.getenv(PATH_KEY)
     if out is None:
         print(f"'{PATH_KEY}' not set in {DEFAULT_CONFIG} or in your environment.")
@@ -62,11 +62,12 @@ def main(tag, tags, fabric):
 
         # function like 'tee' and split the output to a file and STDOUT
         for line in sys.stdin:
-            print(line, end="")
+            if not silent:
+                print(line, end="")
             fp.write(line)
 
 
-if __name__ == "__main__":
+def cli():
     parser = argparse.ArgumentParser(
         description=(
             'save: a "tee-like" utility to pipeline saving of content, '
@@ -101,9 +102,20 @@ if __name__ == "__main__":
         action="store_false",
         help="don't use the fabric tags, only use tags from --tag",
     )
+    parser.add_argument(
+        "-s",
+        "--silent",
+        required=False,
+        action="store_true",
+        help="don't use STDOUT for output, only save to the file",
+    )
     args = parser.parse_args()
 
     if args.stub:
-        main(args.stub, args.tag, args.nofabric)
+        main(args.stub, args.tag, args.silent, args.nofabric)
     else:
         parser.print_help()
+
+
+if __name__ == "__main__":
+    cli()
