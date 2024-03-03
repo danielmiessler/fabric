@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Verify that poetry is installed correctly.
+poetry --version >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo 'Poetry may not be installed correctly. Verify that poetry is in your $PATH.'
+    exit 1
+fi
+
 # Check if pyproject.toml exists in the current directory
 if [ ! -f "pyproject.toml" ]; then
   echo "Poetry could not find a pyproject.toml file in the current directory or its parents."
