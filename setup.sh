@@ -12,8 +12,8 @@ echo "Installing python dependencies"
 poetry install
 
 # List of commands to check and add or update alias for
-commands=("fabric" "fabric-api" "fabric-webui")
-
+# Add 'yt' and 'ts' to the list of commands
+commands=("fabric" "fabric-api" "fabric-webui" "ts", "yt")
 
 # List of shell configuration files to update
 config_files=("$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.bash_profile")
@@ -69,4 +69,3 @@ if [ ${#source_commands[@]} -ne 0 ]; then
 else
   echo "No configuration files were updated. No need to source."
 fi
-
