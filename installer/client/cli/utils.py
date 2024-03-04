@@ -49,7 +49,11 @@ class Standalone:
         self.config_pattern_directory = config_directory
         self.pattern = pattern
         self.args = args
-        self.model = args.model
+        try:
+            modelEnv = os.environ["FABRIC_MODEL"]
+            self.model = modelEnv
+        except KeyError:
+            self.model = args.model
 
     def streamMessage(self, input_data: str, context=""):
         """        Stream a message and handle exceptions.
