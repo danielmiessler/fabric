@@ -1,4 +1,5 @@
 from .utils import Standalone, Update, Setup, Alias, AgentSetup
+from .agents.trip_planner.main import planner_cli
 import argparse
 import sys
 import time
@@ -16,12 +17,11 @@ def main():
     parser.add_argument(
         "--copy", "-C", help="Copy the response to the clipboard", action="store_true"
     )
-    subparsers = parser.add_subparsers(dest='command', help='Sub-command help')
-    agents_parser = subparsers.add_parser('agents', help='Crew command help')
-    agents_parser.add_argument(
-        "trip_planner", help="The origin city for the trip")
-    agents_parser.add_argument(
-        'ApiKeys', help="enter API keys for tools", action="store_true")
+    parser.add_argument(
+        '--agents', '-a', choices=['trip_planner', 'ApiKeys'],
+        help="Use an AI agent to help you with a task. Acceptable values are 'trip_planner' or 'ApiKeys'. This option cannot be used with any other flag."
+    )
+
     parser.add_argument(
         "--output",
         "-o",
@@ -73,19 +73,13 @@ def main():
         Update()
         Alias()
         sys.exit()
-    if args.command == "agents":
-        from .agents.trip_planner.main import planner_cli
-        if not args.trip_planner:
-            print("Please provide an agent")
-            print(f"Available Agents:")
-            for agent in tripcrew.agents:
-                print(agent)
-            sys.exit
-        elif args.trip_planner:
+    if args.agents:
+        # Handle the agents logic
+        if args.agents == 'trip_planner':
             tripcrew = planner_cli()
             tripcrew.ask()
             sys.exit()
-        if args.ApiKeys:
+        elif args.agents == 'ApiKeys':
             AgentSetup().run()
             sys.exit()
     if args.update:
