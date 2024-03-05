@@ -126,8 +126,12 @@ class Standalone:
                             print()  # Handle newlines
                     sys.stdout.flush()
         except Exception as e:
-            print(f"Error: {e}")
-            print(e)
+            if "All connection attempts failed" in str(e):
+                print(
+                    "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
+            else:
+                print(f"Error: {e}")
+                print(e)
         if self.args.copy:
             pyperclip.copy(buffer)
         if self.args.output:
