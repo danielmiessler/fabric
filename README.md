@@ -194,7 +194,10 @@ Once you have it all set up, here's how to use it.
    `fabric -h`
 
 ```bash
-fabric [-h] [--text TEXT] [--copy] [--agents {trip_planner,ApiKeys}] [--output [OUTPUT]] [--stream] [--list] [--update] [--pattern PATTERN] [--setup] [--model MODEL] [--listmodels] [--context]
+fabric [-h] [--text TEXT] [--copy] [--agents {trip_planner,ApiKeys}]
+              [--output [OUTPUT]] [--stream] [--list] [--update]
+              [--pattern PATTERN] [--setup] [--local] [--model MODEL]
+              [--listmodels] [--context]
 
 An open source framework for augmenting humans using AI.
 
@@ -203,19 +206,25 @@ options:
   --text TEXT, -t TEXT  Text to extract summary from
   --copy, -C            Copy the response to the clipboard
   --agents {trip_planner,ApiKeys}, -a {trip_planner,ApiKeys}
-                        Use an AI agent to help you with a task. Acceptable values are 'trip_planner' or 'ApiKeys'. This option cannot be used with any other flag.
+                        Use an AI agent to help you with a task. Acceptable
+                        values are 'trip_planner' or 'ApiKeys'. This option
+                        cannot be used with any other flag.
   --output [OUTPUT], -o [OUTPUT]
                         Save the response to a file
-  --stream, -s          Use this option if you want to see the results in realtime. NOTE: You will not be able to pipe the output into another command.
+  --stream, -s          Use this option if you want to see the results in
+                        realtime. NOTE: You will not be able to pipe the
+                        output into another command.
   --list, -l            List available patterns
   --update, -u          Update patterns
   --pattern PATTERN, -p PATTERN
                         The pattern (prompt) to use
   --setup               Set up your fabric instance
+  --local, -L           Use local LLM. Default is llama2
   --model MODEL, -m MODEL
                         Select the model to use (GPT-4 by default)
   --listmodels          List all available models
-  --context, -c         Use Context file (context.md) to add context to your pattern
+  --context, -c         Use Context file (context.md) to add context to your
+                        pattern
 ```
 
 #### Example commands
