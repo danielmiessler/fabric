@@ -47,6 +47,9 @@
 
 <br />
 
+> [!NOTE]  
+> We are improving the project so quickly that you should update often. That means `git pull; ./setup.sh` in the main directory, and then sourcing your shell files and/or restarting your terminal.
+
 ## Introduction video
 
 <div align="center">
