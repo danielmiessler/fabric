@@ -188,8 +188,12 @@ class Standalone:
                 )
                 print(response.choices[0].message.content)
         except Exception as e:
-            print(f"Error: {e}")
-            print(e)
+            if "All connection attempts failed" in str(e):
+                print(
+                    "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
+            else:
+                print(f"Error: {e}")
+                print(e)
         if self.args.copy:
             pyperclip.copy(response.choices[0].message.content)
         if self.args.output:
