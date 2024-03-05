@@ -46,7 +46,7 @@ def main():
     parser.add_argument(
         '--local', '-L', help="Use local LLM. Default is llama2", action="store_true")
     parser.add_argument(
-        "--model", "-m", help="Select the model to use (GPT-4 by default)", default="gpt-4-turbo-preview"
+        "--model", "-m", help="Select the model to use (GPT-4 by default for chatGPT and llama2 for Ollama)", default="gpt-4-turbo-preview"
     )
     parser.add_argument(
         "--listmodels", help="List all available models", action="store_true"
