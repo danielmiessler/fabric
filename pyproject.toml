@@ -22,6 +22,7 @@ google-api-python-client = "^2.120.0"
 isodate = "^0.6.1"
 youtube-transcript-api = "^0.6.2"
 pydub = "^0.25.1"
+ollama = "^0.1.7"
 
 [tool.poetry.group.cli.dependencies]
 pyyaml = "^6.0.1"
@@ -39,7 +40,7 @@ flask-socketio = "^5.3.6"
 flask-sock = "^0.7.0"
 gunicorn = "^21.2.0"
 gevent = "^23.9.1"
-httpx = "^0.26.0"
+httpx = ">=0.25.2,<0.26.0"
 tqdm = "^4.66.1"
 
 [tool.poetry.group.server.dependencies]
