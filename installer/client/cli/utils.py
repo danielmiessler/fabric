@@ -1,6 +1,7 @@
 import requests
 import os
 from openai import OpenAI
+import asyncio
 import pyperclip
 import sys
 import platform
@@ -15,7 +16,7 @@ env_file = os.path.join(config_directory, ".env")
 
 
 class Standalone:
-    def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
+    def __init__(self, args, pattern="", env_file="~/.config/fabric/.env", local=False):
         """        Initialize the class with the provided arguments and environment file.
 
         Args:
@@ -44,10 +45,24 @@ class Standalone:
         except FileNotFoundError:
             print("No API key found. Use the --apikey option to set the key")
             sys.exit()
+        self.local = local
         self.config_pattern_directory = config_directory
         self.pattern = pattern
         self.args = args
         self.model = args.model
+        if self.local:
+            if self.args.model == 'gpt-4-turbo-preview':
+                self.args.model = 'llama2'
+
+    async def localChat(self, messages):
+        from ollama import AsyncClient
+        response = await AsyncClient().chat(model=self.args.model, messages=messages)
+        print(response['message']['content'])
+
+    async def localStream(self, messages):
+        from ollama import AsyncClient
+        async for part in await AsyncClient().chat(model=self.args.model, messages=messages, stream=True):
+            print(part['message']['content'], end='', flush=True)
 
     def streamMessage(self, input_data: str, context=""):
         """        Stream a message and handle exceptions.
@@ -87,26 +102,29 @@ class Standalone:
             else:
                 messages = [user_message]
         try:
-            stream = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=0.0,
-                top_p=1,
-                frequency_penalty=0.1,
-                presence_penalty=0.1,
-                stream=True,
-            )
-            for chunk in stream:
-                if chunk.choices[0].delta.content is not None:
-                    char = chunk.choices[0].delta.content
-                    buffer += char
-                    if char not in ["\n", " "]:
-                        print(char, end="")
-                    elif char == " ":
-                        print(" ", end="")  # Explicitly handle spaces
-                    elif char == "\n":
-                        print()  # Handle newlines
-                sys.stdout.flush()
+            if self.local:
+                asyncio.run(self.localStream(messages))
+            else:
+                stream = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    temperature=0.0,
+                    top_p=1,
+                    frequency_penalty=0.1,
+                    presence_penalty=0.1,
+                    stream=True,
+                )
+                for chunk in stream:
+                    if chunk.choices[0].delta.content is not None:
+                        char = chunk.choices[0].delta.content
+                        buffer += char
+                        if char not in ["\n", " "]:
+                            print(char, end="")
+                        elif char == " ":
+                            print(" ", end="")  # Explicitly handle spaces
+                        elif char == "\n":
+                            print()  # Handle newlines
+                    sys.stdout.flush()
         except Exception as e:
             print(f"Error: {e}")
             print(e)
@@ -153,15 +171,18 @@ class Standalone:
             else:
                 messages = [user_message]
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=0.0,
-                top_p=1,
-                frequency_penalty=0.1,
-                presence_penalty=0.1,
-            )
-            print(response.choices[0].message.content)
+            if self.local:
+                asyncio.run(self.localChat(messages))
+            else:
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    temperature=0.0,
+                    top_p=1,
+                    frequency_penalty=0.1,
+                    presence_penalty=0.1,
+                )
+                print(response.choices[0].message.content)
         except Exception as e:
             print(f"Error: {e}")
             print(e)

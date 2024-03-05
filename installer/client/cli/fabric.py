@@ -44,6 +44,8 @@ def main():
         "--setup", help="Set up your fabric instance", action="store_true"
     )
     parser.add_argument(
+        '--local', '-L', help="Use local LLM. Default is llama2", action="store_true")
+    parser.add_argument(
         "--model", "-m", help="Select the model to use (GPT-4 by default)", default="gpt-4-turbo-preview"
     )
     parser.add_argument(
@@ -90,7 +92,11 @@ def main():
         if not os.path.exists(os.path.join(config, "context.md")):
             print("Please create a context.md file in ~/.config/fabric")
             sys.exit()
-    standalone = Standalone(args, args.pattern)
+    standalone = None
+    if args.local:
+        standalone = Standalone(args, args.pattern, local=True)
+    else:
+        standalone = Standalone(args, args.pattern)
     if args.list:
         try:
             direct = sorted(os.listdir(config_patterns_directory))
