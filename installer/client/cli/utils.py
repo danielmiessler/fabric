@@ -5,8 +5,6 @@ import pyperclip
 import sys
 import platform
 from dotenv import load_dotenv
-from requests.exceptions import HTTPError
-from tqdm import tqdm
 import zipfile
 import tempfile
 import shutil

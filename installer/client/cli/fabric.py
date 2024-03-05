@@ -1,7 +1,6 @@
-from .utils import Standalone, Update, Setup, Alias, AgentSetup
+from .utils import Standalone, Update, Setup, Alias
 import argparse
 import sys
-import time
 import os
 
 
@@ -74,12 +73,13 @@ def main():
         sys.exit()
     if args.agents:
         # Handle the agents logic
-        from .agents.trip_planner.main import planner_cli
         if args.agents == 'trip_planner':
+            from .agents.trip_planner.main import planner_cli
             tripcrew = planner_cli()
             tripcrew.ask()
             sys.exit()
         elif args.agents == 'ApiKeys':
+            from .utils import AgentSetup
             AgentSetup().run()
             sys.exit()
     if args.update:
