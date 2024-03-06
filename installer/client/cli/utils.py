@@ -475,9 +475,9 @@ class Setup:
 
         print("Welcome to Fabric. Let's get started.")
         apikey = input(
-            "Please enter your OpenAI API key. If you do not have one, press enter.\n")
+            "Please enter your OpenAI API key. If you do not have one or if you have already entered it, press enter.\n")
         self.api_key(apikey.strip())
-        print("Please enter your claude API key. If you do not have one, press enter.\n")
+        print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         claudekey = input()
         self.claude_key(claudekey.strip())
         self.patterns()
