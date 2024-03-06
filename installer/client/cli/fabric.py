@@ -43,6 +43,8 @@ def main():
     parser.add_argument(
         "--setup", help="Set up your fabric instance", action="store_true"
     )
+    parser.add_argument('--changeDefaultModel',
+                        help="Change the default model. Your choice will be saved in ~/.config/fabric/.env). For a list of available models, use the --listmodels flag.")
     parser.add_argument(
         '--local', '-L', help="Use local LLM. Default is llama2", action="store_true")
 
@@ -76,6 +78,10 @@ def main():
     if not os.path.exists(config_patterns_directory):
         Update()
         Alias()
+        sys.exit()
+    if args.changeDefaultModel:
+        Setup().default_model(args.changeDefaultModel)
+        print(f"Default model changed to {args.changeDefaultModel}")
         sys.exit()
     if args.agents:
         # Handle the agents logic
