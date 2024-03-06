@@ -562,6 +562,11 @@ class Setup:
         model = model.strip()
         if model:
             # Write or update the DEFAULT_MODEL in env_file
+            allModels = self.claudeList + self.fullOllamaList + self.gptlist
+            if model not in allModels:
+                print(
+                    f"Error: {model} is not a valid model. Please run fabric --listmodels to see the available models.")
+                sys.exit()
             if os.path.exists(self.env_file):
                 with open(self.env_file, "r") as f:
                     lines = f.readlines()
