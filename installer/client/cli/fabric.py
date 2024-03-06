@@ -45,11 +45,6 @@ def main():
     )
     parser.add_argument('--changeDefaultModel',
                         help="Change the default model. Your choice will be saved in ~/.config/fabric/.env). For a list of available models, use the --listmodels flag.")
-    parser.add_argument(
-        '--local', '-L', help="Use local LLM. Default is llama2", action="store_true")
-
-    parser.add_argument(
-        "--claude", help="Use Claude AI", action="store_true")
 
     parser.add_argument(
         "--model", "-m", help="Select the model to use (GPT-4 by default for chatGPT and llama2 for Ollama)", default="gpt-4-turbo-preview"
@@ -81,6 +76,7 @@ def main():
         sys.exit()
     if args.changeDefaultModel:
         Setup().default_model(args.changeDefaultModel)
+        print(f"Default model changed to {args.changeDefaultModel}")
         sys.exit()
     if args.agents:
         # Handle the agents logic
@@ -101,13 +97,7 @@ def main():
         if not os.path.exists(os.path.join(config, "context.md")):
             print("Please create a context.md file in ~/.config/fabric")
             sys.exit()
-    standalone = None
-    if args.local:
-        standalone = Standalone(args, args.pattern, local=True)
-    elif args.claude:
-        standalone = Standalone(args, args.pattern, claude=True)
-    else:
-        standalone = Standalone(args, args.pattern)
+    standalone = Standalone(args, args.pattern)
     if args.list:
         try:
             direct = sorted(os.listdir(config_patterns_directory))
@@ -118,9 +108,15 @@ def main():
             print("No patterns found")
             sys.exit()
     if args.listmodels:
-        setup = Setup()
-        allmodels = setup.fetch_available_models()
-        for model in allmodels:
+        gptmodels, localmodels, claudemodels = standalone.fetch_available_models()
+        print("GPT Models:")
+        for model in gptmodels:
+            print(model)
+        print("\nLocal Models:")
+        for model in localmodels:
+            print(model)
+        print("\nClaude Models:")
+        for model in claudemodels:
             print(model)
         sys.exit()
     if args.text is not None:

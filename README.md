@@ -197,12 +197,11 @@ Once you have it all set up, here's how to use it.
    `fabric -h`
 
 ```bash
-fabric -h
-usage: fabric [-h] [--text TEXT] [--copy] [--agents {trip_planner,ApiKeys}]
+fabric [-h] [--text TEXT] [--copy] [--agents {trip_planner,ApiKeys}]
               [--output [OUTPUT]] [--stream] [--list] [--update]
               [--pattern PATTERN] [--setup]
-              [--changeDefaultModel CHANGEDEFAULTMODEL] [--local] [--claude]
-              [--model MODEL] [--listmodels] [--context]
+              [--changeDefaultModel CHANGEDEFAULTMODEL] [--model MODEL]
+              [--listmodels] [--context]
 
 An open source framework for augmenting humans using AI.
 
@@ -228,8 +227,6 @@ options:
                         Change the default model. Your choice will be saved in
                         ~/.config/fabric/.env). For a list of available
                         models, use the --listmodels flag.
-  --local, -L           Use local LLM. Default is llama2
-  --claude              Use Claude AI
   --model MODEL, -m MODEL
                         Select the model to use (GPT-4 by default for chatGPT
                         and llama2 for Ollama)

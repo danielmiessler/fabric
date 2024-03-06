@@ -17,7 +17,7 @@ env_file = os.path.join(config_directory, ".env")
 
 
 class Standalone:
-    def __init__(self, args, pattern="", env_file="~/.config/fabric/.env", local=False, claude=False):
+    def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
         """        Initialize the class with the provided arguments and environment file.
 
         Args:
@@ -46,21 +46,19 @@ class Standalone:
         except FileNotFoundError:
             print("No API key found. Use the --apikey option to set the key")
             sys.exit()
-        self.local = local
+        self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
         self.args = args
         self.model = args.model
-        self.claude = claude
+        self.claude = False
+        sorted_gpt_models, ollamaList, claudeList = self.fetch_available_models()
         try:
             self.model = os.environ["DEFAULT_MODEL"]
         except:
-            if self.local:
-                if self.args.model == 'gpt-4-turbo-preview':
-                    self.model = 'llama2'
-            if self.claude:
-                if self.args.model == 'gpt-4-turbo-preview':
-                    self.model = 'claude-3-opus-20240229'
+            pass
+        self.local = self.model.strip() in ollamaList
+        self.claude = self.model.strip() in claudeList
 
     async def localChat(self, messages):
         from ollama import AsyncClient
@@ -259,6 +257,9 @@ class Standalone:
                 f.write(response.choices[0].message.content)
 
     def fetch_available_models(self):
+        gptlist = []
+        fullOllamaList = []
+        claudeList = ['claude-3-opus-20240229']
         headers = {
             "Authorization": f"Bearer {self.client.api_key}"
         }
@@ -267,25 +268,27 @@ class Standalone:
             "https://api.openai.com/v1/models", headers=headers)
 
         if response.status_code == 200:
-            print("OpenAI GPT models:\n")
             models = response.json().get("data", [])
             # Filter only gpt models
             gpt_models = [model for model in models if model.get(
                 "id", "").startswith(("gpt"))]
             # Sort the models alphabetically by their ID
-            sorted_gpt_models = sorted(gpt_models, key=lambda x: x.get("id"))
+            sorted_gpt_models = sorted(
+                gpt_models, key=lambda x: x.get("id"))
 
             for model in sorted_gpt_models:
-                print(model.get("id"))
-            print("\nLocal Ollama models:")
-            import ollama
-            ollamaList = ollama.list()['models']
-            for model in ollamaList:
-                print(model['name'].rstrip(":latest"))
-            print("\nClaude models:")
-            print("claude-3-opus-20240229")
+                gptlist.append(model.get("id"))
         else:
             print(f"Failed to fetch models: HTTP {response.status_code}")
+            sys.exit()
+        import ollama
+        try:
+            default_modelollamaList = ollama.list()['models']
+            for model in default_modelollamaList:
+                fullOllamaList.append(model['name'].rstrip(":latest"))
+        except:
+            fullOllamaList = []
+        return gptlist, fullOllamaList, claudeList
 
     def get_cli_input(self):
         """ aided by ChatGPT; uses platform library
@@ -520,17 +523,14 @@ class Setup:
 
     def update_fabric_command(self, line, model):
         fabric_command_regex = re.compile(
-            r"(alias.*fabric --pattern\s+\S+.*?)( --claude| --local)?'")
+            r"(alias.*fabric --pattern\s+\S+.*?)( --model.*)?'")
         match = fabric_command_regex.search(line)
         if match:
             base_command = match.group(1)
             # Provide a default value for current_flag
             current_flag = match.group(2) if match.group(2) else ""
             new_flag = ""
-            if model in self.claudeList:
-                new_flag = " --claude"
-            elif model in self.fullOllamaList:
-                new_flag = " --local"
+            new_flag = f" --model {model}"
             # Update the command if the new flag is different or to remove an existing flag.
             # Ensure to add the closing quote that was part of the original regex
             return f"{base_command}{new_flag}'\n"
@@ -539,15 +539,11 @@ class Setup:
 
     def update_fabric_alias(self, line, model):
         fabric_alias_regex = re.compile(
-            r"(alias fabric='[^']+?)( --claude| --local)?'")
+            r"(alias fabric='[^']+?)( --model.*)?'")
         match = fabric_alias_regex.search(line)
         if match:
             base_command, current_flag = match.groups()
-            new_flag = ""
-            if model in self.claudeList:
-                new_flag = " --claude"
-            elif model in self.fullOllamaList:
-                new_flag = " --local"
+            new_flag = f" --model {model}"
             # Update the alias if the new flag is different or to remove an existing flag.
             return f"{base_command}{new_flag}'\n"
         else:
