@@ -16,7 +16,7 @@ env_file = os.path.join(config_directory, ".env")
 
 
 class Standalone:
-    def __init__(self, args, pattern="", env_file="~/.config/fabric/.env", local=False):
+    def __init__(self, args, pattern="", env_file="~/.config/fabric/.env", local=False, claude=False):
         """        Initialize the class with the provided arguments and environment file.
 
         Args:
@@ -50,9 +50,13 @@ class Standalone:
         self.pattern = pattern
         self.args = args
         self.model = args.model
+        self.claude = claude
         if self.local:
             if self.args.model == 'gpt-4-turbo-preview':
-                self.args.model = 'llama2'
+                self.model = 'llama2'
+        if self.claude:
+            if self.args.model == 'gpt-4-turbo-preview':
+                self.model = 'claude-3-opus-20240229'
 
     async def localChat(self, messages):
         from ollama import AsyncClient
@@ -63,6 +67,35 @@ class Standalone:
         from ollama import AsyncClient
         async for part in await AsyncClient().chat(model=self.args.model, messages=messages, stream=True):
             print(part['message']['content'], end='', flush=True)
+
+    async def claudeStream(self, system, user):
+        from anthropic import AsyncAnthropic
+        self.claudeApiKey = os.environ["CLAUDE_API_KEY"]
+        Streamingclient = AsyncAnthropic(api_key=self.claudeApiKey)
+        async with Streamingclient.messages.stream(
+            max_tokens=1024,
+            system=system,
+            messages=[user],
+            model=self.model, temperature=0.0, top_p=1.0
+        ) as stream:
+            async for text in stream.text_stream:
+                print(text, end="", flush=True)
+            print()
+
+        message = await stream.get_final_message()
+
+    async def claudeChat(self, system, user):
+        from anthropic import Anthropic
+        self.claudeApiKey = os.environ["CLAUDE_API_KEY"]
+        client = Anthropic(api_key=self.claudeApiKey)
+        message = client.messages.create(
+            max_tokens=1024,
+            system=system,
+            messages=[user],
+            model=self.model,
+            temperature=0.0, top_p=1.0
+        )
+        print(message.content[0].text)
 
     def streamMessage(self, input_data: str, context=""):
         """        Stream a message and handle exceptions.
@@ -82,6 +115,7 @@ class Standalone:
         )
         user_message = {"role": "user", "content": f"{input_data}"}
         wisdom_File = os.path.join(current_directory, wisdomFilePath)
+        system = ""
         buffer = ""
         if self.pattern:
             try:
@@ -104,6 +138,9 @@ class Standalone:
         try:
             if self.local:
                 asyncio.run(self.localStream(messages))
+            elif self.claude:
+                from anthropic import AsyncAnthropic
+                asyncio.run(self.claudeStream(system, user_message))
             else:
                 stream = self.client.chat.completions.create(
                     model=self.model,
@@ -129,6 +166,9 @@ class Standalone:
             if "All connection attempts failed" in str(e):
                 print(
                     "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
+            if "CLAUDE_API_KEY" in str(e):
+                print(
+                    "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
             else:
                 print(f"Error: {e}")
                 print(e)
@@ -156,6 +196,7 @@ class Standalone:
         )
         user_message = {"role": "user", "content": f"{input_data}"}
         wisdom_File = os.path.join(current_directory, wisdomFilePath)
+        system = ""
         if self.pattern:
             try:
                 with open(wisdom_File, "r") as f:
@@ -177,6 +218,8 @@ class Standalone:
         try:
             if self.local:
                 asyncio.run(self.localChat(messages))
+            elif self.claude:
+                asyncio.run(self.claudeChat(system, user_message))
             else:
                 response = self.client.chat.completions.create(
                     model=self.model,
@@ -191,6 +234,9 @@ class Standalone:
             if "All connection attempts failed" in str(e):
                 print(
                     "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
+            if "CLAUDE_API_KEY" in str(e):
+                print(
+                    "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
             else:
                 print(f"Error: {e}")
                 print(e)
@@ -369,11 +415,45 @@ class Setup:
         Raises:
             OSError: If the environment file does not exist or cannot be accessed.
         """
-
-        if not os.path.exists(self.env_file):
+        api_key = api_key.strip()
+        if not os.path.exists(self.env_file) and api_key:
             with open(self.env_file, "w") as f:
                 f.write(f"OPENAI_API_KEY={api_key}")
             print(f"OpenAI API key set to {api_key}")
+        elif api_key:
+            # erase the line OPENAI_API_KEY=key and write the new key
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "OPENAI_API_KEY" not in line:
+                        f.write(line)
+                f.write(f"OPENAI_API_KEY={api_key}")
+
+    def claude_key(self, claude_key):
+        """        Set the Claude API key in the environment file.
+
+        Args:
+            claude_key (str): The API key to be set.
+
+        Returns:
+            None
+
+        Raises:
+            OSError: If the environment file does not exist or cannot be accessed.
+        """
+        claude_key = claude_key.strip()
+        if os.path.exists(self.env_file) and claude_key:
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "CLAUDE_API_KEY" not in line:
+                        f.write(line)
+                f.write(f"CLAUDE_API_KEY={claude_key}")
+        elif claude_key:
+            with open(self.env_file, "w") as f:
+                f.write(f"CLAUDE_API_KEY={claude_key}")
 
     def patterns(self):
         """        Method to update patterns and exit the system.
@@ -396,6 +476,9 @@ class Setup:
         print("Welcome to Fabric. Let's get started.")
         apikey = input("Please enter your OpenAI API key\n")
         self.api_key(apikey.strip())
+        print("Please enter your claude API key. If you do not have one, press enter.")
+        claudekey = input()
+        self.claude_key(claudekey.strip())
         self.patterns()
 
 

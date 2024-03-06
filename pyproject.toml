@@ -23,6 +23,7 @@ isodate = "^0.6.1"
 youtube-transcript-api = "^0.6.2"
 pydub = "^0.25.1"
 ollama = "^0.1.7"
+anthropic = "^0.18.1"
 
 [tool.poetry.group.cli.dependencies]
 pyyaml = "^6.0.1"
