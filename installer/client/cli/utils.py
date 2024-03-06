@@ -520,7 +520,7 @@ class Setup:
 
     def update_fabric_command(self, line, model):
         fabric_command_regex = re.compile(
-            r"(fabric --pattern\s+\S+.*?)( --claude| --local)?'")
+            r"(alias.*fabric --pattern\s+\S+.*?)( --claude| --local)?'")
         match = fabric_command_regex.search(line)
         if match:
             base_command = match.group(1)
