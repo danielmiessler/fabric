@@ -430,8 +430,8 @@ class Setup:
             openaiapikey = os.environ["OPENAI_API_KEY"]
             self.openaiapi_key = openaiapikey
         except KeyError:
-            print("OPENAI_API_KEY not found in environment variables.")
-            sys.exit()
+            print("OPENAI_API_KEY not found in environment variables. ")
+            self.run()
         self.fetch_available_models()
 
     def fetch_available_models(self):
