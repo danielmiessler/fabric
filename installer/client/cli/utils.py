@@ -51,21 +51,24 @@ class Standalone:
         self.args = args
         self.model = args.model
         self.claude = claude
-        if self.local:
-            if self.args.model == 'gpt-4-turbo-preview':
-                self.args.model = 'llama2'
-        if self.claude:
-            if self.args.model == 'gpt-4-turbo-preview':
-                self.model = 'claude-3-opus-20240229'
+        try:
+            self.model = os.environ["DEFAULT_MODEL"]
+        except:
+            if self.local:
+                if self.args.model == 'gpt-4-turbo-preview':
+                    self.model = 'llama2'
+            if self.claude:
+                if self.args.model == 'gpt-4-turbo-preview':
+                    self.model = 'claude-3-opus-20240229'
 
     async def localChat(self, messages):
         from ollama import AsyncClient
-        response = await AsyncClient().chat(model=self.args.model, messages=messages)
+        response = await AsyncClient().chat(model=self.model, messages=messages)
         print(response['message']['content'])
 
     async def localStream(self, messages):
         from ollama import AsyncClient
-        async for part in await AsyncClient().chat(model=self.args.model, messages=messages, stream=True):
+        async for part in await AsyncClient().chat(model=self.model, messages=messages, stream=True):
             print(part['message']['content'], end='', flush=True)
 
     async def claudeStream(self, system, user):
@@ -243,6 +246,8 @@ class Standalone:
             if "overloaded_error" in str(e):
                 print(
                     "Error: Fabric is working fine, but claude is overloaded. Please try again later.")
+            if "Attempted to call a sync iterator on an async stream" in str(e):
+                print("Error: There is a problem connecting fabric with your local ollama installation. Please visit https://ollama.com for installation instructions. It is possible that you have chosen the wrong model. Please run fabric --listmodels to see the available models and choose the right one with fabric --model <model> or fabric --changeDefaultModel. If this does not work. Restart your computer (always a good idea) and try again. If you are still having problems, please visit https://ollama.com for installation instructions.")
             else:
                 print(f"Error: {e}")
                 print(e)
@@ -261,6 +266,7 @@ class Standalone:
             "https://api.openai.com/v1/models", headers=headers)
 
         if response.status_code == 200:
+            print("OpenAI GPT models:\n")
             models = response.json().get("data", [])
             # Filter only gpt models
             gpt_models = [model for model in models if model.get(
@@ -270,6 +276,13 @@ class Standalone:
 
             for model in sorted_gpt_models:
                 print(model.get("id"))
+            print("\nLocal Ollama models:")
+            import ollama
+            ollamaList = ollama.list()['models']
+            for model in ollamaList:
+                print(model['name'].rstrip(":latest"))
+            print("\nClaude models:")
+            print("claude-3-opus-20240229")
         else:
             print(f"Failed to fetch models: HTTP {response.status_code}")
 
@@ -461,6 +474,33 @@ class Setup:
             with open(self.env_file, "w") as f:
                 f.write(f"CLAUDE_API_KEY={claude_key}")
 
+    def default_model(self, model):
+        """        Set the default model in the environment file.
+
+        Args:
+            model (str): The model to be set.
+        """
+
+        model = model.strip()
+        if os.path.exists(self.env_file) and model:
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "DEFAULT_MODEL" not in line:
+                        f.write(line)
+                f.write(f"DEFAULT_MODEL={model}")
+        elif model:
+            with open(self.env_file, "w") as f:
+                f.write(f"DEFAULT_MODEL={model}")
+        else:
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "DEFAULT_MODEL" not in line:
+                        f.write(line)
+
     def patterns(self):
         """        Method to update patterns and exit the system.
 
@@ -486,6 +526,7 @@ class Setup:
         print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         claudekey = input()
         self.claude_key(claudekey.strip())
+        print("Please enter your default model. Press enter to choose the default gpt-4-turbo-preview\n")
         self.patterns()
 
 
