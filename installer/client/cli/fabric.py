@@ -118,7 +118,10 @@ def main():
             print("No patterns found")
             sys.exit()
     if args.listmodels:
-        standalone.fetch_available_models()
+        setup = Setup()
+        allmodels = setup.fetch_available_models()
+        for model in allmodels:
+            print(model)
         sys.exit()
     if args.text is not None:
         text = args.text
