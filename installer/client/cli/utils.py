@@ -329,11 +329,16 @@ class Update:
             patterns_source_path = os.path.join(
                 extracted_folder_path, "fabric-main", "patterns")
             if os.path.exists(patterns_source_path):
+                # Backup existing custom patterns
+                custom_patterns_backup_path = self.backup_custom_patterns(patterns_source_path)
                 # If the patterns directory already exists, remove it before copying over the new one
                 if os.path.exists(self.pattern_directory):
                     shutil.rmtree(self.pattern_directory)
                 shutil.copytree(patterns_source_path, self.pattern_directory)
                 print("Patterns updated successfully.")
+                # Copy back the custom patterns
+                self.restore_custom_patterns(custom_patterns_backup_path, self.pattern_directory)
+                print("Custom patterns restored successfully.")
             else:
                 print("Patterns folder not found in the downloaded zip.")
 
@@ -351,6 +356,32 @@ class Update:
             zip_ref.extractall(extract_to)
         print("Extracted zip file successfully.")
         return extract_to  # Return the path to the extracted contents
+
+    def backup_custom_patterns(self, extracted_folder_path):
+        # Create a temporary directory for the custom backup
+        custom_backup = tempfile.mkdtemp(prefix="custom_patterns_backup_")
+        print(f"Temporary backup directory created at: {custom_backup}")
+        # List all the directories in the source path
+        current_patterns = next(os.walk(self.pattern_directory))[1]
+        # List all the directories in the extracted_folder_path path
+        zip_dirs = next(os.walk(extracted_folder_path))[1]
+        # Identify directories in source_path not in zip_ex
+        custom_patterns = [p for p in current_patterns if p not in zip_dirs]
+        # Back up the unique directories from source_path to the custom_backup directory
+        for dir_name in custom_patterns:
+            src_dir_path = os.path.join(self.pattern_directory, dir_name)
+            backup_dir_path = os.path.join(custom_backup, dir_name)
+            shutil.copytree(src_dir_path, backup_dir_path)
+            print(f"Backed up directory '{dir_name}' to {custom_backup}")
+
+        return custom_backup
+
+    def restore_custom_patterns(self, backup_path, restore_path):
+        # Iterate over all the items in the source directory
+        for custom_pattern in os.listdir(backup_path):
+            src_item_path = os.path.join(backup_path, custom_pattern)
+            dst_item_path = os.path.join(restore_path, custom_pattern)
+            shutil.copytree(src_item_path, dst_item_path, dirs_exist_ok=False)
 
 
 class Alias:
