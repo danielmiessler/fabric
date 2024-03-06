@@ -48,7 +48,10 @@
 <br />
 
 > [!NOTE]  
-> We are improving the project so quickly that you should update often. That means `git pull; ./setup.sh` in the main directory, and then sourcing your shell files and/or restarting your terminal.
+> We are adding functionality to the project so often that you should update often as well. That means: `git pull; ./setup.sh; fabric --update` in the main directory, and then sourcing your shell files and/or restarting your terminal. So exciting!
+
+> [!NOTE]  
+> We just added support for Claude, local models via Ollama, and tons of other stuff. Check `fabric -h` for the latest!
 
 ## Introduction video
 
