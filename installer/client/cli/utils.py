@@ -537,6 +537,48 @@ class Setup:
         else:
             return line  # Return the line unmodified if no match is found.
 
+    def clear_env_line(self, line):
+        fabric_command_regex = re.compile(
+            r"(alias.*fabric --pattern\s+\S+.*?)( --model.*)?'")
+        match = fabric_command_regex.search(line)
+        if match:
+            base_command = match.group(1)
+            return f"{base_command}'\n"
+        else:
+            return line  # Return the line unmodified if no match is found.
+
+    def clean_env(self):
+        """Clear the DEFAULT_MODEL from the environment file.
+
+        Returns:
+            None
+        """
+        user_home = os.path.expanduser("~")
+        sh_config = None
+        # Check for shell configuration files
+        if os.path.exists(os.path.join(user_home, ".bashrc")):
+            sh_config = os.path.join(user_home, ".bashrc")
+        elif os.path.exists(os.path.join(user_home, ".zshrc")):
+            sh_config = os.path.join(user_home, ".zshrc")
+        else:
+            print("No environment file found.")
+        if sh_config:
+            with open(sh_config, "r") as f:
+                lines = f.readlines()
+            with open(sh_config, "w") as f:
+                for line in lines:
+                    modified_line = line
+                    # Update existing fabric commands
+                    if "fabric --pattern" in line:
+                        modified_line = self.clear_env_line(
+                            modified_line)
+                    elif "fabric=" in line:
+                        modified_line = self.clear_env_line(
+                            modified_line)
+                    f.write(modified_line)
+        else:
+            print("No shell configuration file found.")
+
     def update_fabric_alias(self, line, model):
         fabric_alias_regex = re.compile(
             r"(alias fabric='[^']+?)( --model.*)?'")
