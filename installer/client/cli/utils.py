@@ -421,6 +421,41 @@ class Setup:
             self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
         self.env_file = os.path.join(self.config_directory, ".env")
+        self.gptlist = []
+        self.fullOllamaList = []
+        self.claudeList = ['claude-3-opus-20240229']
+
+    def fetch_available_models(self):
+        headers = {
+            "Authorization": f"Bearer {self.client.api_key}"
+        }
+
+        response = requests.get(
+            "https://api.openai.com/v1/models", headers=headers)
+
+        if response.status_code == 200:
+            print("OpenAI GPT models:\n")
+            models = response.json().get("data", [])
+            # Filter only gpt models
+            gpt_models = [model for model in models if model.get(
+                "id", "").startswith(("gpt"))]
+            # Sort the models alphabetically by their ID
+            sorted_gpt_models = sorted(
+                gpt_models, key=lambda x: x.get("id"))
+
+            for model in sorted_gpt_models:
+                print(model.get("id"))
+                self.gptlist.append(model.get("id"))
+            print("\nLocal Ollama models:")
+            import ollama
+            default_modelollamaList = ollama.list()['models']
+            for model in ollamaList:
+                print(model['name'].rstrip(":latest"))
+                self.fullOllamaList.append(model['name'].rstrip(":latest"))
+            print("\nClaude models:")
+            print("claude-3-opus-20240229")
+        else:
+            print(f"Failed to fetch models: HTTP {response.status_code}")
 
     def api_key(self, api_key):
         """        Set the OpenAI API key in the environment file.
@@ -500,6 +535,39 @@ class Setup:
                 for line in lines:
                     if "DEFAULT_MODEL" not in line:
                         f.write(line)
+        import re
+        plain_fabric_regex = re.compile(
+            r"(fabric='.*fabric)( --claude| --local)?'"
+        fabric_regex = re.compile(r"(fabric --pattern.*)( --claude|--local)'")
+        user_home = os.path.expanduser("~")
+        sh_config = None
+        # Check for shell configuration files
+        if os.path.exists(os.path.join(user_home, ".bashrc")):
+            sh_config = os.path.join(user_home, ".bashrc")
+        elif os.path.exists(os.path.join(user_home, ".zshrc")):
+            sh_config = os.path.join(user_home, ".zshrc")
+
+        if sh_config:
+            with open(sh_config, "r") as f:
+                lines = f.readlines()
+            with open(sh_config, "w") as f:
+                for line in lines:
+                    # Remove existing --claude or --local
+                    modified_line = re.sub(fabric_regex, r"\1'", line)
+                    if "fabric --pattern" in line:
+                        if model in self.claudeList:
+                            whole_thing = plain_fabric_regex.search(line)[0]
+                            beginning_match = plain_fabric_regex.search(line)[1]
+                            modified_line = re.sub(
+                                fabric_regex, r"\1 --claude'", line)
+                        elif model in self.fullOllamaList:
+                            modified_line = re.sub(
+                                fabric_regex, r"\1 --local'", line)
+                    f.write(modified_line)
+            print(f"""Default model changed to {
+                  model}. Please restart your terminal to use it.""")
+        else:
+            print("No shell configuration file found.")
 
     def patterns(self):
         """        Method to update patterns and exit the system.
