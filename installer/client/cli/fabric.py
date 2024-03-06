@@ -81,7 +81,6 @@ def main():
         sys.exit()
     if args.changeDefaultModel:
         Setup().default_model(args.changeDefaultModel)
-        print(f"Default model changed to {args.changeDefaultModel}")
         sys.exit()
     if args.agents:
         # Handle the agents logic
