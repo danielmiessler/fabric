@@ -198,7 +198,7 @@ Once you have it all set up, here's how to use it.
 
 ```bash
 fabric [-h] [--text TEXT] [--copy] [--agents {trip_planner,ApiKeys}]
-              [--output [OUTPUT]] [--stream] [--list] [--update]
+              [--output [OUTPUT]] [--stream] [--list] [--clear] [--update]
               [--pattern PATTERN] [--setup]
               [--changeDefaultModel CHANGEDEFAULTMODEL] [--model MODEL]
               [--listmodels] [--context]
@@ -219,6 +219,8 @@ options:
                         realtime. NOTE: You will not be able to pipe the
                         output into another command.
   --list, -l            List available patterns
+  --clear               Clears your persistant model choice so that you can
+                        once again use the --model flag
   --update, -u          Update patterns
   --pattern PATTERN, -p PATTERN
                         The pattern (prompt) to use
@@ -228,8 +230,9 @@ options:
                         ~/.config/fabric/.env). For a list of available
                         models, use the --listmodels flag.
   --model MODEL, -m MODEL
-                        Select the model to use (GPT-4 by default for chatGPT
-                        and llama2 for Ollama)
+                        Select the model to use. NOTE: Will not work if you
+                        have set a default model. please use --clear to clear
+                        persistance before using this flag
   --listmodels          List all available models
   --context, -c         Use Context file (context.md) to add context to your
                         pattern
