@@ -53,7 +53,7 @@ class Standalone:
         self.claude = claude
         if self.local:
             if self.args.model == 'gpt-4-turbo-preview':
-                self.model = 'llama2'
+                self.args.model = 'llama2'
         if self.claude:
             if self.args.model == 'gpt-4-turbo-preview':
                 self.model = 'claude-3-opus-20240229'
@@ -73,7 +73,7 @@ class Standalone:
         self.claudeApiKey = os.environ["CLAUDE_API_KEY"]
         Streamingclient = AsyncAnthropic(api_key=self.claudeApiKey)
         async with Streamingclient.messages.stream(
-            max_tokens=1024,
+            max_tokens=4096,
             system=system,
             messages=[user],
             model=self.model, temperature=0.0, top_p=1.0
@@ -89,7 +89,7 @@ class Standalone:
         self.claudeApiKey = os.environ["CLAUDE_API_KEY"]
         client = Anthropic(api_key=self.claudeApiKey)
         message = client.messages.create(
-            max_tokens=1024,
+            max_tokens=4096,
             system=system,
             messages=[user],
             model=self.model,
@@ -169,6 +169,9 @@ class Standalone:
             if "CLAUDE_API_KEY" in str(e):
                 print(
                     "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
+            if "overloaded_error" in str(e):
+                print(
+                    "Error: Fabric is working fine, but claude is overloaded. Please try again later.")
             else:
                 print(f"Error: {e}")
                 print(e)
@@ -237,6 +240,9 @@ class Standalone:
             if "CLAUDE_API_KEY" in str(e):
                 print(
                     "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
+            if "overloaded_error" in str(e):
+                print(
+                    "Error: Fabric is working fine, but claude is overloaded. Please try again later.")
             else:
                 print(f"Error: {e}")
                 print(e)
