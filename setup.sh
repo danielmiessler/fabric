@@ -7,6 +7,45 @@ if [ ! -f "pyproject.toml" ]; then
   exit 1
 fi
 
+# Check if Poetry is already installed
+if command -v poetry &> /dev/null
+then
+    echo "Poetry is already installed."
+else
+    # Prompt the user if they want to install Poetry
+    read -p "Poetry is not installed. Do you want to install it? (y/n): " choice
+    choice=$(echo "$choice" | tr '[:upper:]' '[:lower:]')  # Convert to lowercase
+
+    if [[ $choice =~ ^(y|yes)$ ]]
+    then
+        echo "Installing Poetry..."
+        curl -sSL https://install.python-poetry.org | python3 -
+
+        # Detect the user's shell
+        if [[ "$SHELL" == *"/bash" ]]; then
+            config_file=".bashrc"
+        elif [[ "$SHELL" == *"/zsh" ]]; then
+            config_file=".zshrc"
+        fi
+
+
+        # Add Poetry to the PATH
+        if [[ -n "$config_file" ]]; then
+            if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+                echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/$config_file
+                eval 'export PATH="$HOME/.local/bin:$PATH"'
+            fi
+        else
+            echo "Unable to determine the shell configuration file."
+            echo "Please manually add the following line to your shell configuration file:"
+            echo 'export PATH="$HOME/.local/bin:$PATH"'
+        fi
+        echo "Poetry has been installed successfully."
+    else
+        echo "Poetry installation skipped."
+    fi
+fi
+
 # Installs poetry-based python dependencies
 echo "Installing python dependencies"
 poetry install
