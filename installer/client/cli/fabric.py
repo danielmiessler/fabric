@@ -46,7 +46,7 @@ def main():
         "--setup", help="Set up your fabric instance", action="store_true"
     )
     parser.add_argument('--changeDefaultModel',
-                        help="Change the default model. Your choice will be saved in ~/.config/fabric/.env). For a list of available models, use the --listmodels flag.")
+                        help="Change the default model. For a list of available models, use the --listmodels flag.")
 
     parser.add_argument(
         "--model", "-m", help="Select the model to use. NOTE: Will not work if you have set a default model. please use --clear to clear persistance before using this flag", default="gpt-4-turbo-preview"
