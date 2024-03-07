@@ -38,10 +38,10 @@ class Standalone:
         load_dotenv(env_file)
         try:
             apikey = os.environ["OPENAI_API_KEY"]
-            self.client = OpenAI()
-            self.client.api_key = apikey
-        except KeyError:
-            print("OPENAI_API_KEY not found in environment variables.")
+        except:
+            pass
+        self.client = OpenAI()
+        self.client.api_key = apikey
 
         except FileNotFoundError:
             print("No API key found. Use the --apikey option to set the key")
