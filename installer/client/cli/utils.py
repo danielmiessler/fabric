@@ -38,11 +38,8 @@ class Standalone:
         load_dotenv(env_file)
         try:
             apikey = os.environ["OPENAI_API_KEY"]
-        except:
-            pass
-        self.client = OpenAI()
-        self.client.api_key = apikey
-
+            self.client = OpenAI()
+            self.client.api_key = apikey
         except FileNotFoundError:
             print("No API key found. Use the --apikey option to set the key")
             sys.exit()
@@ -433,9 +430,11 @@ class Setup:
             openaiapikey = os.environ["OPENAI_API_KEY"]
             self.openaiapi_key = openaiapikey
         except KeyError:
-            print("OPENAI_API_KEY not found in environment variables.")
-            sys.exit()
-        self.fetch_available_models()
+            self.openaiapi_key = ""
+        try:
+            self.fetch_available_models()
+        except:
+            pass
 
     def fetch_available_models(self):
         headers = {
