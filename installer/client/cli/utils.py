@@ -603,7 +603,7 @@ class Setup:
                         modified_line = self.clear_alias(
                             modified_line)
                     f.write(modified_line)
-        self.remove_duplicates(env_file)
+            self.remove_duplicates(env_file)
         else:
             print("No shell configuration file found.")
 
