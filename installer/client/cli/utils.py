@@ -687,10 +687,7 @@ class Setup:
         print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         claudekey = input()
         self.claude_key(claudekey.strip())
-        model = input(
-            "Please enter your default model. Press enter to choose the default gpt-4-turbo-preview\n")
         self.patterns()
-        self.default_model(model)
 
 
 class Transcribe:
