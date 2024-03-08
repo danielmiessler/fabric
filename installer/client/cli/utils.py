@@ -425,8 +425,8 @@ class Setup:
         try:
             openaiapikey = os.environ["OPENAI_API_KEY"]
             self.openaiapi_key = openaiapikey
-        except KeyError:
-            self.openaiapi_key = ""
+        except:
+            pass
         try:
             self.fetch_available_models()
         except:
@@ -603,6 +603,7 @@ class Setup:
                         modified_line = self.clear_alias(
                             modified_line)
                     f.write(modified_line)
+        self.remove_duplicates(env_file)
         else:
             print("No shell configuration file found.")
 
@@ -649,6 +650,17 @@ class Setup:
                   model}. Please restart your terminal to use it.""")
         else:
             print("No shell configuration file found.")
+
+    def remove_duplicates(filename):
+        unique_lines = set()
+        with open(filename, 'r') as file:
+            lines = file.readlines()
+
+        with open(filename, 'w') as file:
+            for line in lines:
+                if line not in unique_lines:
+                    file.write(line)
+                    unique_lines.add(line)
 
     def patterns(self):
         """        Method to update patterns and exit the system.
