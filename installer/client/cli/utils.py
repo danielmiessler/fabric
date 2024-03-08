@@ -651,7 +651,7 @@ class Setup:
         else:
             print("No shell configuration file found.")
 
-    def remove_duplicates(filename):
+    def remove_duplicates(self, filename):
         unique_lines = set()
         with open(filename, 'r') as file:
             lines = file.readlines()
