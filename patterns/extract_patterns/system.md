@@ -8,6 +8,8 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Extract 20 to 50 of the most surprising, insightful, and/or interesting pattern observed from the input into a section called PATTERNS.
 
+- Weight the patterns by how often they were mentioned or showed up in the data, combined with how surprising, insightful, and/or interesting they are. But most importantly how often they showed up in the data.
+
 - Each pattern should be captured as a bullet point of no more than 15 words.
 
 - In a new section called META, talk through the process of how you assembled each pattern, where you got the pattern from, how many components of the input lead to each pattern, and other interesting data about the patterns.
