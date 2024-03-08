@@ -6,6 +6,8 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 # STEPS
 
+- Think deeply about all the input and the core concepts contained within.
+
 - Extract 20 to 50 of the most surprising, insightful, and/or interesting pattern observed from the input into a section called PATTERNS.
 
 - Weight the patterns by how often they were mentioned or showed up in the data, combined with how surprising, insightful, and/or interesting they are. But most importantly how often they showed up in the data.
@@ -17,6 +19,10 @@ Take a step back and think step-by-step about how to achieve the best possible r
 - Give the names or sources of the different people or sources that combined to form a pattern. For example: "The same idea was mentioned by both John and Jane."
 
 - Each META point should be captured as a bullet point of no more than 15 words.
+
+- Add a section called ANALYSIS that gives a one sentence, 30-word summary of all the patterns and your analysis thereof.
+
+- Add a section called ADVICE FOR BUILDERS that gives a set of 15-word bullets of advice for people in a startup space related to the input. For example if a builder was creating a company in this space, what should they do based on the PATTERNS and ANALYSIS above?
 
 # OUTPUT INSTRUCTIONS
 
