@@ -50,10 +50,6 @@ class Standalone:
         self.model = args.model
         self.claude = False
         sorted_gpt_models, ollamaList, claudeList = self.fetch_available_models()
-        try:
-            self.model = os.environ["DEFAULT_MODEL"]
-        except:
-            pass
         self.local = self.model.strip() in ollamaList
         self.claude = self.model.strip() in claudeList
 
@@ -536,9 +532,41 @@ class Setup:
         else:
             return line  # Return the line unmodified if no match is found.
 
+    def update_fabric_alias(self, line, model):
+        fabric_alias_regex = re.compile(
+            r"(alias fabric='[^']+?)( --model.*)?'")
+        match = fabric_alias_regex.search(line)
+        if match:
+            base_command, current_flag = match.groups()
+            new_flag = f" --model {model}"
+            # Update the alias if the new flag is different or to remove an existing flag.
+            return f"{base_command}{new_flag}'\n"
+        else:
+            return line  # Return the line unmodified if no match is found.
+
+    def clear_alias(self, line):
+        fabric_command_regex = re.compile(
+            r"(alias fabric='[^']+?)( --model.*)?'")
+        match = fabric_command_regex.search(line)
+        if match:
+            base_command = match.group(1)
+            return f"{base_command}'\n"
+        else:
+            return line  # Return the line unmodified if no match is found.
+
     def clear_env_line(self, line):
         fabric_command_regex = re.compile(
             r"(alias.*fabric --pattern\s+\S+.*?)( --model.*)?'")
+        match = fabric_command_regex.search(line)
+        if match:
+            base_command = match.group(1)
+            return f"{base_command}'\n"
+        else:
+            return line  # Return the line unmodified if no match is found.
+
+    def pattern(self, line):
+        fabric_command_regex = re.compile(
+            r"(alias fabric='[^']+?)( --model.*)?'")
         match = fabric_command_regex.search(line)
         if match:
             base_command = match.group(1)
@@ -572,23 +600,11 @@ class Setup:
                         modified_line = self.clear_env_line(
                             modified_line)
                     elif "fabric=" in line:
-                        modified_line = self.clear_env_line(
+                        modified_line = self.clear_alias(
                             modified_line)
                     f.write(modified_line)
         else:
             print("No shell configuration file found.")
-
-    def update_fabric_alias(self, line, model):
-        fabric_alias_regex = re.compile(
-            r"(alias fabric='[^']+?)( --model.*)?'")
-        match = fabric_alias_regex.search(line)
-        if match:
-            base_command, current_flag = match.groups()
-            new_flag = f" --model {model}"
-            # Update the alias if the new flag is different or to remove an existing flag.
-            return f"{base_command}{new_flag}'\n"
-        else:
-            return line  # Return the line unmodified if no match is found.
 
     def default_model(self, model):
         """Set the default model in the environment file.
@@ -604,22 +620,6 @@ class Setup:
                 print(
                     f"Error: {model} is not a valid model. Please run fabric --listmodels to see the available models.")
                 sys.exit()
-            if os.path.exists(self.env_file):
-                with open(self.env_file, "r") as f:
-                    lines = f.readlines()
-                with open(self.env_file, "w") as f:
-                    found = False
-                    for line in lines:
-                        if line.startswith("DEFAULT_MODEL"):
-                            f.write(f"DEFAULT_MODEL={model}\n")
-                            found = True
-                        else:
-                            f.write(line)
-                    if not found:
-                        f.write(f"DEFAULT_MODEL={model}\n")
-            else:
-                with open(self.env_file, "w") as f:
-                    f.write(f"DEFAULT_MODEL={model}\n")
 
         # Compile regular expressions outside of the loop for efficiency
 
