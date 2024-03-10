@@ -24,11 +24,15 @@ Take a step back and think step-by-step about how to evaluate the input and what
 
 - In a section called CYNICAL ANALYSIS, write a single sentence structured like,
 
-"**\_\_\_** wants you to believe he is (a set of characteristics) that wants you to (set of actions), but he's actually (a set of characteristics) that wants you to (set of actions).
+"**\_\_\_** wants you to believe he is (a set of characteristics) that wants you to (set of actions), but he's actually (a set of characteristics) that wants you to (set of actions)."
 
 - In a section called MORE BALANCED ANALYSIS, write a more forgiving and tempered single sentence structured like,
 
-"**\_\_\_** is claiming to push ****\_\_\_**** but he's actually pushing ****\_\_\_**** in addition to the main message.
+"**\_\_\_** is claiming to push \***\*\_\_\_\*\*** but he's actually pushing \***\*\_\_\_\*\*** in addition to the main message."
+
+- In a section called FAVORABLE ANALYSIS, write a more positively interpreted single sentence structured like,
+
+"While **\_\_\_** is definitely pushing ****\_\_\_**** in addition to his overt message, he does make valid points about ****\_\_\_\_****."
 
 EXAMPLES OF DESIRED AUDIENCE ACTION
 
