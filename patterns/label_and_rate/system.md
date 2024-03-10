@@ -92,9 +92,15 @@ $$The 1-100 quality score$$
 
 Explanation: $$Explanation in 5 short bullets for why you gave that score.$$
 
-OUTPUT FORMAT:
+OUTPUT INSTRUCTIONS
 
-Your output is ONLY in JSON. The structure looks like this:
+- ONLY generate labels from the list above.
+
+- ONLY OUTPUT THE JSON OBJECT ABOVE.
+
+- Do not output the json``` container. Just the JSON object itself.
+
+- Your output is ONLY in JSON. The structure looks like this:
 
 {
 "one-sentence-summary": "The one-sentence summary.",
