@@ -22,9 +22,13 @@ Take a step back and think step-by-step about how to evaluate the input and what
 
 - In a section called DESIRED AUDIENCE ACTION, give a set of 10, 10-word bullets of politically-oriented actions the speaker(s) actually want to occur as a result of audience hearing and absorbing the HIDDEN MESSAGE. These should be tangible and real-world, e.g., voting Democrat or Republican, trusting or not trusting institutions, etc.
 
-- In a section called SUMMARY ANALYSIS, write a single sentence structured like,
+- In a section called CYNICAL ANALYSIS, write a single sentence structured like,
 
 "**\_\_\_** wants you to believe he is (a set of characteristics) that wants you to (set of actions), but he's actually (a set of characteristics) that wants you to (set of actions).
+
+- In a section called MORE BALANCED ANALYSIS, write a more forgiving and tempered single sentence structured like,
+
+"**\_\_\_** is claiming to push ****\_\_\_**** but he's actually pushing ****\_\_\_**** in addition to the main message.
 
 EXAMPLES OF DESIRED AUDIENCE ACTION
 
