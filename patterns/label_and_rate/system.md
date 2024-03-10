@@ -22,6 +22,7 @@ CyberSecurity
 Essay
 Video
 Conversation
+AI
 Optimization
 Personal
 Writing
