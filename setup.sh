@@ -13,13 +13,29 @@ poetry install
 
 # List of commands to check and add or update alias for
 # Add 'yt' and 'ts' to the list of commands
-commands=("fabric" "fabric-api" "fabric-webui" "ts", "yt")
+commands=("fabric" "fabric-api" "fabric-webui" "ts" "yt")
 
 # List of shell configuration files to update
 config_files=("$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.bash_profile")
 
 # Initialize an array to hold the paths of the sourced files
 source_commands=()
+
+# Prompt the user if they want their shell configuration files to be updated with the aliases
+echo "This script will add or update aliases for the following commands in your shell configuration files:"
+for cmd in "${commands[@]}"; do
+  echo "  - $cmd"
+done
+echo "The following shell configuration files will be updated:"
+for file in "${config_files[@]}"; do
+  echo "  - $file"
+done
+read -p "Do you want to continue? (y/n): " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  echo "Exiting without updating any shell configuration files."
+  exit 0
+fi
 
 for config_file in "${config_files[@]}"; do
   # Check if the configuration file exists
