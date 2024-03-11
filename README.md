@@ -50,7 +50,7 @@
 > [!NOTE]  
 > We are adding functionality to the project so often that you should update often as well. That means: `git pull; ./setup.sh; fabric --update` in the main directory, and then sourcing your shell files and/or restarting your terminal. So exciting!
 
-**March 6, 2024** — We just added support for Claude, local models via Ollama, and tons of other stuff. Check `fabric -h` for the latest!
+**March 11, 2024** — We just added support for Claude, local models via Ollama, and a number of new Patterns. Be sure to update and check `fabric -h` for the latest!
 
 ## Introduction video
 
