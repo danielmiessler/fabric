@@ -40,9 +40,8 @@ class Standalone:
             apikey = os.environ["OPENAI_API_KEY"]
             self.client = OpenAI()
             self.client.api_key = apikey
-        except FileNotFoundError:
+        except:
             print("No API key found. Use the --apikey option to set the key")
-            sys.exit()
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
@@ -253,27 +252,29 @@ class Standalone:
         gptlist = []
         fullOllamaList = []
         claudeList = ['claude-3-opus-20240229']
-        headers = {
-            "Authorization": f"Bearer {self.client.api_key}"
-        }
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.client.api_key}"
+            }
+            response = requests.get(
+                "https://api.openai.com/v1/models", headers=headers)
 
-        response = requests.get(
-            "https://api.openai.com/v1/models", headers=headers)
+            if response.status_code == 200:
+                models = response.json().get("data", [])
+                # Filter only gpt models
+                gpt_models = [model for model in models if model.get(
+                    "id", "").startswith(("gpt"))]
+                # Sort the models alphabetically by their ID
+                sorted_gpt_models = sorted(
+                    gpt_models, key=lambda x: x.get("id"))
 
-        if response.status_code == 200:
-            models = response.json().get("data", [])
-            # Filter only gpt models
-            gpt_models = [model for model in models if model.get(
-                "id", "").startswith(("gpt"))]
-            # Sort the models alphabetically by their ID
-            sorted_gpt_models = sorted(
-                gpt_models, key=lambda x: x.get("id"))
-
-            for model in sorted_gpt_models:
-                gptlist.append(model.get("id"))
-        else:
-            print(f"Failed to fetch models: HTTP {response.status_code}")
-            sys.exit()
+                for model in sorted_gpt_models:
+                    gptlist.append(model.get("id"))
+            else:
+                print(f"Failed to fetch models: HTTP {response.status_code}")
+                sys.exit()
+        except:
+            print('No OpenAI API key found. Please run fabric --setup and add the key if you wish to interact with openai')
         import ollama
         try:
             default_modelollamaList = ollama.list()['models']
