@@ -11,6 +11,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 - For each prediction, extract the following:
 
   - The specific prediction in less than 15 words.
+  - The date by which the prediction is supposed to occur.
   - The confidence level given for the prediction.
   - How we'll know if it's true or not.
 
@@ -20,7 +21,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Output the predictions as a bulleted list.
 
-- Under the list, product a predictions table that includes the following columns: Prediction, Confidence, How to Verify.
+- Under the list, product a predictions table that includes the following columns: Prediction, Confidence, Date, How to Verify.
 
 - Limit each bullet to a maximum of 15 words.
 
