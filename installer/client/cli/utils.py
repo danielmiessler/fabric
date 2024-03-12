@@ -52,15 +52,23 @@ class Standalone:
         self.local = self.model.strip() in ollamaList
         self.claude = self.model.strip() in claudeList
 
-    async def localChat(self, messages):
+    async def localChat(self, messages, host=''):
         from ollama import AsyncClient
-        response = await AsyncClient().chat(model=self.model, messages=messages)
+        response = None
+        if host:
+            response = await AsyncClient(host=host).chat(model=self.model, messages=messages)
+        else:
+            response = await AsyncClient().chat(model=self.model, messages=messages)
         print(response['message']['content'])
 
-    async def localStream(self, messages):
+    async def localStream(self, messages, host=''):
         from ollama import AsyncClient
-        async for part in await AsyncClient().chat(model=self.model, messages=messages, stream=True):
-            print(part['message']['content'], end='', flush=True)
+        if host:
+            async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True):
+                print(part['message']['content'], end='', flush=True)
+        else:
+            async for part in await AsyncClient().chat(model=self.model, messages=messages, stream=True):
+                print(part['message']['content'], end='', flush=True)
 
     async def claudeStream(self, system, user):
         from anthropic import AsyncAnthropic
@@ -91,7 +99,7 @@ class Standalone:
         )
         print(message.content[0].text)
 
-    def streamMessage(self, input_data: str, context=""):
+    def streamMessage(self, input_data: str, context="", host=''):
         """        Stream a message and handle exceptions.
 
         Args:
@@ -131,7 +139,10 @@ class Standalone:
                 messages = [user_message]
         try:
             if self.local:
-                asyncio.run(self.localStream(messages))
+                if host:
+                    asyncio.run(self.localStream(messages, host=host))
+                else:
+                    asyncio.run(self.localStream(messages))
             elif self.claude:
                 from anthropic import AsyncAnthropic
                 asyncio.run(self.claudeStream(system, user_message))
@@ -175,7 +186,7 @@ class Standalone:
             with open(self.args.output, "w") as f:
                 f.write(buffer)
 
-    def sendMessage(self, input_data: str, context=""):
+    def sendMessage(self, input_data: str, context="", host=''):
         """        Send a message using the input data and generate a response.
 
         Args:
@@ -214,7 +225,10 @@ class Standalone:
                 messages = [user_message]
         try:
             if self.local:
-                asyncio.run(self.localChat(messages))
+                if host:
+                    asyncio.run(self.localChat(messages, host=host))
+                else:
+                    asyncio.run(self.localChat(messages))
             elif self.claude:
                 asyncio.run(self.claudeChat(system, user_message))
             else:

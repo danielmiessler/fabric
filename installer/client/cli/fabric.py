@@ -54,6 +54,8 @@ def main():
     parser.add_argument(
         "--listmodels", help="List all available models", action="store_true"
     )
+    parser.add_argument('--remoteOllamaServer',
+                        help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-deault location or port')
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
 
@@ -130,20 +132,34 @@ def main():
     else:
         text = standalone.get_cli_input()
     if args.stream and not args.context:
-        standalone.streamMessage(text)
+        if args.remoteOllamaServer:
+            standalone.streamMessage(text, host=args.remoteOllamaServer)
+        else:
+            standalone.streamMessage(text)
         sys.exit()
     if args.stream and args.context:
         with open(config_context, "r") as f:
             context = f.read()
-            standalone.streamMessage(text, context=context)
+            if args.remoteOllamaServer:
+                standalone.streamMessage(
+                    text, context=context, host=args.remoteOllamaServer)
+            else:
+                standalone.streamMessage(text, context=context)
         sys.exit()
     elif args.context:
         with open(config_context, "r") as f:
             context = f.read()
-            standalone.sendMessage(text, context=context)
+            if args.remoteOllamaServer:
+                standalone.sendMessage(
+                    text, context=context, host=args.remoteOllamaServer)
+            else:
+                standalone.sendMessage(text, context=context)
         sys.exit()
     else:
-        standalone.sendMessage(text)
+        if args.remoteOllamaServer:
+            standalone.sendMessage(text, host=args.remoteOllamaServer)
+        else:
+            standalone.sendMessage(text)
         sys.exit()
 
 
