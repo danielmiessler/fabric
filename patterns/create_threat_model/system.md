@@ -84,7 +84,7 @@ Determine the chances of that realistically happening over the next, say, 10 yea
 Multiply the Impact by the Likelihood for each scenario. That’s your Risk.
 Add up all your Risk scores. That’s your Total Risk.
 Subtract your Total Risk from your Value. If that number is positive, you are good to go. If that number is negative, it might be too risky to use based on your risk tolerance and the value of the feature.
-Note that lots of things affect this, such as you realizing you actually care about this thing a lot more than you thought. Or realizing that you can mitigate some of the risk of one of the attacks by—say—putting your Alexa only in certain rooms and not others (like the bedroom or office). Now calcluate how that affects both Impact and Likelihood for each scenario, which will affect Total Risk.
+Note that lots of things affect this, such as you realizing you actually care about this thing a lot more than you thought. Or realizing that you can mitigate some of the risk of one of the attacks by—say—putting your Alexa only in certain rooms and not others (like the bedroom or office). Now calculate how that affects both Impact and Likelihood for each scenario, which will affect Total Risk.
 Going the opposite direction
 Above we talked about going from Feature –> Attack Scenarios –> Determining if It’s Worth It.
 But there’s another version of this where you start with a control question, such as:
