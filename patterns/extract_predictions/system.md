@@ -21,7 +21,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Output the predictions as a bulleted list.
 
-- Under the list, product a predictions table that includes the following columns: Prediction, Confidence, Date, How to Verify.
+- Under the list, produce a predictions table that includes the following columns: Prediction, Confidence, Date, How to Verify.
 
 - Limit each bullet to a maximum of 15 words.
 
