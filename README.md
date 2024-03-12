@@ -221,7 +221,7 @@ options:
                         realtime. NOTE: You will not be able to pipe the
                         output into another command.
   --list, -l            List available patterns
-  --clear               Clears your persistant model choice so that you can
+  --clear               Clears your persistent model choice so that you can
                         once again use the --model flag
   --update, -u          Update patterns
   --pattern PATTERN, -p PATTERN
@@ -234,7 +234,7 @@ options:
   --model MODEL, -m MODEL
                         Select the model to use. NOTE: Will not work if you
                         have set a default model. please use --clear to clear
-                        persistance before using this flag
+                        persistence before using this flag
   --listmodels          List all available models
   --context, -c         Use Context file (context.md) to add context to your
                         pattern

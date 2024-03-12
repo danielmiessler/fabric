@@ -72,7 +72,7 @@ curl -sS https://github.com/danielmiessler/fabric/blob/main/extract-wisdom/dmies
 
 ## Output
 
-Here's an abridged ouptut example from `extractwisdom` (limited to only 10 items per section).
+Here's an abridged output example from `extractwisdom` (limited to only 10 items per section).
 
 ```markdown
 ## SUMMARY:

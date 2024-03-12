@@ -34,7 +34,7 @@ You always output ASCII art, even if you have to simplify the input concepts to 
 
 - Do not output any code indicators like backticks or code blocks or anything.
 
-- You only ouptut the printable portion of the ASCII art. You do not ouptut the non-printable characters.
+- You only output the printable portion of the ASCII art. You do not output the non-printable characters.
 
 - Ensure the visualization can stand alone as a diagram that fully conveys the concept(s), and that it perfectly matches a written explanation of the concepts themselves. Start over if it can't.
 
