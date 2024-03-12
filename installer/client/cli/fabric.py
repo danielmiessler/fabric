@@ -37,7 +37,7 @@ def main():
     parser.add_argument(
         "--list", "-l", help="List available patterns", action="store_true"
     )
-    parser.add_argument('--clear', help="Clears your persistant model choice so that you can once again use the --model flag",
+    parser.add_argument('--clear', help="Clears your persistent model choice so that you can once again use the --model flag",
                         action="store_true")
     parser.add_argument(
         "--update", "-u", help="Update patterns. NOTE: This will revert the default model to gpt4-turbo. please run --changeDefaultModel to once again set default model", action="store_true")
@@ -49,7 +49,7 @@ def main():
                         help="Change the default model. For a list of available models, use the --listmodels flag.")
 
     parser.add_argument(
-        "--model", "-m", help="Select the model to use. NOTE: Will not work if you have set a default model. please use --clear to clear persistance before using this flag", default="gpt-4-turbo-preview"
+        "--model", "-m", help="Select the model to use. NOTE: Will not work if you have set a default model. please use --clear to clear persistence before using this flag", default="gpt-4-turbo-preview"
     )
     parser.add_argument(
         "--listmodels", help="List all available models", action="store_true"

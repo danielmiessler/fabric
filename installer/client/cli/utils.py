@@ -265,7 +265,7 @@ class Standalone:
     def fetch_available_models(self):
         gptlist = []
         fullOllamaList = []
-        claudeList = ['claude-3-opus-20240229']
+        claudeList = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-2.1']
         try:
             headers = {
                 "Authorization": f"Bearer {self.client.api_key}"
@@ -726,7 +726,7 @@ class Transcribe:
         of a YouTube video designated with the video_id
 
         Input:
-            the video id specifing a YouTube video
+            the video id specifying a YouTube video
             an example url for a video: https://www.youtube.com/watch?v=vF-MQmVxnCs&t=306s
             the video id is vF-MQmVxnCs&t=306s
 
