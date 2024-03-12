@@ -253,13 +253,13 @@ class Standalone:
         try:
             models = [model.id for model in self.client.models.list().data]
         except APIConnectionError as e:
-            if e.__cause__.args[0] == "Illegal header value b'Bearer '":
+            if getattr(e.__cause__, 'args', [''])[0] == "Illegal header value b'Bearer '":
                 print("Error: Cannot connect to the OpenAI API Server because the API key is not set. Please run fabric --setup and add a key.")
             else:
-                print(f'{e.message} trying to access {e.request.url}: {e.__cause__.args}')
+                print(f'{e.message} trying to access {e.request.url}: {getattr(e.__cause__, 'args', [''])}')
             sys.exit()
         except Exception as e:
-            print(f"Error: {e.__context__.args[0]}")
+            print(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
             sys.exit()
         if "/" in models[0] or "\\" in models[0]:
             # lmstudio returns full paths to models. Iterate and truncate everything before and including the last slash
@@ -426,13 +426,13 @@ class Setup:
         try:
             models = [model.id for model in self.client.models.list().data]
         except APIConnectionError as e:
-            if e.__cause__.args[0] == "Illegal header value b'Bearer '":
+            if getattr(e.__cause__, 'args', [''])[0] == "Illegal header value b'Bearer '":
                 print("Error: Cannot connect to the OpenAI API Server because the API key is not set. Please run fabric --setup and add a key.")
             else:
-                print(f'{e.message} trying to access {e.request.url}: {e.__cause__.args}')
+                print(f'{e.message} trying to access {e.request.url}: {getattr(e.__cause__, 'args', [''])}')
             sys.exit()
         except Exception as e:
-            print(f"Error: {e.__context__.args[0]}")
+            print(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
             sys.exit()
         if "/" in models[0] or "\\" in models[0]:
             # lmstudio returns full paths to models. Iterate and truncate everything before and including the last slash
