@@ -1,6 +1,6 @@
 import requests
 import os
-from openai import OpenAI, APIConnectionError
+from openai import OpenAI
 import asyncio
 import pyperclip
 import sys
@@ -36,10 +36,12 @@ class Standalone:
         # Expand the tilde to the full path
         env_file = os.path.expanduser(env_file)
         load_dotenv(env_file)
-        assert 'OPENAI_API_KEY' in os.environ, "Error: OPENAI_API_KEY not found in environment variables. Please run fabric --setup and add the key."
-        api_key = os.environ['OPENAI_API_KEY']
-        base_url = os.environ.get('OPENAI_BASE_URL', 'https://api.openai.com/v1/')
-        self.client = OpenAI(api_key=api_key, base_url=base_url)
+        try:
+            apikey = os.environ["OPENAI_API_KEY"]
+            self.client = OpenAI()
+            self.client.api_key = apikey
+        except:
+            print("No API key found. Use the --apikey option to set the key")
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
@@ -54,7 +56,7 @@ class Standalone:
         from ollama import AsyncClient
         response = None
         if host:
-            response = await AsyncClient(host=host).chat(model=self.model, messages=messages)
+            response = await AsyncClient(host=host).chat(model=self.model, messages=messages, host=host)
         else:
             response = await AsyncClient().chat(model=self.model, messages=messages)
         print(response['message']['content'])
@@ -62,7 +64,7 @@ class Standalone:
     async def localStream(self, messages, host=''):
         from ollama import AsyncClient
         if host:
-            async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True):
+            async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True, host=host):
                 print(part['message']['content'], end='', flush=True)
         else:
             async for part in await AsyncClient().chat(model=self.model, messages=messages, stream=True):
@@ -265,23 +267,28 @@ class Standalone:
         fullOllamaList = []
         claudeList = ['claude-3-opus-20240229']
         try:
-            models = [model.id for model in self.client.models.list().data]
-        except APIConnectionError as e:
-            if getattr(e.__cause__, 'args', [''])[0] == "Illegal header value b'Bearer '":
-                print("Error: Cannot connect to the OpenAI API Server because the API key is not set. Please run fabric --setup and add a key.")
+            headers = {
+                "Authorization": f"Bearer {self.client.api_key}"
+            }
+            response = requests.get(
+                "https://api.openai.com/v1/models", headers=headers)
+
+            if response.status_code == 200:
+                models = response.json().get("data", [])
+                # Filter only gpt models
+                gpt_models = [model for model in models if model.get(
+                    "id", "").startswith(("gpt"))]
+                # Sort the models alphabetically by their ID
+                sorted_gpt_models = sorted(
+                    gpt_models, key=lambda x: x.get("id"))
+
+                for model in sorted_gpt_models:
+                    gptlist.append(model.get("id"))
             else:
-                print(f'{e.message} trying to access {e.request.url}: {getattr(e.__cause__, 'args', [''])}')
-            sys.exit()
-        except Exception as e:
-            print(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
-            sys.exit()
-        if "/" in models[0] or "\\" in models[0]:
-            # lmstudio returns full paths to models. Iterate and truncate everything before and including the last slash
-            gptlist = [item[item.rfind("/") + 1:] if "/" in item else item[item.rfind("\\") + 1:] for item in models]
-        else:
-            # Keep items that start with "gpt"
-            gptlist = [item for item in models if item.startswith("gpt")]
-        gptlist.sort()
+                print(f"Failed to fetch models: HTTP {response.status_code}")
+                sys.exit()
+        except:
+            print('No OpenAI API key found. Please run fabric --setup and add the key if you wish to interact with openai')
         import ollama
         try:
             default_modelollamaList = ollama.list()['models']
@@ -429,24 +436,27 @@ class Setup:
             pass
 
     def fetch_available_models(self):
-        try:
-            models = [model.id for model in self.client.models.list().data]
-        except APIConnectionError as e:
-            if getattr(e.__cause__, 'args', [''])[0] == "Illegal header value b'Bearer '":
-                print("Error: Cannot connect to the OpenAI API Server because the API key is not set. Please run fabric --setup and add a key.")
-            else:
-                print(f'{e.message} trying to access {e.request.url}: {getattr(e.__cause__, 'args', [''])}')
-            sys.exit()
-        except Exception as e:
-            print(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
-            sys.exit()
-        if "/" in models[0] or "\\" in models[0]:
-            # lmstudio returns full paths to models. Iterate and truncate everything before and including the last slash
-            self.gptlist = [item[item.rfind("/") + 1:] if "/" in item else item[item.rfind("\\") + 1:] for item in models]
+        headers = {
+            "Authorization": f"Bearer {self.openaiapi_key}"
+        }
+
+        response = requests.get(
+            "https://api.openai.com/v1/models", headers=headers)
+
+        if response.status_code == 200:
+            models = response.json().get("data", [])
+            # Filter only gpt models
+            gpt_models = [model for model in models if model.get(
+                "id", "").startswith(("gpt"))]
+            # Sort the models alphabetically by their ID
+            sorted_gpt_models = sorted(
+                gpt_models, key=lambda x: x.get("id"))
+
+            for model in sorted_gpt_models:
+                self.gptlist.append(model.get("id"))
         else:
-            # Keep items that start with "gpt"
-            self.gptlist = [item for item in models if item.startswith("gpt")]
-        self.gptlist.sort()
+            print(f"Failed to fetch models: HTTP {response.status_code}")
+            sys.exit()
         import ollama
         try:
             default_modelollamaList = ollama.list()['models']
@@ -472,7 +482,7 @@ class Setup:
         api_key = api_key.strip()
         if not os.path.exists(self.env_file) and api_key:
             with open(self.env_file, "w") as f:
-                f.write(f"OPENAI_API_KEY={api_key}")
+                f.write(f"OPENAI_API_KEY={api_key}\n")
             print(f"OpenAI API key set to {api_key}")
         elif api_key:
             # erase the line OPENAI_API_KEY=key and write the new key
@@ -482,7 +492,7 @@ class Setup:
                 for line in lines:
                     if "OPENAI_API_KEY" not in line:
                         f.write(line)
-                f.write(f"OPENAI_API_KEY={api_key}")
+                f.write(f"OPENAI_API_KEY={api_key}\n")
 
     def claude_key(self, claude_key):
         """        Set the Claude API key in the environment file.
@@ -504,10 +514,35 @@ class Setup:
                 for line in lines:
                     if "CLAUDE_API_KEY" not in line:
                         f.write(line)
-                f.write(f"CLAUDE_API_KEY={claude_key}")
+                f.write(f"CLAUDE_API_KEY={claude_key}\n")
         elif claude_key:
             with open(self.env_file, "w") as f:
-                f.write(f"CLAUDE_API_KEY={claude_key}")
+                f.write(f"CLAUDE_API_KEY={claude_key}\n")
+
+    def youtube_key(self, youtube_key):
+        """        Set the YouTube API key in the environment file.
+
+        Args:
+            youtube_key (str): The API key to be set.
+
+        Returns:
+            None
+
+        Raises:
+            OSError: If the environment file does not exist or cannot be accessed.
+        """
+        youtube_key = youtube_key.strip()
+        if os.path.exists(self.env_file) and youtube_key:
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "YOUTUBE_API_KEY" not in line:
+                        f.write(line)
+                f.write(f"YOUTUBE_API_KEY={youtube_key}\n")
+        elif youtube_key:
+            with open(self.env_file, "w") as f:
+                f.write(f"YOUTUBE_API_KEY={youtube_key}\n")
 
     def update_fabric_command(self, line, model):
         fabric_command_regex = re.compile(
@@ -674,10 +709,13 @@ class Setup:
         print("Welcome to Fabric. Let's get started.")
         apikey = input(
             "Please enter your OpenAI API key. If you do not have one or if you have already entered it, press enter.\n")
-        self.api_key(apikey.strip())
+        self.api_key(apikey)
         print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         claudekey = input()
-        self.claude_key(claudekey.strip())
+        self.claude_key(claudekey)
+        print("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
+        youtubekey = input()
+        self.youtube_key(youtubekey)
         self.patterns()
 
 
@@ -720,8 +758,8 @@ class AgentSetup:
         """
 
         print("Welcome to Fabric. Let's get started.")
-        browserless = input("Please enter your Browserless API key\n")
-        serper = input("Please enter your Serper API key\n")
+        browserless = input("Please enter your Browserless API key\n").strip()
+        serper = input("Please enter your Serper API key\n").strip()
 
         # Entries to be added
         browserless_entry = f"BROWSERLESS_API_KEY={browserless}"
