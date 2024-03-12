@@ -263,7 +263,7 @@ class Standalone:
     def fetch_available_models(self):
         gptlist = []
         fullOllamaList = []
-        claudeList = ['claude-3-opus-20240229']
+        claudeList = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-2.1']
         try:
             models = [model.id for model in self.client.models.list().data]
         except APIConnectionError as e:
