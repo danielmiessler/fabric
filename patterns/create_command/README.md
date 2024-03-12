@@ -28,7 +28,7 @@ python3 sqlmap -u https://example.com?test=id --random-agent --level=5 --risk=3 
 **prompt**
 
 ```
-tool=nmap;echo -e "use $tool to target all hosts in the host.lst file even if they don't respond to pings. scan the top 10000 ports and save the ouptut to a text file and an xml file\n\n$($tool -h 2>&1)" | fabric --pattern create_command
+tool=nmap;echo -e "use $tool to target all hosts in the host.lst file even if they don't respond to pings. scan the top 10000 ports and save the output to a text file and an xml file\n\n$($tool -h 2>&1)" | fabric --pattern create_command
 ```
 
 **result**
