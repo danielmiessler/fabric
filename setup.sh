@@ -13,59 +13,55 @@ poetry install
 
 # List of commands to check and add or update alias for
 # Add 'yt' and 'ts' to the list of commands
-commands=("fabric" "fabric-api" "fabric-webui" "ts", "yt")
+commands=("fabric" "fabric-api" "fabric-webui" "ts" "yt")
+
+# Path to the bootstrap file
+bootstrap_file="$HOME/.config/fabric/fabric-bootstrap.inc"
+
+# Ensure the directory for the bootstrap file exists
+mkdir -p "$(dirname "$bootstrap_file")"
+
+# Start the bootstrap file with a shebang if it doesn't already exist
+if [ ! -f "$bootstrap_file" ]; then
+  echo "#!/bin/bash" > "$bootstrap_file"
+fi
 
 # List of shell configuration files to update
 config_files=("$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.bash_profile")
 
-# Initialize an array to hold the paths of the sourced files
-source_commands=()
-
 for config_file in "${config_files[@]}"; do
   # Check if the configuration file exists
   if [ -f "$config_file" ]; then
-    echo "Updating $config_file"
-    for cmd in "${commands[@]}"; do
-      # Get the path of the command
-      CMD_PATH=$(poetry run which $cmd 2>/dev/null)
+    echo "Checking $config_file"
 
-      # Check if CMD_PATH is empty
-      if [ -z "$CMD_PATH" ]; then
-        echo "Command $cmd not found in the current Poetry environment."
-        continue
-      fi
+    # Ensure the bootstrap script is sourced from the shell configuration file
+    source_line="if [ -f \"$bootstrap_file\" ]; then . \"$bootstrap_file\"; fi"
+    if ! grep -qF -- "$source_line" "$config_file"; then
+      echo -e "\n# Load custom aliases\n$source_line" >> "$config_file"
+      echo "Added source command for $bootstrap_file in $config_file."
+    fi
+    sed -i '/alias fabric=/d' "$config_file"
+    sed -i '/fabric --pattern/d' "$config_file"
 
-      # Check if the config file contains an alias for the command
-      if grep -qE "alias $cmd=|alias $cmd =" "$config_file"; then
-        # Compatibility with GNU and BSD sed: Check for operating system and apply appropriate sed syntax
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-          # BSD sed (macOS)
-          sed -i '' "/alias $cmd=/c\\
-alias $cmd='$CMD_PATH'" "$config_file"
-        else
-          # GNU sed (Linux and others)
-          sed -i "/alias $cmd=/c\alias $cmd='$CMD_PATH'" "$config_file"
-        fi
-        echo "Updated alias for $cmd in $config_file."
-      else
-        # If not, add the alias to the config file
-        echo -e "\nalias $cmd='$CMD_PATH'" >>"$config_file"
-        echo "Added alias for $cmd to $config_file."
-      fi
-    done
-    # Add to source_commands array
-    source_commands+=("$config_file")
+
   else
     echo "$config_file does not exist."
   fi
 done
 
-# Provide instruction to source the updated files
-if [ ${#source_commands[@]} -ne 0 ]; then
-  echo "To apply the changes, please run the following command(s) in your terminal:"
-  for file in "${source_commands[@]}"; do
-    echo "source $file"
-  done
-else
-  echo "No configuration files were updated. No need to source."
-fi
+# Add aliases to the bootstrap file
+for cmd in "${commands[@]}"; do
+  CMD_PATH=$(poetry run which $cmd 2>/dev/null)
+  if [ -z "$CMD_PATH" ]; then
+    echo "Command $cmd not found in the current Poetry environment."
+    continue
+  fi
+  
+  # Check if the alias already exists in the bootstrap file
+  if ! grep -qF "alias $cmd=" "$bootstrap_file"; then
+    echo "alias $cmd='$CMD_PATH'" >> "$bootstrap_file"
+    echo "Added alias for $cmd to $bootstrap_file."
+  fi
+done
+
+echo "Setup completed. Please restart your terminal or source your configuration files to apply changes."
