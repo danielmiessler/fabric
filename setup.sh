@@ -40,8 +40,8 @@ for config_file in "${config_files[@]}"; do
       echo -e "\n# Load custom aliases\n$source_line" >> "$config_file"
       echo "Added source command for $bootstrap_file in $config_file."
     fi
-    sed -i '/alias fabric=/d' "$config_file"
-    sed -i '/fabric --pattern/d' "$config_file"
+    sed -i '' '/alias fabric=/d' "$config_file"
+    sed -i '' '/fabric --pattern/d' "$config_file"
 
 
   else

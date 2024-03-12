@@ -388,14 +388,6 @@ class Alias:
         for pattern in allPatterns:
             self.remove(pattern)
 
-    def find_line(self, name):
-        for file in self.config_files:
-            with open(file, "r") as f:
-                lines = f.readlines()
-            for line in lines:
-                if line.strip("\n") == f"alias ${name}='{alias}'":
-                    return line
-
     def add_patterns(self):
         allPatterns = os.listdir(self.patterns)
         for pattern in allPatterns:
