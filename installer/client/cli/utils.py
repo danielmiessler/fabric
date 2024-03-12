@@ -279,7 +279,7 @@ class Standalone:
         try:
             default_modelollamaList = ollama.list()['models']
             for model in default_modelollamaList:
-                fullOllamaList.append(model['name'].split(":")[0])
+                fullOllamaList.append(model['name'])
         except:
             fullOllamaList = []
         return gptlist, fullOllamaList, claudeList
