@@ -447,7 +447,7 @@ class Setup:
         try:
             default_modelollamaList = ollama.list()['models']
             for model in default_modelollamaList:
-                self.fullOllamaList.append(model['name'].rstrip(":latest"))
+                self.fullOllamaList.append(model['name'])
         except:
             self.fullOllamaList = []
         allmodels = self.gptlist + self.fullOllamaList + self.claudeList
