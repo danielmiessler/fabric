@@ -355,13 +355,9 @@ class Alias:
         self.config_files = []
         home_directory = os.path.expanduser("~")
         self.patterns = os.path.join(home_directory, ".config/fabric/patterns")
-        if os.path.exists(os.path.join(home_directory, ".bashrc")):
-            self.config_files.append(os.path.join(home_directory, ".bashrc"))
-        if os.path.exists(os.path.join(home_directory, ".zshrc")):
-            self.config_files.append(os.path.join(home_directory, ".zshrc"))
-        if os.path.exists(os.path.join(home_directory, ".bash_profile")):
+        if os.path.exists(os.path.join(home_directory, ".config/fabric/fabric-bootstrap.inc")):
             self.config_files.append(os.path.join(
-                home_directory, ".bash_profile"))
+                home_directory, ".config/fabric/fabric-bootstrap.inc"))
         self.remove_all_patterns()
         self.add_patterns()
         print('Aliases added successfully. Please restart your terminal to use them.')
@@ -584,10 +580,9 @@ class Setup:
         user_home = os.path.expanduser("~")
         sh_config = None
         # Check for shell configuration files
-        if os.path.exists(os.path.join(user_home, ".bashrc")):
-            sh_config = os.path.join(user_home, ".bashrc")
-        elif os.path.exists(os.path.join(user_home, ".zshrc")):
-            sh_config = os.path.join(user_home, ".zshrc")
+        if os.path.exists(os.path.join(user_home, ".config/fabric/fabric-bootstrap.inc")):
+            sh_config = os.path.join(
+                user_home, ".config/fabric/fabric-bootstrap.inc")
         else:
             print("No environment file found.")
         if sh_config:
@@ -628,10 +623,9 @@ class Setup:
         user_home = os.path.expanduser("~")
         sh_config = None
         # Check for shell configuration files
-        if os.path.exists(os.path.join(user_home, ".bashrc")):
-            sh_config = os.path.join(user_home, ".bashrc")
-        elif os.path.exists(os.path.join(user_home, ".zshrc")):
-            sh_config = os.path.join(user_home, ".zshrc")
+        if os.path.exists(os.path.join(user_home, ".config/fabric/fabric-bootstrap.inc")):
+            sh_config = os.path.join(
+                user_home, ".config/fabric/fabric-bootstrap.inc")
 
         if sh_config:
             with open(sh_config, "r") as f:
