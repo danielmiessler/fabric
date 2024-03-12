@@ -688,7 +688,7 @@ class Transcribe:
         of a YouTube video designated with the video_id
 
         Input:
-            the video id specifing a YouTube video
+            the video id specifying a YouTube video
             an example url for a video: https://www.youtube.com/watch?v=vF-MQmVxnCs&t=306s
             the video id is vF-MQmVxnCs&t=306s
 
