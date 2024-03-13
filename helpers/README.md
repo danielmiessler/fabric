@@ -24,19 +24,9 @@ windows:
 download instructions https://www.ffmpeg.org/download.html
 ```
 
-```bash
+````bash
 usage: yt [-h] [--duration] [--transcript] [url]
 
-vm (video meta) extracts metadata about a video, such as the transcript and the video's duration. By Daniel Miessler.
-
-positional arguments:
-  url           YouTube video URL
-
-options:
-  -h, --help    show this help message and exit
-  --duration    Output only the duration
-  --transcript  Output only the transcript
-```
 
 ```bash
 ts -h
@@ -49,4 +39,4 @@ positional arguments:
 
 options:
   -h, --help  show this help message and exit
-```
+````
