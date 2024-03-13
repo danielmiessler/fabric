@@ -46,7 +46,14 @@ class Standalone:
         self.config_pattern_directory = config_directory
         self.pattern = pattern
         self.args = args
-        self.model = args.model
+        self.model = None
+        if args.model:
+            self.model = args.model
+        else:
+            try:
+                self.model = os.environ["DEFAULT_MODEL"]
+            except:
+                self.model = 'gpt-4-turbo-preview'
         self.claude = False
         sorted_gpt_models, ollamaList, claudeList = self.fetch_available_models()
         self.local = self.model.strip() in ollamaList
@@ -265,7 +272,8 @@ class Standalone:
     def fetch_available_models(self):
         gptlist = []
         fullOllamaList = []
-        claudeList = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-2.1']
+        claudeList = ['claude-3-opus-20240229',
+                      'claude-3-sonnet-20240229', 'claude-2.1']
         try:
             headers = {
                 "Authorization": f"Bearer {self.client.api_key}"
@@ -367,45 +375,15 @@ class Update:
 class Alias:
     def __init__(self):
         self.config_files = []
-        home_directory = os.path.expanduser("~")
-        self.patterns = os.path.join(home_directory, ".config/fabric/patterns")
-        if os.path.exists(os.path.join(home_directory, ".config/fabric/fabric-bootstrap.inc")):
-            self.config_files.append(os.path.join(
-                home_directory, ".config/fabric/fabric-bootstrap.inc"))
-        self.remove_all_patterns()
-        self.add_patterns()
-        print('Aliases added successfully. Please restart your terminal to use them.')
+        self.home_directory = os.path.expanduser("~")
+        patternsFolder = os.path.join(
+            self.home_directory, ".config/fabric/patterns")
+        self.patterns = os.listdir(patternsFolder)
 
-    def add(self, name, alias):
-        for file in self.config_files:
-            with open(file, "a") as f:
-                f.write(f"alias {name}='{alias}'\n")
-
-    def remove(self, pattern):
-        for file in self.config_files:
-            # Read the whole file first
-            with open(file, "r") as f:
-                wholeFile = f.read()
-
-            # Determine if the line to be removed is in the file
-            target_line = f"alias {pattern}='fabric --pattern {pattern}'\n"
-            if target_line in wholeFile:
-                # If the line exists, replace it with nothing (remove it)
-                wholeFile = wholeFile.replace(target_line, "")
-
-                # Write the modified content back to the file
-                with open(file, "w") as f:
-                    f.write(wholeFile)
-
-    def remove_all_patterns(self):
-        allPatterns = os.listdir(self.patterns)
-        for pattern in allPatterns:
-            self.remove(pattern)
-
-    def add_patterns(self):
-        allPatterns = os.listdir(self.patterns)
-        for pattern in allPatterns:
-            self.add(pattern, f"fabric --pattern {pattern}")
+    def execute(self):
+        with open(os.path.join(self.home_directory, ".config/fabric/fabric-bootstrap.inc"), "w") as w:
+            for pattern in self.patterns:
+                w.write(f"alias {pattern}='fabric --pattern {pattern}'\n")
 
 
 class Setup:
@@ -420,6 +398,14 @@ class Setup:
         self.pattern_directory = os.path.join(
             self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
+        self.shconfigs = []
+        home = os.path.expanduser("~")
+        if os.path.exists(os.path.join(home, ".bashrc")):
+            self.shconfigs.append(os.path.join(home, ".bashrc"))
+        if os.path.exists(os.path.join(home, ".bash_profile")):
+            self.shconfigs.append(os.path.join(home, ".bash_profile"))
+        if os.path.exists(os.path.join(home, ".zshrc")):
+            self.shconfigs.append(os.path.join(home, ".zshrc"))
         self.env_file = os.path.join(self.config_directory, ".env")
         self.gptlist = []
         self.fullOllamaList = []
@@ -434,6 +420,20 @@ class Setup:
             self.fetch_available_models()
         except:
             pass
+
+    def update_shconfigs(self):
+        bootstrap_file = os.path.join(
+            self.config_directory, "fabric-bootstrap.inc")
+        sourceLine = f'if [ -f "{bootstrap_file}" ]; then . "{bootstrap_file}"; fi'
+        for config in self.shconfigs:
+            lines = None
+            with open(config, 'r') as f:
+                lines = f.readlines()
+            with open(config, 'w') as f:
+                for line in lines:
+                    if sourceLine not in line:
+                        f.write(line)
+                f.write(sourceLine)
 
     def fetch_available_models(self):
         headers = {
@@ -544,96 +544,6 @@ class Setup:
             with open(self.env_file, "w") as f:
                 f.write(f"YOUTUBE_API_KEY={youtube_key}\n")
 
-    def update_fabric_command(self, line, model):
-        fabric_command_regex = re.compile(
-            r"(alias.*fabric --pattern\s+\S+.*?)( --model.*)?'")
-        match = fabric_command_regex.search(line)
-        if match:
-            base_command = match.group(1)
-            # Provide a default value for current_flag
-            current_flag = match.group(2) if match.group(2) else ""
-            new_flag = ""
-            new_flag = f" --model {model}"
-            # Update the command if the new flag is different or to remove an existing flag.
-            # Ensure to add the closing quote that was part of the original regex
-            return f"{base_command}{new_flag}'\n"
-        else:
-            return line  # Return the line unmodified if no match is found.
-
-    def update_fabric_alias(self, line, model):
-        fabric_alias_regex = re.compile(
-            r"(alias fabric='[^']+?)( --model.*)?'")
-        match = fabric_alias_regex.search(line)
-        if match:
-            base_command, current_flag = match.groups()
-            new_flag = f" --model {model}"
-            # Update the alias if the new flag is different or to remove an existing flag.
-            return f"{base_command}{new_flag}'\n"
-        else:
-            return line  # Return the line unmodified if no match is found.
-
-    def clear_alias(self, line):
-        fabric_command_regex = re.compile(
-            r"(alias fabric='[^']+?)( --model.*)?'")
-        match = fabric_command_regex.search(line)
-        if match:
-            base_command = match.group(1)
-            return f"{base_command}'\n"
-        else:
-            return line  # Return the line unmodified if no match is found.
-
-    def clear_env_line(self, line):
-        fabric_command_regex = re.compile(
-            r"(alias.*fabric --pattern\s+\S+.*?)( --model.*)?'")
-        match = fabric_command_regex.search(line)
-        if match:
-            base_command = match.group(1)
-            return f"{base_command}'\n"
-        else:
-            return line  # Return the line unmodified if no match is found.
-
-    def pattern(self, line):
-        fabric_command_regex = re.compile(
-            r"(alias fabric='[^']+?)( --model.*)?'")
-        match = fabric_command_regex.search(line)
-        if match:
-            base_command = match.group(1)
-            return f"{base_command}'\n"
-        else:
-            return line  # Return the line unmodified if no match is found.
-
-    def clean_env(self):
-        """Clear the DEFAULT_MODEL from the environment file.
-
-        Returns:
-            None
-        """
-        user_home = os.path.expanduser("~")
-        sh_config = None
-        # Check for shell configuration files
-        if os.path.exists(os.path.join(user_home, ".config/fabric/fabric-bootstrap.inc")):
-            sh_config = os.path.join(
-                user_home, ".config/fabric/fabric-bootstrap.inc")
-        else:
-            print("No environment file found.")
-        if sh_config:
-            with open(sh_config, "r") as f:
-                lines = f.readlines()
-            with open(sh_config, "w") as f:
-                for line in lines:
-                    modified_line = line
-                    # Update existing fabric commands
-                    if "fabric --pattern" in line:
-                        modified_line = self.clear_env_line(
-                            modified_line)
-                    elif "fabric=" in line:
-                        modified_line = self.clear_alias(
-                            modified_line)
-                    f.write(modified_line)
-            self.remove_duplicates(env_file)
-        else:
-            print("No shell configuration file found.")
-
     def default_model(self, model):
         """Set the default model in the environment file.
 
@@ -651,42 +561,29 @@ class Setup:
 
         # Compile regular expressions outside of the loop for efficiency
 
-        user_home = os.path.expanduser("~")
-        sh_config = None
         # Check for shell configuration files
-        if os.path.exists(os.path.join(user_home, ".config/fabric/fabric-bootstrap.inc")):
-            sh_config = os.path.join(
-                user_home, ".config/fabric/fabric-bootstrap.inc")
-
-        if sh_config:
-            with open(sh_config, "r") as f:
+        if os.path.exists(os.path.expanduser("~/.config/fabric/.env")):
+            env = os.path.expanduser("~/.config/fabric/.env")
+            there = False
+            with open(env, "r") as f:
                 lines = f.readlines()
-            with open(sh_config, "w") as f:
-                for line in lines:
-                    modified_line = line
-                    # Update existing fabric commands
-                    if "fabric --pattern" in line:
-                        modified_line = self.update_fabric_command(
-                            modified_line, model)
-                    elif "fabric=" in line:
-                        modified_line = self.update_fabric_alias(
-                            modified_line, model)
-                    f.write(modified_line)
+                if "DEFAULT_MODEL" in lines:
+                    there = True
+            if there:
+                with open(env, "w") as f:
+                    for line in lines:
+                        modified_line = line
+                        # Update existing fabric commands
+                        if "DEFAULT_MODEL" in line:
+                            modified_line = f'DEFAULT_MODEL={model}\n'
+                        f.write(modified_line)
+            else:
+                with open(env, "a") as f:
+                    f.write(f'DEFAULT_MODEL={model}\n')
             print(f"""Default model changed to {
                   model}. Please restart your terminal to use it.""")
         else:
             print("No shell configuration file found.")
-
-    def remove_duplicates(self, filename):
-        unique_lines = set()
-        with open(filename, 'r') as file:
-            lines = file.readlines()
-
-        with open(filename, 'w') as file:
-            for line in lines:
-                if line not in unique_lines:
-                    file.write(line)
-                    unique_lines.add(line)
 
     def patterns(self):
         """        Method to update patterns and exit the system.
@@ -717,6 +614,7 @@ class Setup:
         youtubekey = input()
         self.youtube_key(youtubekey)
         self.patterns()
+        self.update_shconfigs()
 
 
 class Transcribe:

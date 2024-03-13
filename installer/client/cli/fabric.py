@@ -49,7 +49,7 @@ def main():
                         help="Change the default model. For a list of available models, use the --listmodels flag.")
 
     parser.add_argument(
-        "--model", "-m", help="Select the model to use. NOTE: Will not work if you have set a default model. please use --clear to clear persistence before using this flag", default="gpt-4-turbo-preview"
+        "--model", "-m", help="Select the model to use. NOTE: Will not work if you have set a default model. please use --clear to clear persistence before using this flag"
     )
     parser.add_argument(
         "--listmodels", help="List all available models", action="store_true"
@@ -69,7 +69,7 @@ def main():
         os.makedirs(config)
     if args.setup:
         Setup().run()
-        Alias()
+        Alias().execute()
         sys.exit()
     if not os.path.exists(env_file) or not os.path.exists(config_patterns_directory):
         print("Please run --setup to set up your API key and download patterns.")
@@ -80,7 +80,6 @@ def main():
         sys.exit()
     if args.changeDefaultModel:
         Setup().default_model(args.changeDefaultModel)
-        print(f"Default model changed to {args.changeDefaultModel}")
         sys.exit()
     if args.agents:
         # Handle the agents logic
