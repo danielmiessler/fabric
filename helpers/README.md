@@ -56,7 +56,7 @@ options:
 `save` is a "tee-like" utility to pipeline saving of content, while keeping the output stream intact. Can optionally generate "frontmatter" for PKM utilities like Obsidian via the
 "FABRIC_FRONTMATTER" environment variable
 
-### Environment Variables
+
 
 If you'd like to default variables, set them in `~/.config/fabric/.env`. `FABRIC_OUTPUT_PATH` needs to be set so `save` where to write. `FABRIC_FRONTMATTER_TAGS` is optional, but useful for tracking how tags have entered your PKM, if that's important to you.
 
@@ -89,3 +89,4 @@ tags: fabric-extraction stub-for-name extra-tag
 ---
 test
 ```
+

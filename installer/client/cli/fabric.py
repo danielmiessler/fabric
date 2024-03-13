@@ -1,7 +1,6 @@
-from .utils import Standalone, Update, Setup, Alias, AgentSetup
+from .utils import Standalone, Update, Setup, Alias
 import argparse
 import sys
-import time
 import os
 
 
@@ -16,12 +15,11 @@ def main():
     parser.add_argument(
         "--copy", "-C", help="Copy the response to the clipboard", action="store_true"
     )
-    subparsers = parser.add_subparsers(dest='command', help='Sub-command help')
-    agents_parser = subparsers.add_parser('agents', help='Crew command help')
-    agents_parser.add_argument(
-        "trip_planner", help="The origin city for the trip")
-    agents_parser.add_argument(
-        'ApiKeys', help="enter API keys for tools", action="store_true")
+    parser.add_argument(
+        '--agents', '-a', choices=['trip_planner', 'ApiKeys'],
+        help="Use an AI agent to help you with a task. Acceptable values are 'trip_planner' or 'ApiKeys'. This option cannot be used with any other flag."
+    )
+
     parser.add_argument(
         "--output",
         "-o",
@@ -39,18 +37,25 @@ def main():
     parser.add_argument(
         "--list", "-l", help="List available patterns", action="store_true"
     )
+    parser.add_argument('--clear', help="Clears your persistent model choice so that you can once again use the --model flag",
+                        action="store_true")
     parser.add_argument(
-        "--update", "-u", help="Update patterns", action="store_true")
+        "--update", "-u", help="Update patterns. NOTE: This will revert the default model to gpt4-turbo. please run --changeDefaultModel to once again set default model", action="store_true")
     parser.add_argument("--pattern", "-p", help="The pattern (prompt) to use")
     parser.add_argument(
         "--setup", help="Set up your fabric instance", action="store_true"
     )
+    parser.add_argument('--changeDefaultModel',
+                        help="Change the default model. For a list of available models, use the --listmodels flag.")
+
     parser.add_argument(
-        "--model", "-m", help="Select the model to use (GPT-4 by default)", default="gpt-4-turbo-preview"
+        "--model", "-m", help="Select the model to use. NOTE: Will not work if you have set a default model. please use --clear to clear persistence before using this flag"
     )
     parser.add_argument(
         "--listmodels", help="List all available models", action="store_true"
     )
+    parser.add_argument('--remoteOllamaServer',
+                        help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-deault location or port')
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
 
@@ -64,7 +69,7 @@ def main():
         os.makedirs(config)
     if args.setup:
         Setup().run()
-        Alias()
+        Alias().execute()
         sys.exit()
     if not os.path.exists(env_file) or not os.path.exists(config_patterns_directory):
         print("Please run --setup to set up your API key and download patterns.")
@@ -73,19 +78,18 @@ def main():
         Update()
         Alias()
         sys.exit()
-    if args.command == "agents":
-        from .agents.trip_planner.main import planner_cli
-        if not args.trip_planner:
-            print("Please provide an agent")
-            print(f"Available Agents:")
-            for agent in tripcrew.agents:
-                print(agent)
-            sys.exit
-        elif args.trip_planner:
+    if args.changeDefaultModel:
+        Setup().default_model(args.changeDefaultModel)
+        sys.exit()
+    if args.agents:
+        # Handle the agents logic
+        if args.agents == 'trip_planner':
+            from .agents.trip_planner.main import planner_cli
             tripcrew = planner_cli()
             tripcrew.ask()
             sys.exit()
-        if args.ApiKeys:
+        elif args.agents == 'ApiKeys':
+            from .utils import AgentSetup
             AgentSetup().run()
             sys.exit()
     if args.update:
@@ -96,6 +100,10 @@ def main():
         if not os.path.exists(os.path.join(config, "context.md")):
             print("Please create a context.md file in ~/.config/fabric")
             sys.exit()
+    if args.clear:
+        Setup().clean_env()
+        print("Model choice cleared. please restart your session to use the --model flag.")
+        sys.exit()
     standalone = Standalone(args, args.pattern)
     if args.list:
         try:
@@ -107,27 +115,50 @@ def main():
             print("No patterns found")
             sys.exit()
     if args.listmodels:
-        standalone.fetch_available_models()
+        gptmodels, localmodels, claudemodels = standalone.fetch_available_models()
+        print("GPT Models:")
+        for model in gptmodels:
+            print(model)
+        print("\nLocal Models:")
+        for model in localmodels:
+            print(model)
+        print("\nClaude Models:")
+        for model in claudemodels:
+            print(model)
         sys.exit()
     if args.text is not None:
         text = args.text
     else:
         text = standalone.get_cli_input()
     if args.stream and not args.context:
-        standalone.streamMessage(text)
+        if args.remoteOllamaServer:
+            standalone.streamMessage(text, host=args.remoteOllamaServer)
+        else:
+            standalone.streamMessage(text)
         sys.exit()
     if args.stream and args.context:
         with open(config_context, "r") as f:
             context = f.read()
-            standalone.streamMessage(text, context=context)
+            if args.remoteOllamaServer:
+                standalone.streamMessage(
+                    text, context=context, host=args.remoteOllamaServer)
+            else:
+                standalone.streamMessage(text, context=context)
         sys.exit()
     elif args.context:
         with open(config_context, "r") as f:
             context = f.read()
-            standalone.sendMessage(text, context=context)
+            if args.remoteOllamaServer:
+                standalone.sendMessage(
+                    text, context=context, host=args.remoteOllamaServer)
+            else:
+                standalone.sendMessage(text, context=context)
         sys.exit()
     else:
-        standalone.sendMessage(text)
+        if args.remoteOllamaServer:
+            standalone.sendMessage(text, host=args.remoteOllamaServer)
+        else:
+            standalone.sendMessage(text)
         sys.exit()
 
 
