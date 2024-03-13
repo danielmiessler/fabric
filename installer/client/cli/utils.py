@@ -268,7 +268,6 @@ class Standalone:
             else:
                 print(f"Error: {e}")
                 print(e)
-        
 
     def fetch_available_models(self):
         gptlist = []
@@ -351,6 +350,17 @@ class Update:
             if os.path.exists(patterns_source_path):
                 # If the patterns directory already exists, remove it before copying over the new one
                 if os.path.exists(self.pattern_directory):
+                    old_pattern_contents = os.listdir(self.pattern_directory)
+                    new_pattern_contents = os.listdir(patterns_source_path)
+                    custom_patterns = []
+                    for pattern in old_pattern_contents:
+                        if pattern not in new_pattern_contents:
+                            custom_patterns.append(pattern)
+                    if custom_patterns:
+                        for pattern in custom_patterns:
+                            custom_path = os.path.join(
+                                self.pattern_directory, pattern)
+                            shutil.move(custom_path, patterns_source_path)
                     shutil.rmtree(self.pattern_directory)
                 shutil.copytree(patterns_source_path, self.pattern_directory)
                 print("Patterns updated successfully.")
