@@ -2,12 +2,14 @@ document.addEventListener("DOMContentLoaded", async function () {
   const patternSelector = document.getElementById("patternSelector");
   const userInput = document.getElementById("userInput");
   const submitButton = document.getElementById("submit");
+  const lastQueryContainer = document.getElementById("lastQueryContainer");
   const responseContainer = document.getElementById("responseContainer");
   const themeChanger = document.getElementById("themeChanger");
   const configButton = document.getElementById("configButton");
   const configSection = document.getElementById("configSection");
-  const saveApiKeyButton = document.getElementById("saveApiKey");
+  const saveApiConfigButton = document.getElementById("saveApiConfig");
   const apiKeyInput = document.getElementById("apiKeyInput");
+  const apiBaseURLInput = document.getElementById("apiBaseURLInput");
   const originalPlaceholder = userInput.placeholder;
   const updatePatternsButton = document.getElementById("updatePatternsButton");
   const copyButton = document.createElement("button");
@@ -16,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.log("Patterns are ready. Refreshing the pattern list.");
     loadPatterns();
   });
-  window.electronAPI.on("request-api-key", () => {
+  window.electronAPI.on("request-api-config", () => {
     // Show the API key input section or modal to the user
     configSection.classList.remove("hidden"); // Assuming 'configSection' is your API key input area
   });
@@ -56,6 +58,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   async function submitQuery(userInputValue) {
+    lastQueryContainer.textContent = htmlToPlainText(userInputValue);
+    lastQueryContainer.classList.remove("hidden");
     userInput.value = ""; // Clear the input after submitting
     systemCommand = await window.electronAPI.invoke(
       "get-pattern-content",
@@ -188,19 +192,20 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   // Save API Key button click handler
-  saveApiKeyButton.addEventListener("click", () => {
+  saveApiConfigButton.addEventListener("click", () => {
     const apiKey = apiKeyInput.value;
+    const apiBaseURL = apiBaseURLInput.value;
     window.electronAPI
-      .invoke("save-api-key", apiKey)
+      .invoke("save-api-config", apiKey, apiBaseURL)
       .then(() => {
-        alert("API Key saved successfully.");
+        alert("API Configuration saved successfully.");
         // Optionally hide the config section and clear the input after saving
         configSection.classList.add("hidden");
         apiKeyInput.value = "";
       })
       .catch((err) => {
-        console.error("Error saving API key:", err);
-        alert("Failed to save API Key.");
+        console.error("Error saving API configuration:", err);
+        alert("Failed to save API configurationy.");
       });
   });
 

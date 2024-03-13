@@ -12,7 +12,11 @@ function getOpenAIClient() {
       "The OPENAI_API_KEY environment variable is missing or empty."
     );
   }
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  if(!process.env.OPENAI_BASE_URL){
+    return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }else{
+    return new OpenAI({ apiKey: process.env.OPENAI_API_KEY, baseURL: process.env.OPENAI_BASE_URL});
+  }
 }
 
 async function queryOpenAI(system, user, callback) {

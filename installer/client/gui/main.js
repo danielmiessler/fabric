@@ -29,9 +29,9 @@ function promptUserForApiKey() {
   });
 
   // Handle the API key submission from the prompt window
-  ipcMain.on("submit-api-key", (event, apiKey) => {
-    if (apiKey) {
-      saveApiKey(apiKey);
+  ipcMain.on("submit-api-config", (event, apiKey, apiBaseURL) => {
+    if ((apiKey) && (apiBaseURL)) {
+      saveApiConfig(apiKey, apiBaseURL);
       promptWindow.close();
       createWindow(); // Proceed to create the main window
     } else {
@@ -45,7 +45,7 @@ function loadApiKey() {
   const configPath = path.join(os.homedir(), ".config", "fabric", ".env");
   if (fs.existsSync(configPath)) {
     const envContents = fs.readFileSync(configPath, { encoding: "utf8" });
-    const matches = envContents.match(/^OPENAI_API_KEY=(.*)$/m);
+    const matches = envContents.match(/^OPENAI_API_KEY="(.*)"$/m);
     if (matches && matches[1]) {
       return matches[1];
     }
@@ -53,7 +53,19 @@ function loadApiKey() {
   return null;
 }
 
-function saveApiKey(apiKey) {
+function loadBaseURL() {
+  const configPath = path.join(os.homedir(), ".config", "fabric", ".env");
+  if (fs.existsSync(configPath)) {
+    const envContents = fs.readFileSync(configPath, { encoding: "utf8" });
+    const matches = envContents.match(/^OPENAI_BASE_URL="(.*)"$/m);
+    if (matches && matches[1]) {
+      return matches[1];
+    }
+  }
+  return null;
+}
+
+function saveApiConfig(apiKey, apiBaseURL) {
   const configPath = path.join(os.homedir(), ".config", "fabric");
   const envFilePath = path.join(configPath, ".env");
 
@@ -61,8 +73,10 @@ function saveApiKey(apiKey) {
     fs.mkdirSync(configPath, { recursive: true });
   }
 
-  fs.writeFileSync(envFilePath, `OPENAI_API_KEY=${apiKey}`);
+  fs.writeFileSync(envFilePath, `OPENAI_API_KEY="${apiKey}"\n`);
+  fs.appendFileSync(envFilePath, `OPENAI_BASE_URL="${apiBaseURL}"\n`);
   process.env.OPENAI_API_KEY = apiKey; // Set for current session
+  process.env.OPENAI_BASE_URL = apiBaseURL; // Set for current session
 }
 
 function ensureFabricFoldersExist() {
@@ -127,7 +141,7 @@ async function downloadAndUpdatePatterns(patternsPath) {
   }
 }
 
-function checkApiKeyExists() {
+function checkEnvExists() {
   const configPath = path.join(os.homedir(), ".config", "fabric", ".env");
   return fs.existsSync(configPath);
 }
@@ -245,21 +259,13 @@ ipcMain.handle("get-pattern-content", async (event, patternName) => {
   }
 });
 
-ipcMain.handle("save-api-key", async (event, apiKey) => {
+ipcMain.handle("save-api-config", async (event, apiKey, apiBaseURL) => {
   try {
-    const configPath = path.join(os.homedir(), ".config", "fabric");
-    if (!fs.existsSync(configPath)) {
-      fs.mkdirSync(configPath, { recursive: true });
-    }
-
-    const envFilePath = path.join(configPath, ".env");
-    fs.writeFileSync(envFilePath, `OPENAI_API_KEY=${apiKey}`);
-    process.env.OPENAI_API_KEY = apiKey;
-
-    return "API Key saved successfully.";
+    saveApiConfig(apiKey, apiBaseURL);
+    return "API configuration saved successfully.";
   } catch (error) {
-    console.error("Error saving API key:", error);
-    throw new Error("Failed to save API Key.");
+    console.error("Error saving API configuration:", error);
+    throw new Error("Failed to save API Key and Base URL.");
   }
 });
 
@@ -276,10 +282,10 @@ app.whenReady().then(async () => {
     createWindow(); // Create the application window
 
     // After window creation, check if the API key exists
-    if (!checkApiKeyExists()) {
-      console.log("API key is missing. Prompting user to input API key.");
+    if (!checkApiEnvExists()) {
+      console.log("API environment is missing. Prompting user to input API key and base URL.");
       // Optionally, directly invoke a function here to show a prompt in the renderer process
-      win.webContents.send("request-api-key");
+      win.webContents.send("request-api-config");
     }
   } catch (error) {
     console.error("Failed to initialize fabric folders:", error);

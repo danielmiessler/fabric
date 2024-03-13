@@ -58,6 +58,7 @@ def main():
                         help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-deault location or port')
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
+    parser.add_argument('files', nargs='*', help='Files to read from (reads from stdin if not provided)')
 
     args = parser.parse_args()
     home_holder = os.path.expanduser("~")
@@ -129,7 +130,21 @@ def main():
     if args.text is not None:
         text = args.text
     else:
-        text = standalone.get_cli_input()
+        if args.files:
+            text = ""
+            for file in args.files:
+                try:
+                    with open(file, "r") as f:
+                        text += f.read()
+                except FileNotFoundError:
+                    print(f"File {file} not found")
+                    sys.exit()
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+                    sys.exit()    
+                
+        else:
+            text = standalone.get_cli_input()
     if args.stream and not args.context:
         if args.remoteOllamaServer:
             standalone.streamMessage(text, host=args.remoteOllamaServer)

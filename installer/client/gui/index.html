@@ -59,8 +59,16 @@
           placeholder="Enter OpenAI API Key"
           class="form-control"
         />
-        <button id="saveApiKey" class="btn btn-primary">Save API Key</button>
+        <input
+          type="text"
+          id="apiBaseURLInput"
+          placeholder="Enter OpenAI baseURL"
+	  value="https://api.openai.com/v1"
+          class="form-control"
+        />
+        <button id="saveApiConfig" class="btn btn-primary">Update OpenAI configuration</button>
       </div>
+      <div class="container hidden" id="lastQueryContainer"></div>
       <div class="container hidden" id="responseContainer"></div>
     </main>
     <script src="static/js/jquery-3.0.0.slim.min.js"></script>
