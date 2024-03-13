@@ -36,12 +36,17 @@ class Standalone:
         # Expand the tilde to the full path
         env_file = os.path.expanduser(env_file)
         load_dotenv(env_file)
-        try:
-            apikey = os.environ["OPENAI_API_KEY"]
+        if "OPENAI_API_KEY" not in os.environ:
+            print("Error: OPENAI_API_KEY not found in environment variables.")
             self.client = OpenAI()
-            self.client.api_key = apikey
-        except:
-            print("No API key found. Use the --apikey option to set the key")
+        else:
+            api_key = os.environ['OPENAI_API_KEY']
+            base_url = os.environ.get('OPENAI_BASE_URL')
+            if base_url:
+                self.client = OpenAI(api_key=api_key, base_url=base_url)
+            else:
+                self.client = OpenAI(api_key=api_key)
+        
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
@@ -426,7 +431,7 @@ class Setup:
         self.claudeList = ['claude-3-opus-20240229']
         load_dotenv(self.env_file)
         try:
-            openaiapikey = os.environ["OPENAI_API_KEY"]
+            openaiapikey = os.getenv("OPENAI_API_KEY")|''
             self.openaiapi_key = openaiapikey
         except:
             pass
@@ -482,7 +487,7 @@ class Setup:
         api_key = api_key.strip()
         if not os.path.exists(self.env_file) and api_key:
             with open(self.env_file, "w") as f:
-                f.write(f"OPENAI_API_KEY={api_key}\n")
+                f.write(f'OPENAI_API_KEY="{api_key}"\n')
             print(f"OpenAI API key set to {api_key}")
         elif api_key:
             # erase the line OPENAI_API_KEY=key and write the new key
@@ -492,8 +497,36 @@ class Setup:
                 for line in lines:
                     if "OPENAI_API_KEY" not in line:
                         f.write(line)
-                f.write(f"OPENAI_API_KEY={api_key}\n")
+                f.write(f'OPENAI_API_KEY="{api_key}"\n')
 
+    def api_base_url(self, api_base_url):
+        """        Set the OpenAI API base URL in the environment file.
+
+        Args:
+            api_base_url (str): The API base URL to be set.
+
+        Returns:
+            None
+
+        Raises:
+            OSError: If the environment file does not exist or cannot be accessed.
+        """
+        api_base_url = api_base_url.strip()
+        if not api_base_url:
+            api_base_url = "https://api.openai.com/v1/"
+        if os.path.exists(self.env_file) and api_base_url:
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "OPENAI_BASE_URL" not in line:
+                        f.write(line)
+                f.write(f'OPENAI_BASE_URL="{api_base_url}"')
+        elif api_base_url:
+            with open(self.env_file, "w") as f:
+                f.write(f'OPENAI_BASE_URL="{api_base_url}"')
+                
+                
     def claude_key(self, claude_key):
         """        Set the Claude API key in the environment file.
 
@@ -709,7 +742,11 @@ class Setup:
         print("Welcome to Fabric. Let's get started.")
         apikey = input(
             "Please enter your OpenAI API key. If you do not have one or if you have already entered it, press enter.\n")
-        self.api_key(apikey)
+        self.api_key(apikey.strip())
+        apiBaseURL = input(
+            "Please enter the OpenAI API Base URL. If you want to use the default, press enter.\n")
+        self.api_base_url(apiBaseURL.strip())
+
         print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         claudekey = input()
         self.claude_key(claudekey)
