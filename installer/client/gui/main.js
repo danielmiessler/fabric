@@ -282,7 +282,7 @@ app.whenReady().then(async () => {
     createWindow(); // Create the application window
 
     // After window creation, check if the API key exists
-    if (!checkApiEnvExists()) {
+    if (!checkEnvExists()) {
       console.log("API environment is missing. Prompting user to input API key and base URL.");
       // Optionally, directly invoke a function here to show a prompt in the renderer process
       win.webContents.send("request-api-config");
