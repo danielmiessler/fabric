@@ -151,9 +151,9 @@ git clone https://github.com/danielmiessler/fabric.git
 cd fabric
 ```
 
-4. install pipx:
+4. Install pipx:
 
-Mac:
+macOS:
 
 ```bash
 brew install pipx
@@ -164,6 +164,10 @@ Linux:
 ```bash
 sudo apt intall pipx
 ```
+
+Windows:
+
+Use WSL and follow the Linux instructions.
 
 5. Install fabric
 
@@ -179,7 +183,7 @@ fabric --setup
 
 7. Restart your shell to reload everything.
 
-8. Now you are up and running! You can test by pulling the help.
+8. Now you are up and running! You can test by running the help.
 
 ```bash
 # Making sure the paths are set up correctly
