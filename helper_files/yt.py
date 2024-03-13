@@ -49,7 +49,8 @@ def main_function(url, options):
         # Get video transcript
         try:
             transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
-            transcript_text = " ".join([item["text"] for item in transcript_list])
+            transcript_text = " ".join([item["text"]
+                                       for item in transcript_list])
             transcript_text = transcript_text.replace("\n", " ")
         except Exception as e:
             transcript_text = f"Transcript not available. ({e})"
@@ -61,13 +62,14 @@ def main_function(url, options):
             print(transcript_text)
         else:
             # Create JSON object
-            output = {"transcript": transcript_text, "duration": duration_minutes}
+            output = {"transcript": transcript_text,
+                      "duration": duration_minutes}
             # Print JSON object
             print(json.dumps(output))
     except HttpError as e:
 
-        print(f"Error: Failed to access YouTube API. Please check your YOUTUBE_API_KEY and ensure it is valid: {e}")
-
+        print(
+            f"Error: Failed to access YouTube API. Please check your YOUTUBE_API_KEY and ensure it is valid: {e}")
 
 
 def main():
@@ -79,12 +81,4 @@ def main():
                         help='Output only the duration')
     parser.add_argument('--transcript', action='store_true',
                         help='Output only the transcript')
-        description="vm (video meta) extracts metadata about a video, such as the transcript and the video's duration. By Daniel Miessler."
-    )
     parser.add_argument("url", nargs="?", help="YouTube video URL")
-    parser.add_argument(
-        "--duration", action="store_true", help="Output only the duration"
-    )
-    parser.add_argument(
-        "--transcript", action="store_true", help="Output only the transcript"
-    )
