@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import re
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -9,7 +7,7 @@ import os
 import json
 import isodate
 import argparse
-import sys
+
 
 def get_video_id(url):
     # Extract video ID from URL
@@ -49,29 +47,9 @@ def main_function(url, options):
         duration_seconds = isodate.parse_duration(duration_iso).total_seconds()
         duration_minutes = round(duration_seconds / 60)
 
-        # Get video transcript language
-        try:
-            transcript_available = False
-            transcript_options = ''
-            transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-            for transcript in transcript_list:
-                if options.language == transcript.language_code:
-                    transcript_available = True
-                else:
-                    transcript_options += transcript.language + ' (' + \
-                                          transcript.language_code + '); '
-
-            if not transcript_available:
-                # exit with existing languages, cause get_transcript will fail
-                sys.exit('"' + options.language + '" not available. ' + \
-                         'Following languages exists: ' + transcript_options)
-
-        except Exception as e:
-            print(e)
-
         # Get video transcript
         try:
-            transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=[options.language])
+            transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
             transcript_text = ' '.join([item['text']
                                        for item in transcript_list])
             transcript_text = transcript_text.replace('\n', ' ')
@@ -99,8 +77,6 @@ def main():
     parser = argparse.ArgumentParser(
         description='vm (video meta) extracts metadata about a video, such as the transcript and the video\'s duration. By Daniel Miessler.')
     parser.add_argument('url', nargs='?', help='YouTube video URL')
-    parser.add_argument('-l', '--language',
-                        help='Set transcript language (default en)', default='en')
     parser.add_argument('--duration', action='store_true',
                         help='Output only the duration')
     parser.add_argument('--transcript', action='store_true',
