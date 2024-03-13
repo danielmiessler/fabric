@@ -274,7 +274,9 @@ class Standalone:
         gptlist = []
         fullOllamaList = []
         claudeList = ['claude-3-opus-20240229',
-                      'claude-3-sonnet-20240229', 'claude-2.1']
+                      'claude-3-sonnet-20240229', 
+                      'claude-3-haiku-20240307', 
+                      'claude-2.1']
         try:
             headers = {
                 "Authorization": f"Bearer {self.client.api_key}"
