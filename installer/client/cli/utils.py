@@ -248,6 +248,11 @@ class Standalone:
                     presence_penalty=0.1,
                 )
                 print(response.choices[0].message.content)
+                if self.args.copy:
+                    pyperclip.copy(response.choices[0].message.content)
+                if self.args.output:
+                    with open(self.args.output, "w") as f:
+                        f.write(response.choices[0].message.content)
         except Exception as e:
             if "All connection attempts failed" in str(e):
                 print(
@@ -263,11 +268,7 @@ class Standalone:
             else:
                 print(f"Error: {e}")
                 print(e)
-        if self.args.copy:
-            pyperclip.copy(response.choices[0].message.content)
-        if self.args.output:
-            with open(self.args.output, "w") as f:
-                f.write(response.choices[0].message.content)
+        
 
     def fetch_available_models(self):
         gptlist = []
