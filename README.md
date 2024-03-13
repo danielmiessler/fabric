@@ -48,15 +48,18 @@
 <br />
 
 > [!NOTE]  
-> We are adding functionality to the project so often that you should update often as well. That means: `git pull; ./setup.sh; fabric --update` in the main directory, and then sourcing your shell files and/or restarting your terminal. So exciting!
+> We are adding functionality to the project so often that you should update often as well. That means: `git pull; pipx upgrade fabric; fabric --update` in the main directory. So exciting!
 
 **March 11, 2024** — We just added support for Claude, local models via Ollama, and a number of new Patterns. Be sure to update and check `fabric -h` for the latest!
 
-## Introduction video
+## Introduction videos
 
 <div align="center">
 <a href="https://youtu.be/wPEyyigh10g">
-  <img width="972" alt="fabric_intro_video" src="https://github.com/danielmiessler/fabric/assets/50654/1eb1b9be-0bab-4c77-8ed2-ed265e8a3435">
+<img width="972" alt="fabric_intro_video" src="https://github.com/danielmiessler/fabric/assets/50654/1eb1b9be-0bab-4c77-8ed2-ed265e8a3435"></a>
+    <br /><br />
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=lEXd6TXPw7E target="_blank">
+ <img src="http://img.youtube.com/vi/lEXd6TXPw7E/mqdefault.jpg" alt="Watch the video" width="240" height="972" />
 </a>
 </div>
 
