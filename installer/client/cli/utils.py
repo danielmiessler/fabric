@@ -16,6 +16,9 @@ config_directory = os.path.expanduser("~/.config/fabric")
 env_file = os.path.join(config_directory, ".env")
 
 
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 class Standalone:
     def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
         """        Initialize the class with the provided arguments and environment file.
@@ -36,12 +39,17 @@ class Standalone:
         # Expand the tilde to the full path
         env_file = os.path.expanduser(env_file)
         load_dotenv(env_file)
-        try:
-            apikey = os.environ["OPENAI_API_KEY"]
+        if "OPENAI_API_KEY" not in os.environ:
+            eprint("Error: OPENAI_API_KEY not found in environment variables.")
             self.client = OpenAI()
-            self.client.api_key = apikey
-        except:
-            print("No API key found. Use the --apikey option to set the key")
+        else:
+            api_key = os.environ['OPENAI_API_KEY']
+            base_url = os.environ.get('OPENAI_BASE_URL')
+            if base_url:
+                self.client = OpenAI(api_key=api_key, base_url=base_url)
+            else:
+                self.client = OpenAI(api_key=api_key)
+        
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
@@ -136,7 +144,7 @@ class Standalone:
                     system_message = {"role": "system", "content": system}
                 messages = [system_message, user_message]
             except FileNotFoundError:
-                print("pattern not found")
+                eprint("pattern not found")
                 return
         else:
             if context:
@@ -176,17 +184,17 @@ class Standalone:
                     sys.stdout.flush()
         except Exception as e:
             if "All connection attempts failed" in str(e):
-                print(
+                eprint(
                     "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
             if "CLAUDE_API_KEY" in str(e):
-                print(
+                eprint(
                     "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
             if "overloaded_error" in str(e):
-                print(
+                eprint(
                     "Error: Fabric is working fine, but claude is overloaded. Please try again later.")
             else:
-                print(f"Error: {e}")
-                print(e)
+                eprint(f"Error: {e}")
+                eprint(e)
         if self.args.copy:
             pyperclip.copy(buffer)
         if self.args.output:
@@ -222,7 +230,7 @@ class Standalone:
                     system_message = {"role": "system", "content": system}
                 messages = [system_message, user_message]
             except FileNotFoundError:
-                print("pattern not found")
+                eprint("pattern not found")
                 return
         else:
             if context:
@@ -255,19 +263,19 @@ class Standalone:
                         f.write(response.choices[0].message.content)
         except Exception as e:
             if "All connection attempts failed" in str(e):
-                print(
+                eprint(
                     "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
             if "CLAUDE_API_KEY" in str(e):
-                print(
+                eprint(
                     "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
             if "overloaded_error" in str(e):
-                print(
+                eprint(
                     "Error: Fabric is working fine, but claude is overloaded. Please try again later.")
             if "Attempted to call a sync iterator on an async stream" in str(e):
-                print("Error: There is a problem connecting fabric with your local ollama installation. Please visit https://ollama.com for installation instructions. It is possible that you have chosen the wrong model. Please run fabric --listmodels to see the available models and choose the right one with fabric --model <model> or fabric --changeDefaultModel. If this does not work. Restart your computer (always a good idea) and try again. If you are still having problems, please visit https://ollama.com for installation instructions.")
+                eprint("Error: There is a problem connecting fabric with your local ollama installation. Please visit https://ollama.com for installation instructions. It is possible that you have chosen the wrong model. Please run fabric --listmodels to see the available models and choose the right one with fabric --model <model> or fabric --changeDefaultModel. If this does not work. Restart your computer (always a good idea) and try again. If you are still having problems, please visit https://ollama.com for installation instructions.")
             else:
-                print(f"Error: {e}")
-                print(e)
+                eprint(f"Error: {e}")
+                eprint(e)
         
 
     def fetch_available_models(self):
@@ -294,10 +302,10 @@ class Standalone:
                 for model in sorted_gpt_models:
                     gptlist.append(model.get("id"))
             else:
-                print(f"Failed to fetch models: HTTP {response.status_code}")
+                eprint(f"Failed to fetch models: HTTP {response.status_code}")
                 sys.exit()
         except:
-            print('No OpenAI API key found. Please run fabric --setup and add the key if you wish to interact with openai')
+            eprint('No OpenAI API key found. Please run fabric --setup and add the key if you wish to interact with openai')
         import ollama
         try:
             default_modelollamaList = ollama.list()['models']
@@ -336,7 +344,7 @@ class Update:
         self.pattern_directory = os.path.join(
             self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
-        print("Updating patterns...")
+        eprint("Updating patterns...")
         self.update_patterns()  # Start the update process immediately
 
     def update_patterns(self):
@@ -353,9 +361,9 @@ class Update:
                 if os.path.exists(self.pattern_directory):
                     shutil.rmtree(self.pattern_directory)
                 shutil.copytree(patterns_source_path, self.pattern_directory)
-                print("Patterns updated successfully.")
+                eprint("Patterns updated successfully.")
             else:
-                print("Patterns folder not found in the downloaded zip.")
+                eprint("Patterns folder not found in the downloaded zip.")
 
     def download_zip(self, url, save_path):
         """Download the zip file from the specified URL."""
@@ -363,13 +371,13 @@ class Update:
         response.raise_for_status()  # Check if the download was successful
         with open(save_path, 'wb') as f:
             f.write(response.content)
-        print("Downloaded zip file successfully.")
+        eprint("Downloaded zip file successfully.")
 
     def extract_zip(self, zip_path, extract_to):
         """Extract the zip file to the specified directory."""
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(extract_to)
-        print("Extracted zip file successfully.")
+        eprint("Extracted zip file successfully.")
         return extract_to  # Return the path to the extracted contents
 
 
@@ -413,7 +421,7 @@ class Setup:
         self.claudeList = ['claude-3-opus-20240229']
         load_dotenv(self.env_file)
         try:
-            openaiapikey = os.environ["OPENAI_API_KEY"]
+            openaiapikey = os.getenv("OPENAI_API_KEY")|''
             self.openaiapi_key = openaiapikey
         except:
             pass
@@ -456,7 +464,7 @@ class Setup:
             for model in sorted_gpt_models:
                 self.gptlist.append(model.get("id"))
         else:
-            print(f"Failed to fetch models: HTTP {response.status_code}")
+            eprint(f"Failed to fetch models: HTTP {response.status_code}")
             sys.exit()
         import ollama
         try:
@@ -484,7 +492,7 @@ class Setup:
         if not os.path.exists(self.env_file) and api_key:
             with open(self.env_file, "w") as f:
                 f.write(f"OPENAI_API_KEY={api_key}\n")
-            print(f"OpenAI API key set to {api_key}")
+            eprint(f"OpenAI API key set to {api_key}")
         elif api_key:
             # erase the line OPENAI_API_KEY=key and write the new key
             with open(self.env_file, "r") as f:
@@ -493,8 +501,36 @@ class Setup:
                 for line in lines:
                     if "OPENAI_API_KEY" not in line:
                         f.write(line)
-                f.write(f"OPENAI_API_KEY={api_key}\n")
+                f.write(f'OPENAI_API_KEY="{api_key}"\n')
 
+    def api_base_url(self, api_base_url):
+        """        Set the OpenAI API base URL in the environment file.
+
+        Args:
+            api_base_url (str): The API base URL to be set.
+
+        Returns:
+            None
+
+        Raises:
+            OSError: If the environment file does not exist or cannot be accessed.
+        """
+        api_base_url = api_base_url.strip()
+        if not api_base_url:
+            api_base_url = "https://api.openai.com/v1/"
+        if os.path.exists(self.env_file) and api_base_url:
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "OPENAI_BASE_URL" not in line:
+                        f.write(line)
+                f.write(f'OPENAI_BASE_URL="{api_base_url}"')
+        elif api_base_url:
+            with open(self.env_file, "w") as f:
+                f.write(f'OPENAI_BASE_URL="{api_base_url}"')
+                
+                
     def claude_key(self, claude_key):
         """        Set the Claude API key in the environment file.
 
@@ -556,7 +592,7 @@ class Setup:
             # Write or update the DEFAULT_MODEL in env_file
             allModels = self.claudeList + self.fullOllamaList + self.gptlist
             if model not in allModels:
-                print(
+                eprint(
                     f"Error: {model} is not a valid model. Please run fabric --listmodels to see the available models.")
                 sys.exit()
 
@@ -581,10 +617,10 @@ class Setup:
             else:
                 with open(env, "a") as f:
                     f.write(f'DEFAULT_MODEL={model}\n')
-            print(f"""Default model changed to {
+            eprint(f"""Default model changed to {
                   model}. Please restart your terminal to use it.""")
         else:
-            print("No shell configuration file found.")
+            eprint("No shell configuration file found.")
 
     def patterns(self):
         """        Method to update patterns and exit the system.
@@ -604,15 +640,18 @@ class Setup:
             None
         """
 
-        print("Welcome to Fabric. Let's get started.")
+        eprint("Welcome to Fabric. Let's get started.")
         apikey = input(
             "Please enter your OpenAI API key. If you do not have one or if you have already entered it, press enter.\n")
-        self.api_key(apikey)
-        print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
-        claudekey = input()
+        self.api_key(apikey.strip())
+        apiBaseURL = input(
+            "Please enter the OpenAI API Base URL. If you want to use the default, press enter.\n")
+        self.api_base_url(apiBaseURL.strip())
+
+        claudekey = input("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         self.claude_key(claudekey)
-        print("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
-        youtubekey = input()
+        
+        youtubekey = input("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
         self.youtube_key(youtubekey)
         self.patterns()
         self.update_shconfigs()
@@ -644,7 +683,7 @@ class Transcribe:
                 transcript += segment['text'] + " "
             return transcript.strip()
         except Exception as e:
-            print("Error:", e)
+            eprint("Error:", e)
             return None
 
 
@@ -656,7 +695,7 @@ class AgentSetup:
             None
         """
 
-        print("Welcome to Fabric. Let's get started.")
+        eprint("Welcome to Fabric. Let's get started.")
         browserless = input("Please enter your Browserless API key\n").strip()
         serper = input("Please enter your Serper API key\n").strip()
 

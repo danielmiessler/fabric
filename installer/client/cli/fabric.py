@@ -1,4 +1,4 @@
-from .utils import Standalone, Update, Setup, Alias
+from .utils import Standalone, Update, Setup, Alias, eprint
 import argparse
 import sys
 import os
@@ -58,6 +58,7 @@ def main():
                         help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-deault location or port')
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
+    parser.add_argument('files', nargs='*', help='Files to read from (reads from stdin if not provided)')
 
     args = parser.parse_args()
     home_holder = os.path.expanduser("~")
@@ -72,7 +73,7 @@ def main():
         Alias().execute()
         sys.exit()
     if not os.path.exists(env_file) or not os.path.exists(config_patterns_directory):
-        print("Please run --setup to set up your API key and download patterns.")
+        eprint("Please run --setup to set up your API key and download patterns.")
         sys.exit()
     if not os.path.exists(config_patterns_directory):
         Update()
@@ -80,6 +81,7 @@ def main():
         sys.exit()
     if args.changeDefaultModel:
         Setup().default_model(args.changeDefaultModel)
+        eprint(f"Default model changed to {args.changeDefaultModel}")
         sys.exit()
     if args.agents:
         # Handle the agents logic
@@ -98,11 +100,11 @@ def main():
         sys.exit()
     if args.context:
         if not os.path.exists(os.path.join(config, "context.md")):
-            print("Please create a context.md file in ~/.config/fabric")
+            eprint("Please create a context.md file in ~/.config/fabric")
             sys.exit()
     if args.clear:
         Setup().clean_env()
-        print("Model choice cleared. please restart your session to use the --model flag.")
+        eprint("Model choice cleared. please restart your session to use the --model flag.")
         sys.exit()
     standalone = Standalone(args, args.pattern)
     if args.list:
@@ -112,24 +114,38 @@ def main():
                 print(d)
             sys.exit()
         except FileNotFoundError:
-            print("No patterns found")
+            eprint("No patterns found")
             sys.exit()
     if args.listmodels:
         gptmodels, localmodels, claudemodels = standalone.fetch_available_models()
-        print("GPT Models:")
+        eprint("GPT Models:")
         for model in gptmodels:
-            print(model)
-        print("\nLocal Models:")
+            eprint(model)
+        eprint("\nLocal Models:")
         for model in localmodels:
-            print(model)
-        print("\nClaude Models:")
+            eprint(model)
+        eprint("\nClaude Models:")
         for model in claudemodels:
-            print(model)
+            eprint(model)
         sys.exit()
     if args.text is not None:
         text = args.text
     else:
-        text = standalone.get_cli_input()
+        if args.files:
+            text = ""
+            for file in args.files:
+                try:
+                    with open(file, "r") as f:
+                        text += f.read()
+                except FileNotFoundError:
+                    print(f"File {file} not found")
+                    sys.exit()
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+                    sys.exit()    
+                
+        else:
+            text = standalone.get_cli_input()
     if args.stream and not args.context:
         if args.remoteOllamaServer:
             standalone.streamMessage(text, host=args.remoteOllamaServer)
