@@ -33,8 +33,8 @@ fi
 if [ -e "$context_file" ]; then
   echo "$context_file exists. Doing nothing"
 else
-  touch $bootstrap_file
-  echo "created $bootstrap_file"
+  touch $context_file
+  echo "created $contex_file"
 fi
 
 # List of shell configuration files to update
@@ -73,4 +73,5 @@ do
 done
 
 echo "Please restart your terminal or source $bootstrap_file with '. $bootstrap_file'."
+echo "Your personal context file is located at $context_file."
 echo "Setup completed."
