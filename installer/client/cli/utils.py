@@ -36,21 +36,38 @@ class Standalone:
         # Expand the tilde to the full path
         env_file = os.path.expanduser(env_file)
         load_dotenv(env_file)
-        try:
-            apikey = os.environ["OPENAI_API_KEY"]
-            self.client = OpenAI()
-            self.client.api_key = apikey
-        except:
-            print("No API key found. Use the --apikey option to set the key")
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
         self.args = args
-        self.model = args.model
+        self.model = None
+        if args.model:
+            self.model = args.model
+        else:
+            try:
+                self.model = os.environ["DEFAULT_MODEL"]
+            except:
+                self.model = 'gpt-4-turbo-preview'
         self.claude = False
-        sorted_gpt_models, ollamaList, claudeList = self.fetch_available_models()
+        self.groq = False
+        sorted_gpt_models, ollamaList, claudeList, groq_list = self.fetch_available_models()
         self.local = self.model.strip() in ollamaList
         self.claude = self.model.strip() in claudeList
+        self.groq = self.model.strip() in groq_list
+        try:
+            if self.groq:
+                apikey = os.environ.get("GROQ_API_KEY")
+
+                self.client = OpenAI(base_url="https://api.groq.com/openai/v1")
+            else:
+                apikey = os.environ["OPENAI_API_KEY"]
+
+                self.client = OpenAI()
+
+            self.client.api_key = apikey
+
+        except:
+            print("No API key found. Use the --apikey option to set the key")
 
     async def localChat(self, messages, host=''):
         from ollama import AsyncClient
@@ -146,6 +163,7 @@ class Standalone:
             elif self.claude:
                 from anthropic import AsyncAnthropic
                 asyncio.run(self.claudeStream(system, user_message))
+
             else:
                 stream = self.client.chat.completions.create(
                     model=self.model,
@@ -174,6 +192,8 @@ class Standalone:
             if "CLAUDE_API_KEY" in str(e):
                 print(
                     "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
+            if "groq" in str(e):
+                print("Error from groq")
             if "overloaded_error" in str(e):
                 print(
                     "Error: Fabric is working fine, but claude is overloaded. Please try again later.")
@@ -265,7 +285,9 @@ class Standalone:
     def fetch_available_models(self):
         gptlist = []
         fullOllamaList = []
-        claudeList = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-2.1']
+        claudeList = ['claude-3-opus-20240229',
+                      'claude-3-sonnet-20240229', 'claude-2.1']
+        groqList = ['llama2-70b-4096', 'mixtral-8x7b-32768', 'gemma-7b-it']
         try:
             headers = {
                 "Authorization": f"Bearer {self.client.api_key}"
@@ -296,7 +318,7 @@ class Standalone:
                 fullOllamaList.append(model['name'])
         except:
             fullOllamaList = []
-        return gptlist, fullOllamaList, claudeList
+        return gptlist, fullOllamaList, claudeList, groqList
 
     def get_cli_input(self):
         """ aided by ChatGPT; uses platform library
@@ -519,6 +541,33 @@ class Setup:
             with open(self.env_file, "w") as f:
                 f.write(f"CLAUDE_API_KEY={claude_key}\n")
 
+    def groq_key(self, groq_key):
+        """         Set the Groq API key in the environment file.
+
+        Args:
+            groq_key (str): The API key to be set.
+
+        Returns:
+            None
+
+        Raises:
+            OSError: If the environment file does not exist or cannot be accessed.
+        """
+        groq_key = groq_key.strip()
+        if os.path.exists(self.env_file) and groq_key:
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "GROQ_API_KEY" not in line:
+                        f.write(line)
+                    f.write(f"GROQ_API_KEY={groq_key}\n")
+
+        elif groq_key:
+            with open(self.env_file, "w") as f:
+                f.write(f"GROQ_API_KEY={groq_key}\n")
+
     def youtube_key(self, youtube_key):
         """        Set the YouTube API key in the environment file.
 
@@ -713,6 +762,9 @@ class Setup:
         print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         claudekey = input()
         self.claude_key(claudekey)
+        print("Please enter your Groq API key. If you do not have one, or if you have already entered it, press enter.\n")
+        groqkey = input()
+        self.groq_key(groqkey)
         print("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
         youtubekey = input()
         self.youtube_key(youtubekey)
