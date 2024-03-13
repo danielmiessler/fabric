@@ -1159,6 +1159,17 @@ files = [
 ]
 
 [[package]]
+name = "helpers"
+version = "0.2.0"
+description = "Improved developer experience, accumulated."
+optional = false
+python-versions = "*"
+files = [
+    {file = "helpers-0.2.0-py3-none-any.whl", hash = "sha256:2ca7fdfc5c1e6994f80e9d01812d92383163434372bad51e7c04d2fe04c82a3e"},
+    {file = "helpers-0.2.0.tar.gz", hash = "sha256:bdfe1641fdaa1be60de8d0a8e3d243e5273582969b1118e87895616f83acdf90"},
+]
+
+[[package]]
 name = "httpcore"
 version = "1.0.4"
 description = "A minimal low-level HTTP client."
@@ -3673,4 +3684,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "f2995ca96c32fda2c1567d045cb36422b0f5541e809c47e24ff96025a35ac7b0"
+content-hash = "5732b76a0ab3501228efa6c0091e4a66bd84def76c8934f06b9219dc2c9d3ad3"
