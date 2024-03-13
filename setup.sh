@@ -10,13 +10,17 @@ echo "Installing fabric via pipx"
 pipx install .
 pipx ensurepath
 
+PATH=$HOME/.local/bin:$PATH
+
 # Path to the bootstrap file
 fabric_path="$HOME/.config/fabric/"
 bootstrap="fabric-bootstrap.inc"
 context="context.md"
+env=".env"
 
 bootstrap_file="$fabric_path$bootstrap"
 context_file="$fabric_path$context"
+env_file=$fabric_path$env
 # Ensure the directory for the bootstrap file exists
 mkdir -p "$(dirname "$bootstrap_file")"
 
@@ -51,6 +55,9 @@ do
   fi
 done
 
+if [ ! -e "$env_file" ]; then
+  fabric --setup
+fi
 # set aliases for all known patterns
 echo "Checking alises:"
 for i in $(fabric --list)
