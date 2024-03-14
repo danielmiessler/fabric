@@ -56,6 +56,7 @@ def main():
                         help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-deault location or port')
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
+    parser.add_argument('--clear', help="Clear the default model and other persisted settings", action="store_true")
 
     args = parser.parse_args()
     home_holder = os.path.expanduser("~")
@@ -79,6 +80,9 @@ def main():
     if args.changeDefaultModel:
         Setup().default_model(args.changeDefaultModel)
         sys.exit()
+    if args.clear:
+        os.remove(env_file)
+        sys.exit()        
     if args.agents:
         # Handle the agents logic
         if args.agents == 'trip_planner':
