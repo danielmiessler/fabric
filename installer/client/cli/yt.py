@@ -82,3 +82,5 @@ def main():
     parser.add_argument('--transcript', action='store_true',
                         help='Output only the transcript')
     parser.add_argument("url", nargs="?", help="YouTube video URL")
+    args = parser.parse_args()
+    main_function(args.url, args)
