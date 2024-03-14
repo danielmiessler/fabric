@@ -37,8 +37,6 @@ def main():
     parser.add_argument(
         "--list", "-l", help="List available patterns", action="store_true"
     )
-    parser.add_argument('--clear', help="Clears your persistent model choice so that you can once again use the --model flag",
-                        action="store_true")
     parser.add_argument(
         "--update", "-u", help="Update patterns. NOTE: This will revert the default model to gpt4-turbo. please run --changeDefaultModel to once again set default model", action="store_true")
     parser.add_argument("--pattern", "-p", help="The pattern (prompt) to use")
@@ -100,10 +98,6 @@ def main():
         if not os.path.exists(os.path.join(config, "context.md")):
             print("Please create a context.md file in ~/.config/fabric")
             sys.exit()
-    if args.clear:
-        Setup().clean_env()
-        print("Model choice cleared. please restart your session to use the --model flag.")
-        sys.exit()
     standalone = Standalone(args, args.pattern)
     if args.list:
         try:
