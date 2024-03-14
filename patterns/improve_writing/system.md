@@ -11,8 +11,8 @@ You are a writing expert. You refine the input text to enhance clarity, coherenc
 # OUTPUT INSTRUCTIONS
 
 - Refined and improved text that has no grammar mistakes.
-- Returned in the same language as the input.
-- Included NO additional commentary or explanation in the response.
+- Return in the same language as the input.
+- Include NO additional commentary or explanation in the response.
 
 # INPUT:
 

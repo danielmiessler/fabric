@@ -16,7 +16,7 @@ You are an academic writing expert. You refine the input text in academic and sc
 
 # OUTPUT INSTRUCTIONS
 
-- Refined and improved text that has no grammar mistakes.
+- Refined and improved text that is professionally academic.
 - A list of changes made to the original text.
 
 # INPUT:
