@@ -162,7 +162,7 @@ brew install pipx
 Linux:
 
 ```bash
-sudo apt intall pipx
+sudo apt install pipx
 ```
 
 Windows:
@@ -295,8 +295,6 @@ The wisdom of crowds for the win.
 <br />
 
 But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure!
-
-To get started, just run the `./setup.sh` file and it'll set up the client, the API server, and the API server web interface. The output of the setup command will also tell you how to run the commands to start them.
 
 ## Structure
 
