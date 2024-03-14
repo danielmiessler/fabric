@@ -38,8 +38,7 @@ windows:
 download instructions https://www.ffmpeg.org/download.html
 ```
 
-
-```bash
+````bash
 ts -h
 usage: ts [-h] audio_file
 
@@ -75,7 +74,8 @@ options:
   -t, TAG, --tag TAG  add an additional frontmatter tag. Use this argument multiple timesfor multiple tags
   -n, --nofabric      don't use the fabric tags, only use tags from --tag
   -s, --silent        don't use STDOUT for output, only save to the file
-```
+````
+
 ### example
 
 ```bash
@@ -89,4 +89,3 @@ tags: fabric-extraction stub-for-name extra-tag
 ---
 test
 ```
-
