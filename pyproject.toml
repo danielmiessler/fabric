@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fabric"
-version = "0.2.0"
+version = "1.2.0"
 description = "Fabric - AI framework for human augmentation"
 authors = [
     "Daniel Miessler <https://github.com/danielmiessler>",
@@ -33,7 +33,6 @@ helpers = "^0.2.0"
 [tool.poetry.group.cli.dependencies]
 pyyaml = "^6.0.1"
 requests = "^2.31.0"
-pyperclip = "^1.8.2"
 python-socketio = "^5.11.0"
 websocket-client = "^1.7.0"
 flask = "^3.0.2"
