@@ -564,39 +564,36 @@ class Setup:
             model (str): The model to be set.
         """
         model = model.strip()
+        env = os.path.expanduser("~/.config/fabric/.env")
+
+        # Only proceed if the model is not empty
         if model:
-            # Write or update the DEFAULT_MODEL in env_file
-            allModels = self.claudeList + self.fullOllamaList + self.gptlist
-            if model not in allModels:
-                print(
-                    f"Error: {model} is not a valid model. Please run fabric --listmodels to see the available models.")
-                sys.exit()
+            if os.path.exists(env):
+                # Initialize a flag to track the presence of DEFAULT_MODEL
+                there = False
+                with open(env, "r") as f:
+                    lines = f.readlines()
 
-        # Compile regular expressions outside of the loop for efficiency
-
-        # Check for shell configuration files
-        if os.path.exists(os.path.expanduser("~/.config/fabric/.env")):
-            env = os.path.expanduser("~/.config/fabric/.env")
-            there = False
-            with open(env, "r") as f:
-                lines = f.readlines()
-                if "DEFAULT_MODEL" in lines:
-                    there = True
-            if there:
+                # Open the file again to write the changes
                 with open(env, "w") as f:
                     for line in lines:
-                        modified_line = line
-                        # Update existing fabric commands
-                        if "DEFAULT_MODEL" in line:
-                            modified_line = f'DEFAULT_MODEL={model}\n'
-                        f.write(modified_line)
+                        # Check each line to see if it contains DEFAULT_MODEL
+                        if "DEFAULT_MODEL=" in line:
+                            # Update the flag and the line with the new model
+                            there = True
+                            f.write(f'DEFAULT_MODEL={model}\n')
+                        else:
+                            # If the line does not contain DEFAULT_MODEL, write it unchanged
+                            f.write(line)
+
+                    # If DEFAULT_MODEL was not found in the file, add it
+                    if not there:
+                        f.write(f'DEFAULT_MODEL={model}\n')
+
+                print(
+                    f"Default model changed to {model}. Please restart your terminal to use it.")
             else:
-                with open(env, "a") as f:
-                    f.write(f'DEFAULT_MODEL={model}\n')
-            print(f"""Default model changed to {
-                  model}. Please restart your terminal to use it.""")
-        else:
-            print("No shell configuration file found.")
+                print("No shell configuration file found.")
 
     def patterns(self):
         """        Method to update patterns and exit the system.
