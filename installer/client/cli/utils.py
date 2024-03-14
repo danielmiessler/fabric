@@ -259,6 +259,8 @@ class Standalone:
                     with open(self.args.output, "w") as f:
                         f.write(response.choices[0].message.content)
         except Exception as e:
+            if getattr(e.__cause__, 'args', [''])[0] == "Illegal header value b'Bearer '":
+                print("Error: Cannot connect to the OpenAI API Server because the API key is not set. Please run fabric --setup and add a key.")
             if "All connection attempts failed" in str(e):
                 print(
                     "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
