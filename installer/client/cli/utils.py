@@ -36,11 +36,21 @@ class Standalone:
         # Expand the tilde to the full path
         env_file = os.path.expanduser(env_file)
         load_dotenv(env_file)
-        assert 'OPENAI_API_KEY' in os.environ, "Error: OPENAI_API_KEY not found in environment variables. Please run fabric --setup and add a key."
-        api_key = os.environ['OPENAI_API_KEY']
-        base_url = os.environ.get(
+        api_key = os.getenv('OPENAI_API_KEY')
+        base_url = os.getenv(
             'OPENAI_BASE_URL', 'https://api.openai.com/v1/')
-        self.client = OpenAI(api_key=api_key, base_url=base_url)
+        if 'OPENAI_API_KEY' not in os.environ and (base_url == 'https://api.openai.com/v1/' or "azure" in base_url):
+            print("Warning: OPENAI_API_KEY not found in environment variables. Please run fabric --setup and add a key.")
+        if "OPENAI_API_KEY" not in os.environ:
+            print("Error: OPENAI_API_KEY not found in environment variables.")
+            self.client = OpenAI()
+        else:
+            api_key = os.getenv('OPENAI_API_KEY')
+            base_url = os.getenv('OPENAI_BASE_URL')
+            if base_url:
+                self.client = OpenAI(api_key=api_key, base_url=base_url)
+            else:
+                self.client = OpenAI(api_key=api_key)
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
@@ -49,10 +59,7 @@ class Standalone:
         try:
             self.model = args.model
         except:
-            try:
-                self.model = os.environ["DEFAULT_MODEL"]
-            except:
-                self.model = 'gpt-4-turbo-preview'
+            self.model = os.getenv("DEFAULT_MODEL", 'gpt-4-turbo-preview')
         self.claude = False
         sorted_gpt_models, ollamaList, claudeList = self.fetch_available_models()
         self.local = self.model in ollamaList
@@ -81,7 +88,7 @@ class Standalone:
 
     async def claudeStream(self, system, user):
         from anthropic import AsyncAnthropic
-        self.claudeApiKey = os.environ["CLAUDE_API_KEY"]
+        self.claudeApiKey = os.getenv("CLAUDE_API_KEY")
         Streamingclient = AsyncAnthropic(api_key=self.claudeApiKey)
         async with Streamingclient.messages.stream(
             max_tokens=4096,
@@ -97,7 +104,7 @@ class Standalone:
 
     async def claudeChat(self, system, user, copy=False):
         from anthropic import Anthropic
-        self.claudeApiKey = os.environ["CLAUDE_API_KEY"]
+        self.claudeApiKey = os.getenv("CLAUDE_API_KEY")
         client = Anthropic(api_key=self.claudeApiKey)
         message = client.messages.create(
             max_tokens=4096,
@@ -429,11 +436,9 @@ class Setup:
         self.fullOllamaList = []
         self.claudeList = ['claude-3-opus-20240229']
         load_dotenv(self.env_file)
-        try:
-            openaiapikey = os.environ["OPENAI_API_KEY"]
-            self.openaiapi_key = openaiapikey
-        except:
-            pass
+        self.openaiapikey = os.getenv("OPENAI_API_KEY")
+        self.openai_base_url = os.getenv("OPENAI_BASE_URL")
+        
 
     def update_shconfigs(self):
         bootstrap_file = os.path.join(
@@ -474,7 +479,36 @@ class Setup:
                 for line in lines:
                     if "OPENAI_API_KEY" not in line:
                         f.write(line)
-                f.write(f"OPENAI_API_KEY={api_key}\n")
+                f.write(f'OPENAI_API_KEY="{api_key}"\n')
+
+    def api_base_url(self, api_base_url):
+        """        Set the OpenAI API base URL in the environment file.
+
+        Args:
+            api_base_url (str): The API base URL to be set.
+
+        Returns:
+            None
+
+        Raises:
+            OSError: If the environment file does not exist or cannot be accessed.
+        """
+        api_base_url = api_base_url.strip()
+        if not api_base_url:
+            api_base_url = "https://api.openai.com/v1/"
+        if os.path.exists(self.env_file) and api_base_url:
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "OPENAI_BASE_URL" not in line:
+                        f.write(line)
+                f.write(f'OPENAI_BASE_URL="{api_base_url}"')
+        elif api_base_url:
+            with open(self.env_file, "w") as f:
+                f.write(f'OPENAI_BASE_URL="{api_base_url}"')
+                
+                
 
     def claude_key(self, claude_key):
         """        Set the Claude API key in the environment file.
@@ -593,11 +627,16 @@ class Setup:
         apikey = input(
             "Please enter your OpenAI API key. If you do not have one or if you have already entered it, press enter.\n")
         self.api_key(apikey)
-        print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
-        claudekey = input()
+        apiBaseURL = input(
+            "Please enter the OpenAI API Base URL. If you want to use the default, press enter.\n")
+        apiBaseURL = apiBaseURL.strip()
+        if apiBaseURL:
+            self.api_base_url(apiBaseURL)
+        else:
+            self.api_base_url("https://api.openai.com/v1/")
+        claudekey = input("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         self.claude_key(claudekey)
-        print("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
-        youtubekey = input()
+        youtubekey = input("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
         self.youtube_key(youtubekey)
         self.patterns()
         self.update_shconfigs()
