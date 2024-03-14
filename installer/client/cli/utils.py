@@ -46,9 +46,9 @@ class Standalone:
         self.pattern = pattern
         self.args = args
         self.model = None
-        try:
+        if args.model:
             self.model = args.model
-        except:
+        else:
             try:
                 self.model = os.environ["DEFAULT_MODEL"]
             except:
@@ -278,8 +278,8 @@ class Standalone:
         gptlist = []
         fullOllamaList = []
         claudeList = ['claude-3-opus-20240229',
-                      'claude-3-sonnet-20240229', 
-                      'claude-3-haiku-20240307', 
+                      'claude-3-sonnet-20240229',
+                      'claude-3-haiku-20240307',
                       'claude-2.1']
         try:
             models = [model.id.strip()
