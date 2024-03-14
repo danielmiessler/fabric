@@ -26,7 +26,7 @@
 
 ## Navigation
 
-- [Introduction Video](#introduction-video)
+- [Introduction Videos](#introduction-videos)
 - [What and Why](#what-and-why)
 - [Philosophy](#philosophy)
   - [Breaking problems into components](#breaking-problems-into-components)
@@ -48,15 +48,18 @@
 <br />
 
 > [!NOTE]  
-> We are adding functionality to the project so often that you should update often as well. That means: `git pull; ./setup.sh; fabric --update` in the main directory, and then sourcing your shell files and/or restarting your terminal. So exciting!
+> We are adding functionality to the project so often that you should update often as well. That means: `git pull; pipx upgrade fabric; fabric --update; source ~/.zshrc (or ~/.bashrc)` in the main directory!
 
-**March 11, 2024** — We just added support for Claude, local models via Ollama, and a number of new Patterns. Be sure to update and check `fabric -h` for the latest!
+**March 13, 2024** — We just added `pipx` install support, which makes it way easier to install Fabric, support for Claude, local models via Ollama, and a number of new Patterns. Be sure to update and check `fabric -h` for the latest!
 
-## Introduction video
+## Introduction videos
 
 <div align="center">
 <a href="https://youtu.be/wPEyyigh10g">
-  <img width="972" alt="fabric_intro_video" src="https://github.com/danielmiessler/fabric/assets/50654/1eb1b9be-0bab-4c77-8ed2-ed265e8a3435">
+<img width="972" alt="fabric_intro_video" src="https://github.com/danielmiessler/fabric/assets/50654/1eb1b9be-0bab-4c77-8ed2-ed265e8a3435"></a>
+    <br /><br />
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=lEXd6TXPw7E target="_blank">
+ <img src="http://img.youtube.com/vi/lEXd6TXPw7E/mqdefault.jpg" alt="Watch the video" width="972" " />
 </a>
 </div>
 
@@ -148,40 +151,39 @@ git clone https://github.com/danielmiessler/fabric.git
 cd fabric
 ```
 
-4. Ensure the `setup.sh` script is executable. If you're not sure, you can make it executable by running the following command:
+4. Install pipx:
+
+macOS:
 
 ```bash
-chmod +x setup.sh
+brew install pipx
 ```
 
-5. Install poetry
-
-ref.: https://python-poetry.org/docs/#installing-with-the-official-installer
+Linux:
 
 ```bash
-curl -sSL https://install.python-poetry.org | python3 -
+sudo apt install pipx
 ```
 
-6. Run the `setup.sh`, which will do the following:
+Windows:
 
-- Installs python dependencies.
-- Creates aliases in your OS. It should update `~/.bashrc`, `/.zshrc`, and `~/.bash_profile` if they are present in your file system.
+Use WSL and follow the Linux instructions.
+
+5. Install fabric
 
 ```bash
-./setup.sh
+pipx install .
 ```
 
-7. Restart your shell to reload everything.
-
-8. Set your `OPENAI_API_KEY`.
+6. Run setup:
 
 ```bash
 fabric --setup
 ```
 
-You'll be asked to enter your OpenAI API key, which will be written to `~/.config/fabric/.env`. Patterns will then be downloaded from Github, which will take a few moments.
+7. Restart your shell to reload everything.
 
-9. Now you are up and running! You can test by pulling the help.
+8. Now you are up and running! You can test by running the help.
 
 ```bash
 # Making sure the paths are set up correctly
@@ -199,11 +201,38 @@ Once you have it all set up, here's how to use it.
    `fabric -h`
 
 ```bash
-fabric [-h] [--text TEXT] [--copy] [--agents {trip_planner,ApiKeys}]
+us the results in
+                        realtime. NOTE: You will not be able to pipe the
+                        output into another command.
+  --list, -l            List available patterns
+  --clear               Clears your persistent model choice so that you can
+                        once again use the --model flag
+  --update, -u          Update patterns. NOTE: This will revert the default
+                        model to gpt4-turbo. please run --changeDefaultModel
+                        to once again set default model
+  --pattern PATTERN, -p PATTERN
+                        The pattern (prompt) to use
+  --setup               Set up your fabric instance
+  --changeDefaultModel CHANGEDEFAULTMODEL
+                        Change the default model. For a list of available
+                        models, use the --listmodels flag.
+  --model MODEL, -m MODEL
+                        Select the model to use. NOTE: Will not work if you
+                        have set a default model. please use --clear to clear
+                        persistence before using this flag
+  --listmodels          List all available models
+  --remoteOllamaServer REMOTEOLLAMASERVER
+                        The URL of the remote ollamaserver to use. ONLY USE
+                        THIS if you are using a local ollama server in an non-
+                        deault location or port
+  --context, -c         Use Context file (context.md) to add context to your
+                        pattern
+age: fabric [-h] [--text TEXT] [--copy] [--agents {trip_planner,ApiKeys}]
               [--output [OUTPUT]] [--stream] [--list] [--clear] [--update]
               [--pattern PATTERN] [--setup]
               [--changeDefaultModel CHANGEDEFAULTMODEL] [--model MODEL]
-              [--listmodels] [--context]
+              [--listmodels] [--remoteOllamaServer REMOTEOLLAMASERVER]
+              [--context]
 
 An open source framework for augmenting humans using AI.
 
@@ -217,27 +246,7 @@ options:
                         cannot be used with any other flag.
   --output [OUTPUT], -o [OUTPUT]
                         Save the response to a file
-  --stream, -s          Use this option if you want to see the results in
-                        realtime. NOTE: You will not be able to pipe the
-                        output into another command.
-  --list, -l            List available patterns
-  --clear               Clears your persistent model choice so that you can
-                        once again use the --model flag
-  --update, -u          Update patterns
-  --pattern PATTERN, -p PATTERN
-                        The pattern (prompt) to use
-  --setup               Set up your fabric instance
-  --changeDefaultModel CHANGEDEFAULTMODEL
-                        Change the default model. Your choice will be saved in
-                        ~/.config/fabric/.env). For a list of available
-                        models, use the --listmodels flag.
-  --model MODEL, -m MODEL
-                        Select the model to use. NOTE: Will not work if you
-                        have set a default model. please use --clear to clear
-                        persistence before using this flag
-  --listmodels          List all available models
-  --context, -c         Use Context file (context.md) to add context to your
-                        pattern
+  --stream, -s          Use this option if you want to see
 ```
 
 #### Example commands
@@ -286,8 +295,6 @@ The wisdom of crowds for the win.
 <br />
 
 But we go beyond just providing Patterns. We provide code for you to build your very own Fabric server and personal AI infrastructure!
-
-To get started, just run the `./setup.sh` file and it'll set up the client, the API server, and the API server web interface. The output of the setup command will also tell you how to run the commands to start them.
 
 ## Structure
 
