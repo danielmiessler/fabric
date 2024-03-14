@@ -55,8 +55,8 @@ class Standalone:
                 self.model = 'gpt-4-turbo-preview'
         self.claude = False
         sorted_gpt_models, ollamaList, claudeList = self.fetch_available_models()
-        self.local = self.model.strip() in ollamaList
-        self.claude = self.model.strip() in claudeList
+        self.local = self.model in ollamaList
+        self.claude = self.model in claudeList
 
     async def localChat(self, messages, host=''):
         from ollama import AsyncClient
