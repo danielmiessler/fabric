@@ -54,6 +54,9 @@
 
 ## Introduction videos
 
+> [!NOTE]  
+> These videos use the `./setup.sh` install method, which is now replaced with the easier `pipx install .` method. Other than that everything else is still the same.
+
 <div align="center">
 <a href="https://youtu.be/wPEyyigh10g">
 <img width="972" alt="fabric_intro_video" src="https://github.com/danielmiessler/fabric/assets/50654/1eb1b9be-0bab-4c77-8ed2-ed265e8a3435"></a>
