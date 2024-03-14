@@ -282,8 +282,13 @@ class Standalone:
                       'claude-3-haiku-20240307', 
                       'claude-2.1']
         try:
-            models = [model.id.strip()
-                      for model in self.client.models.list().data]
+
+            if self.client.api_key:
+                models = [model.id.strip()
+                        for model in self.client.models.list().data]
+            else:
+                models = []
+
         except APIConnectionError as e:
             if getattr(e.__cause__, 'args', [''])[0] == "Illegal header value b'Bearer '":
                 print("Error: Cannot connect to the OpenAI API Server because the API key is not set. Please run fabric --setup and add a key.")
@@ -295,7 +300,7 @@ class Standalone:
         except Exception as e:
             print(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
             sys.exit()
-        if "/" in models[0] or "\\" in models[0]:
+        if len(models) > 0 and  ("/" in models[0] or "\\" in models[0]):
             # lmstudio returns full paths to models. Iterate and truncate everything before and including the last slash
             gptlist = [item[item.rfind(
                 "/") + 1:] if "/" in item else item[item.rfind("\\") + 1:] for item in models]
@@ -462,11 +467,11 @@ class Setup:
             OSError: If the environment file does not exist or cannot be accessed.
         """
         api_key = api_key.strip()
-        if not os.path.exists(self.env_file) and api_key:
+        if not os.path.exists(self.env_file):
             with open(self.env_file, "w") as f:
                 f.write(f"OPENAI_API_KEY={api_key}\n")
             print(f"OpenAI API key set to {api_key}")
-        elif api_key:
+        else:
             # erase the line OPENAI_API_KEY=key and write the new key
             with open(self.env_file, "r") as f:
                 lines = f.readlines()
