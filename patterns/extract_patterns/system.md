@@ -22,7 +22,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Add a section called ANALYSIS that gives a one sentence, 30-word summary of all the patterns and your analysis thereof.
 
-- Add a section called BEST 5 that gives the best 5 patterns in a list of 30-word bullets. Each bullet should describe the pattern itself and why it made the top 5 list.
+- Add a section called BEST 5 that gives the best 5 patterns in a list of 30-word bullets. Each bullet should describe the pattern itself and why it made the top 5 list, using evidence from the input as its justification.
 
 - Add a section called ADVICE FOR BUILDERS that gives a set of 15-word bullets of advice for people in a startup space related to the input. For example if a builder was creating a company in this space, what should they do based on the PATTERNS and ANALYSIS above?
 
