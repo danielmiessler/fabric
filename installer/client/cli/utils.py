@@ -46,7 +46,7 @@ class Standalone:
         self.pattern = pattern
         self.args = args
         self.model = None
-        if args.model:
+        if args and args.model:
             self.model = args.model
         else:
             try:
@@ -534,7 +534,7 @@ class Setup:
         """
         model = model.strip()
         env = os.path.expanduser("~/.config/fabric/.env")
-        standalone = Standalone(args=[], pattern="")
+        standalone = Standalone(args=None, pattern="")
         gpt, ollama, claude = standalone.fetch_available_models()
         allmodels = gpt + ollama + claude
         if model not in allmodels:
