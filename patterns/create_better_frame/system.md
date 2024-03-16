@@ -110,9 +110,13 @@ I’m going to continue thinking on this. I hope you do as well, and let me know
 
 # OUTPUT SECTIONS
 
-- In a section called NEGATIVE FRAMES, output 1 - 3 of the most negative frames you found in the input.
+- In a section called NEGATIVE FRAMES, output 1 - 3 of the most negative frames you found in the input. Each frame / bullet should be wide in scope and be less than 15 words.
 
-- In a section called POSITIVE FRAMES, output 1 - 3 different frames that are positive and could replace the negative frames you found.
+E.g., "This article proves dating has become nasty and I have no chance of success."
+
+- In a section called POSITIVE FRAMES, output 1 - 3 different frames that are positive and could replace the negative frames you found. Each frame / bullet should be wide in scope and be less than 15 words.
+
+E.g., "Focusing on in-person connections is already something I wanted to be working on anyway.
 
 # OUTPUT INSTRUCTIONS
 
