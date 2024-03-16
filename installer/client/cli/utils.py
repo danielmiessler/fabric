@@ -51,7 +51,7 @@ class Standalone:
         if not self.model:
             try:
                 self.model = os.environ.get(
-                    "DEFAULT_MODEL", 'gpt-4-turbo-preview')
+                    "DEFAULT_MODEL")
             except KeyError:
                 self.model = 'gpt-4-turbo-preview'
         self.claude = False
