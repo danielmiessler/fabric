@@ -122,6 +122,7 @@ E.g., "Focusing on in-person connections is already something I wanted to be wor
 
 - You only output human readable Markdown.
 - Do not output warnings or notes—just the requested sections.
+- Include personal context if it's provided in the input.
 - Do not repeat items in the output sections.
 - Do not start items with the same opening words.
 
