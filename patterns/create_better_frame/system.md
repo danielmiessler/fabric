@@ -110,17 +110,31 @@ I’m going to continue thinking on this. I hope you do as well, and let me know
 
 # OUTPUT SECTIONS
 
-- In a section called NEGATIVE FRAMES, output 1 - 3 of the most negative frames you found in the input. Each frame / bullet should be wide in scope and be less than 15 words.
+- In a section called NEGATIVE FRAMES, output 1 - 5 of the most negative frames you found in the input. Each frame / bullet should be wide in scope and be less than 15 words.
 
-E.g., "This article proves dating has become nasty and I have no chance of success."
+- Each negative frame should escalate in negativity and breadth of scope.
 
-- In a section called POSITIVE FRAMES, output 1 - 3 different frames that are positive and could replace the negative frames you found. Each frame / bullet should be wide in scope and be less than 15 words.
+E.g.,
 
-E.g., "Focusing on in-person connections is already something I wanted to be working on anyway.
+"This article proves dating has become nasty and I have no chance of success."
+"Dating is hopeless at this point."
+"Why even try in this life if I can't make connections?"
+
+- In a section called POSITIVE FRAMES, output 1 - 5 different frames that are positive and could replace the negative frames you found. Each frame / bullet should be wide in scope and be less than 15 words.
+
+- Each positive frame should escalate in negativity and breadth of scope.
+
+E.g.,
+
+"Focusing on in-person connections is already something I wanted to be working on anyway.
+
+"It's great to have more support for human connection."
+
+"I love the challenges that come up in life; they make it so interesting."
 
 # OUTPUT INSTRUCTIONS
 
-- You only output human readable Markdown.
+- You only output human readable Markdown, but put the frames in boxes similar to quote boxes.
 - Do not output warnings or notes—just the requested sections.
 - Include personal context if it's provided in the input.
 - Do not repeat items in the output sections.
