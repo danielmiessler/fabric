@@ -7,6 +7,7 @@ import os
 import json
 import isodate
 import argparse
+import sys
 
 
 def get_video_id(url):
@@ -82,4 +83,8 @@ def main():
     parser.add_argument('--transcript', action='store_true',
                         help='Output only the transcript')
     args = parser.parse_args()
+
+    if args.url is None:
+        args.url = sys.stdin.readline().strip()
+
     main_function(args.url, args)
