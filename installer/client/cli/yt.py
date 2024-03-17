@@ -18,34 +18,43 @@ def get_video_id(url):
 
 
 def get_comments(youtube, video_id):
-    # Fetch comments for the video
     comments = []
+
     try:
-        response = youtube.commentThreads().list(
-            part="snippet",
+        # Fetch top-level comments
+        request = youtube.commentThreads().list(
+            part="snippet,replies",
             videoId=video_id,
             textFormat="plainText",
             maxResults=100  # Adjust based on needs
-        ).execute()
+        )
 
-        while response:
+        while request:
+            response = request.execute()
             for item in response['items']:
-                comment = item['snippet']['topLevelComment']['snippet']['textDisplay']
-                comments.append(comment)
-
+                # Top-level comment
+                topLevelComment = item['snippet']['topLevelComment']['snippet']['textDisplay']
+                comments.append(topLevelComment)
+                
+                # Check if there are replies in the thread
+                if 'replies' in item:
+                    for reply in item['replies']['comments']:
+                        replyText = reply['snippet']['textDisplay']
+                        # Add incremental spacing and a dash for replies
+                        comments.append("    - " + replyText)
+            
+            # Prepare the next page of comments, if available
             if 'nextPageToken' in response:
-                response = youtube.commentThreads().list(
-                    part="snippet",
-                    videoId=video_id,
-                    textFormat="plainText",
-                    pageToken=response['nextPageToken'],
-                    maxResults=100  # Adjust based on needs
-                ).execute()
+                request = youtube.commentThreads().list_next(
+                    previous_request=request, previous_response=response)
             else:
-                break
+                request = None
+
     except HttpError as e:
         print(f"Failed to fetch comments: {e}")
+
     return comments
+
 
 
 def main_function(url, options):
