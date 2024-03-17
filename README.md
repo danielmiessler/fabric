@@ -271,7 +271,7 @@ pbpaste | fabric --stream --pattern analyze_claims
 3. Run the `extract_wisdom` Pattern with the `--stream` option to get immediate and streaming results from any Youtube video (much like in the original introduction video).
 
 ```bash
-yt https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --pattern extract_wisdom
+yt --transcript https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --pattern extract_wisdom
 ```
 
 4. **new** All of the patterns have been added as aliases to your bash (or zsh) config file
