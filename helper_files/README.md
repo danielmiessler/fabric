@@ -4,7 +4,7 @@ These are helper tools to work with Fabric. Examples include things like getting
 
 ## yt (YouTube)
 
-`yt` is a command that uses the YouTube API to pull transcripts, get video duration, and other functions. It's primary function is to get a transcript from a video that can then be stitched (piped) into other Fabric Patterns.
+`yt` is a command that uses the YouTube API to pull transcripts, pull user comments, get video duration, and other functions. It's primary function is to get a transcript from a video that can then be stitched (piped) into other Fabric Patterns.
 
 ```bash
 usage: yt [-h] [--duration] [--transcript] [url]
@@ -15,9 +15,10 @@ positional arguments:
   url           YouTube video URL
 
 options:
-  -h, --help    show this help message and exit
+  -h, --help    Show this help message and exit
   --duration    Output only the duration
   --transcript  Output only the transcript
+  --comments    Output only the user comments 
 ```
 
 ## ts (Audio transcriptions)
@@ -49,7 +50,7 @@ positional arguments:
 
 options:
   -h, --help  show this help message and exit
-
+````
 ## save
 
 `save` is a "tee-like" utility to pipeline saving of content, while keeping the output stream intact. Can optionally generate "frontmatter" for PKM utilities like Obsidian via the
