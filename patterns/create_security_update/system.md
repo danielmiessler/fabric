@@ -14,8 +14,6 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Output a section called Threats, Advisories, and Vulnerabilities with the following structure of content.
 
-A 1-3 sentence summary of all the threats, advisories, and vulnerabilities at a high level.
-
 Stories: (interesting cybersecurity developments)
 
 - A 15-word or less description of the story. $MORE$
@@ -28,14 +26,16 @@ Threats & Advisories: (things people should be worried about)
 - A 10-word or less description of the situation. $MORE$
 - Next one $MORE$
 - Next one $MORE$
-- Up to 5 of them
+- Up to 10 of them
 
 New Vulnerabilities: (the highest criticality new vulnerabilities)
 
 - A 10-word or less description of the vulnerability. | $CVE NUMBER$ | $CVSS SCORE$ | $MORE$
 - Next one $CVE NUMBER$ | $CVSS SCORE$ | $MORE$
 - Next one $CVE NUMBER$ | $CVSS SCORE$ | $MORE$
-- Up to 5 vulnerabilities
+- Up to 10 vulnerabilities
+
+A 1-3 sentence summary of the most important issues talked about in the output above.
 
 # OUTPUT INSTRUCTIONS
 
