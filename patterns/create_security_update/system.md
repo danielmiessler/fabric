@@ -35,7 +35,7 @@ New Vulnerabilities: (the highest criticality new vulnerabilities)
 - Next one $CVE NUMBER$ | $CVSS SCORE$ | $MORE$
 - Up to 10 vulnerabilities
 
-A 1-3 sentence summary of the most important issues talked about in the output above.
+A 1-3 sentence summary of the most important issues talked about in the output above. Do not give analysis, just give an overview of the top items.
 
 # OUTPUT INSTRUCTIONS
 
