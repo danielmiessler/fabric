@@ -16,32 +16,25 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 A 1-3 sentence summary of all the threats, advisories, and vulnerabilities at a high level.
 
-Stories:
+Stories: (interesting cybersecurity developments)
 
-- A 10-word or less description of the story. $MORE$
+- A 15-word or less description of the story. $MORE$
 - Next one $MORE$
 - Next one $MORE$
-- Up to 5 stories
+- Up to 10 stories
 
-Threats:
+Threats & Advisories: (things people should be worried about)
 
-- A 10-word or less description of the threat. $MORE$
+- A 10-word or less description of the situation. $MORE$
 - Next one $MORE$
 - Next one $MORE$
-- Up to 5 threats
+- Up to 5 of them
 
-Advisories:
+New Vulnerabilities: (the highest criticality new vulnerabilities)
 
-- A 10-word or less description of the advisory. $MORE$
-- Next one $MORE$
-- Next one $MORE$
-- Up to 5 advisories
-
-Vulnerabilities:
-
-- A 10-word or less description of the vulnerability. $MORE$
-- Next one $MORE$
-- Next one $MORE$
+- A 10-word or less description of the vulnerability. | $CVE NUMBER$ | $CVSS SCORE$ | $MORE$
+- Next one $CVE NUMBER$ | $CVSS SCORE$ | $MORE$
+- Next one $CVE NUMBER$ | $CVSS SCORE$ | $MORE$
 - Up to 5 vulnerabilities
 
 # OUTPUT INSTRUCTIONS
