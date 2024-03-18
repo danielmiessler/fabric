@@ -477,7 +477,7 @@ The content features a conversation between two individuals discussing various t
 10. Nietzsche's walks
 ```
 
-## Creating Custom Patterns
+## Custom Patterns
 
 You can also use Custom Patterns with Fabric, meaning Patterns you keep locally and don't upload to Fabric.
 
