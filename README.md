@@ -47,14 +47,14 @@
 
 <br />
 
-> [!NOTE]  
+> [!NOTE]
 > We are adding functionality to the project so often that you should update often as well. That means: `git pull; pipx upgrade fabric; fabric --update; source ~/.zshrc (or ~/.bashrc)` in the main directory!
 
 **March 13, 2024** — We just added `pipx` install support, which makes it way easier to install Fabric, support for Claude, local models via Ollama, and a number of new Patterns. Be sure to update and check `fabric -h` for the latest!
 
 ## Introduction videos
 
-> [!NOTE]  
+> [!NOTE]
 > These videos use the `./setup.sh` install method, which is now replaced with the easier `pipx install .` method. Other than that everything else is still the same.
 
 <div align="center">
@@ -193,7 +193,7 @@ fabric --setup
 fabric --help
 ```
 
-> [!NOTE]  
+> [!NOTE]
 > If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in distinct terminal windows.
 
 ### Using the `fabric` client
@@ -268,13 +268,19 @@ pbpaste | fabric --pattern summarize
 pbpaste | fabric --stream --pattern analyze_claims
 ```
 
-3. **new** All of the patterns have been added as aliases to your bash (or zsh) config file
+3. Run the `extract_wisdom` Pattern with the `--stream` option to get immediate and streaming results from any Youtube video (much like in the original introduction video).
+
+```bash
+yt --transcript https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --pattern extract_wisdom
+```
+
+4. **new** All of the patterns have been added as aliases to your bash (or zsh) config file
 
 ```bash
 pbpaste | analyze_claims --stream
 ```
 
-> [!NOTE]  
+> [!NOTE]
 > More examples coming in the next few days, including a demo video!
 
 ### Just use the Patterns
@@ -468,7 +474,7 @@ The content features a conversation between two individuals discussing various t
 
 ## Meta
 
-> [!NOTE]  
+> [!NOTE]
 > Special thanks to the following people for their inspiration and contributions!
 
 - _Caleb Sima_ for pushing me over the edge of whether to make this a public project or not.
