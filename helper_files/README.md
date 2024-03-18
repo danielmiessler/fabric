@@ -89,3 +89,26 @@ tags: fabric-extraction stub-for-name extra-tag
 ---
 test
 ```
+
+## ws (Web Scraper)
+
+`ws` is a command that allows users to scrape text from specific HTML elements on a webpage. It offers flexibility in selecting which elements to scrape and how to post-process the extracted content. This tool can be invaluable for data extraction and automation tasks, fitting seamlessly into a range of workflows.
+
+```bash
+usage: ws [-u URL] [-e ELEMENT] [-p PROCESS] [-d]
+
+ws (web scraper) extracts text from specified elements within the body of a given webpage, with options for post-processing actions, such as decomposing or extracting specific tags. It is based on beautifulsoup. 
+
+options:
+  -u, --url       URL of the webpage to scrape
+  -e, --element   Comma-separated list of elements to match within the body. Example: "p,code"
+  -p, --process   Comma-separated list of post-process actions by tag and action. Example: "p:decompose=script, code:extract=span"
+  -d, --debug     Enable debug mode to print matched element names, useful for deciding what elements to match and process
+  -h, --help      Show this help message and exit
+
+Examples:
+  Scrape paragraphs and code snippets: ws --url "https://example.com" --element "p,code"
+  Remove scripts from divs, extract spans from paragraphs: ws --url "https://example.com" --element "div,p" --process "div:decompose=script, p:extract=span"
+```
+
+This tool is designed to be highly configurable, allowing users to specify which elements to extract and how to modify the extracted content for further processing. The debug mode prints what element matches come from making it easier to refine selections.
