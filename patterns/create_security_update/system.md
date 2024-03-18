@@ -40,6 +40,7 @@ New Vulnerabilities: (the highest criticality new vulnerabilities)
 # OUTPUT INSTRUCTIONS
 
 - Each $MORE$ item above should be replaced with a MORE link like so: <a href="https://www.example.com">MORE</a> with the best link for that item from the input.
+- For sections like $CVE NUMBER$ and $CVSS SCORE$, if they aren't included in the input, don't output anything, and remove the extra | symbol.
 - Do not output warnings or notes—just the requested sections.
 - Do not repeat items in the output sections.
 - Do not start items with the same opening words.
