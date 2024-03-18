@@ -41,6 +41,7 @@ A 1-3 sentence summary of the most important issues talked about in the output a
 
 - Each $MORE$ item above should be replaced with a MORE link like so: <a href="https://www.example.com">MORE</a> with the best link for that item from the input.
 - For sections like $CVE NUMBER$ and $CVSS SCORE$, if they aren't included in the input, don't output anything, and remove the extra | symbol.
+- Do not create fake links for the $MORE$ links. If you can't create a full URL just link to a placeholder or the top level domain.
 - Do not output warnings or notes—just the requested sections.
 - Do not repeat items in the output sections.
 - Do not start items with the same opening words.
