@@ -88,7 +88,7 @@ END EXAMPLE CHART
 
 - Output all sections above.
 
-- For the chart, use the actual scores to fill in the chart.
+- For the chart, use the actual scores to fill in the chart, and ensure the number associated with the score is placed on the right place on the chart., e.g., in the EXAMPLE CHART above.
 
 - For the findings and other analysis sections, write at the 9th-grade reading level. This means using short sentences and simple words/concepts to explain everything.
 
