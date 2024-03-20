@@ -96,6 +96,8 @@ A final 25-word summary of the paper, its findings, and what we should do about 
 
 - Output all sections above.
 
+- Ensure the scoring looks closely at the reproducibility and transparency of the methodology, and that it doesn't give a pass to papers that don't provide the data or methodology for safety or other reasons.
+
 - For the chart, use the actual scores to fill in the chart, and ensure the number associated with the score is placed on the right place on the chart., e.g., here is the chart for 2 Novelty, 8 Rigor, and 3 Empiricism:
 
 Known         [-2--------]    Novel
