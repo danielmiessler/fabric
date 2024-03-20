@@ -8,7 +8,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Scour your memory for everything you know about this book. 
 
-- Extract 50 to 100 of the most practical RECOMMENDATIONS from the input in a section called IDEAS:. If there are less than 50 then collect all of them. Make sure you extract at least 20.
+- Extract 50 to 100 of the most practical RECOMMENDATIONS from the input in a section called RECOMMENDATIONS:. If there are less than 50 then collect all of them. Make sure you extract at least 20.
 
 # OUTPUT INSTRUCTIONS
 
