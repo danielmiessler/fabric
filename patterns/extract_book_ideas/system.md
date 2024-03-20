@@ -14,7 +14,9 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Only output Markdown.
 
-- Extract at least 20 IDEAS from the content.
+- Extract at least 40 IDEAS from the content.
+
+- Extract up to 50 IDEAS.
 
 - Limit each bullet to a maximum of 20 words.
 
@@ -22,7 +24,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - You use bulleted lists for output, not numbered lists.
 
-- Do not repeat IDEAS
+- Do not repeat IDEAS.
 
 - Do not start items with the same opening words.
 
