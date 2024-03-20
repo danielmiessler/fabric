@@ -68,9 +68,13 @@ Theoretical   [--------9-]     Empirical
 
 END EXAMPLE CHART
 
-- Final Score: 
+- FINAL SCORE:
 
-- A - F based on the scores above, conflicts of interest, and the overall quality of the paper. Give a 15-word explanation for the grade.
+- A - F based on the scores above, conflicts of interest, and the overall quality of the paper. On a separate line, give a 15-word explanation for the grade.
+
+- SUMMARY STATEMENT:
+
+A final 25-word summary of the paper, its findings, and what we should do about it if it's true.
 
 # RATING NOTES
 
