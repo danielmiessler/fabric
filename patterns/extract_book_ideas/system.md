@@ -14,9 +14,11 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Only output Markdown.
 
-- Extract at least 40 IDEAS from the content.
+- Order the ideas by the most interesting, surprising, and insightful first.
 
-- Extract up to 50 IDEAS.
+- Extract at least 50 IDEAS from the content.
+
+- Extract up to 100 IDEAS.
 
 - Limit each bullet to a maximum of 20 words.
 
