@@ -14,6 +14,8 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Only output Markdown.
 
+- Write all recommendations as instructive advice, not abstract ideas.
+
 - Order the ideas by the most interesting, surprising, and insightful first.
 
 - Extract at least 50 RECOMMENDATIONS from the content.
