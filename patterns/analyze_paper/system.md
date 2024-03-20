@@ -42,13 +42,13 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Rigor: 1 - 10 Rating, followed by a 15 word explanation for the rating.
 
-- Rating Chart: Create a 10 x 10 chart (10 spots vertically, 10 spots horizontally) created with Markdown, with Novelty on the X axis and Rigor on the Y axis, with the score for the paper indicated by an X.
+- Rating Chart: Create a 10 x 10 chart (10 spots vertically, 10 spots horizontally) created with ASCII art, with Novelty on the X axis and Rigor on the Y axis, with the score for the paper indicated by an X that corresponds to the location on both axis.
 
 - Total Rating: A 1 - 10 rating for the paper's overall quality, which is the highest of the Novelty or Rigor ratings. 
 
 # OUTPUT INSTRUCTIONS
 
-- You only output Markdown.
+- Output all sections.
 - Create the output using the formatting above.
 - In the markdown, don't use formatting like bold or italics. Make the output maximially readable in plain text.
 - Do not output warnings or notes—just the requested sections.
