@@ -64,7 +64,7 @@ EXAMPLE CHART for 7, 5, 9 SCORES (fill in the actual scores):
 
 Known         [------7---]    Novel
 Weak          [----5-----]    Rigorous
-Theoretical   [-------9-]     Empirical
+Theoretical   [--------9-]     Empirical
 
 END EXAMPLE CHART
 
@@ -92,8 +92,7 @@ END EXAMPLE CHART
 
 Known         [-2--------]    Novel
 Weak          [-------8--]    Rigorous
-Theoretical   [--3------]     Empirical
-
+Theoretical   [--3-------]     Empirical
 
 - For the findings and other analysis sections, write at the 9th-grade reading level. This means using short sentences and simple words/concepts to explain everything.
 
