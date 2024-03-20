@@ -44,7 +44,25 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Rating Chart: Create a 10 x 10 chart (10 spots vertically, 10 spots horizontally) created with ASCII art, with Novelty on the X axis going left to right, and Rigor on the Y axis going low to high, with the score for the paper indicated by an X that corresponds to the location on both axis.
 
-- Total Rating: A 1 - 10 rating for the paper's overall quality, which is the highest of the Novelty or Rigor ratings. 
+EMPTY CHART
+
+  Novelty
+    ^
+9   |-----------------------------------------
+8   |-----------------------------------------
+7   |-----------------------------------------
+6   |-----------------------------------------
+5   |-----------------------------------------
+4   |-----------------------------------------
+3   |-----------------------------------------
+2   |-----------------------------------------
+1   |-----------------------------------------
+0   +----------------------------------------> Rigor
+     0   1   2   3   4   5   6   7   8   9
+
+EMPTY CHART END
+
+- Total Rating: A 1 - 10 rating for the paper's overall quality, which is the highest of the Novelty or Rigor ratings. Map it onto the chart using an X.
 
 # OUTPUT INSTRUCTIONS
 
