@@ -25,11 +25,19 @@ Take a deep breath and think step by step about how to best accomplish this goal
 - Extract the study quality by evaluating the following items in a section called STUDY QUALITY that has the following sub-sections:
 
 - Study Design: (give a 15 word description, including the pertinent data and statistics.)
+
 - Sample Size: (give a 15 word description, including the pertinent data and statistics.)
+
 - Confidence Intervals (give a 15 word description, including the pertinent data and statistics.)
+
 - P-value (give a 15 word description, including the pertinent data and statistics.)
+
 - Effect Size (give a 15 word description, including the pertinent data and statistics.)
+
 - Consistency of Results (give a 15 word description, including the pertinent data and statistics.)
+
+- Methodology Transparency (give a 15 word description, including the pertinent data and statistics.)
+
 - Data Analysis Method (give a 15 word description, including the pertinent data and statistics.)
 
 - Discuss any Conflicts of Interest in a section called CONFLICTS OF INTEREST. Rate the conflicts of interest as NONE DETECTED, LOW, MEDIUM, HIGH, or CRITICAL.
@@ -64,11 +72,22 @@ EMPTY CHART END
 
 - Total Rating: A 1 - 10 rating for the paper's overall quality, which is the highest of the Novelty or Rigor ratings. Map it onto the chart using an X.
 
+# RATING NOTES
+
+- If the paper makes claims and presents stats but doesn't show how it arrived at these stats, then the Methodology Transparency would be low, and the RIGOR score should be lowered as well.
+
+- The stronger the claims the stronger the evidence needs to be, as well as the transparency into the methodology. If the paper makes strong claims, but the evidence or transparency is weak, then the RIGOR score should be lowered.
+
 # OUTPUT INSTRUCTIONS
 
 - Output all sections.
+
+- Ensure there's a blank line between each bullet of output.
+
 - Create the output using the formatting above.
+
 - In the markdown, don't use formatting like bold or italics. Make the output maximially readable in plain text.
+
 - Do not output warnings or notes—just the requested sections.
 
 # INPUT:
