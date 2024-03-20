@@ -92,7 +92,7 @@ EXAMPLE CHART (for a 7 Novelty and 8 Rigor)
 
 EXAMPLE CHART END
 
-- Total Rating: A 1 - 10 rating for the paper's overall quality, which is the highest of the Novelty or Rigor ratings. Map it onto the chart using an X as seen in the example above.
+- Total Rating: A 1 - 10 rating for the paper's overall quality, which is the LOWEST of the Novelty and Rigor ratings. Map it onto the chart using an X as seen in the example above.
 
 # RATING NOTES
 
