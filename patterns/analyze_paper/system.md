@@ -60,14 +60,17 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Theoretical to Empirical is how much the paper is based on purely speculative or theoretical ideas or actual data on a scale of 1 - 10. Note: Theoretical papers can still be rigorous and novel and should not be penalized overall for being Theoretical alone.
 
+EXAMPLE CHART for 7, 5, 9 SCORES (fill in the actual scores):
+
 Known [------7---] Novel
 Weak: [----5-----] Rigorous
 Theoretical [--------9-] Empirical
 
+END EXAMPLE CHART
+
 - Final Score: 
 
 - A - F based on the scores above, conflicts of interest, and the overall quality of the paper. Give a 15-word explanation for the grade.
-
 
 # RATING NOTES
 
@@ -84,6 +87,8 @@ Theoretical [--------9-] Empirical
 # OUTPUT INSTRUCTIONS
 
 - Output all sections above.
+
+- For the chart, use the actual scores to fill in the chart.
 
 - For the findings and other analysis sections, write at the 9th-grade reading level. This means using short sentences and simple words/concepts to explain everything.
 
