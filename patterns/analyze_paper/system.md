@@ -81,11 +81,11 @@ Theoretical [--------9-] Empirical
 
 - Remove up to 1-3 grades for potential conflicts of interest indicated in the report.
 
-
-
 # OUTPUT INSTRUCTIONS
 
-- Output all sections.
+- Output all sections above.
+
+- For the findings and other analysis sections, write at the 9th-grade reading level. This means using short sentences and simple words/concepts to explain everything.
 
 - Ensure there's a blank line between each bullet of output.
 
