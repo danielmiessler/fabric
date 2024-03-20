@@ -22,21 +22,23 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Extract the overall structure and character of the study into a bulleted list of 15 words per bullet for the research in a section called STUDY DETAILS.
 
-- Extract the study quality by evaluating the following items in a section called STUDY QUALITY that has the following sub-sections:
+- Extract the study quality by evaluating the following items in a section called STUDY QUALITY that has the following bulleted sub-sections:
 
-- Study Design: (give a 15 word description, including the pertinent data and statistics.)
+- STUDY DESIGN: (give a 15 word description, including the pertinent data and statistics.)
 
-- Sample Size: (give a 15 word description, including the pertinent data and statistics.)
+- SAMPLE SIZE: (give a 15 word description, including the pertinent data and statistics.)
 
-- Confidence Intervals (give a 15 word description, including the pertinent data and statistics.)
+- CONFIDENCE INTERVALS (give a 15 word description, including the pertinent data and statistics.)
 
-- P-value (give a 15 word description, including the pertinent data and statistics.)
+- P-VALUE (give a 15 word description, including the pertinent data and statistics.)
 
-- Effect Size (give a 15 word description, including the pertinent data and statistics.)
+- EFFECT SIZE (give a 15 word description, including the pertinent data and statistics.)
 
-- Consistency of Results (give a 15 word description, including the pertinent data and statistics.)
+- CONSISTENCE OF RESULTS (give a 15 word description, including the pertinent data and statistics.)
 
-- Methodology Transparency (give a 15 word description, including the pertinent data and statistics.)
+- METHODOLOGY TRANSPARENCY (give a 15 word description of the methodology quality and documentation.)
+
+- STUDY REPRODUCIBILITY (give a 15 word description, including how to fully reproduce the study.)
 
 - Data Analysis Method (give a 15 word description, including the pertinent data and statistics.)
 
@@ -85,6 +87,8 @@ A final 25-word summary of the paper, its findings, and what we should do about 
 - A paper could get an A if it's theoretical but everything else would have to be perfect.
 
 - The stronger the claims the stronger the evidence needs to be, as well as the transparency into the methodology. If the paper makes strong claims, but the evidence or transparency is weak, then the RIGOR score should be lowered.
+
+- Remove up to 2 grades for papers where compelling data is provided but it's not clear what exact tests were run and/or how to reproduce those tests.
 
 - Remove up to 1-3 grades for potential conflicts of interest indicated in the report.
 
