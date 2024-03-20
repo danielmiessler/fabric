@@ -64,13 +64,24 @@ Known [------7---] Novel
 Weak: [----5-----] Rigorous
 Theoretical [--------9-] Empirical
 
-- Total Rating: A 1 - 10 rating for the paper's overall quality, which is the LOWEST of the Novelty and Rigor ratings. 
+- Final Score: 
+
+- A - F based on the scores above, conflicts of interest, and the overall quality of the paper. Give a 15-word explanation for the grade.
+
 
 # RATING NOTES
 
 - If the paper makes claims and presents stats but doesn't show how it arrived at these stats, then the Methodology Transparency would be low, and the RIGOR score should be lowered as well.
 
+- An A would be a paper that is novel, rigorous, empirical, and has no conflicts of interest.
+
+- A paper could get an A if it's theoretical but everything else would have to be perfect.
+
 - The stronger the claims the stronger the evidence needs to be, as well as the transparency into the methodology. If the paper makes strong claims, but the evidence or transparency is weak, then the RIGOR score should be lowered.
+
+- Remove up to 1-3 grades for potential conflicts of interest indicated in the report.
+
+
 
 # OUTPUT INSTRUCTIONS
 
