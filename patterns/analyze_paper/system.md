@@ -88,7 +88,11 @@ A final 25-word summary of the paper, its findings, and what we should do about 
 
 - The stronger the claims the stronger the evidence needs to be, as well as the transparency into the methodology. If the paper makes strong claims, but the evidence or transparency is weak, then the RIGOR score should be lowered.
 
-- Remove up to 2 grades for papers where compelling data is provided but it's not clear what exact tests were run and/or how to reproduce those tests. Do not relax this requirement for papers that claim they couldn't provide the data for safety or other good-sounding reasons. Make the grade deductions anyway and note that in your reasoning and explanation for lower scores.
+- Remove at least 1 grade (and up to 2) for papers where compelling data is provided but it's not clear what exact tests were run and/or how to reproduce those tests. 
+
+- Do not relax this transparency requirement for papers that claim security reasons.
+
+- If a paper does not clearly articulate its methodology in a way that's replicable, lower the RIGOR and overall score significantly.
 
 - Remove up to 1-3 grades for potential conflicts of interest indicated in the report.
 
