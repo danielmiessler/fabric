@@ -50,47 +50,21 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Rigor: 1 - 10 Rating, followed by a 15 word explanation for the rating.
 
-- Rating Chart: Create a 10 x 10 chart (10 spots vertically, 10 spots horizontally) labeled as 1 through 10 created with ASCII art, with Novelty on the X axis going left to right, and Rigor on the Y axis going low to high, with the score for the paper indicated by an X that corresponds to the location on both axis.
+- Empiricism: 1 - 10 Rating, followed by a 15 word explanation for the rating.
 
-- Ensure the rating is placed on the chart in the correct location. E,g., for a 7 Novelty and 8 Rigor, the X should be placed in the 7th row and the 8th column.
+- Rating Chart: Create a chart like the one below that shows how the paper rates on all these dimensions. 
 
-EMPTY CHART
+- Known to Novel is how new and interesting and surprising the paper is on a scale of 1 - 10.
 
-  Novelty
-    ^
-10  |---------------------------------------
-9   |---------------------------------------
-8   |---------------------------------------
-7   |---------------------------------------
-6   |---------------------------------------
-5   |---------------------------------------
-4   |---------------------------------------
-3   |---------------------------------------
-2   |---------------------------------------
-1   +--------------------------------------> Rigor
-     1   2   3   4   5   6   7   8   9   10
+- Weak to Rigorous is how well the paper is supported by careful science, transparency, and methodology on a scale of 1 - 10.
 
-EMPTY CHART END
+- Theoretical to Empirical is how much the paper is based on purely speculative or theoretical ideas or actual data on a scale of 1 - 10. Note: Theoretical papers can still be rigorous and novel and should not be penalized overall for being Theoretical alone.
 
-EXAMPLE CHART (for a 7 Novelty and 8 Rigor)
-  
-  Novelty
-    ^
-10  |---------------------------------------
-9   |---------------------------------------
-8   |---------------------------------------
-7   |----------------------------X----------
-6   |---------------------------------------
-5   |---------------------------------------
-4   |---------------------------------------
-3   |---------------------------------------
-2   |---------------------------------------
-1   +--------------------------------------> Rigor
-     1   2   3   4   5   6   7   8   9   10
+Known [------7---] Novel
+Weak: [----5-----] Rigorous
+Theoretical [--------9-] Empirical
 
-EXAMPLE CHART END
-
-- Total Rating: A 1 - 10 rating for the paper's overall quality, which is the LOWEST of the Novelty and Rigor ratings. Map it onto the chart using an X as seen in the example above.
+- Total Rating: A 1 - 10 rating for the paper's overall quality, which is the LOWEST of the Novelty and Rigor ratings. 
 
 # RATING NOTES
 
