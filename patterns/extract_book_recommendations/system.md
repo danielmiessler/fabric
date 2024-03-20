@@ -24,11 +24,13 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Do not give warnings or notes; only output the requested sections.
 
+- Do not repeat IDEAS.
+
+- Vary the wording of the IDEAS.
+
+- Don't repeat the same IDEAS over and over, even if you're using different wording.
+
 - You use bulleted lists for output, not numbered lists.
-
-- Do not repeat RECOMMENDATIONS.
-
-- Do not start items with the same opening words.
 
 - Ensure you follow ALL these instructions when creating your output.
 
