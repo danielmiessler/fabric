@@ -50,7 +50,7 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Rigor: 1 - 10 Rating, followed by a 15 word explanation for the rating.
 
-- Rating Chart: Create a 10 x 10 chart (10 spots vertically, 10 spots horizontally) created with ASCII art, with Novelty on the X axis going left to right, and Rigor on the Y axis going low to high, with the score for the paper indicated by an X that corresponds to the location on both axis.
+- Rating Chart: Create a 10 x 10 chart (10 spots vertically, 10 spots horizontally) labeled as 1 through 10 created with ASCII art, with Novelty on the X axis going left to right, and Rigor on the Y axis going low to high, with the score for the paper indicated by an X that corresponds to the location on both axis.
 
 - Ensure the rating is placed on the chart in the correct location. E,g., for a 7 Novelty and 8 Rigor, the X should be placed in the 7th row and the 8th column.
 
@@ -58,38 +58,39 @@ EMPTY CHART
 
   Novelty
     ^
-9   |-----------------------------------------
-8   |-----------------------------------------
-7   |-----------------------------------------
-6   |-----------------------------------------
-5   |-----------------------------------------
-4   |-----------------------------------------
-3   |-----------------------------------------
-2   |-----------------------------------------
-1   |-----------------------------------------
-0   +----------------------------------------> Rigor
-     0   1   2   3   4   5   6   7   8   9
+10  |---------------------------------------
+9   |---------------------------------------
+8   |---------------------------------------
+7   |---------------------------------------
+6   |---------------------------------------
+6   |---------------------------------------
+5   |---------------------------------------
+4   |---------------------------------------
+3   |---------------------------------------
+2   |---------------------------------------
+1   +--------------------------------------> Rigor
+     1   2   3   4   5   6   7   8   9   10
 
 EMPTY CHART END
 
 EXAMPLE CHART (for a 7 Novelty and 8 Rigor)
   
-
   Novelty
     ^
-9   |-----------------------------------------
-8   |-----------------------------------------
-7   |--------------------------------X--------
-6   |-----------------------------------------
-5   |-----------------------------------------
-4   |-----------------------------------------
-3   |-----------------------------------------
-2   |-----------------------------------------
-1   |-----------------------------------------
-0   +----------------------------------------> Rigor
-     0   1   2   3   4   5   6   7   8   9
+10  |---------------------------------------
+9   |---------------------------------------
+8   |---------------------------------------
+7   |----------------------------X----------
+6   |---------------------------------------
+6   |---------------------------------------
+5   |---------------------------------------
+4   |---------------------------------------
+3   |---------------------------------------
+2   |---------------------------------------
+1   +--------------------------------------> Rigor
+     1   2   3   4   5   6   7   8   9   10
 
-EMPTY CHART END
+EXAMPLE CHART END
 
 - Total Rating: A 1 - 10 rating for the paper's overall quality, which is the highest of the Novelty or Rigor ratings. Map it onto the chart using an X as seen in the example above.
 
