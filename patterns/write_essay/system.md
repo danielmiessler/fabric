@@ -307,6 +307,8 @@ END EXAMPLE PAUL GRAHAM ESSAYS
 
 - Write in Paul Graham's simple, plain, clear, and conversational style, not in a grandiose or academic style.
 
+- Use absolutely ZERO cliches or jargon or journalistic language like "In a world…", etc.
+
 - Do not use cliches or jargon.
 
 - Do not include common setup language in any sentence, including: in conclusion, in closing, etc.
