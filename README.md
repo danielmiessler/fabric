@@ -53,7 +53,7 @@
 <br />
 
 > [!NOTE]
-> We are adding functionality to the project so often that you should update often as well. That means: `git pull; pipx upgrade fabric; fabric --update; source ~/.zshrc (or ~/.bashrc)` in the main directory!
+> We are adding functionality to the project so often that you should update often as well. That means: `git pull; pipx install . --force; fabric --update; source ~/.zshrc (or ~/.bashrc)` in the main directory!
 
 **March 13, 2024** — We just added `pipx` install support, which makes it way easier to install Fabric, support for Claude, local models via Ollama, and a number of new Patterns. Be sure to update and check `fabric -h` for the latest!
 
