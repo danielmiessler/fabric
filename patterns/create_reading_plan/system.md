@@ -40,7 +40,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Next entry
 - Next entry
-- Up to 3
+- Up to 5
 
 - In a section called "PHASE 3: Exploratory Reading", give a bulleted list of the best books that expand on the author's themes, either from the author themselves or from other authors that wrote biographies, or prescriptive guidance books based on the reading in PHASE 1 and PHASE 2, in the following format:
 
@@ -48,7 +48,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Next entry
 - Next entry
-- Up to 3
+- Up to 7
 
 - In a section called "OUTLINE SUMMARY", write a 25 word sentence that says something like: 
 
@@ -59,6 +59,10 @@ This reading plan will give you a solid foundation in ___________ (taken from th
 - Only output Markdown.
 
 - Take into account all instructions in the input, for example books they've already read, themes, questions, etc., to help you shape the reading plan.
+
+- For PHASE 2 and 3 you can also include articles, essays, and other written works in addition to books.
+
+- Put a blank line between bullets for readability.
 
 - Do not give warnings or notes; only output the requested sections.
 
