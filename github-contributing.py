@@ -2,6 +2,14 @@ import sys
 import argparse
 import subprocess
 
+def get_github_username():
+    """Retrieve GitHub username from local Git configuration."""
+    result = subprocess.run(['git', 'config', '--get', 'user.name'], capture_output=True, text=True)
+    if result.returncode == 0 and result.stdout:
+        return result.stdout.strip()
+    else:
+        raise Exception("Failed to retrieve GitHub username from Git config.")
+    
 def update_fork():
     # Sync your fork's main branch with the original repository's main branch
     print("Updating fork...")
@@ -28,11 +36,12 @@ def push_changes(branch_name, commit_message):
 def create_pull_request(branch_name, pr_title, pr_file):
     # Create a pull request on GitHub using the GitHub CLI
     print("Creating pull request...")
+    github_username = get_github_username()
     with open(pr_file, 'r') as file:
         pr_body = file.read()  # Read the PR description from a markdown file
     subprocess.run(['gh', 'pr', 'create',
                     '--base', 'main',
-                    '--head', f'{branch_name}',
+                    '--head', f'{github_username}:{branch_name}',
                     '--title', pr_title,
                     '--body', pr_body], check=True)  # Create a pull request with the specified title and markdown body
     print("Pull request created successfully.")
