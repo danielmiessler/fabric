@@ -20,8 +20,6 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Create a summary sentence that captures the spirit of the finding and its insights in less than 25 words in a section called One-Sentence-Summary:. Use plain and conversational language when creating this summary. Don't use jargon or marketing language.
 
-- Extract up to 20 of the most surprising, insightful, and/or interesting trends from the input in a section called Trends:. If there are less than 50 then collect all of them. Make sure you extract at least 20.
-
 - Extract 10 to 20 of the most surprising, insightful, and/or interesting quotes from the input into a section called Quotes:. Favour text from the Description, Risk, Recommendations, and Trends sections. Use the exact quote text from the input.
 
 # OUTPUT INSTRUCTIONS
