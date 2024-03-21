@@ -62,6 +62,8 @@ This reading plan will give you a solid foundation in ___________ (taken from th
 
 - For PHASE 2 and 3 you can also include articles, essays, and other written works in addition to books.
 
+- DO NOT hallucinate or make up any of the recommendations you give. Only use real content.
+
 - Put a blank line between bullets for readability.
 
 - Do not give warnings or notes; only output the requested sections.
