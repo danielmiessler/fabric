@@ -15,7 +15,7 @@ def create_branch(branch_name):
     print(f"Creating new branch '{branch_name}'...")
     subprocess.run(['git', 'checkout', '-b', branch_name], check=True)
     print(f"Branch '{branch_name}' created and switched to.")
-    
+
 def push_changes(branch_name, commit_message):
     # Push your local changes to your fork on GitHub
     print("Pushing changes to fork...")
