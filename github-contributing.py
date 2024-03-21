@@ -25,7 +25,7 @@ def push_changes(branch_name, commit_message):
     subprocess.run(['git', 'push', 'fork', branch_name], check=True)  # Push the commit to the same branch in your fork
     print("Changes pushed successfully.")
 
-def create_pull_request(pr_title, pr_file, branch_name):
+def create_pull_request(branch_name, pr_title, pr_file):
     # Create a pull request on GitHub using the GitHub CLI
     print("Creating pull request...")
     with open(pr_file, 'r') as file:
