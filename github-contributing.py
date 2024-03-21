@@ -11,6 +11,11 @@ def update_fork():
     subprocess.run(['git', 'push', 'origin', 'main'], check=True)  # Push the updated main branch to your fork on GitHub
     print("Fork updated successfully.")
 
+def create_branch(branch_name):
+    print(f"Creating new branch '{branch_name}'...")
+    subprocess.run(['git', 'checkout', '-b', branch_name], check=True)
+    print(f"Branch '{branch_name}' created and switched to.")
+    
 def push_changes(branch_name, commit_message):
     # Push your local changes to your fork on GitHub
     print("Pushing changes to fork...")
@@ -54,6 +59,8 @@ def main():
 
     if args.command == 'update-fork':
         update_fork()
+    elif args.command == 'create-branch':
+        create_branch(args.branch_name)
     elif args.command == 'push-changes':
         push_changes(args.branch_name, args.commit_message)
     elif args.command == 'create-pr':
