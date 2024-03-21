@@ -49,7 +49,9 @@ class Standalone:
         self.args = args
         self.model = getattr(args, 'model', None)
         if not self.model:
-            self.model = 'gpt-4-turbo-preview'
+            self.model = os.environ.get('DEFAULT_MODEL', None)
+            if not self.model:
+                self.model = 'gpt-4-turbo-preview'
         self.claude = False
         sorted_gpt_models, ollamaList, claudeList = self.fetch_available_models()
         self.local = self.model in ollamaList
