@@ -588,6 +588,42 @@ tags: fabric-extraction stub-for-name extra-tag
 test
 ```
 
+## Np4k (Newspaper 4k) 
+
+`np4k` is a command that uses the [Newspaper4K](https://github.com/AndyTheFactory/newspaper4k) package to scrape content and metadata from a URL. You can scrape a single article or a list of articles. 
+
+Np4k is currently configured to send only the article text to STDOUT. As can be seen with the `--output` flag, it extracts a host of other metadata that could be sent to Fabric as well.  
+
+### Usage
+
+```bash
+usage: np4k [-h] [--url URL] [--file FILE] [--output {stdout,kvp,json}]
+
+Np4k is a helper to extract information from blogs or articles.
+
+options:
+  -h, --help            show this help message and exit
+  --url URL             A single URL to process.
+  --file FILE           A file containing the list of URLs to process.
+  --output {stdout,kvp,json}
+                        The file format to write the extracted data in. Default is stdout.
+```
+### Example
+
+For a single URL you can do this: 
+```bash
+np4k --url 'https://thehackernews.com/2024/03/github-launches-ai-powered-autofix-tool.html' | fabric --pattern summarize
+```
+
+Or a list of URLs:
+```bash
+ np4k --file test.txt --output kvp | fabric --pattern extract_article_wisdom
+```
+
+* `test.txt` is simply a file with one URL per line. 
+
+The `--output` flag is optional. If set, it will write the full scraped metadata (including an NLP-based summary) to a local file in addition to piping the article.text to STDOUT. 
+
 ## Meta
 
 > [!NOTE]
