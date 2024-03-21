@@ -44,6 +44,9 @@ def main():
     # Subparser for updating fork
     parser_update = subparsers.add_parser('update-fork', help="Update fork with the latest from the original repository")
     
+    parser_create_branch = subparsers.add_parser('create-branch', help="Create a new branch")
+    parser_create_branch.add_argument('--branch-name', required=True, help="The name for the new branch")
+
     # Subparser for pushing changes
     parser_push = subparsers.add_parser('push-changes', help="Push local changes to the fork")
     parser_push.add_argument('--branch-name', required=True, help="The name of the branch you are working on")
