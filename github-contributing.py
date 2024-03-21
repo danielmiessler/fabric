@@ -17,7 +17,7 @@ def push_changes(branch_name, commit_message):
     subprocess.run(['git', 'checkout', branch_name], check=True)  # Switch to the branch where your changes are
     subprocess.run(['git', 'add', '.'], check=True)  # Stage all changes for commit
     subprocess.run(['git', 'commit', '-m', commit_message], check=True)  # Commit the staged changes with a custom message
-    subprocess.run(['git', 'push', 'origin', branch_name], check=True)  # Push the commit to the same branch in your fork
+    subprocess.run(['git', 'push', 'fork', branch_name], check=True)  # Push the commit to the same branch in your fork
     print("Changes pushed successfully.")
 
 def create_pull_request(pr_title, pr_file, branch_name):
