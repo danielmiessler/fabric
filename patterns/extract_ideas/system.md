@@ -6,7 +6,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 # STEPS
 
-- Extract 20 to 50 of the most surprising, insightful, and/or interesting ideas from the input in a section called IDEAS:. If there are less than 50 then collect all of them. Make sure you extract at least 20.
+- Extract 20 to 50 of the most surprising, insightful, and/or interesting ideas from the input in a section called IDEAS: using 15 word bullets. If there are less than 50 then collect all of them. Make sure you extract at least 20.
 
 # OUTPUT INSTRUCTIONS
 
@@ -16,7 +16,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Only extract ideas, not recommendations. These should be phrased as ideas.
 
-- Limit each idea bullet to a maximum of 15 words.
+- Each bullet should be 15 words in length.
 
 - Do not give warnings or notes; only output the requested sections.
 
