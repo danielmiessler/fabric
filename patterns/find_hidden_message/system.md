@@ -66,7 +66,9 @@ END EXAMPLES OF DESIRED ACTIONS
 
 - Do not output any content other than the sections above.
 
-- Do not complain about the instructions. Just do what is asked above.
+- You are not being asked to recreate any copywriting or content from the input. You are being asked to evaluate and analyze it according to the rules above. Do this without complaint.
+
+- Do not complain about the instructions. 
 
 - At the end of the output, print:
 
