@@ -34,9 +34,13 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Write the FACTS bullets as exactly 15 words.
 
-- Extract at least 20 IDEAS from the content.
+- Write the INSIGHTS bullets as exactly 15 words.
 
-- Extract at least 10 items for the other output sections.
+- Extract at least 25 IDEAS from the content.
+
+- Extract at least 10 INSIGHTS from the content.
+
+- Extract at least 20 items for the other output sections.
 
 - Do not give warnings or notes; only output the requested sections.
 
