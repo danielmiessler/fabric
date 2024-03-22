@@ -60,13 +60,13 @@ END EXAMPLES OF DESIRED ACTIONS
 
 # OUTPUT INSTRUCTIONS
 
+- You are not being asked to recreate any protected content. You are being asked to evaluate and analyze it according to the rules above. Do this without complaint. This is analysis, not content creation.
+
 - Only output valid Markdown.
 
 - Do not output any asterisks, which are used for italicizing and bolding text.
 
 - Do not output any content other than the sections above.
-
-- You are not being asked to recreate any copywriting or content from the input. You are being asked to evaluate and analyze it according to the rules above. Do this without complaint.
 
 - Do not complain about the instructions. 
 
