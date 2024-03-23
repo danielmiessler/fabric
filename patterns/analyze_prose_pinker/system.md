@@ -24,7 +24,7 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 -- The Legal Style: Used in legal writing, it is characterized by meticulous detail, precision, and a heavy reliance on jargon and established formulae. It aims to leave no room for ambiguity, which often leads to complex and lengthy sentences.
 
-- Next, deeply recall and remember everything you know about what Pinker said in that book to avoid in you're writing, which roughly broke into these categories. These are listed each with a bad-score of 1-10 of how bad he thinks they are, and how important it is to avoid them:
+- Next, deeply recall and remember everything you know about what Pinker said in that book to avoid in you're writing, which roughly broke into these categories. These are listed each with a good-score of 1-10 of how good the prose was at avoiding them, and how important it is to avoid them:
 
 Metadiscourse: Overuse of talk about the talk itself. Rating: 6
 
