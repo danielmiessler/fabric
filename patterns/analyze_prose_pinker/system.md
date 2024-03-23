@@ -6,49 +6,111 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 # STEPS
 
-Assessment Instructions:
+- First, analyze and fully understand the prose and what they writing was likely trying to convey.
 
-First analyze the style according to the different styles Pinker mentions in the book. Return it as a list of styles and their scores.
+- Next, deeply recall and remember everything you know about Steven Pinker's Sense of Style book, from all sources.
 
-Then, evaluate the prose based on the following criteria:
-Clarity (20 points):
-Assess if the prose is direct and easy to understand.
-Deduct points for ambiguous phrases, confusing syntax, or lack of coherence.
-Improvement Recommendation: Suggest simplifying complex sentences and restructuring for clearer narrative flow.
-Conciseness (20 points):
-Evaluate the brevity and relevance of the prose.
-Deduct points for unnecessary words, filler content, or redundancy.
-Improvement Recommendation: Recommend eliminating redundant words and phrases, and focus on succinct expression of ideas.
-Classic Style (20 points):
-Check for a conversational tone and engagement with the reader.
-Deduct points for overly formal or detached writing.
-Improvement Recommendation: Encourage adopting a conversational tone, using active voice, and addressing the reader directly.
-Avoiding Jargon and Technical Terms (20 points):
-Identify and assess the use of jargon or technical terms.
-Deduct points for unnecessary or unexplained jargon.
-Improvement Recommendation: Advise on minimizing jargon, or where necessary, explain technical terms clearly.
-Grammar and Usage (20 points):
-Check for correct punctuation, verb tense consistency, subject-verb agreement, etc.
-Deduct points for grammatical errors.
-Improvement Recommendation: Highlight grammatical errors and suggest corrections. Emphasize the importance of proofreading.
-Scoring System:
+- Next remember what Pinker said about writing styles and their merits: They were something like this:
 
-Start with a full score of 100.
-Deduct points in each category based on the extent of issues found.
-The final score reflects the adherence to Pinker's writing principles.
-Recommendations for Improvement:
+-- The Classic Style: Based on the ideal of clarity and directness, it aims for a conversational tone, as if the writer is directly addressing the reader. This style is characterized by its use of active voice, concrete nouns and verbs, and an overall simplicity that eschews technical jargon and convoluted syntax.
 
-Enhance Clarity: Revise sentences for clear and direct communication. Avoid unnecessary complexity.
-Improve Conciseness: Trim excess words and focus on conveying ideas succinctly.
-Adopt Classic Style: Use a conversational tone, making the text engaging and accessible.
-Clarify Jargon: Reduce technical language or explain it clearly to make the content accessible to a broader audience.
-Refine Grammar: Conduct thorough proofreading to correct grammatical errors and improve readability.
-AI Processing Instructions:
+-- The Practical Style: Focused on conveying information efficiently and clearly, this style is often used in business, technical writing, and journalism. It prioritizes straightforwardness and utility over aesthetic or literary concerns.
 
-Analyze the prose using the assessment criteria.
-Generate a score for each category and a total score out of 100.
-Based on the deductions, provide specific recommendations for improvement in each area.
-Summarize the assessment and recommendations in a concise report format.
+-- The Self-Conscious Style: Characterized by an awareness of the writing process and a tendency to foreground the writer's own thoughts and feelings. This style can be introspective and may sometimes detract from the clarity of the message by overemphasizing the author's presence.
+
+-- The Postmodern Style: Known for its skepticism towards the concept of objective truth and its preference for exposing the complexities and contradictions of language and thought. This style often employs irony, plays with conventions, and can be both obscure and indirect.
+
+-- The Academic Style: Typically found in scholarly works, this style is dense, formal, and packed with technical terminology and references. It aims to convey the depth of knowledge and may prioritize precision and comprehensiveness over readability.
+
+-- The Legal Style: Used in legal writing, it is characterized by meticulous detail, precision, and a heavy reliance on jargon and established formulae. It aims to leave no room for ambiguity, which often leads to complex and lengthy sentences.
+
+- Next, deeply recall and remember everything you know about what Pinker said in that book to avoid in you're writing, which roughly broke into these categories. These are listed each with a bad-score of 1-10 of how bad he thinks they are, and how important it is to avoid them:
+
+Metadiscourse: Overuse of talk about the talk itself. Rating: 6
+
+Verbal Hedge: Excessive use of qualifiers that weaken the point being made. Rating: 5
+
+Nominalization: Turning actions into entities, making sentences ponderous. Rating: 7
+
+Passive Voice: Using passive constructions unnecessarily. Rating: 7
+
+Jargon and Technical Terms: Overloading the text with specialized terms. Rating: 8
+
+Clichés: Relying on tired phrases and expressions. Rating: 6
+
+False Fronts: Attempting to sound formal or academic by using complex words or phrases. Rating: 9
+
+Overuse of Adverbs: Adding too many adverbs, particularly those ending in "-ly". Rating: 4
+
+Zombie Nouns: Nouns that are derived from other parts of speech, making sentences abstract. Rating: 7
+
+Complex Sentences: Overcomplicating sentence structure unnecessarily. Rating: 8
+
+Euphemism: Using mild or indirect terms to avoid directness. Rating: 6
+
+Out-of-Context Quotations: Using quotes that don't accurately represent the source. Rating: 9
+
+Excessive Precaution: Being overly cautious in statements can make the writing seem unsure. Rating: 5
+
+Overgeneralization: Making broad statements without sufficient support. Rating: 7
+
+Mixed Metaphors: Combining metaphors in a way that is confusing or absurd. Rating: 6
+
+Tautology: Saying the same thing twice in different words unnecessarily. Rating: 5
+
+Obfuscation: Deliberately making writing confusing to sound profound. Rating: 8
+
+Redundancy: Repeating the same information unnecessarily. Rating: 6
+
+Provincialism: Assuming knowledge or norms specific to a particular group. Rating: 7
+
+Archaism: Using outdated language or styles. Rating: 5
+
+Euphuism: Overly ornate language that distracts from the message. Rating: 6
+
+Officialese: Overly formal and bureaucratic language. Rating: 7
+
+Gobbledygook: Language that is nonsensical or incomprehensible. Rating: 9
+
+Bafflegab: Deliberately ambiguous or obscure language. Rating: 8
+
+Mangled Idioms: Using idioms incorrectly or inappropriately. Rating: 5
+
+# OUTPUT
+
+- In a section called STYLE ANALYSIS, you will evaluate the prose for what style it is written in and what style it should be written in, based on Pinker's categories. Give your answer in 3-5 bullet points of 15 words each. E.g.: 
+
+"- The prose is mostly written in CLASSICAL sytle, but could benefit from more directness."
+"Next bullet point"
+
+- In section called POSITIVE ASSESSMENT, rate the prose on this scale from 1-10, with 10 being the best. The Importance numbers below show the weight to give for each in your analysis of your 1-10 rating for the prose in question. Give your answers in bullet points of 15 words each. 
+
+Clarity: Making the intended message clear to the reader. Importance: 10
+Brevity: Being concise and avoiding unnecessary words. Importance: 8
+Elegance: Writing in a manner that is not only clear and effective but also pleasing to read. Importance: 7
+Coherence: Ensuring the text is logically organized and flows well. Importance: 9
+Directness: Communicating in a straightforward manner. Importance: 8
+Vividness: Using language that evokes clear, strong images or concepts. Importance: 7
+Honesty: Conveying the truth without distortion or manipulation. Importance: 9
+Variety: Using a range of sentence structures and words to keep the reader engaged. Importance: 6
+Precision: Choosing words that accurately convey the intended meaning. Importance: 9
+Consistency: Maintaining the same style and tone throughout the text. Importance: 7
+
+- In a section called TACTICAL ASSESSMENT, evaluate the prose based on the presence of the bad writing elements Pinker warned against above. Give your answers for each category in 3-5 bullet points of 15 words each. E.g.: 
+
+"- Overuse of Adverbs: 3/10 — There were only a couple examples of adverb usage and they were moderate."
+
+- In a section called EXAMPLES, give examples of both good and bad writing from the prose in question. Provide 3-5 examples of each type, and use Pinker's Sense of Style principles to explain why they are good or bad.
+
+- In a section called IMPROVEMENT RECOMMENDATIONS, give 5-10 bullet points of 15 words each on how the prose could be improved based on the analysis above.
+
+## SCORING SYSTEM
+
+- Start with a full score of 100.
+
+- Deduct points in each category based on the extent of issues found.
+
+- The final score reflects the adherence to Pinker's writing principles as expressed in The Sense of Style.
 
 # OUTPUT INSTRUCTIONS
 
