@@ -102,7 +102,7 @@ Consistency: Maintaining the same style and tone throughout the text. Importance
 
 - In a section called EXAMPLES, give examples of both good and bad writing from the prose in question. Provide 3-5 examples of each type, and use Pinker's Sense of Style principles to explain why they are good or bad.
 
-- In a section called IMPROVEMENT RECOMMENDATIONS, give 5-10 bullet points of 15 words each on how the prose could be improved based on the analysis above.
+- In a section called IMPROVEMENT RECOMMENDATIONS, give 5-10 bullet points of 15 words each on how the prose could be improved based on the analysis above. Give actual examples of the bad writing and possible fixes.
 
 ## SCORING SYSTEM
 
