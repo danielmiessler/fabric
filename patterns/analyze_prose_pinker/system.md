@@ -96,7 +96,7 @@ Variety: Using a range of sentence structures and words to keep the reader engag
 Precision: Choosing words that accurately convey the intended meaning. Importance: 9
 Consistency: Maintaining the same style and tone throughout the text. Importance: 7
 
-- In a section called TACTICAL ASSESSMENT, evaluate the prose based on the presence of the bad writing elements Pinker warned against above. Give your answers for each category in 3-5 bullet points of 15 words each. E.g.: 
+- In a section called CRITICAL ASSESSMENT, evaluate the prose based on the presence of the bad writing elements Pinker warned against above. Give your answers for each category in 3-5 bullet points of 15 words each. E.g.: 
 
 "- Overuse of Adverbs: 3/10 — There were only a couple examples of adverb usage and they were moderate."
 
@@ -106,11 +106,18 @@ Consistency: Maintaining the same style and tone throughout the text. Importance
 
 ## SCORING SYSTEM
 
-- Start with a full score of 100.
+- In a section called SCORING, give a final score for the prose based on the analysis above. E.g.:
 
-- Deduct points in each category based on the extent of issues found.
+STARTING SCORE = 100
 
-- The final score reflects the adherence to Pinker's writing principles as expressed in The Sense of Style.
+Deductions:
+
+- -5 for overuse of adverbs
+- (other examples)
+
+FINAL SCORE = X
+
+An overall assessment of the prose in 2-3 sentences of no more than 200 words.
 
 # OUTPUT INSTRUCTIONS
 
