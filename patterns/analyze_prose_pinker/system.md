@@ -8,6 +8,9 @@ Take a step back and think step-by-step about how to achieve the best outcomes b
 
 Assessment Instructions:
 
+First analyze the style according to the different styles Pinker mentions in the book. Return it as a list of styles and their scores.
+
+Then, evaluate the prose based on the following criteria:
 Clarity (20 points):
 Assess if the prose is direct and easy to understand.
 Deduct points for ambiguous phrases, confusing syntax, or lack of coherence.
