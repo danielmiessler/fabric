@@ -16,6 +16,8 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Create an output section called WORLD MODEL UPDATES that has a set of 15 word bullet points that describe the world model beliefs presented in the content.
 
+- The WORLD MODEL UPDATES should not be just facts or ideas, but rather higher-level descriptions of how the world works that we can use to help make decisions.
+
 - Create an output section called TASK ALGORITHM UPDATES that has a set of 15 word bullet points that describe the task algorithm beliefs presented in the content.
 
 - For the TASK UPDATE ALGORITHM section, create subsections with practical one or two word category headers that correspond to the real world and human tasks, e.g., Reading, Writing, Morning Routine, Being Creative, etc.
@@ -26,7 +28,7 @@ WORLD MODEL UPDATES
 
 - One's success in life largely comes down to which frames of reality they choose to embrace.
 
-- Framing is more than just a way of seeing reality; in a very real way it's a way of shaping it.
+- Framing—or how we see the world—completely transforms the reality that we live in. 
 
 TASK ALGORITHM UPDATES
 
@@ -34,7 +36,7 @@ Hygiene
 
 - If you have to only brush and floss your teeth once a day, do it at night rather than in the morning.
 
-Webapp Assessment
+Web Application Assessment
 
 - Start all security assessments with a full crawl of the target website with a full browser passed through Burpsuite.
 
