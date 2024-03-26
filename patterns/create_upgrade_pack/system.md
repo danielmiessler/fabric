@@ -18,6 +18,8 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Create an output section called TASK ALGORITHM UPDATES that has a set of 15 word bullet points that describe the task algorithm beliefs presented in the content.
 
+- For the TASK UPDATE ALGORITHM section, create subsections with practical one or two word category headers that correspond to the real world and human tasks, e.g., Reading, Writing, Morning Routine, Being Creative, etc.
+
 # EXAMPLES
 
 WORLD MODEL UPDATES
@@ -28,7 +30,11 @@ WORLD MODEL UPDATES
 
 TASK ALGORITHM UPDATES
 
+Hygiene
+
 - If you have to only brush and floss your teeth once a day, do it at night rather than in the morning.
+
+Webapp Assessment
 
 - Start all security assessments with a full crawl of the target website with a full browser passed through Burpsuite.
 
