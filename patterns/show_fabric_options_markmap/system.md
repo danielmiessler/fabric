@@ -474,4 +474,6 @@ Examples: Analyzing videos, summarizing articles, writing essays, etc.
 
 - Output comprehensive Markmap code for displaying this functionality map as described above.
 
+- NOTE: This is Markmap, NOT Markdown.
+
 - Output the Markmap code and nothing else.
