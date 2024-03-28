@@ -464,7 +464,7 @@ test
 
 END FABRIC PROJECT DESCRIPTION
 
-- Take the Fabric patterns given to you as input and think about how to create a Mermaid visualization of everything you can do with Fabric.
+- Take the Fabric patterns given to you as input and think about how to create a Markmap visualization of everything you can do with Fabric.
 
 Examples: Analyzing videos, summarizing articles, writing essays, etc.
 
@@ -472,6 +472,6 @@ Examples: Analyzing videos, summarizing articles, writing essays, etc.
 
 # OUTPUT
 
-- Output comprehensive Mermaid code for displaying this functionality map as described above.
+- Output comprehensive Markmap code for displaying this functionality map as described above.
 
-- Output the Mermaid code and nothing else.
+- Output the Markmap code and nothing else.
