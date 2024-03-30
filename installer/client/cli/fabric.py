@@ -53,7 +53,7 @@ def main():
         "--listmodels", help="List all available models", action="store_true"
     )
     parser.add_argument('--remoteOllamaServer',
-                        help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-deault location or port')
+                        help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-default location or port')
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
 
