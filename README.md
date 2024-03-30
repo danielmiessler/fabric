@@ -241,6 +241,9 @@ options:
 
 The client, by default, runs Fabric patterns without needing a server (the Patterns were downloaded during setup). This means the client connects directly to OpenAI using the input given and the Fabric pattern used.
 
+> [!NOTE]
+> `pbpaste` is the Linux/bash command to read from the clipboard. In PowerShell, use `Get-Clipboard`, or in WSL use `powershell.exe -c Get-Clipboard` in place of `pbpaste` in the following commands
+
 1. Run the `summarize` Pattern based on input from `stdin`. In this case, the body of an article.
 
 ```bash
@@ -259,10 +262,15 @@ pbpaste | fabric --stream --pattern analyze_claims
 yt --transcript https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --pattern extract_wisdom
 ```
 
-4. **new** All of the patterns have been added as aliases to your bash (or zsh) config file
+4. All of the patterns have been added as aliases to your bash (or zsh) config file
 
 ```bash
 pbpaste | analyze_claims --stream
+```
+5. Run patterns on a local Ollama instance. Note that Ollama must be running with `ollama serve` on localhost with the default port, or the host and port should be configured with `--remoteOllamaServer`. This example assumes that the codellama model has already been pulled by Ollama (ie `ollama pull codellama:latest`)
+
+```bash
+pbpaste | fabric --pattern explain_code --model codellama:latest
 ```
 
 > [!NOTE]
