@@ -8,8 +8,8 @@ import platform
 from dotenv import load_dotenv
 import zipfile
 import tempfile
-import re
 import shutil
+from youtube_transcript_api import YouTubeTranscriptApi
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
@@ -61,7 +61,7 @@ class Standalone:
         from ollama import AsyncClient
         response = None
         if host:
-            response = await AsyncClient(host=host).chat(model=self.model, messages=messages, host=host)
+            response = await AsyncClient(host=host).chat(model=self.model, messages=messages)
         else:
             response = await AsyncClient().chat(model=self.model, messages=messages)
         print(response['message']['content'])
@@ -72,7 +72,7 @@ class Standalone:
     async def localStream(self, messages, host=''):
         from ollama import AsyncClient
         if host:
-            async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True, host=host):
+            async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True):
                 print(part['message']['content'], end='', flush=True)
         else:
             async for part in await AsyncClient().chat(model=self.model, messages=messages, stream=True):
@@ -305,7 +305,11 @@ class Standalone:
         gptlist.sort()
         import ollama
         try:
-            default_modelollamaList = ollama.list()['models']
+            if self.args.remoteOllamaServer:
+                client = ollama.Client(host=self.args.remoteOllamaServer)
+                default_modelollamaList = client.list()['models']
+            else:
+                default_modelollamaList = ollama.list()['models']
             for model in default_modelollamaList:
                 fullOllamaList.append(model['name'])
         except:
