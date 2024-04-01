@@ -165,6 +165,8 @@ function saveApiKeys(openAIKey, claudeKey) {
   }
 
   fs.writeFileSync(envFilePath, envContent.trim());
+  loadApiKeys();
+  win.webContents.send("reload-app");
 }
 
 function updateOrAddKey(envContent, keyName, keyValue) {
