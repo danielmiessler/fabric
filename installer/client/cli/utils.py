@@ -87,7 +87,7 @@ class Standalone:
             max_tokens=4096,
             system=system,
             messages=[user],
-            model=self.model, temperature=0.0, top_p=1.0
+            model=self.model, temperature=self.args.temp, top_p=self.args.top_p
         ) as stream:
             async for text in stream.text_stream:
                 print(text, end="", flush=True)
@@ -104,7 +104,7 @@ class Standalone:
             system=system,
             messages=[user],
             model=self.model,
-            temperature=0.0, top_p=1.0
+            temperature=self.args.temp, top_p=self.args.top_p
         )
         print(message.content[0].text)
         copy = self.args.copy
@@ -162,10 +162,10 @@ class Standalone:
                 stream = self.client.chat.completions.create(
                     model=self.model,
                     messages=messages,
-                    temperature=0.0,
-                    top_p=1,
-                    frequency_penalty=0.1,
-                    presence_penalty=0.1,
+                    temperature=self.args.temp,
+                    top_p=self.args.top_p,
+                    frequency_penalty=self.args.frequency_penalty,
+                    presence_penalty=self.args.presence_penalty,
                     stream=True,
                 )
                 for chunk in stream:
@@ -247,10 +247,10 @@ class Standalone:
                 response = self.client.chat.completions.create(
                     model=self.model,
                     messages=messages,
-                    temperature=0.0,
-                    top_p=1,
-                    frequency_penalty=0.1,
-                    presence_penalty=0.1,
+                    temperature=self.args.temp,
+                    top_p=self.args.top_p,
+                    frequency_penalty=self.args.frequency_penalty,
+                    presence_penalty=self.args.presence_penalty,
                 )
                 print(response.choices[0].message.content)
                 if self.args.copy:
