@@ -14,6 +14,22 @@ document.addEventListener("DOMContentLoaded", async function () {
   const updatePatternButton = document.getElementById("createPattern");
   const patternCreator = document.getElementById("patternCreator");
   const submitPatternButton = document.getElementById("submitPattern");
+  const fineTuningButton = document.getElementById("fineTuningButton");
+  const fineTuningSection = document.getElementById("fineTuningSection");
+  const temperatureSlider = document.getElementById("temperatureSlider");
+  const temperatureValue = document.getElementById("temperatureValue");
+  const topPSlider = document.getElementById("topPSlider");
+  const topPValue = document.getElementById("topPValue");
+  const frequencyPenaltySlider = document.getElementById(
+    "frequencyPenaltySlider"
+  );
+  const frequencyPenaltyValue = document.getElementById(
+    "frequencyPenaltyValue"
+  );
+  const presencePenaltySlider = document.getElementById(
+    "presencePenaltySlider"
+  );
+  const presencePenaltyValue = document.getElementById("presencePenaltyValue");
   const myForm = document.getElementById("my-form");
   const copyButton = document.createElement("button");
 
@@ -55,6 +71,10 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   async function submitQuery(userInputValue) {
+    const temperature = parseFloat(temperatureSlider.value);
+    const topP = parseFloat(topPSlider.value);
+    const frequencyPenalty = parseFloat(frequencyPenaltySlider.value);
+    const presencePenalty = parseFloat(presencePenaltySlider.value);
     userInput.value = ""; // Clear the input after submitting
     const systemCommand = await window.electronAPI.invoke(
       "get-pattern-content",
@@ -70,7 +90,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       "start-query",
       systemCommand,
       userInputValue,
-      selectedModel
+      selectedModel,
+      temperature,
+      topP,
+      frequencyPenalty,
+      presencePenalty
     );
   }
 
@@ -220,6 +244,27 @@ document.addEventListener("DOMContentLoaded", async function () {
   submitButton.addEventListener("click", async () => {
     const userInputValue = userInput.value;
     submitQuery(userInputValue);
+  });
+
+  fineTuningButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    fineTuningSection.classList.toggle("hidden");
+  });
+
+  temperatureSlider.addEventListener("input", function () {
+    temperatureValue.textContent = this.value;
+  });
+
+  topPSlider.addEventListener("input", function () {
+    topPValue.textContent = this.value;
+  });
+
+  frequencyPenaltySlider.addEventListener("input", function () {
+    frequencyPenaltyValue.textContent = this.value;
+  });
+
+  presencePenaltySlider.addEventListener("input", function () {
+    presencePenaltyValue.textContent = this.value;
   });
 
   submitPatternButton.addEventListener("click", async () => {
