@@ -28,7 +28,8 @@ def main():
         const="analyzepaper.txt",
         default=None,
     )
-    parser.add_argument("--gui", help="Use the GUI", action="store_true")
+    parser.add_argument(
+        "--gui", help="Use the GUI (Node and npm need to be installed)", action="store_true")
     parser.add_argument(
         "--stream",
         "-s",
