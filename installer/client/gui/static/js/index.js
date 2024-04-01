@@ -168,6 +168,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     submitQuery(message);
   });
 
+  window.electronAPI.on;
+  "reload-app",
+    () => {
+      // Reload the app
+      loadModels();
+    };
+
   // Submit button click handler
   submitButton.addEventListener("click", async () => {
     const userInputValue = userInput.value;

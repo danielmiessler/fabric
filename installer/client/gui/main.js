@@ -146,18 +146,37 @@ function saveApiKeys(openAIKey, claudeKey) {
   }
 
   let envContent = "";
+
+  // Read the existing .env file if it exists
+  if (fs.existsSync(envFilePath)) {
+    envContent = fs.readFileSync(envFilePath, "utf8");
+  }
+
+  // Update the specific API key
   if (openAIKey) {
-    envContent += `OPENAI_API_KEY=${openAIKey}\n`;
+    envContent = updateOrAddKey(envContent, "OPENAI_API_KEY", openAIKey);
     process.env.OPENAI_API_KEY = openAIKey; // Set for current session
     openai = new OpenAI({ apiKey: openAIKey });
   }
   if (claudeKey) {
-    envContent += `CLAUDE_API_KEY=${claudeKey}\n`;
+    envContent = updateOrAddKey(envContent, "CLAUDE_API_KEY", claudeKey);
     process.env.CLAUDE_API_KEY = claudeKey; // Set for current session
     claude = new Anthropic({ apiKey: claudeKey });
   }
 
   fs.writeFileSync(envFilePath, envContent.trim());
+}
+
+function updateOrAddKey(envContent, keyName, keyValue) {
+  const keyPattern = new RegExp(`^${keyName}=.*$`, "m");
+  if (keyPattern.test(envContent)) {
+    // Update the existing key
+    envContent = envContent.replace(keyPattern, `${keyName}=${keyValue}`);
+  } else {
+    // Add the new key
+    envContent += `\n${keyName}=${keyValue}`;
+  }
+  return envContent;
 }
 
 async function getOllamaModels() {
@@ -186,11 +205,16 @@ async function getModels() {
     ];
     allModels.claudeModels = claudeModels;
   }
-
+  let gptModelsPromise = [];
   if (keys.openAIKey) {
     openai = new OpenAI({ apiKey: keys.openAIKey });
     // Wrap asynchronous call with a Promise to handle it in parallel
-    gptModelsPromise = openai.models.list();
+    try {
+      gptModelsPromise = openai.models.list();
+    } catch (error) {
+      gptModelsPromise = [];
+      console.error("Error fetching models from OpenAI:", error);
+    }
   }
 
   // Check if ollama exists and has a list method
