@@ -18,7 +18,7 @@ const unzipper = require("unzipper");
 
 let win;
 let openai;
-let ollama;
+let ollama = new Ollama.Ollama();
 
 async function ensureFabricFoldersExist() {
   const fabricPath = path.join(os.homedir(), ".config", "fabric");

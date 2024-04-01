@@ -669,7 +669,8 @@ def run_electron_app():
     # Step 2: Check for the './installer/client/gui' directory
     target_dir = '../gui'
     if not os.path.exists(target_dir):
-        print(f"""The directory {target_dir} does not exist. Please check the path and try again.""")
+        print(f"""The directory {
+              target_dir} does not exist. Please check the path and try again.""")
         return
 
     # Step 3: Check for NPM installation
