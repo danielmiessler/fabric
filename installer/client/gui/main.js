@@ -134,21 +134,18 @@ async function loadApiKeys() {
   let keys = { openAIKey: null, claudeKey: null };
 
   try {
-    // Use fs.promises.readFile and await its result
     const envContents = await fs.readFile(configPath, { encoding: "utf8" });
     const openAIMatch = envContents.match(/^OPENAI_API_KEY=(.*)$/m);
     const claudeMatch = envContents.match(/^CLAUDE_API_KEY=(.*)$/m);
 
     if (openAIMatch && openAIMatch[1]) {
       keys.openAIKey = openAIMatch[1];
-      // Initialize your OpenAI client here if necessary
     }
     if (claudeMatch && claudeMatch[1]) {
       keys.claudeKey = claudeMatch[1];
-      // Initialize your Claude client here if necessary
+      claude = new Anthropic({ apiKey: keys.claudeKey });
     }
   } catch (error) {
-    // Handle the case where the .env file doesn't exist or can't be read
     console.error("Could not load API keys:", error);
   }
   return keys;
@@ -338,6 +335,14 @@ async function openaiMessage(system, user, model, event) {
 }
 
 async function claudeMessage(system, user, model, event) {
+  if (!claude) {
+    event.reply(
+      "model-response-error",
+      "Claude API key is missing or invalid."
+    );
+    return;
+  }
+
   const userMessage = { role: "user", content: user };
   const systemMessage = system;
   const response = await claude.messages.create({
