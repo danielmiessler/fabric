@@ -37,13 +37,26 @@ body {
   border: 1px solid #555; /* Adjusted border color */
   padding: 10px; /* Added padding for better text visibility */
 }
-#patternSelector {
+
+.selector-container {
+  display: flex;
+  gap: 10px;
   margin-bottom: 10px;
-  background-color: #424242; /* Darker shade for textarea */
-  color: #e0e0e0; /* Light text for readability */
-  border: 1px solid #555; /* Adjusted border color */
-  padding: 10px; /* Added padding for better text visibility */
+}
+
+#patternSelector,
+#modelSelector {
+  flex: 1;
+  background-color: #424242;
+  color: #e0e0e0;
+  border: 1px solid #555;
+  padding: 10px;
   height: 40px;
+}
+.light-theme #modelSelector {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ddd;
 }
 
 @media (min-width: 768px) {
@@ -78,6 +91,7 @@ body {
 .hidden {
   display: none;
 }
+
 .drag-over {
   background-color: #505050; /* Slightly lighter than the regular background for visibility */
   border: 2px dashed #007bff; /* Dashed border with the primary button color for emphasis */
@@ -123,6 +137,7 @@ body.light-theme .navbar-toggler-icon {
     padding: 0.25rem 0.5rem; /* Adjust padding for the toggle button */
   }
 }
+
 #responseContainer {
   position: relative; /* Needed for absolute positioning of the child button */
 }
@@ -157,4 +172,35 @@ body.light-theme .navbar-toggler-icon {
 
 #copyButton:focus {
   outline: none;
+}
+
+#patternCreatedMessage {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 5px;
+}
+
+.light-theme #patternCreator {
+  background: #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.light-theme #patternCreator input,
+.light-theme #patternCreator textarea {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+#patternCreator textarea {
+  background-color: #424242;
+  color: #e0e0e0;
+  border: 1px solid #555;
+}
+#patternCreator input {
+  background-color: #424242;
+  color: #e0e0e0;
+  border: 1px solid #555;
 }

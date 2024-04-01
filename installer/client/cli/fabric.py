@@ -1,4 +1,4 @@
-from .utils import Standalone, Update, Setup, Alias
+from .utils import Standalone, Update, Setup, Alias, run_electron_app
 import argparse
 import sys
 import os
@@ -28,6 +28,8 @@ def main():
         const="analyzepaper.txt",
         default=None,
     )
+    parser.add_argument(
+        "--gui", help="Use the GUI (Node and npm need to be installed)", action="store_true")
     parser.add_argument(
         "--stream",
         "-s",
@@ -90,6 +92,9 @@ def main():
             from .utils import AgentSetup
             AgentSetup().run()
             sys.exit()
+    if args.gui:
+        run_electron_app()
+        sys.exit()
     if args.update:
         Update()
         Alias()
