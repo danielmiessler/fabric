@@ -212,6 +212,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       alert("Failed to reload models.");
     }
   });
+  updatePatternsButton.addEventListener("click", async () => {
+    window.electronAPI.send("update-patterns");
+  });
 
   // Submit button click handler
   submitButton.addEventListener("click", async () => {
