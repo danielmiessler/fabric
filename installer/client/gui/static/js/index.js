@@ -173,6 +173,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     () => {
       // Reload the app
       loadModels();
+      location.reload();
     };
 
   // Submit button click handler
@@ -206,6 +207,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         configSection.classList.add("hidden");
         openaiApiKeyInput.value = "";
         claudeApiKeyInput.value = "";
+        // Reload the models
+        loadModels();
       })
       .catch((err) => {
         console.error("Error saving API keys:", err);
