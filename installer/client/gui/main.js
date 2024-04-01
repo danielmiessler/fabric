@@ -207,23 +207,33 @@ function updateOrAddKey(envContent, keyName, keyValue) {
 }
 
 async function getOllamaModels() {
-  ollama = new Ollama.Ollama();
-  const _models = await ollama.list();
-  return _models.models.map((x) => x.name);
+  try {
+    ollama = new Ollama.Ollama();
+    const _models = await ollama.list();
+    return _models.models.map((x) => x.name);
+  } catch (error) {
+    if (error.cause && error.cause.code === "ECONNREFUSED") {
+      console.error(
+        "Failed to connect to Ollama. Make sure Ollama is running and accessible."
+      );
+      return []; // Return an empty array instead of throwing an error
+    } else {
+      console.error("Error fetching models from Ollama:", error);
+      throw error; // Re-throw the error for other types of errors
+    }
+  }
 }
 
 async function getModels() {
-  ollama = new Ollama.Ollama();
   allModels = {
     gptModels: [],
     claudeModels: [],
     ollamaModels: [],
   };
 
-  let keys = await loadApiKeys(); // Assuming loadApiKeys() is updated to return both keys
+  let keys = await loadApiKeys();
 
   if (keys.claudeKey) {
-    // Assuming claudeModels do not require an asynchronous call to be fetched
     claudeModels = [
       "claude-3-opus-20240229",
       "claude-3-sonnet-20240229",
@@ -232,14 +242,13 @@ async function getModels() {
     ];
     allModels.claudeModels = claudeModels;
   }
-  let gptModelsPromise = [];
+
   if (keys.openAIKey) {
     openai = new OpenAI({ apiKey: keys.openAIKey });
-    // Wrap asynchronous call with a Promise to handle it in parallel
     try {
-      gptModelsPromise = openai.models.list();
+      const response = await openai.models.list();
+      allModels.gptModels = response.data;
     } catch (error) {
-      gptModelsPromise = [];
       console.error("Error fetching models from OpenAI:", error);
     }
   }
@@ -250,24 +259,16 @@ async function getModels() {
     ollama.list &&
     typeof ollama.list === "function"
   ) {
-    // Assuming ollama.list() returns a Promise
-    ollamaModelsPromise = getOllamaModels();
+    try {
+      allModels.ollamaModels = await getOllamaModels();
+    } catch (error) {
+      console.error("Error fetching models from Ollama:", error);
+    }
   } else {
-    console.log("ollama is not available or does not support listing models.");
+    console.log("Ollama is not available or does not support listing models.");
   }
 
-  // Wait for all asynchronous operations to complete
-  try {
-    const results = await Promise.all(
-      [gptModelsPromise, ollamaModelsPromise].filter(Boolean)
-    ); // Filter out undefined promises
-    allModels.gptModels = results[0]?.data || []; // Assuming the first promise is always GPT models if it exists
-    allModels.ollamaModels = results[1] || []; // Assuming the second promise is always Ollama models if it exists
-  } catch (error) {
-    console.error("Error fetching models from OpenAI or Ollama:", error);
-  }
-
-  return allModels; // Return the aggregated results
+  return allModels;
 }
 
 async function getPatternContent(patternName) {
