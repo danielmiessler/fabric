@@ -1,69 +1,21 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
-const pdfParse = require("pdf-parse");
-const mammoth = require("mammoth");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
-const { queryOpenAI } = require("./chatgpt.js");
-const axios = require("axios");
-const fsExtra = require("fs-extra");
+const OpenAI = require("openai");
+const Ollama = require("ollama");
+const Anthropic = require("@anthropic-ai/sdk");
 
-let fetch;
+let fetch, allModels;
+
 import("node-fetch").then((module) => {
   fetch = module.default;
 });
 const unzipper = require("unzipper");
 
 let win;
-
-function promptUserForApiKey() {
-  // Create a new window to prompt the user for the API key
-  const promptWindow = new BrowserWindow({
-    // Window configuration for the prompt
-    width: 500,
-    height: 200,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false, // Consider security implications
-    },
-  });
-
-  // Handle the API key submission from the prompt window
-  ipcMain.on("submit-api-key", (event, apiKey) => {
-    if (apiKey) {
-      saveApiKey(apiKey);
-      promptWindow.close();
-      createWindow(); // Proceed to create the main window
-    } else {
-      // Handle invalid input or user cancellation
-      promptWindow.close();
-    }
-  });
-}
-
-function loadApiKey() {
-  const configPath = path.join(os.homedir(), ".config", "fabric", ".env");
-  if (fs.existsSync(configPath)) {
-    const envContents = fs.readFileSync(configPath, { encoding: "utf8" });
-    const matches = envContents.match(/^OPENAI_API_KEY=(.*)$/m);
-    if (matches && matches[1]) {
-      return matches[1];
-    }
-  }
-  return null;
-}
-
-function saveApiKey(apiKey) {
-  const configPath = path.join(os.homedir(), ".config", "fabric");
-  const envFilePath = path.join(configPath, ".env");
-
-  if (!fs.existsSync(configPath)) {
-    fs.mkdirSync(configPath, { recursive: true });
-  }
-
-  fs.writeFileSync(envFilePath, `OPENAI_API_KEY=${apiKey}`);
-  process.env.OPENAI_API_KEY = apiKey; // Set for current session
-}
+let openai;
+let ollama;
 
 function ensureFabricFoldersExist() {
   return new Promise(async (resolve, reject) => {
@@ -87,8 +39,9 @@ function ensureFabricFoldersExist() {
   });
 }
 
-async function downloadAndUpdatePatterns(patternsPath) {
+async function downloadAndUpdatePatterns() {
   try {
+    // Download the zip file
     const response = await axios({
       method: "get",
       url: "https://github.com/danielmiessler/fabric/archive/refs/heads/main.zip",
@@ -99,16 +52,15 @@ async function downloadAndUpdatePatterns(patternsPath) {
     fs.writeFileSync(zipPath, response.data);
     console.log("Zip file written to:", zipPath);
 
+    // Prepare for extraction
     const tempExtractPath = path.join(os.tmpdir(), "fabric_extracted");
-    fsExtra.emptyDirSync(tempExtractPath);
+    await fsExtra.emptyDir(tempExtractPath);
 
-    await fsExtra.remove(patternsPath); // Delete the existing patterns directory
-
+    // Extract the zip file
     await fs
       .createReadStream(zipPath)
       .pipe(unzipper.Extract({ path: tempExtractPath }))
       .promise();
-
     console.log("Extraction complete");
 
     const extractedPatternsPath = path.join(
@@ -117,14 +69,46 @@ async function downloadAndUpdatePatterns(patternsPath) {
       "patterns"
     );
 
-    await fsExtra.copy(extractedPatternsPath, patternsPath);
+    // Compare and move folders
+    const existingPatternsPath = path.join(
+      os.homedir(),
+      ".config",
+      "fabric",
+      "patterns"
+    );
+    if (fs.existsSync(existingPatternsPath)) {
+      const existingFolders = await fsExtra.readdir(existingPatternsPath);
+      for (const folder of existingFolders) {
+        if (!fs.existsSync(path.join(extractedPatternsPath, folder))) {
+          await fsExtra.move(
+            path.join(existingPatternsPath, folder),
+            path.join(extractedPatternsPath, folder)
+          );
+          console.log(
+            `Moved missing folder ${folder} to the extracted patterns directory.`
+          );
+        }
+      }
+    }
+
+    // Overwrite the existing patterns directory with the updated extracted directory
+    await fsExtra.copy(extractedPatternsPath, existingPatternsPath, {
+      overwrite: true,
+    });
     console.log("Patterns successfully updated");
 
     // Inform the renderer process that the patterns have been updated
-    win.webContents.send("patterns-updated");
+    // win.webContents.send("patterns-updated");
   } catch (error) {
     console.error("Error downloading or updating patterns:", error);
   }
+}
+function getPatternFolders() {
+  const patternsPath = path.join(os.homedir(), ".config", "fabric", "patterns");
+  return fs
+    .readdirSync(patternsPath, { withFileTypes: true })
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name);
 }
 
 function checkApiKeyExists() {
@@ -132,12 +116,107 @@ function checkApiKeyExists() {
   return fs.existsSync(configPath);
 }
 
-function getPatternFolders() {
-  const patternsPath = path.join(os.homedir(), ".config", "fabric", "patterns");
-  return fs
-    .readdirSync(patternsPath, { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name);
+function loadApiKeys() {
+  const configPath = path.join(os.homedir(), ".config", "fabric", ".env");
+  let keys = { openAIKey: null, claudeKey: null };
+
+  if (fs.existsSync(configPath)) {
+    const envContents = fs.readFileSync(configPath, { encoding: "utf8" });
+    const openAIMatch = envContents.match(/^OPENAI_API_KEY=(.*)$/m);
+    const claudeMatch = envContents.match(/^CLAUDE_API_KEY=(.*)$/m);
+
+    if (openAIMatch && openAIMatch[1]) {
+      keys.openAIKey = openAIMatch[1];
+      openai = new OpenAI({ apiKey: keys.openAIKey });
+    }
+    if (claudeMatch && claudeMatch[1]) {
+      keys.claudeKey = claudeMatch[1];
+      claude = new Anthropic({ apiKey: keys.claudeKey });
+    }
+  }
+  return keys;
+}
+
+function saveApiKeys(openAIKey, claudeKey) {
+  const configPath = path.join(os.homedir(), ".config", "fabric");
+  const envFilePath = path.join(configPath, ".env");
+
+  if (!fs.existsSync(configPath)) {
+    fs.mkdirSync(configPath, { recursive: true });
+  }
+
+  let envContent = "";
+  if (openAIKey) {
+    envContent += `OPENAI_API_KEY=${openAIKey}\n`;
+    process.env.OPENAI_API_KEY = openAIKey; // Set for current session
+    openai = new OpenAI({ apiKey: openAIKey });
+  }
+  if (claudeKey) {
+    envContent += `CLAUDE_API_KEY=${claudeKey}\n`;
+    process.env.CLAUDE_API_KEY = claudeKey; // Set for current session
+    claude = new Anthropic({ apiKey: claudeKey });
+  }
+
+  fs.writeFileSync(envFilePath, envContent.trim());
+}
+
+async function getOllamaModels() {
+  ollama = new Ollama.Ollama();
+  const _models = await ollama.list();
+  return _models.models.map((x) => x.name);
+}
+
+async function getModels() {
+  ollama = new Ollama.Ollama();
+  allModels = {
+    gptModels: [],
+    claudeModels: [],
+    ollamaModels: [],
+  };
+
+  let keys = loadApiKeys(); // Assuming loadApiKeys() is updated to return both keys
+
+  if (keys.claudeKey) {
+    // Assuming claudeModels do not require an asynchronous call to be fetched
+    claudeModels = [
+      "claude-3-opus-20240229",
+      "claude-3-sonnet-20240229",
+      "claude-3-haiku-20240307",
+      "claude-2.1",
+    ];
+    allModels.claudeModels = claudeModels;
+  }
+
+  if (keys.openAIKey) {
+    openai = new OpenAI({ apiKey: keys.openAIKey });
+    // Wrap asynchronous call with a Promise to handle it in parallel
+    gptModelsPromise = openai.models.list();
+  }
+
+  // Check if ollama exists and has a list method
+  if (
+    typeof ollama !== "undefined" &&
+    ollama.list &&
+    typeof ollama.list === "function"
+  ) {
+    // Assuming ollama.list() returns a Promise
+    ollamaModelsPromise = getOllamaModels();
+  } else {
+    console.log("ollama is not available or does not support listing models.");
+  }
+
+  // Wait for all asynchronous operations to complete
+  try {
+    const results = await Promise.all(
+      [gptModelsPromise, ollamaModelsPromise].filter(Boolean)
+    ); // Filter out undefined promises
+    allModels.gptModels = results[0]?.data || []; // Assuming the first promise is always GPT models if it exists
+    allModels.ollamaModels = results[1] || []; // Assuming the second promise is always Ollama models if it exists
+  } catch (error) {
+    console.error("Error fetching models from OpenAI or Ollama:", error);
+  }
+
+  return allModels; // Return the aggregated results
 }
 
 function getPatternContent(patternName) {
@@ -157,6 +236,76 @@ function getPatternContent(patternName) {
   }
 }
 
+async function ollamaMessage(system, user, model, event) {
+  ollama = new Ollama.Ollama();
+  const userMessage = {
+    role: "user",
+    content: user,
+  };
+  const systemMessage = { role: "system", content: system };
+  const response = await ollama.chat({
+    model: model,
+    messages: [systemMessage, userMessage],
+    stream: true,
+  });
+  let responseMessage = "";
+  for await (const chunk of response) {
+    const content = chunk.message.content;
+    if (content) {
+      responseMessage += content;
+      event.reply("model-response", content);
+    }
+    event.reply("model-response-end", responseMessage);
+  }
+}
+
+async function openaiMessage(system, user, model, event) {
+  const userMessage = { role: "user", content: user };
+  const systemMessage = { role: "system", content: system };
+  const stream = await openai.chat.completions.create(
+    {
+      model: model,
+      messages: [systemMessage, userMessage],
+      stream: true,
+    },
+    { responseType: "stream" }
+  );
+
+  let responseMessage = "";
+
+  for await (const chunk of stream) {
+    const content = chunk.choices[0].delta.content;
+    if (content) {
+      responseMessage += content;
+      event.reply("model-response", content);
+    }
+  }
+
+  event.reply("model-response-end", responseMessage);
+}
+
+async function claudeMessage(system, user, model, event) {
+  const userMessage = { role: "user", content: user };
+  const systemMessage = system;
+  const response = await claude.messages.create({
+    model: model,
+    system: systemMessage,
+    max_tokens: 4096,
+    messages: [userMessage],
+    stream: true,
+    temperature: 0.0,
+    top_p: 1.0,
+  });
+  let responseMessage = "";
+  for await (const chunk of response) {
+    if (chunk.delta && chunk.delta.text) {
+      responseMessage += chunk.delta.text;
+      event.reply("model-response", chunk.delta.text);
+    }
+  }
+  event.reply("model-response-end", responseMessage);
+}
+
 function createWindow() {
   win = new BrowserWindow({
     width: 800,
@@ -174,50 +323,31 @@ function createWindow() {
     win = null;
   });
 }
-ipcMain.on("process-complex-file", (event, filePath) => {
-  const extension = path.extname(filePath).toLowerCase();
-  let fileProcessPromise;
 
-  if (extension === ".pdf") {
-    const dataBuffer = fs.readFileSync(filePath);
-    fileProcessPromise = pdfParse(dataBuffer).then((data) => data.text);
-  } else if (extension === ".docx") {
-    fileProcessPromise = mammoth
-      .extractRawText({ path: filePath })
-      .then((result) => result.value)
-      .catch((err) => {
-        console.error("Error processing DOCX file:", err);
-        throw new Error("Error processing DOCX file.");
-      });
-  } else {
-    event.reply("file-response", "Error: Unsupported file type");
+ipcMain.on("start-query", async (event, system, user, model) => {
+  if (system == null || user == null || model == null) {
+    console.error("Received null for system, user message, or model");
+    event.reply(
+      "model-response-error",
+      "Error: System, user message, or model is null."
+    );
     return;
   }
 
-  fileProcessPromise
-    .then((extractedText) => {
-      // Sending the extracted text back to the frontend.
-      event.reply("file-response", extractedText);
-    })
-    .catch((error) => {
-      // Handling any errors during file processing and sending them back to the frontend.
-      event.reply("file-response", `Error processing file: ${error.message}`);
-    });
-});
-
-ipcMain.on("start-query-openai", async (event, system, user) => {
-  if (system == null || user == null) {
-    console.error("Received null for system or user message");
-    event.reply("openai-response", "Error: System or user message is null.");
-    return;
-  }
   try {
-    await queryOpenAI(system, user, (message) => {
-      event.reply("openai-response", message);
-    });
+    const _gptModels = allModels.gptModels.map((model) => model.id);
+    if (allModels.claudeModels.includes(model)) {
+      await claudeMessage(system, user, model, event);
+    } else if (_gptModels.includes(model)) {
+      await openaiMessage(system, user, model, event);
+    } else if (allModels.ollamaModels.includes(model)) {
+      await ollamaMessage(system, user, model, event);
+    } else {
+      event.reply("model-response-error", "Unsupported model: " + model);
+    }
   } catch (error) {
-    console.error("Error querying OpenAI:", error);
-    event.reply("no-api-key", "Error querying OpenAI.");
+    console.error("Error querying model:", error);
+    event.reply("model-response-error", "Error querying model.");
   }
 });
 
@@ -245,31 +375,32 @@ ipcMain.handle("get-pattern-content", async (event, patternName) => {
   }
 });
 
-ipcMain.handle("save-api-key", async (event, apiKey) => {
+ipcMain.handle("save-api-keys", async (event, { openAIKey, claudeKey }) => {
   try {
-    const configPath = path.join(os.homedir(), ".config", "fabric");
-    if (!fs.existsSync(configPath)) {
-      fs.mkdirSync(configPath, { recursive: true });
-    }
-
-    const envFilePath = path.join(configPath, ".env");
-    fs.writeFileSync(envFilePath, `OPENAI_API_KEY=${apiKey}`);
-    process.env.OPENAI_API_KEY = apiKey;
-
-    return "API Key saved successfully.";
+    saveApiKeys(openAIKey, claudeKey);
+    return "API Keys saved successfully.";
   } catch (error) {
-    console.error("Error saving API key:", error);
-    throw new Error("Failed to save API Key.");
+    console.error("Error saving API keys:", error);
+    throw new Error("Failed to save API Keys.");
+  }
+});
+
+ipcMain.handle("get-models", async (event) => {
+  try {
+    const models = await getModels();
+    return models;
+  } catch (error) {
+    console.error("Failed to get models:", error);
+    return { gptModels: [], claudeModels: [], ollamaModels: [] };
   }
 });
 
 app.whenReady().then(async () => {
   try {
-    const apiKey = loadApiKey();
-    if (!apiKey) {
+    const keys = loadApiKeys();
+    if (!keys.openAIKey && !keys.claudeKey) {
       promptUserForApiKey();
     } else {
-      process.env.OPENAI_API_KEY = apiKey;
       createWindow();
     }
     await ensureFabricFoldersExist(); // Ensure fabric folders exist
@@ -278,7 +409,6 @@ app.whenReady().then(async () => {
     // After window creation, check if the API key exists
     if (!checkApiKeyExists()) {
       console.log("API key is missing. Prompting user to input API key.");
-      // Optionally, directly invoke a function here to show a prompt in the renderer process
       win.webContents.send("request-api-key");
     }
   } catch (error) {

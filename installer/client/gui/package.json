@@ -11,12 +11,14 @@
   "devDependencies": {
     "dotenv": "^16.4.1",
     "electron": "^28.2.6",
-    "openai": "^4.27.0"
+    "openai": "^4.31.0"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.19.1",
     "axios": "^1.6.7",
     "mammoth": "^1.6.0",
     "node-fetch": "^2.6.7",
+    "ollama": "^0.5.0",
     "pdf-parse": "^1.1.1",
     "unzipper": "^0.10.14"
   }
