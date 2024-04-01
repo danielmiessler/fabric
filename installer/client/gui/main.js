@@ -1,10 +1,13 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
-const fs = require("fs");
+const fs = require("fs").promises;
 const path = require("path");
 const os = require("os");
 const OpenAI = require("openai");
 const Ollama = require("ollama");
 const Anthropic = require("@anthropic-ai/sdk");
+const axios = require("axios");
+const fsExtra = require("fs-extra");
+const fsConstants = require("fs").constants;
 
 let fetch, allModels;
 
@@ -17,26 +20,22 @@ let win;
 let openai;
 let ollama;
 
-function ensureFabricFoldersExist() {
-  return new Promise(async (resolve, reject) => {
-    const fabricPath = path.join(os.homedir(), ".config", "fabric");
-    const patternsPath = path.join(fabricPath, "patterns");
+async function ensureFabricFoldersExist() {
+  const fabricPath = path.join(os.homedir(), ".config", "fabric");
+  const patternsPath = path.join(fabricPath, "patterns");
 
-    try {
-      if (!fs.existsSync(fabricPath)) {
-        fs.mkdirSync(fabricPath, { recursive: true });
-      }
-
-      if (!fs.existsSync(patternsPath)) {
-        fs.mkdirSync(patternsPath, { recursive: true });
-        await downloadAndUpdatePatterns(patternsPath);
-      }
-      resolve(); // Resolve the promise once everything is set up
-    } catch (error) {
-      console.error("Error ensuring fabric folders exist:", error);
-      reject(error); // Reject the promise if an error occurs
-    }
-  });
+  try {
+    await fs
+      .access(fabricPath, fsConstants.F_OK)
+      .catch(() => fs.mkdir(fabricPath, { recursive: true }));
+    await fs
+      .access(patternsPath, fsConstants.F_OK)
+      .catch(() => fs.mkdir(patternsPath, { recursive: true }));
+    // Optionally download and update patterns after ensuring the directories exist
+  } catch (error) {
+    console.error("Error ensuring fabric folders exist:", error);
+    throw error; // Make sure to re-throw the error to handle it further up the call stack if necessary
+  }
 }
 
 async function downloadAndUpdatePatterns() {
@@ -105,51 +104,77 @@ async function downloadAndUpdatePatterns() {
 }
 function getPatternFolders() {
   const patternsPath = path.join(os.homedir(), ".config", "fabric", "patterns");
-  return fs
-    .readdirSync(patternsPath, { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name);
+  return new Promise((resolve, reject) => {
+    fs.readdir(patternsPath, { withFileTypes: true }, (error, dirents) => {
+      if (error) {
+        console.error("Failed to read pattern folders:", error);
+        reject(error);
+      } else {
+        const folders = dirents
+          .filter((dirent) => dirent.isDirectory())
+          .map((dirent) => dirent.name);
+        resolve(folders);
+      }
+    });
+  });
 }
 
-function checkApiKeyExists() {
+async function checkApiKeyExists() {
   const configPath = path.join(os.homedir(), ".config", "fabric", ".env");
-  return fs.existsSync(configPath);
+  try {
+    await fs.access(configPath, fsConstants.F_OK);
+    return true; // The file exists
+  } catch (e) {
+    return false; // The file does not exist
+  }
 }
 
-function loadApiKeys() {
+async function loadApiKeys() {
   const configPath = path.join(os.homedir(), ".config", "fabric", ".env");
   let keys = { openAIKey: null, claudeKey: null };
 
-  if (fs.existsSync(configPath)) {
-    const envContents = fs.readFileSync(configPath, { encoding: "utf8" });
+  try {
+    // Use fs.promises.readFile and await its result
+    const envContents = await fs.readFile(configPath, { encoding: "utf8" });
     const openAIMatch = envContents.match(/^OPENAI_API_KEY=(.*)$/m);
     const claudeMatch = envContents.match(/^CLAUDE_API_KEY=(.*)$/m);
 
     if (openAIMatch && openAIMatch[1]) {
       keys.openAIKey = openAIMatch[1];
-      openai = new OpenAI({ apiKey: keys.openAIKey });
+      // Initialize your OpenAI client here if necessary
     }
     if (claudeMatch && claudeMatch[1]) {
       keys.claudeKey = claudeMatch[1];
-      claude = new Anthropic({ apiKey: keys.claudeKey });
+      // Initialize your Claude client here if necessary
     }
+  } catch (error) {
+    // Handle the case where the .env file doesn't exist or can't be read
+    console.error("Could not load API keys:", error);
   }
   return keys;
 }
 
-function saveApiKeys(openAIKey, claudeKey) {
+async function saveApiKeys(openAIKey, claudeKey) {
   const configPath = path.join(os.homedir(), ".config", "fabric");
   const envFilePath = path.join(configPath, ".env");
 
-  if (!fs.existsSync(configPath)) {
-    fs.mkdirSync(configPath, { recursive: true });
+  try {
+    await fs.access(configPath);
+  } catch {
+    await fs.mkdir(configPath, { recursive: true });
   }
 
   let envContent = "";
 
   // Read the existing .env file if it exists
-  if (fs.existsSync(envFilePath)) {
-    envContent = fs.readFileSync(envFilePath, "utf8");
+  try {
+    envContent = await fs.readFile(envFilePath, "utf8");
+  } catch (err) {
+    if (err.code !== "ENOENT") {
+      throw err;
+    }
+    // If the file doesn't exist, create an empty .env file
+    await fs.writeFile(envFilePath, "");
   }
 
   // Update the specific API key
@@ -164,9 +189,9 @@ function saveApiKeys(openAIKey, claudeKey) {
     claude = new Anthropic({ apiKey: claudeKey });
   }
 
-  fs.writeFileSync(envFilePath, envContent.trim());
-  loadApiKeys();
-  win.webContents.send("reload-app");
+  await fs.writeFile(envFilePath, envContent.trim());
+  await loadApiKeys();
+  win.webContents.send("api-keys-saved");
 }
 
 function updateOrAddKey(envContent, keyName, keyValue) {
@@ -195,7 +220,7 @@ async function getModels() {
     ollamaModels: [],
   };
 
-  let keys = loadApiKeys(); // Assuming loadApiKeys() is updated to return both keys
+  let keys = await loadApiKeys(); // Assuming loadApiKeys() is updated to return both keys
 
   if (keys.claudeKey) {
     // Assuming claudeModels do not require an asynchronous call to be fetched
@@ -245,7 +270,7 @@ async function getModels() {
   return allModels; // Return the aggregated results
 }
 
-function getPatternContent(patternName) {
+async function getPatternContent(patternName) {
   const patternPath = path.join(
     os.homedir(),
     ".config",
@@ -255,7 +280,8 @@ function getPatternContent(patternName) {
     "system.md"
   );
   try {
-    return fs.readFileSync(patternPath, "utf8");
+    const content = await fs.readFile(patternPath, "utf8");
+    return content;
   } catch (error) {
     console.error("Error reading pattern file:", error);
     return "";
@@ -332,6 +358,33 @@ async function claudeMessage(system, user, model, event) {
   event.reply("model-response-end", responseMessage);
 }
 
+async function createPatternFolder(patternName, patternBody) {
+  try {
+    const patternsPath = path.join(
+      os.homedir(),
+      ".config",
+      "fabric",
+      "patterns"
+    );
+    const patternFolderPath = path.join(patternsPath, patternName);
+
+    // Create the pattern folder using the promise-based API
+    await fs.mkdir(patternFolderPath, { recursive: true });
+
+    // Create the system.md file inside the pattern folder
+    const filePath = path.join(patternFolderPath, "system.md");
+    await fs.writeFile(filePath, patternBody);
+
+    console.log(
+      `Pattern folder '${patternName}' created successfully with system.md inside.`
+    );
+    return `Pattern folder '${patternName}' created successfully with system.md inside.`;
+  } catch (err) {
+    console.error(`Failed to create the pattern folder: ${err.message}`);
+    throw err; // Ensure the error is thrown so it can be caught by the caller
+  }
+}
+
 function createWindow() {
   win = new BrowserWindow({
     width: 800,
@@ -377,10 +430,21 @@ ipcMain.on("start-query", async (event, system, user, model) => {
   }
 });
 
+ipcMain.handle("create-pattern", async (event, patternName, patternContent) => {
+  try {
+    const result = await createPatternFolder(patternName, patternContent);
+    return { status: "success", message: result }; // Use a response object for more detailed responses
+  } catch (error) {
+    console.error("Error creating pattern:", error);
+    return { status: "error", message: error.message }; // Return an error object
+  }
+});
+
 // Example of using ipcMain.handle for asynchronous operations
 ipcMain.handle("get-patterns", async (event) => {
   try {
-    return getPatternFolders();
+    const patterns = await getPatternFolders();
+    return patterns;
   } catch (error) {
     console.error("Failed to get patterns:", error);
     return [];
@@ -394,7 +458,8 @@ ipcMain.on("update-patterns", () => {
 
 ipcMain.handle("get-pattern-content", async (event, patternName) => {
   try {
-    return getPatternContent(patternName);
+    const content = await getPatternContent(patternName);
+    return content;
   } catch (error) {
     console.error("Failed to get pattern content:", error);
     return "";
@@ -403,7 +468,7 @@ ipcMain.handle("get-pattern-content", async (event, patternName) => {
 
 ipcMain.handle("save-api-keys", async (event, { openAIKey, claudeKey }) => {
   try {
-    saveApiKeys(openAIKey, claudeKey);
+    await saveApiKeys(openAIKey, claudeKey);
     return "API Keys saved successfully.";
   } catch (error) {
     console.error("Error saving API keys:", error);
@@ -423,22 +488,13 @@ ipcMain.handle("get-models", async (event) => {
 
 app.whenReady().then(async () => {
   try {
-    const keys = loadApiKeys();
-    if (!keys.openAIKey && !keys.claudeKey) {
-      promptUserForApiKey();
-    } else {
-      createWindow();
-    }
+    const keys = await loadApiKeys();
     await ensureFabricFoldersExist(); // Ensure fabric folders exist
-    createWindow(); // Create the application window
-
-    // After window creation, check if the API key exists
-    if (!checkApiKeyExists()) {
-      console.log("API key is missing. Prompting user to input API key.");
-      win.webContents.send("request-api-key");
-    }
+    await getModels(); // Fetch models after loading API keys
+    createWindow(); // Keep this line
   } catch (error) {
-    console.error("Failed to initialize fabric folders:", error);
+    await ensureFabricFoldersExist(); // Ensure fabric folders exist
+    createWindow(); // Keep this line
     // Handle initialization failure (e.g., close the app or show an error message)
   }
 });

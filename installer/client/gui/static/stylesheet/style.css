@@ -158,3 +158,27 @@ body.light-theme .navbar-toggler-icon {
 #copyButton:focus {
   outline: none;
 }
+#patternCreatedMessage {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 5px;
+}
+
+.light-theme #patternCreator {
+  background: #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.light-theme #patternCreator input,
+.light-theme #patternCreator textarea {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+}
+#patternCreator textarea {
+  background-color: #424242;
+  color: #e0e0e0;
+  border: 1px solid #555;
+}
