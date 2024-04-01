@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function () {
   const patternSelector = document.getElementById("patternSelector");
+  const modelSelector = document.getElementById("modelSelector");
   const userInput = document.getElementById("userInput");
   const submitButton = document.getElementById("submit");
   const responseContainer = document.getElementById("responseContainer");
@@ -7,8 +8,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   const configButton = document.getElementById("configButton");
   const configSection = document.getElementById("configSection");
   const saveApiKeyButton = document.getElementById("saveApiKey");
-  const apiKeyInput = document.getElementById("apiKeyInput");
-  const originalPlaceholder = userInput.placeholder;
+  const openaiApiKeyInput = document.getElementById("apiKeyInput");
+  const claudeApiKeyInput = document.getElementById("claudeApiKeyInput");
   const updatePatternsButton = document.getElementById("updatePatternsButton");
   const copyButton = document.createElement("button");
 
@@ -17,14 +18,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     loadPatterns();
   });
   window.electronAPI.on("request-api-key", () => {
-    // Show the API key input section or modal to the user
-    configSection.classList.remove("hidden"); // Assuming 'configSection' is your API key input area
+    configSection.classList.remove("hidden");
   });
   copyButton.textContent = "Copy";
   copyButton.id = "copyButton";
   document.addEventListener("click", function (e) {
     if (e.target && e.target.id === "copyButton") {
-      // Your copy to clipboard function
       copyToClipboard();
     }
   });
@@ -38,54 +37,48 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   function htmlToPlainText(html) {
-    // Create a temporary div element to hold the HTML
     var tempDiv = document.createElement("div");
     tempDiv.innerHTML = html;
 
-    // Replace <br> tags with newline characters
     tempDiv.querySelectorAll("br").forEach((br) => br.replaceWith("\n"));
 
-    // Replace block elements like <p> and <div> with newline characters
     tempDiv.querySelectorAll("p, div").forEach((block) => {
-      block.prepend("\n"); // Add a newline before the block element's content
-      block.replaceWith(...block.childNodes); // Replace the block element with its own contents
+      block.prepend("\n");
+      block.replaceWith(...block.childNodes);
     });
 
-    // Return the text content, trimming leading and trailing newlines
     return tempDiv.textContent.trim();
   }
 
   async function submitQuery(userInputValue) {
     userInput.value = ""; // Clear the input after submitting
-    systemCommand = await window.electronAPI.invoke(
+    const systemCommand = await window.electronAPI.invoke(
       "get-pattern-content",
       patternSelector.value
     );
+    const selectedModel = modelSelector.value;
     responseContainer.innerHTML = ""; // Clear previous responses
     if (responseContainer.classList.contains("hidden")) {
-      console.log("contains hidden");
       responseContainer.classList.remove("hidden");
       responseContainer.appendChild(copyButton);
     }
     window.electronAPI.send(
-      "start-query-openai",
+      "start-query",
       systemCommand,
-      userInputValue
+      userInputValue,
+      selectedModel
     );
   }
 
   function copyToClipboard() {
     const containerClone = responseContainer.cloneNode(true);
-    // Remove the copy button from the clone
     const copyButtonClone = containerClone.querySelector("#copyButton");
     if (copyButtonClone) {
       copyButtonClone.parentNode.removeChild(copyButtonClone);
     }
 
-    // Convert HTML to plain text, preserving newlines
     const plainText = htmlToPlainText(containerClone.innerHTML);
 
-    // Use a temporary textarea for copying
     const textArea = document.createElement("textarea");
     textArea.style.position = "absolute";
     textArea.style.left = "-9999px";
@@ -118,45 +111,53 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  function fallbackCopyTextToClipboard(text) {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-
+  async function loadModels() {
     try {
-      const successful = document.execCommand("copy");
-      const msg = successful ? "successful" : "unsuccessful";
-      console.log("Fallback: Copying text command was " + msg);
-    } catch (err) {
-      console.error("Fallback: Oops, unable to copy", err);
+      const models = await window.electronAPI.invoke("get-models");
+      modelSelector.innerHTML = ""; // Clear existing options first
+      models.gptModels.forEach((model) => {
+        const option = document.createElement("option");
+        option.value = model.id;
+        option.textContent = model.id;
+        modelSelector.appendChild(option);
+      });
+      models.claudeModels.forEach((model) => {
+        const option = document.createElement("option");
+        option.value = model;
+        option.textContent = model;
+        modelSelector.appendChild(option);
+      });
+      models.ollamaModels.forEach((model) => {
+        const option = document.createElement("option");
+        option.value = model;
+        option.textContent = model;
+        modelSelector.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Failed to load models:", error);
     }
-
-    document.body.removeChild(textArea);
   }
 
   updatePatternsButton.addEventListener("click", () => {
     window.electronAPI.send("update-patterns");
   });
 
-  // Load patterns on startup
-  try {
-    const patterns = await window.electronAPI.invoke("get-patterns");
-    patterns.forEach((pattern) => {
-      const option = document.createElement("option");
-      option.value = pattern;
-      option.textContent = pattern;
-      patternSelector.appendChild(option);
-    });
-  } catch (error) {
-    console.error("Failed to load patterns:", error);
-  }
+  // Load patterns and models on startup
+  loadPatterns();
+  loadModels();
 
-  // Listen for OpenAI responses
-  window.electronAPI.on("openai-response", (message) => {
+  // Listen for model responses
+  window.electronAPI.on("model-response", (message) => {
     const formattedMessage = message.replace(/\n/g, "<br>");
     responseContainer.innerHTML += formattedMessage; // Append new data as it arrives
+  });
+
+  window.electronAPI.on("model-response-end", (message) => {
+    // Handle the end of the model response if needed
+  });
+
+  window.electronAPI.on("model-response-error", (message) => {
+    alert(message);
   });
 
   window.electronAPI.on("file-response", (message) => {
@@ -189,18 +190,19 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // Save API Key button click handler
   saveApiKeyButton.addEventListener("click", () => {
-    const apiKey = apiKeyInput.value;
+    const openAIKey = openaiApiKeyInput.value;
+    const claudeKey = claudeApiKeyInput.value;
     window.electronAPI
-      .invoke("save-api-key", apiKey)
+      .invoke("save-api-keys", { openAIKey, claudeKey })
       .then(() => {
-        alert("API Key saved successfully.");
-        // Optionally hide the config section and clear the input after saving
+        alert("API Keys saved successfully.");
         configSection.classList.add("hidden");
-        apiKeyInput.value = "";
+        openaiApiKeyInput.value = "";
+        claudeApiKeyInput.value = "";
       })
       .catch((err) => {
-        console.error("Error saving API key:", err);
-        alert("Failed to save API Key.");
+        console.error("Error saving API keys:", err);
+        alert("Failed to save API Keys.");
       });
   });
 
@@ -211,7 +213,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       "get-pattern-content",
       selectedPattern
     );
-    // Use systemCommand as part of the input for querying OpenAI
+    // Use systemCommand as part of the input for querying the model
   });
 
   // drag and drop
