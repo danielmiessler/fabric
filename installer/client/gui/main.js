@@ -286,7 +286,16 @@ async function getPatternContent(patternName) {
   }
 }
 
-async function ollamaMessage(system, user, model, event) {
+async function ollamaMessage(
+  system,
+  user,
+  model,
+  temperature,
+  topP,
+  frequencyPenalty,
+  presencePenalty,
+  event
+) {
   ollama = new Ollama.Ollama();
   const userMessage = {
     role: "user",
@@ -296,6 +305,10 @@ async function ollamaMessage(system, user, model, event) {
   const response = await ollama.chat({
     model: model,
     messages: [systemMessage, userMessage],
+    temperature: temperature,
+    top_p: topP,
+    frequency_penalty: frequencyPenalty,
+    presence_penalty: presencePenalty,
     stream: true,
   });
   let responseMessage = "";
@@ -309,13 +322,26 @@ async function ollamaMessage(system, user, model, event) {
   }
 }
 
-async function openaiMessage(system, user, model, event) {
+async function openaiMessage(
+  system,
+  user,
+  model,
+  temperature,
+  topP,
+  frequencyPenalty,
+  presencePenalty,
+  event
+) {
   const userMessage = { role: "user", content: user };
   const systemMessage = { role: "system", content: system };
   const stream = await openai.chat.completions.create(
     {
       model: model,
       messages: [systemMessage, userMessage],
+      temperature: temperature,
+      top_p: topP,
+      frequency_penalty: frequencyPenalty,
+      presence_penalty: presencePenalty,
       stream: true,
     },
     { responseType: "stream" }
@@ -334,7 +360,7 @@ async function openaiMessage(system, user, model, event) {
   event.reply("model-response-end", responseMessage);
 }
 
-async function claudeMessage(system, user, model, event) {
+async function claudeMessage(system, user, model, temperature, topP, event) {
   if (!claude) {
     event.reply(
       "model-response-error",
@@ -351,8 +377,8 @@ async function claudeMessage(system, user, model, event) {
     max_tokens: 4096,
     messages: [userMessage],
     stream: true,
-    temperature: 0.0,
-    top_p: 1.0,
+    temperature: temperature,
+    top_p: topP,
   });
   let responseMessage = "";
   for await (const chunk of response) {
@@ -409,32 +435,62 @@ function createWindow() {
   });
 }
 
-ipcMain.on("start-query", async (event, system, user, model) => {
-  if (system == null || user == null || model == null) {
-    console.error("Received null for system, user message, or model");
-    event.reply(
-      "model-response-error",
-      "Error: System, user message, or model is null."
-    );
-    return;
-  }
-
-  try {
-    const _gptModels = allModels.gptModels.map((model) => model.id);
-    if (allModels.claudeModels.includes(model)) {
-      await claudeMessage(system, user, model, event);
-    } else if (_gptModels.includes(model)) {
-      await openaiMessage(system, user, model, event);
-    } else if (allModels.ollamaModels.includes(model)) {
-      await ollamaMessage(system, user, model, event);
-    } else {
-      event.reply("model-response-error", "Unsupported model: " + model);
+ipcMain.on(
+  "start-query",
+  async (
+    event,
+    system,
+    user,
+    model,
+    temperature,
+    topP,
+    frequencyPenalty,
+    presencePenalty
+  ) => {
+    if (system == null || user == null || model == null) {
+      console.error("Received null for system, user message, or model");
+      event.reply(
+        "model-response-error",
+        "Error: System, user message, or model is null."
+      );
+      return;
     }
-  } catch (error) {
-    console.error("Error querying model:", error);
-    event.reply("model-response-error", "Error querying model.");
+
+    try {
+      const _gptModels = allModels.gptModels.map((model) => model.id);
+      if (allModels.claudeModels.includes(model)) {
+        await claudeMessage(system, user, model, temperature, topP, event);
+      } else if (_gptModels.includes(model)) {
+        await openaiMessage(
+          system,
+          user,
+          model,
+          temperature,
+          topP,
+          frequencyPenalty,
+          presencePenalty,
+          event
+        );
+      } else if (allModels.ollamaModels.includes(model)) {
+        await ollamaMessage(
+          system,
+          user,
+          model,
+          temperature,
+          topP,
+          frequencyPenalty,
+          presencePenalty,
+          event
+        );
+      } else {
+        event.reply("model-response-error", "Unsupported model: " + model);
+      }
+    } catch (error) {
+      console.error("Error querying model:", error);
+      event.reply("model-response-error", "Error querying model.");
+    }
   }
-});
+);
 
 ipcMain.handle("create-pattern", async (event, patternName, patternContent) => {
   try {

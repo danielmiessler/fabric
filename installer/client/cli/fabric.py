@@ -40,6 +40,14 @@ def main():
         "--list", "-l", help="List available patterns", action="store_true"
     )
     parser.add_argument(
+        '--temp', help="set the temperature for the model. Default is 0", default=0, type=float)
+    parser.add_argument(
+        '--top_p', help="set the top_p for the model. Default is 1", default=1, type=float)
+    parser.add_argument(
+        '--frequency_penalty', help="set the frequency penalty for the model. Default is 0.1", default=0.1, type=float)
+    parser.add_argument(
+        '--presence_penalty', help="set the presence penalty for the model. Default is 0.1", default=0.1, type=float)
+    parser.add_argument(
         "--update", "-u", help="Update patterns. NOTE: This will revert the default model to gpt4-turbo. please run --changeDefaultModel to once again set default model", action="store_true")
     parser.add_argument("--pattern", "-p", help="The pattern (prompt) to use")
     parser.add_argument(
