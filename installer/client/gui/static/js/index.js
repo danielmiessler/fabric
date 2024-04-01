@@ -11,6 +11,10 @@ document.addEventListener("DOMContentLoaded", async function () {
   const openaiApiKeyInput = document.getElementById("apiKeyInput");
   const claudeApiKeyInput = document.getElementById("claudeApiKeyInput");
   const updatePatternsButton = document.getElementById("updatePatternsButton");
+  const updatePatternButton = document.getElementById("createPattern");
+  const patternCreator = document.getElementById("patternCreator");
+  const submitPatternButton = document.getElementById("submitPattern");
+  const myForm = document.getElementById("my-form");
   const copyButton = document.createElement("button");
 
   window.electronAPI.on("patterns-ready", () => {
@@ -68,6 +72,35 @@ document.addEventListener("DOMContentLoaded", async function () {
       userInputValue,
       selectedModel
     );
+  }
+
+  async function submitPattern(patternName, patternText) {
+    try {
+      const response = await window.electronAPI.invoke(
+        "create-pattern",
+        patternName,
+        patternText
+      );
+      if (response.status === "success") {
+        console.log(response.message);
+        // Show success message
+        const patternCreatedMessage = document.getElementById(
+          "patternCreatedMessage"
+        );
+        patternCreatedMessage.classList.remove("hidden");
+        setTimeout(() => {
+          patternCreatedMessage.classList.add("hidden");
+        }, 3000); // Hide the message after 3 seconds
+
+        // Update pattern list
+        loadPatterns();
+      } else {
+        console.error(response.message);
+        // Handle failure (e.g., showing an error message to the user)
+      }
+    } catch (error) {
+      console.error("IPC error:", error);
+    }
   }
 
   function copyToClipboard() {
@@ -135,12 +168,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       });
     } catch (error) {
       console.error("Failed to load models:", error);
+      alert(
+        "Failed to load models. Please check the console for more details."
+      );
     }
   }
-
-  updatePatternsButton.addEventListener("click", () => {
-    window.electronAPI.send("update-patterns");
-  });
 
   // Load patterns and models on startup
   loadPatterns();
@@ -168,18 +200,31 @@ document.addEventListener("DOMContentLoaded", async function () {
     submitQuery(message);
   });
 
-  window.electronAPI.on;
-  "reload-app",
-    () => {
-      // Reload the app
-      loadModels();
-      location.reload();
-    };
+  window.electronAPI.on("api-keys-saved", async () => {
+    try {
+      await loadModels();
+      alert("API Keys saved successfully.");
+      configSection.classList.add("hidden");
+      openaiApiKeyInput.value = "";
+      claudeApiKeyInput.value = "";
+    } catch (error) {
+      console.error("Failed to reload models:", error);
+      alert("Failed to reload models.");
+    }
+  });
 
   // Submit button click handler
   submitButton.addEventListener("click", async () => {
     const userInputValue = userInput.value;
     submitQuery(userInputValue);
+  });
+
+  submitPatternButton.addEventListener("click", async () => {
+    const patternName = document.getElementById("patternName").value;
+    const patternText = document.getElementById("patternBody").value;
+    document.getElementById("patternName").value = "";
+    document.getElementById("patternBody").value = "";
+    submitPattern(patternName, patternText);
   });
 
   // Theme changer click handler
@@ -188,6 +233,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.body.classList.toggle("light-theme");
     themeChanger.innerText =
       themeChanger.innerText === "Dark" ? "Light" : "Dark";
+  });
+
+  updatePatternButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    patternCreator.classList.toggle("hidden");
+    myForm.classList.toggle("hidden");
+
+    // window.electronAPI.send("create-pattern");
   });
 
   // Config button click handler - toggles the config section visibility
@@ -202,14 +255,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     const claudeKey = claudeApiKeyInput.value;
     window.electronAPI
       .invoke("save-api-keys", { openAIKey, claudeKey })
-      .then(() => {
-        alert("API Keys saved successfully.");
-        configSection.classList.add("hidden");
-        openaiApiKeyInput.value = "";
-        claudeApiKeyInput.value = "";
-        // Reload the models
-        loadModels();
-      })
       .catch((err) => {
         console.error("Error saving API keys:", err);
         alert("Failed to save API Keys.");
