@@ -1470,17 +1470,16 @@ extended-testing = ["aiosqlite (>=0.19.0,<0.20.0)", "aleph-alpha-client (>=2.15.
 
 [[package]]
 name = "langchain-core"
-version = "0.1.31"
+version = "0.1.35"
 description = "Building applications with LLMs through composability"
 optional = false
-python-versions = ">=3.8.1,<4.0"
+python-versions = "<4.0,>=3.8.1"
 files = [
-    {file = "langchain_core-0.1.31-py3-none-any.whl", hash = "sha256:ff028f00db8ff03565b542cea81be27426022a72c6545b54d8de66fa00948ab3"},
-    {file = "langchain_core-0.1.31.tar.gz", hash = "sha256:d660cf209bb6ce61cb1c853107b091aaa809015a55dce9e0ce19b51d4c8f2a70"},
+    {file = "langchain_core-0.1.35-py3-none-any.whl", hash = "sha256:9d790446ea211f4cb620886081cc5a5723bc9a2dc90af1f6205aded2ee61bb71"},
+    {file = "langchain_core-0.1.35.tar.gz", hash = "sha256:862b8415d4deaf4e06833ef826bcef3614d75c3e7fd82b09b1349cc223f02e9a"},
 ]
 
 [package.dependencies]
-anyio = ">=3,<5"
 jsonpatch = ">=1.33,<2.0"
 langsmith = ">=0.1.0,<0.2.0"
 packaging = ">=23.2,<24.0"
@@ -3684,4 +3683,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5732b76a0ab3501228efa6c0091e4a66bd84def76c8934f06b9219dc2c9d3ad3"
+content-hash = "0cb2d2f8fc9cdfa79f9406a835251676f39db15de63b1ba1ef8f0fed71307f2b"
