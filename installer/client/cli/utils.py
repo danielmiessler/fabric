@@ -55,6 +55,9 @@ class Standalone:
                 self.model = 'gpt-4-turbo-preview'
         self.claude = False
         sorted_gpt_models, ollamaList, claudeList = self.fetch_available_models()
+        self.sorted_gpt_models = sorted_gpt_models
+        self.ollamaList = ollamaList
+        self.claudeList = claudeList
         self.local = self.model in ollamaList
         self.claude = self.model in claudeList
 
@@ -332,6 +335,23 @@ class Standalone:
                 return input("Enter Question: ")
         else:
             return sys.stdin.read()
+
+    def agents(self, userInput):
+        from praisonai import PraisonAI
+        model = self.model
+        os.environ["OPENAI_MODEL_NAME"] = model
+        if model in self.sorted_gpt_models:
+            os.environ["OPENAI_API_BASE"] = "https://api.openai.com/v1/"
+        elif model in self.ollamaList:
+            os.environ["OPENAI_API_BASE"] = "http://localhost:11434/v1"
+            os.environ["OPENAI_API_KEY"] = "NA"
+
+        elif model in self.claudeList:
+            print("Claude is not supported in this mode")
+            sys.exit()
+        print("Starting PraisonAI...")
+        praison_ai = PraisonAI(auto=userInput, framework="autogen")
+        praison_ai.main()
 
 
 class Update:

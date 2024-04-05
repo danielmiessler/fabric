@@ -16,8 +16,8 @@ def main():
         "--copy", "-C", help="Copy the response to the clipboard", action="store_true"
     )
     parser.add_argument(
-        '--agents', '-a', choices=['trip_planner', 'ApiKeys'],
-        help="Use an AI agent to help you with a task. Acceptable values are 'trip_planner' or 'ApiKeys'. This option cannot be used with any other flag."
+        '--agents', '-a',
+        help="Use praisonAI to create an AI agent and then use it. ex: 'write me a movie script'", action="store_true"
     )
 
     parser.add_argument(
@@ -89,17 +89,6 @@ def main():
     if args.changeDefaultModel:
         Setup().default_model(args.changeDefaultModel)
         sys.exit()
-    if args.agents:
-        # Handle the agents logic
-        if args.agents == 'trip_planner':
-            from .agents.trip_planner.main import planner_cli
-            tripcrew = planner_cli()
-            tripcrew.ask()
-            sys.exit()
-        elif args.agents == 'ApiKeys':
-            from .utils import AgentSetup
-            AgentSetup().run()
-            sys.exit()
     if args.gui:
         run_electron_app()
         sys.exit()
@@ -110,6 +99,18 @@ def main():
     if args.context:
         if not os.path.exists(os.path.join(config, "context.md")):
             print("Please create a context.md file in ~/.config/fabric")
+            sys.exit()
+    if args.agents:
+        standalone = Standalone(args)
+        text = ""  # Initialize text variable
+        # Check if an argument was provided to --agents
+        if args.text:
+            text = args.text
+        else:
+            text = standalone.get_cli_input()
+        if text:
+            standalone = Standalone(args)
+            standalone.agents(text)
             sys.exit()
     standalone = Standalone(args, args.pattern)
     if args.list:

@@ -1,0 +1,44 @@
+framework: crewai
+topic: 'write me a 20 word essay on apples
+
+  '
+roles:
+  researcher:
+    backstory: Has an extensive background in conducting research using digital tools
+      to extract relevant information.
+    goal: Gather comprehensive information about apples
+    role: Researcher
+    tasks:
+      collect_information_on_apples:
+        description: Use digital tools to find credible sources of information on
+          apples covering history, types, and benefits.
+        expected_output: Collected data on apples, including historical background,
+          varieties, and health benefits.
+    tools:
+    - ''
+  analyst:
+    backstory: Expert in analyzing large volumes of data to identify the most relevant
+      and interesting facts.
+    goal: Analyze gathered information to distill key points
+    role: Analyst
+    tasks:
+      synthesize_information:
+        description: Review the collected data and extract the most pertinent facts
+          about apples, focusing on uniqueness and impact.
+        expected_output: A summary highlighting key facts about apples, such as nutritional
+          benefits, global popularity, and cultural significance.
+    tools:
+    - ''
+  writer:
+    backstory: Specializes in creating short, impactful pieces of writing that capture
+      the essence of the subject matter.
+    goal: Craft a concise and engaging essay on apples
+    role: Writer
+    tasks:
+      write_essay:
+        description: Based on the analyzed data, write a compelling 20-word essay
+          on apples that encapsulates their essence and significance.
+        expected_output: An engaging 20-word essay on apples.
+    tools:
+    - ''
+dependencies: []

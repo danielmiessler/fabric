@@ -209,8 +209,9 @@ Once you have it all set up, here's how to use it.
    `fabric -h`
 
 ```bash
-usage: fabric [-h] [--text TEXT] [--copy] [--agents {trip_planner,ApiKeys}] [--output [OUTPUT]] [--gui] [--stream] [--list] [--update] [--pattern PATTERN] [--setup] [--changeDefaultModel CHANGEDEFAULTMODEL]
-              [--model MODEL] [--listmodels] [--remoteOllamaServer REMOTEOLLAMASERVER] [--context]
+usage: fabric [-h] [--text TEXT] [--copy] [--agents] [--output [OUTPUT]] [--gui] [--stream] [--list] [--temp TEMP] [--top_p TOP_P] [--frequency_penalty FREQUENCY_PENALTY]
+              [--presence_penalty PRESENCE_PENALTY] [--update] [--pattern PATTERN] [--setup] [--changeDefaultModel CHANGEDEFAULTMODEL] [--model MODEL] [--listmodels]
+              [--remoteOllamaServer REMOTEOLLAMASERVER] [--context]
 
 An open source framework for augmenting humans using AI.
 
@@ -218,13 +219,18 @@ options:
   -h, --help            show this help message and exit
   --text TEXT, -t TEXT  Text to extract summary from
   --copy, -C            Copy the response to the clipboard
-  --agents {trip_planner,ApiKeys}, -a {trip_planner,ApiKeys}
-                        Use an AI agent to help you with a task. Acceptable values are 'trip_planner' or 'ApiKeys'. This option cannot be used with any other flag.
+  --agents, -a          Use praisonAI to create an AI agent and then use it. ex: 'write me a movie script'
   --output [OUTPUT], -o [OUTPUT]
                         Save the response to a file
   --gui                 Use the GUI (Node and npm need to be installed)
   --stream, -s          Use this option if you want to see the results in realtime. NOTE: You will not be able to pipe the output into another command.
   --list, -l            List available patterns
+  --temp TEMP           set the temperature for the model. Default is 0
+  --top_p TOP_P         set the top_p for the model. Default is 1
+  --frequency_penalty FREQUENCY_PENALTY
+                        set the frequency penalty for the model. Default is 0.1
+  --presence_penalty PRESENCE_PENALTY
+                        set the presence penalty for the model. Default is 0.1
   --update, -u          Update patterns. NOTE: This will revert the default model to gpt4-turbo. please run --changeDefaultModel to once again set default model
   --pattern PATTERN, -p PATTERN
                         The pattern (prompt) to use
@@ -463,7 +469,7 @@ The content features a conversation between two individuals discussing various t
 
 You can also use Custom Patterns with Fabric, meaning Patterns you keep locally and don't upload to Fabric.
 
-One possible place to store them is `~/.config/custom-fabric-patterns`.
+One possible place to store PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAIthem is `~/.config/custom-fabric-patterns`.
 
 Then when you want to use them, simply copy them into `~/.config/fabric/patterns`.
 
@@ -476,6 +482,16 @@ Now you can run them with:
 ```bash
 pbpaste | fabric -p your_custom_pattern
 ```
+
+## Agents
+
+NEW FEATURE! We have incorporated PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAI. This feature CREATES AI agents and then uses them to perform a task
+
+```bash
+echo "Search for recent articles about the future of AI and write me a 500 word essay on the findings" | fabric --agents
+```
+
+This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
 
 ## Helper Apps
 
