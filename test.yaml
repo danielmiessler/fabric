@@ -1,44 +1,44 @@
 framework: crewai
-topic: 'write me a 20 word essay on apples
+topic: 'give me the complete voting record of senator marco rubio
 
   '
 roles:
-  researcher:
-    backstory: Has an extensive background in conducting research using digital tools
-      to extract relevant information.
-    goal: Gather comprehensive information about apples
-    role: Researcher
+  data_researcher:
+    backstory: Skilled in using various data search tools to find accurate information.
+    goal: Gather relevant data on Senator Marco Rubio's voting record
+    role: Data Researcher
     tasks:
-      collect_information_on_apples:
-        description: Use digital tools to find credible sources of information on
-          apples covering history, types, and benefits.
-        expected_output: Collected data on apples, including historical background,
-          varieties, and health benefits.
+      data_collection:
+        description: Use provided search tools to collect voting records of Senator
+          Marco Rubio from different sources.
+        expected_output: A collection of CSV, XML or other data files containing the
+          required information.
     tools:
     - ''
-  analyst:
-    backstory: Expert in analyzing large volumes of data to identify the most relevant
-      and interesting facts.
-    goal: Analyze gathered information to distill key points
-    role: Analyst
+  data_processor:
+    backstory: Expert in processing and cleaning raw data, preparing it for analysis
+      or presentation.
+    goal: Process and format collected data into a readable output
+    role: Data Processor
     tasks:
-      synthesize_information:
-        description: Review the collected data and extract the most pertinent facts
-          about apples, focusing on uniqueness and impact.
-        expected_output: A summary highlighting key facts about apples, such as nutritional
-          benefits, global popularity, and cultural significance.
+      data_processing:
+        description: Clean and process the collected voting records into a structured
+          JSON format.
+        expected_output: A JSON file containing Senator Marco Rubio's complete voting
+          record.
     tools:
     - ''
-  writer:
-    backstory: Specializes in creating short, impactful pieces of writing that capture
-      the essence of the subject matter.
-    goal: Craft a concise and engaging essay on apples
-    role: Writer
+  presenter:
+    backstory: Skilled in extracting and summarizing information, presenting it in
+      a clear and concise format.
+    goal: Generate the final output for user consumption
+    role: Presenter
     tasks:
-      write_essay:
-        description: Based on the analyzed data, write a compelling 20-word essay
-          on apples that encapsulates their essence and significance.
-        expected_output: An engaging 20-word essay on apples.
+      presentation_creation:
+        description: Create an easily digestible presentation from the processed data
+          on Senator Marco Rubio's voting record.
+        expected_output: A well-structured text or multimedia output that highlights
+          key aspects of Senator Marco Rubio's voting history.
     tools:
     - ''
 dependencies: []
