@@ -38,12 +38,11 @@ class Standalone:
         if args is None:
             args = type('Args', (), {})()
         env_file = os.path.expanduser(env_file)
+        self.client = None
         load_dotenv(env_file)
-        assert 'OPENAI_API_KEY' in os.environ, "Error: OPENAI_API_KEY not found in environment variables. Please run fabric --setup and add a key."
-        api_key = os.environ['OPENAI_API_KEY']
-        base_url = os.environ.get(
-            'OPENAI_BASE_URL', 'https://api.openai.com/v1/')
-        self.client = OpenAI(api_key=api_key, base_url=base_url)
+        if "OPENAI_API_KEY" in os.environ:
+            api_key = os.environ['OPENAI_API_KEY']
+            self.client = OpenAI(api_key=api_key)
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
@@ -280,33 +279,26 @@ class Standalone:
     def fetch_available_models(self):
         gptlist = []
         fullOllamaList = []
-        claudeList = ['claude-3-opus-20240229',
-                      'claude-3-sonnet-20240229',
-                      'claude-3-haiku-20240307',
-                      'claude-2.1']
-        try:
-            models = [model.id.strip()
-                      for model in self.client.models.list().data]
-        except APIConnectionError as e:
-            if getattr(e.__cause__, 'args', [''])[0] == "Illegal header value b'Bearer '":
-                print("Error: Cannot connect to the OpenAI API Server because the API key is not set. Please run fabric --setup and add a key.")
+        claudeList = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229',
+                      'claude-3-haiku-20240307', 'claude-2.1']
 
-            else:
-                print(
-                    f"Error: {e.message} trying to access {e.request.url}: {getattr(e.__cause__, 'args', [''])}")
-            sys.exit()
+        try:
+            if self.client:
+                models = [model.id.strip()
+                          for model in self.client.models.list().data]
+                if "/" in models[0] or "\\" in models[0]:
+                    gptlist = [item[item.rfind(
+                        "/") + 1:] if "/" in item else item[item.rfind("\\") + 1:] for item in models]
+                else:
+                    gptlist = [item.strip()
+                               for item in models if item.startswith("gpt")]
+                gptlist.sort()
+        except APIConnectionError as e:
+            print("OpenAI API key not set. Skipping GPT models.")
         except Exception as e:
             print(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
             sys.exit()
-        if "/" in models[0] or "\\" in models[0]:
-            # lmstudio returns full paths to models. Iterate and truncate everything before and including the last slash
-            gptlist = [item[item.rfind(
-                "/") + 1:] if "/" in item else item[item.rfind("\\") + 1:] for item in models]
-        else:
-            # Keep items that start with "gpt"
-            gptlist = [item.strip()
-                       for item in models if item.startswith("gpt")]
-        gptlist.sort()
+
         import ollama
         try:
             if self.args.remoteOllamaServer:
@@ -318,6 +310,7 @@ class Standalone:
                 fullOllamaList.append(model['name'])
         except:
             fullOllamaList = []
+
         return gptlist, fullOllamaList, claudeList
 
     def get_cli_input(self):
