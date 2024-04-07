@@ -279,8 +279,11 @@ class Standalone:
     def fetch_available_models(self):
         gptlist = []
         fullOllamaList = []
-        claudeList = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229',
-                      'claude-3-haiku-20240307', 'claude-2.1']
+        if "CLAUDE_API_KEY" in os.environ:
+            claudeList = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229',
+                          'claude-3-haiku-20240307', 'claude-2.1']
+        else:
+            claudeList = []
 
         try:
             if self.client:
@@ -294,7 +297,7 @@ class Standalone:
                                for item in models if item.startswith("gpt")]
                 gptlist.sort()
         except APIConnectionError as e:
-            print("OpenAI API key not set. Skipping GPT models.")
+            pass
         except Exception as e:
             print(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
             sys.exit()
