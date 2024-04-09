@@ -31,16 +31,23 @@ ARCHITECTURE:
 - What protocol and version will the client use to communicate with the server?
 - Next question
 - Next question
+- Etc
+- As many as necessary
 
 AUTHENTICATION: 
 
 - Question
 - Question
 - Etc
+- As many as necessary
 
 END EXAMPLES
 
-- There should be at least 15 questions and up to 30.
+- There should be at least 15 questions and up to 50.
+
+# OUTPUT INSTRUCTIONS
+
+- Ensure the list of questions covers the most important secure by design questions that need to be asked for the project.
 
 # INPUT
 
