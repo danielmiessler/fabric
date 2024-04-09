@@ -24,13 +24,23 @@ Create a perfect set of questions to ask in order to address the security of the
 
 - In a section called SECURE BY DESIGN QUESTIONS, create a prioritized, bulleted list of 15-25-word questions that should be asked to ensure the project is being built with security by design in mind.
 
-- Each question should start with a theme followed by a colon, like so:
+- Questions should be grouped into themes that have capitalized headers, e.g.,:
 
-ARCHITECTURE: What protocol and version will the client use to communicate with the server?
+ARCHITECTURE: 
 
-ENVIRONMENTAL: What standards will you use to build the bridge to ensure it can survive up to an 8.5 earthquake?
+- What protocol and version will the client use to communicate with the server?
+- Next question
+- Next question
 
-- This section should have least 10 items, and up to 25.
+AUTHENTICATION: 
+
+- Question
+- Question
+- Etc
+
+END EXAMPLES
+
+- There should be at least 15 questions and up to 30.
 
 # INPUT
 
