@@ -40,9 +40,16 @@ class Standalone:
         env_file = os.path.expanduser(env_file)
         self.client = None
         load_dotenv(env_file)
+        if args.openAiBaseUrl:
+            self.openai_base_url = args.openApiBaseUrl
+        else:
+            self.openai_base_url = os.environ.get("OPENAI_API_BASE_URL", None)
         if "OPENAI_API_KEY" in os.environ:
             api_key = os.environ['OPENAI_API_KEY']
-            self.client = OpenAI(api_key=api_key)
+            if self.openai_base_url:
+                self.client = OpenAI(api_key=api_key, base_url=self.openai_base_url)
+            else:
+                self.client = OpenAI(api_key=api_key)
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern

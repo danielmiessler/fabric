@@ -64,6 +64,8 @@ def main():
     )
     parser.add_argument('--remoteOllamaServer',
                         help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-deault location or port')
+    parser.add_argument('--openAiBaseUrl',
+                        help='Base URL for OpenAI calls. Use this for when you want to use a local model via LM Studio. Alternatively, you can set OPENAI_API_BASE_URL in the environment.')
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
 
