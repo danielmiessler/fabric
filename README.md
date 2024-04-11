@@ -469,7 +469,7 @@ The content features a conversation between two individuals discussing various t
 
 You can also use Custom Patterns with Fabric, meaning Patterns you keep locally and don't upload to Fabric.
 
-One possible place to store PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAIthem is `~/.config/custom-fabric-patterns`.
+One possible place to store them is `~/.config/custom-fabric-patterns`.
 
 Then when you want to use them, simply copy them into `~/.config/fabric/patterns`.
 
