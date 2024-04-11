@@ -11,11 +11,14 @@ import tempfile
 import subprocess
 import shutil
 from youtube_transcript_api import YouTubeTranscriptApi
-
+import sys
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
 env_file = os.path.join(config_directory, ".env")
 
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 class Standalone:
     def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
@@ -143,7 +146,7 @@ class Standalone:
                     system_message = {"role": "system", "content": system}
                 messages = [system_message, user_message]
             except FileNotFoundError:
-                print("pattern not found")
+                eprint("pattern not found")
                 return
         else:
             if context:
@@ -183,17 +186,17 @@ class Standalone:
                     sys.stdout.flush()
         except Exception as e:
             if "All connection attempts failed" in str(e):
-                print(
+                eprint(
                     "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
             if "CLAUDE_API_KEY" in str(e):
-                print(
+                eprint(
                     "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
             if "overloaded_error" in str(e):
-                print(
+                eprint(
                     "Error: Fabric is working fine, but claude is overloaded. Please try again later.")
             else:
-                print(f"Error: {e}")
-                print(e)
+                eprint(f"Error: {e}")
+                eprint(e)
         if self.args.copy:
             pyperclip.copy(buffer)
         if self.args.output:
@@ -229,7 +232,7 @@ class Standalone:
                     system_message = {"role": "system", "content": system}
                 messages = [system_message, user_message]
             except FileNotFoundError:
-                print("pattern not found")
+                eprint("pattern not found")
                 return
         else:
             if context:
@@ -262,19 +265,19 @@ class Standalone:
                         f.write(response.choices[0].message.content)
         except Exception as e:
             if "All connection attempts failed" in str(e):
-                print(
+                eprint(
                     "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
             if "CLAUDE_API_KEY" in str(e):
-                print(
+                eprint(
                     "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
             if "overloaded_error" in str(e):
-                print(
+                eprint(
                     "Error: Fabric is working fine, but claude is overloaded. Please try again later.")
             if "Attempted to call a sync iterator on an async stream" in str(e):
-                print("Error: There is a problem connecting fabric with your local ollama installation. Please visit https://ollama.com for installation instructions. It is possible that you have chosen the wrong model. Please run fabric --listmodels to see the available models and choose the right one with fabric --model <model> or fabric --changeDefaultModel. If this does not work. Restart your computer (always a good idea) and try again. If you are still having problems, please visit https://ollama.com for installation instructions.")
+                eprint("Error: There is a problem connecting fabric with your local ollama installation. Please visit https://ollama.com for installation instructions. It is possible that you have chosen the wrong model. Please run fabric --listmodels to see the available models and choose the right one with fabric --model <model> or fabric --changeDefaultModel. If this does not work. Restart your computer (always a good idea) and try again. If you are still having problems, please visit https://ollama.com for installation instructions.")
             else:
-                print(f"Error: {e}")
-                print(e)
+                eprint(f"Error: {e}")
+                eprint(e)
 
     def fetch_available_models(self):
         gptlist = []
@@ -299,7 +302,7 @@ class Standalone:
         except APIConnectionError as e:
             pass
         except Exception as e:
-            print(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
+            eprint(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
             sys.exit()
 
         import ollama
@@ -347,9 +350,9 @@ class Standalone:
             os.environ["OPENAI_API_KEY"] = "NA"
 
         elif model in self.claudeList:
-            print("Claude is not supported in this mode")
+            eprint("Claude is not supported in this mode")
             sys.exit()
-        print("Starting PraisonAI...")
+        eprint("Starting PraisonAI...")
         praison_ai = PraisonAI(auto=userInput, framework="autogen")
         praison_ai.main()
 
@@ -362,7 +365,7 @@ class Update:
         self.pattern_directory = os.path.join(
             self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
-        print("Updating patterns...")
+        eprint("Updating patterns...")
         self.update_patterns()  # Start the update process immediately
 
     def update_patterns(self):
@@ -390,9 +393,9 @@ class Update:
                             shutil.move(custom_path, patterns_source_path)
                     shutil.rmtree(self.pattern_directory)
                 shutil.copytree(patterns_source_path, self.pattern_directory)
-                print("Patterns updated successfully.")
+                eprint("Patterns updated successfully.")
             else:
-                print("Patterns folder not found in the downloaded zip.")
+                eprint("Patterns folder not found in the downloaded zip.")
 
     def download_zip(self, url, save_path):
         """Download the zip file from the specified URL."""
@@ -400,13 +403,13 @@ class Update:
         response.raise_for_status()  # Check if the download was successful
         with open(save_path, 'wb') as f:
             f.write(response.content)
-        print("Downloaded zip file successfully.")
+        eprint("Downloaded zip file successfully.")
 
     def extract_zip(self, zip_path, extract_to):
         """Extract the zip file to the specified directory."""
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(extract_to)
-        print("Extracted zip file successfully.")
+        eprint("Extracted zip file successfully.")
         return extract_to  # Return the path to the extracted contents
 
 
@@ -485,7 +488,7 @@ class Setup:
         if not os.path.exists(self.env_file) and api_key:
             with open(self.env_file, "w") as f:
                 f.write(f"OPENAI_API_KEY={api_key}\n")
-            print(f"OpenAI API key set to {api_key}")
+            eprint(f"OpenAI API key set to {api_key}")
         elif api_key:
             # erase the line OPENAI_API_KEY=key and write the new key
             with open(self.env_file, "r") as f:
@@ -558,7 +561,7 @@ class Setup:
         gpt, ollama, claude = standalone.fetch_available_models()
         allmodels = gpt + ollama + claude
         if model not in allmodels:
-            print(
+            eprint(
                 f"Error: {model} is not a valid model. Please run fabric --listmodels to see the available models.")
             sys.exit()
 
@@ -586,10 +589,10 @@ class Setup:
                     if not there:
                         f.write(f'DEFAULT_MODEL={model}\n')
 
-                print(
+                eprint(
                     f"Default model changed to {model}. Please restart your terminal to use it.")
             else:
-                print("No shell configuration file found.")
+                eprint("No shell configuration file found.")
 
     def patterns(self):
         """        Method to update patterns and exit the system.
@@ -609,14 +612,14 @@ class Setup:
             None
         """
 
-        print("Welcome to Fabric. Let's get started.")
+        eprint("Welcome to Fabric. Let's get started.")
         apikey = input(
             "Please enter your OpenAI API key. If you do not have one or if you have already entered it, press enter.\n")
         self.api_key(apikey)
-        print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
+        eprint("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         claudekey = input()
         self.claude_key(claudekey)
-        print("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
+        eprint("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
         youtubekey = input()
         self.youtube_key(youtubekey)
         self.patterns()
@@ -649,7 +652,7 @@ class Transcribe:
                 transcript += segment['text'] + " "
             return transcript.strip()
         except Exception as e:
-            print("Error:", e)
+            eprint("Error:", e)
             return None
 
 
@@ -661,7 +664,7 @@ class AgentSetup:
             None
         """
 
-        print("Welcome to Fabric. Let's get started.")
+        eprint("Welcome to Fabric. Let's get started.")
         browserless = input("Please enter your Browserless API key\n").strip()
         serper = input("Please enter your Serper API key\n").strip()
 
@@ -689,7 +692,7 @@ def run_electron_app():
     # Step 2: Check for the './installer/client/gui' directory
     target_dir = '../gui'
     if not os.path.exists(target_dir):
-        print(f"""The directory {
+        eprint(f"""The directory {
               target_dir} does not exist. Please check the path and try again.""")
         return
 
@@ -698,7 +701,7 @@ def run_electron_app():
         subprocess.run(['npm', '--version'], check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
-        print("NPM is not installed. Please install NPM and try again.")
+        eprint("NPM is not installed. Please install NPM and try again.")
         return
 
     # If this point is reached, NPM is installed.
@@ -707,10 +710,10 @@ def run_electron_app():
 
     # Step 5: Run 'npm install' and 'npm start'
     try:
-        print("Running 'npm install'... This might take a few minutes.")
+        eprint("Running 'npm install'... This might take a few minutes.")
         subprocess.run(['npm', 'install'], check=True)
-        print(
+        eprint(
             "'npm install' completed successfully. Starting the Electron app with 'npm start'...")
         subprocess.run(['npm', 'start'], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"An error occurred while executing NPM commands: {e}")
+        eprint(f"An error occurred while executing NPM commands: {e}")

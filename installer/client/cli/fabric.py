@@ -1,4 +1,4 @@
-from .utils import Standalone, Update, Setup, Alias, run_electron_app
+from .utils import Standalone, Update, Setup, Alias, run_electron_app, eprint
 import argparse
 import sys
 import os
@@ -80,7 +80,7 @@ def main():
         Alias().execute()
         sys.exit()
     if not os.path.exists(env_file) or not os.path.exists(config_patterns_directory):
-        print("Please run --setup to set up your API key and download patterns.")
+        eprint("Please run --setup to set up your API key and download patterns.")
         sys.exit()
     if not os.path.exists(config_patterns_directory):
         Update()
@@ -98,7 +98,7 @@ def main():
         sys.exit()
     if args.context:
         if not os.path.exists(os.path.join(config, "context.md")):
-            print("Please create a context.md file in ~/.config/fabric")
+            eprint("Please create a context.md file in ~/.config/fabric")
             sys.exit()
     if args.agents:
         standalone = Standalone(args)
@@ -120,7 +120,7 @@ def main():
                 print(d)
             sys.exit()
         except FileNotFoundError:
-            print("No patterns found")
+            eprint("No patterns found")
             sys.exit()
     if args.listmodels:
         gptmodels, localmodels, claudemodels = standalone.fetch_available_models()

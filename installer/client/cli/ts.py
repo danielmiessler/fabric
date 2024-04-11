@@ -3,7 +3,7 @@ from pydub import AudioSegment
 from openai import OpenAI
 import os
 import argparse
-
+from utils import eprint
 
 class Whisper:
     def __init__(self):
@@ -14,10 +14,10 @@ class Whisper:
             self.client = OpenAI()
             self.client.api_key = apikey
         except KeyError:
-            print("OPENAI_API_KEY not found in environment variables.")
+            eprint("OPENAI_API_KEY not found in environment variables.")
 
         except FileNotFoundError:
-            print("No API key found. Use the --apikey option to set the key")
+            eprint("No API key found. Use the --apikey option to set the key")
         self.whole_response = []
 
     def split_audio(self, file_path):
@@ -66,7 +66,7 @@ class Whisper:
             self.whole_response.append(response.text)
 
         except Exception as e:
-            print(f"Error: {e}")
+            eprint(f"Error: {e}")
 
     def process_file(self, audio_file):
         """        Transcribe an audio file and print the transcript.
@@ -94,7 +94,7 @@ class Whisper:
             print(' '.join(self.whole_response))
 
         except Exception as e:
-            print(f"Error: {e}")
+            eprint(f"Error: {e}")
 
 
 def main():

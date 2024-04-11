@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 from datetime import datetime
-
+from utils import eprint
 from dotenv import load_dotenv
 
 DEFAULT_CONFIG = "~/.config/fabric/.env"
@@ -15,20 +15,20 @@ load_dotenv(os.path.expanduser(DEFAULT_CONFIG))
 def main(tag, tags, silent, fabric):
     out = os.getenv(PATH_KEY)
     if out is None:
-        print(f"'{PATH_KEY}' not set in {DEFAULT_CONFIG} or in your environment.")
+        eprint(f"'{PATH_KEY}' not set in {DEFAULT_CONFIG} or in your environment.")
         sys.exit(1)
 
     out = os.path.expanduser(out)
 
     if not os.path.isdir(out):
-        print(f"'{out}' does not exist. Create it and try again.")
+        eprint(f"'{out}' does not exist. Create it and try again.")
         sys.exit(1)
 
     if not out.endswith("/"):
         out += "/"
 
     if len(sys.argv) < 2:
-        print(f"'{sys.argv[0]}' takes a single argument to tag your summary")
+        eprint(f"'{sys.argv[0]}' takes a single argument to tag your summary")
         sys.exit(1)
 
     yyyymmdd = datetime.now().strftime(DATE_FORMAT)

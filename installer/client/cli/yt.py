@@ -8,6 +8,7 @@ import json
 import isodate
 import argparse
 import sys
+from utils import eprint
 
 
 def get_video_id(url):
@@ -51,7 +52,7 @@ def get_comments(youtube, video_id):
                 request = None
 
     except HttpError as e:
-        print(f"Failed to fetch comments: {e}")
+        eprint(f"Failed to fetch comments: {e}")
 
     return comments
 
@@ -64,13 +65,13 @@ def main_function(url, options):
     # Get YouTube API key from environment variable
     api_key = os.getenv("YOUTUBE_API_KEY")
     if not api_key:
-        print("Error: YOUTUBE_API_KEY not found in ~/.config/fabric/.env")
+        eprint("Error: YOUTUBE_API_KEY not found in ~/.config/fabric/.env")
         return
 
     # Extract video ID from URL
     video_id = get_video_id(url)
     if not video_id:
-        print("Invalid YouTube URL")
+        eprint("Invalid YouTube URL")
         return
 
     try:
@@ -116,7 +117,7 @@ def main_function(url, options):
             # Print JSON object
             print(json.dumps(output, indent=2))
     except HttpError as e:
-        print(f"Error: Failed to access YouTube API. Please check your YOUTUBE_API_KEY and ensure it is valid: {e}")
+        eprint(f"Error: Failed to access YouTube API. Please check your YOUTUBE_API_KEY and ensure it is valid: {e}")
 
 
 def main():
@@ -131,7 +132,7 @@ def main():
     args = parser.parse_args()
 
     if args.url is None:
-        print("Error: No URL provided.")
+        eprint("Error: No URL provided.")
         return
 
     main_function(args.url, args)
