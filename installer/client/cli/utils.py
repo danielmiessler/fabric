@@ -41,7 +41,7 @@ class Standalone:
         self.client = None
         load_dotenv(env_file)
         if args.openAiBaseUrl:
-            self.openai_base_url = args.openApiBaseUrl
+            self.openai_base_url = args.openAiBaseUrl
         else:
             self.openai_base_url = os.environ.get("OPENAI_API_BASE_URL", None)
         if "OPENAI_API_KEY" in os.environ:
