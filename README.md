@@ -203,7 +203,7 @@ fabric --help
 
 ### Using the `fabric` client
 
-If you want to use it with OpenAI API compatible inference servers, such as [FastChat](https://github.com/lm-sys/FastChat) or [Helmholtz Blablador](http://helmholtz-blablador.fz-juelich.de), simply export the following environment variables:
+If you want to use it with OpenAI API compatible inference servers, such as [FastChat](https://github.com/lm-sys/FastChat), [Helmholtz Blablador](http://helmholtz-blablador.fz-juelich.de), [LM Studio](https://lmstudio.ai) and others, simply export the following environment variables:
 
 - `export OPENAI_BASE_URL=https://YOUR-SERVER:8000/v1/`
 - `export DEFAULT_MODEL="YOUR_MODEL"`
