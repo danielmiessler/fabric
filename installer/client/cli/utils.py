@@ -71,20 +71,32 @@ class Standalone:
         copy = self.args.copy
         if copy:
             pyperclip.copy(response['message']['content'])
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(response['message']['content'])
 
     async def localStream(self, messages, host=''):
         from ollama import AsyncClient
+        buffer = ""
         if host:
             async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True):
+                buffer += part['message']['content']
                 print(part['message']['content'], end='', flush=True)
         else:
             async for part in await AsyncClient().chat(model=self.model, messages=messages, stream=True):
+                buffer += part['message']['content']
                 print(part['message']['content'], end='', flush=True)
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(buffer)
+        if self.args.copy:
+            pyperclip.copy(buffer)
 
     async def claudeStream(self, system, user):
         from anthropic import AsyncAnthropic
         self.claudeApiKey = os.environ["CLAUDE_API_KEY"]
         Streamingclient = AsyncAnthropic(api_key=self.claudeApiKey)
+        buffer = ""
         async with Streamingclient.messages.stream(
             max_tokens=4096,
             system=system,
@@ -92,9 +104,14 @@ class Standalone:
             model=self.model, temperature=self.args.temp, top_p=self.args.top_p
         ) as stream:
             async for text in stream.text_stream:
+                buffer += text
                 print(text, end="", flush=True)
             print()
-
+        if self.args.copy:
+            pyperclip.copy(buffer)
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(buffer)
         message = await stream.get_final_message()
 
     async def claudeChat(self, system, user, copy=False):
@@ -112,6 +129,9 @@ class Standalone:
         copy = self.args.copy
         if copy:
             pyperclip.copy(message.content[0].text)
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(message.content[0].text)
 
     def streamMessage(self, input_data: str, context="", host=''):
         """        Stream a message and handle exceptions.
