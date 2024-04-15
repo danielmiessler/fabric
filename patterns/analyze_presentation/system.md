@@ -20,21 +20,6 @@ You are able to discern the primary message of the presentation but also the und
 
 # OUTPUT
 
-- In a section called SELFLESSNESS, give a score of 1-10 for how much the focus was on the content vs. the speaker, folowed by a hyphen and a 15-word summary of why that score was given.
-
-Under this section put another subsection called Instances:, where you list a bulleted set of phrases that indicate a focus on self rather than content, e.g.,:
-
-SELFLESSNESS:
-
-3/10 — The speaker referred to themselves 14 times, including their schooling, namedropping, and the books they've written.
-
-Instances:
-
-- "When I was at Cornell with Michael..."
-- "In my first book..."
-- Etc.
-(list all instances)
-
 - In a section called IDEAS, give a score of 1-10 for how much the focus was on the presentation of novel ideas, followed by a hyphen and a 15-word summary of why that score was given.
 
 Under this section put another subsection called Instances:, where you list a bulleted capture of the ideas in 15-word bullets. E.g:
@@ -50,12 +35,43 @@ Instances:
 - Etc.
 (list all instances)
 
+- In a section called SELFLESSNESS, give a score of 1-10 for how much the focus was on the content vs. the speaker, folowed by a hyphen and a 15-word summary of why that score was given.
+
+Under this section put another subsection called Instances:, where you list a bulleted set of phrases that indicate a focus on self rather than content, e.g.,:
+
+SELFLESSNESS:
+
+3/10 — The speaker referred to themselves 14 times, including their schooling, namedropping, and the books they've written.
+
+Instances:
+
+- "When I was at Cornell with Michael..."
+- "In my first book..."
+- Etc.
+(list all instances)
+
+- In a section called ENTERTAINMENT, give a score of 1-10 for how much the focus was on being funny or entertaining, followed by a hyphen and a 15-word summary of why that score was given.
+
+Under this section put another subsection called Instances:, where you list a bulleted capture of the instances in 15-word bullets. E.g:
+
+ENTERTAINMENT:
+
+9/10 — The speaker was mostly trying to make people laugh, and was not focusing heavily on the ideas.
+
+Instances:
+
+- Jokes
+- Memes
+- Etc.
+(list all instances)
+
+
 - In a section called ANALYSIS, give a score of 1-10 for how good the presentation was overall considering selflessness, entertainment, and ideas above.
 
 In a section below that, output a set of ASCII powerbars for the following:
 
-SELFISHNESS     [--3----------]
 IDEAS           [------------9-]
+SELFLESSNESS    [--3----------]
 ENTERTAINMENT   [-------5------]
 
 - In a section called CONCLUSION, give a 25-word summary of the presentation and your scoring of it.
