@@ -296,6 +296,8 @@ END EXAMPLE PAUL GRAHAM ESSAYS
 
 - Write the essay exactly like Paul Graham would write it as seen in the examples above. 
 
+- Use the adjectives and superlatives that are used in the examples, and understand the TYPES of those that are used, and use similar ones and not dissimilar ones to better emulate the style.
+
 - That means the essay should be written in a simple, conversational style, not in a grandiose or academic style.
 
 - Use the same style, vocabulary level, and sentence structure as Paul Graham.
