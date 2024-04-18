@@ -36,6 +36,15 @@
       >
         Update Patterns
       </button>
+      <button id="createPattern" class="btn btn-outline-success my-2 my-sm-0">
+        Create Pattern
+      </button>
+      <button
+        id="fineTuningButton"
+        class="btn btn-outline-success my-2 my-sm-0"
+      >
+        Fine Tuning
+      </button>
       <div class="collapse navbar-collapse" id="navbarCollapse"></div>
       <div class="m1-auto">
         <a class="navbar-brand" id="themeChanger" href="#">Dark</a>
@@ -43,7 +52,10 @@
     </nav>
     <main>
       <div class="container" id="my-form">
-        <select class="form-control" id="patternSelector"></select>
+        <div class="selector-container">
+          <select class="form-control" id="patternSelector"></select>
+          <select class="form-control" id="modelSelector"></select>
+        </div>
         <textarea
           rows="5"
           class="form-control"
@@ -52,6 +64,24 @@
         ></textarea>
         <button class="btn btn-primary" id="submit">Submit</button>
       </div>
+      <div id="patternCreator" class="container hidden">
+        <input
+          type="text"
+          id="patternName"
+          placeholder="Enter Pattern Name"
+          class="form-control"
+        />
+        <textarea
+          rows="5"
+          class="form-control"
+          id="patternBody"
+          placeholder="Create your pattern"
+        ></textarea>
+        <button class="btn btn-primary" id="submitPattern">Submit</button>
+        <div id="patternCreatedMessage" class="hidden">
+          Pattern created successfully!
+        </div>
+      </div>
       <div id="configSection" class="container hidden">
         <input
           type="text"
@@ -59,7 +89,63 @@
           placeholder="Enter OpenAI API Key"
           class="form-control"
         />
+        <input
+          type="text"
+          id="claudeApiKeyInput"
+          placeholder="Enter Claude API Key"
+          class="form-control"
+        />
         <button id="saveApiKey" class="btn btn-primary">Save API Key</button>
+      </div>
+      <div id="fineTuningSection" class="container hidden">
+        <div>
+          <label for="temperatureSlider">Temperature:</label>
+          <input
+            type="range"
+            id="temperatureSlider"
+            min="0"
+            max="2"
+            step="0.1"
+            value="0"
+          />
+          <span id="temperatureValue">0</span>
+        </div>
+        <div>
+          <label for="topPSlider">Top_p:</label>
+          <input
+            type="range"
+            id="topPSlider"
+            min="0"
+            max="2"
+            step="0.1"
+            value="1"
+          />
+          <span id="topPValue">1</span>
+        </div>
+        <div>
+          <label for="frequencyPenaltySlider">Frequency Penalty:</label>
+          <input
+            type="range"
+            id="frequencyPenaltySlider"
+            min="0"
+            max="2"
+            step="0.1"
+            value="0.1"
+          />
+          <span id="frequencyPenaltyValue">0.1</span>
+        </div>
+        <div>
+          <label for="presencePenaltySlider">Presence Penalty:</label>
+          <input
+            type="range"
+            id="presencePenaltySlider"
+            min="0"
+            max="2"
+            step="0.1"
+            value="0.1"
+          />
+          <span id="presencePenaltyValue">0.1</span>
+        </div>
       </div>
       <div class="container hidden" id="responseContainer"></div>
     </main>

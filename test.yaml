@@ -1,0 +1,44 @@
+framework: crewai
+topic: 'give me the complete voting record of senator marco rubio
+
+  '
+roles:
+  data_researcher:
+    backstory: Skilled in using various data search tools to find accurate information.
+    goal: Gather relevant data on Senator Marco Rubio's voting record
+    role: Data Researcher
+    tasks:
+      data_collection:
+        description: Use provided search tools to collect voting records of Senator
+          Marco Rubio from different sources.
+        expected_output: A collection of CSV, XML or other data files containing the
+          required information.
+    tools:
+    - ''
+  data_processor:
+    backstory: Expert in processing and cleaning raw data, preparing it for analysis
+      or presentation.
+    goal: Process and format collected data into a readable output
+    role: Data Processor
+    tasks:
+      data_processing:
+        description: Clean and process the collected voting records into a structured
+          JSON format.
+        expected_output: A JSON file containing Senator Marco Rubio's complete voting
+          record.
+    tools:
+    - ''
+  presenter:
+    backstory: Skilled in extracting and summarizing information, presenting it in
+      a clear and concise format.
+    goal: Generate the final output for user consumption
+    role: Presenter
+    tasks:
+      presentation_creation:
+        description: Create an easily digestible presentation from the processed data
+          on Senator Marco Rubio's voting record.
+        expected_output: A well-structured text or multimedia output that highlights
+          key aspects of Senator Marco Rubio's voting history.
+    tools:
+    - ''
+dependencies: []

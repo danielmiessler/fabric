@@ -305,9 +305,9 @@ END EXAMPLE PAUL GRAHAM ESSAYS
 
 - Output a full, publish-ready essay about the content provided using the instructions above.
 
-- Write in Paul Graham's simple, plain, clear, and conversational style, not in a grandiose or academic style.
-
 - Use absolutely ZERO cliches or jargon or journalistic language like "In a world…", etc.
+
+- Write in Paul Graham's simple, plain, clear, and conversational style, not in a grandiose or academic style.
 
 - Do not use cliches or jargon.
 
@@ -315,6 +315,7 @@ END EXAMPLE PAUL GRAHAM ESSAYS
 
 - Do not output warnings or notes—just the output requested.
 
+- The essay should be a maximum of 250 words.
 
 # INPUT:
 

@@ -46,14 +46,14 @@
   - [Directly calling Patterns](#directly-calling-patterns)
 - [Examples](#examples)
 - [Custom Patterns](#custom-patterns)
-- [Helper Apps](#helper-apps) 
+- [Helper Apps](#helper-apps)
 - [Meta](#meta)
   - [Primary contributors](#primary-contributors)
 
 <br />
 
 > [!NOTE]
-> We are adding functionality to the project so often that you should update often as well. That means: `git pull; pipx upgrade fabric; fabric --update; source ~/.zshrc (or ~/.bashrc)` in the main directory!
+> We are adding functionality to the project so often that you should update often as well. That means: `git pull; pipx install . --force; fabric --update; source ~/.zshrc (or ~/.bashrc)` in the main directory!
 
 **March 13, 2024** — We just added `pipx` install support, which makes it way easier to install Fabric, support for Claude, local models via Ollama, and a number of new Patterns. Be sure to update and check `fabric -h` for the latest!
 
@@ -209,38 +209,9 @@ Once you have it all set up, here's how to use it.
    `fabric -h`
 
 ```bash
-us the results in
-                        realtime. NOTE: You will not be able to pipe the
-                        output into another command.
-  --list, -l            List available patterns
-  --clear               Clears your persistent model choice so that you can
-                        once again use the --model flag
-  --update, -u          Update patterns. NOTE: This will revert the default
-                        model to gpt4-turbo. please run --changeDefaultModel
-                        to once again set default model
-  --pattern PATTERN, -p PATTERN
-                        The pattern (prompt) to use
-  --setup               Set up your fabric instance
-  --changeDefaultModel CHANGEDEFAULTMODEL
-                        Change the default model. For a list of available
-                        models, use the --listmodels flag.
-  --model MODEL, -m MODEL
-                        Select the model to use. NOTE: Will not work if you
-                        have set a default model. please use --clear to clear
-                        persistence before using this flag
-  --listmodels          List all available models
-  --remoteOllamaServer REMOTEOLLAMASERVER
-                        The URL of the remote ollamaserver to use. ONLY USE
-                        THIS if you are using a local ollama server in an non-
-                        deault location or port
-  --context, -c         Use Context file (context.md) to add context to your
-                        pattern
-age: fabric [-h] [--text TEXT] [--copy] [--agents {trip_planner,ApiKeys}]
-              [--output [OUTPUT]] [--stream] [--list] [--clear] [--update]
-              [--pattern PATTERN] [--setup]
-              [--changeDefaultModel CHANGEDEFAULTMODEL] [--model MODEL]
-              [--listmodels] [--remoteOllamaServer REMOTEOLLAMASERVER]
-              [--context]
+usage: fabric [-h] [--text TEXT] [--copy] [--agents] [--output [OUTPUT]] [--gui] [--stream] [--list] [--temp TEMP] [--top_p TOP_P] [--frequency_penalty FREQUENCY_PENALTY]
+              [--presence_penalty PRESENCE_PENALTY] [--update] [--pattern PATTERN] [--setup] [--changeDefaultModel CHANGEDEFAULTMODEL] [--model MODEL] [--listmodels]
+              [--remoteOllamaServer REMOTEOLLAMASERVER] [--context]
 
 An open source framework for augmenting humans using AI.
 
@@ -248,13 +219,30 @@ options:
   -h, --help            show this help message and exit
   --text TEXT, -t TEXT  Text to extract summary from
   --copy, -C            Copy the response to the clipboard
-  --agents {trip_planner,ApiKeys}, -a {trip_planner,ApiKeys}
-                        Use an AI agent to help you with a task. Acceptable
-                        values are 'trip_planner' or 'ApiKeys'. This option
-                        cannot be used with any other flag.
+  --agents, -a          Use praisonAI to create an AI agent and then use it. ex: 'write me a movie script'
   --output [OUTPUT], -o [OUTPUT]
                         Save the response to a file
-  --stream, -s          Use this option if you want to see
+  --gui                 Use the GUI (Node and npm need to be installed)
+  --stream, -s          Use this option if you want to see the results in realtime. NOTE: You will not be able to pipe the output into another command.
+  --list, -l            List available patterns
+  --temp TEMP           set the temperature for the model. Default is 0
+  --top_p TOP_P         set the top_p for the model. Default is 1
+  --frequency_penalty FREQUENCY_PENALTY
+                        set the frequency penalty for the model. Default is 0.1
+  --presence_penalty PRESENCE_PENALTY
+                        set the presence penalty for the model. Default is 0.1
+  --update, -u          Update patterns. NOTE: This will revert the default model to gpt4-turbo. please run --changeDefaultModel to once again set default model
+  --pattern PATTERN, -p PATTERN
+                        The pattern (prompt) to use
+  --setup               Set up your fabric instance
+  --changeDefaultModel CHANGEDEFAULTMODEL
+                        Change the default model. For a list of available models, use the --listmodels flag.
+  --model MODEL, -m MODEL
+                        Select the model to use. NOTE: Will not work if you have set a default model. please use --clear to clear persistence before using this flag
+  --listmodels          List all available models
+  --remoteOllamaServer REMOTEOLLAMASERVER
+                        The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-deault location or port
+  --context, -c         Use Context file (context.md) to add context to your pattern
 ```
 
 #### Example commands
@@ -481,7 +469,7 @@ The content features a conversation between two individuals discussing various t
 
 You can also use Custom Patterns with Fabric, meaning Patterns you keep locally and don't upload to Fabric.
 
-One possible place to store them is `~/.config/custom-fabric-patterns`.
+One possible place to store PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAIthem is `~/.config/custom-fabric-patterns`.
 
 Then when you want to use them, simply copy them into `~/.config/fabric/patterns`.
 
@@ -494,6 +482,16 @@ Now you can run them with:
 ```bash
 pbpaste | fabric -p your_custom_pattern
 ```
+
+## Agents
+
+NEW FEATURE! We have incorporated PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAI. This feature CREATES AI agents and then uses them to perform a task
+
+```bash
+echo "Search for recent articles about the future of AI and write me a 500 word essay on the findings" | fabric --agents
+```
+
+This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
 
 ## Helper Apps
 
@@ -515,7 +513,7 @@ options:
   -h, --help    Show this help message and exit
   --duration    Output only the duration
   --transcript  Output only the transcript
-  --comments    Output only the user comments 
+  --comments    Output only the user comments
 ```
 
 ## ts (Audio transcriptions)
@@ -536,7 +534,7 @@ windows:
 download instructions https://www.ffmpeg.org/download.html
 ```
 
-````bash
+```bash
 ts -h
 usage: ts [-h] audio_file
 
@@ -547,17 +545,17 @@ positional arguments:
 
 options:
   -h, --help  show this help message and exit
-````
+```
+
 ## Save
 
 `save` is a "tee-like" utility to pipeline saving of content, while keeping the output stream intact. Can optionally generate "frontmatter" for PKM utilities like Obsidian via the
 "FABRIC_FRONTMATTER" environment variable
 
-
-
 If you'd like to default variables, set them in `~/.config/fabric/.env`. `FABRIC_OUTPUT_PATH` needs to be set so `save` where to write. `FABRIC_FRONTMATTER_TAGS` is optional, but useful for tracking how tags have entered your PKM, if that's important to you.
 
 ### usage
+
 ```bash
 usage: save [-h] [-t, TAG] [-n] [-s] [stub]
 
@@ -572,7 +570,7 @@ options:
   -t, TAG, --tag TAG  add an additional frontmatter tag. Use this argument multiple timesfor multiple tags
   -n, --nofabric      don't use the fabric tags, only use tags from --tag
   -s, --silent        don't use STDOUT for output, only save to the file
-````
+```
 
 ### Example
 

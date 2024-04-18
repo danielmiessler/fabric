@@ -1,4 +1,4 @@
-from .utils import Standalone, Update, Setup, Alias
+from .utils import Standalone, Update, Setup, Alias, run_electron_app
 import argparse
 import sys
 import os
@@ -16,8 +16,8 @@ def main():
         "--copy", "-C", help="Copy the response to the clipboard", action="store_true"
     )
     parser.add_argument(
-        '--agents', '-a', choices=['trip_planner', 'ApiKeys'],
-        help="Use an AI agent to help you with a task. Acceptable values are 'trip_planner' or 'ApiKeys'. This option cannot be used with any other flag."
+        '--agents', '-a',
+        help="Use praisonAI to create an AI agent and then use it. ex: 'write me a movie script'", action="store_true"
     )
 
     parser.add_argument(
@@ -29,6 +29,8 @@ def main():
         default=None,
     )
     parser.add_argument(
+        "--gui", help="Use the GUI (Node and npm need to be installed)", action="store_true")
+    parser.add_argument(
         "--stream",
         "-s",
         help="Use this option if you want to see the results in realtime. NOTE: You will not be able to pipe the output into another command.",
@@ -37,6 +39,14 @@ def main():
     parser.add_argument(
         "--list", "-l", help="List available patterns", action="store_true"
     )
+    parser.add_argument(
+        '--temp', help="set the temperature for the model. Default is 0", default=0, type=float)
+    parser.add_argument(
+        '--top_p', help="set the top_p for the model. Default is 1", default=1, type=float)
+    parser.add_argument(
+        '--frequency_penalty', help="set the frequency penalty for the model. Default is 0.1", default=0.1, type=float)
+    parser.add_argument(
+        '--presence_penalty', help="set the presence penalty for the model. Default is 0.1", default=0.1, type=float)
     parser.add_argument(
         "--update", "-u", help="Update patterns. NOTE: This will revert the default model to gpt4-turbo. please run --changeDefaultModel to once again set default model", action="store_true")
     parser.add_argument("--pattern", "-p", help="The pattern (prompt) to use")
@@ -79,17 +89,9 @@ def main():
     if args.changeDefaultModel:
         Setup().default_model(args.changeDefaultModel)
         sys.exit()
-    if args.agents:
-        # Handle the agents logic
-        if args.agents == 'trip_planner':
-            from .agents.trip_planner.main import planner_cli
-            tripcrew = planner_cli()
-            tripcrew.ask()
-            sys.exit()
-        elif args.agents == 'ApiKeys':
-            from .utils import AgentSetup
-            AgentSetup().run()
-            sys.exit()
+    if args.gui:
+        run_electron_app()
+        sys.exit()
     if args.update:
         Update()
         Alias()
@@ -97,6 +99,18 @@ def main():
     if args.context:
         if not os.path.exists(os.path.join(config, "context.md")):
             print("Please create a context.md file in ~/.config/fabric")
+            sys.exit()
+    if args.agents:
+        standalone = Standalone(args)
+        text = ""  # Initialize text variable
+        # Check if an argument was provided to --agents
+        if args.text:
+            text = args.text
+        else:
+            text = standalone.get_cli_input()
+        if text:
+            standalone = Standalone(args)
+            standalone.agents(text)
             sys.exit()
     standalone = Standalone(args, args.pattern)
     if args.list:

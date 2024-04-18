@@ -88,11 +88,11 @@ def main_function(url, options):
 
         # Get video transcript
         try:
-            transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
+            transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=[options.lang])
             transcript_text = " ".join([item["text"] for item in transcript_list])
             transcript_text = transcript_text.replace("\n", " ")
         except Exception as e:
-            transcript_text = f"Transcript not available. ({e})"
+            transcript_text = f"Transcript not available in the selected language ({options.lang}). ({e})"
 
         # Get comments if the flag is set
         comments = []
@@ -103,7 +103,7 @@ def main_function(url, options):
         if options.duration:
             print(duration_minutes)
         elif options.transcript:
-            print(transcript_text)
+            print(transcript_text.encode('utf-8').decode('unicode-escape'))
         elif options.comments:
             print(json.dumps(comments, indent=2))
         else:
@@ -126,7 +126,8 @@ def main():
     parser.add_argument('--duration', action='store_true', help='Output only the duration')
     parser.add_argument('--transcript', action='store_true', help='Output only the transcript')
     parser.add_argument('--comments', action='store_true', help='Output the comments on the video')
-
+    parser.add_argument('--lang', default='en', help='Language for the transcript (default: English)')
+    
     args = parser.parse_args()
 
     if args.url is None:

@@ -8,8 +8,9 @@ import platform
 from dotenv import load_dotenv
 import zipfile
 import tempfile
-import re
+import subprocess
 import shutil
+from youtube_transcript_api import YouTubeTranscriptApi
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
@@ -37,21 +38,25 @@ class Standalone:
         if args is None:
             args = type('Args', (), {})()
         env_file = os.path.expanduser(env_file)
+        self.client = None
         load_dotenv(env_file)
-        assert 'OPENAI_API_KEY' in os.environ, "Error: OPENAI_API_KEY not found in environment variables. Please run fabric --setup and add a key."
-        api_key = os.environ['OPENAI_API_KEY']
-        base_url = os.environ.get(
-            'OPENAI_BASE_URL', 'https://api.openai.com/v1/')
-        self.client = OpenAI(api_key=api_key, base_url=base_url)
+        if "OPENAI_API_KEY" in os.environ:
+            api_key = os.environ['OPENAI_API_KEY']
+            self.client = OpenAI(api_key=api_key)
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
         self.args = args
         self.model = getattr(args, 'model', None)
         if not self.model:
-            self.model = 'gpt-4-turbo-preview'
+            self.model = os.environ.get('DEFAULT_MODEL', None)
+            if not self.model:
+                self.model = 'gpt-4-turbo-preview'
         self.claude = False
         sorted_gpt_models, ollamaList, claudeList = self.fetch_available_models()
+        self.sorted_gpt_models = sorted_gpt_models
+        self.ollamaList = ollamaList
+        self.claudeList = claudeList
         self.local = self.model in ollamaList
         self.claude = self.model in claudeList
 
@@ -59,37 +64,54 @@ class Standalone:
         from ollama import AsyncClient
         response = None
         if host:
-            response = await AsyncClient(host=host).chat(model=self.model, messages=messages, host=host)
+            response = await AsyncClient(host=host).chat(model=self.model, messages=messages)
         else:
             response = await AsyncClient().chat(model=self.model, messages=messages)
         print(response['message']['content'])
         copy = self.args.copy
         if copy:
             pyperclip.copy(response['message']['content'])
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(response['message']['content'])
 
     async def localStream(self, messages, host=''):
         from ollama import AsyncClient
+        buffer = ""
         if host:
-            async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True, host=host):
+            async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True):
+                buffer += part['message']['content']
                 print(part['message']['content'], end='', flush=True)
         else:
             async for part in await AsyncClient().chat(model=self.model, messages=messages, stream=True):
+                buffer += part['message']['content']
                 print(part['message']['content'], end='', flush=True)
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(buffer)
+        if self.args.copy:
+            pyperclip.copy(buffer)
 
     async def claudeStream(self, system, user):
         from anthropic import AsyncAnthropic
         self.claudeApiKey = os.environ["CLAUDE_API_KEY"]
         Streamingclient = AsyncAnthropic(api_key=self.claudeApiKey)
+        buffer = ""
         async with Streamingclient.messages.stream(
             max_tokens=4096,
             system=system,
             messages=[user],
-            model=self.model, temperature=0.0, top_p=1.0
+            model=self.model, temperature=self.args.temp, top_p=self.args.top_p
         ) as stream:
             async for text in stream.text_stream:
+                buffer += text
                 print(text, end="", flush=True)
             print()
-
+        if self.args.copy:
+            pyperclip.copy(buffer)
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(buffer)
         message = await stream.get_final_message()
 
     async def claudeChat(self, system, user, copy=False):
@@ -101,12 +123,15 @@ class Standalone:
             system=system,
             messages=[user],
             model=self.model,
-            temperature=0.0, top_p=1.0
+            temperature=self.args.temp, top_p=self.args.top_p
         )
         print(message.content[0].text)
         copy = self.args.copy
         if copy:
             pyperclip.copy(message.content[0].text)
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(message.content[0].text)
 
     def streamMessage(self, input_data: str, context="", host=''):
         """        Stream a message and handle exceptions.
@@ -159,10 +184,10 @@ class Standalone:
                 stream = self.client.chat.completions.create(
                     model=self.model,
                     messages=messages,
-                    temperature=0.0,
-                    top_p=1,
-                    frequency_penalty=0.1,
-                    presence_penalty=0.1,
+                    temperature=self.args.temp,
+                    top_p=self.args.top_p,
+                    frequency_penalty=self.args.frequency_penalty,
+                    presence_penalty=self.args.presence_penalty,
                     stream=True,
                 )
                 for chunk in stream:
@@ -244,10 +269,10 @@ class Standalone:
                 response = self.client.chat.completions.create(
                     model=self.model,
                     messages=messages,
-                    temperature=0.0,
-                    top_p=1,
-                    frequency_penalty=0.1,
-                    presence_penalty=0.1,
+                    temperature=self.args.temp,
+                    top_p=self.args.top_p,
+                    frequency_penalty=self.args.frequency_penalty,
+                    presence_penalty=self.args.presence_penalty,
                 )
                 print(response.choices[0].message.content)
                 if self.args.copy:
@@ -274,40 +299,42 @@ class Standalone:
     def fetch_available_models(self):
         gptlist = []
         fullOllamaList = []
-        claudeList = ['claude-3-opus-20240229',
-                      'claude-3-sonnet-20240229',
-                      'claude-3-haiku-20240307',
-                      'claude-2.1']
-        try:
-            models = [model.id.strip()
-                      for model in self.client.models.list().data]
-        except APIConnectionError as e:
-            if getattr(e.__cause__, 'args', [''])[0] == "Illegal header value b'Bearer '":
-                print("Error: Cannot connect to the OpenAI API Server because the API key is not set. Please run fabric --setup and add a key.")
+        if "CLAUDE_API_KEY" in os.environ:
+            claudeList = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229',
+                          'claude-3-haiku-20240307', 'claude-2.1']
+        else:
+            claudeList = []
 
-            else:
-                print(
-                    f"Error: {e.message} trying to access {e.request.url}: {getattr(e.__cause__, 'args', [''])}")
-            sys.exit()
+        try:
+            if self.client:
+                models = [model.id.strip()
+                          for model in self.client.models.list().data]
+                if "/" in models[0] or "\\" in models[0]:
+                    gptlist = [item[item.rfind(
+                        "/") + 1:] if "/" in item else item[item.rfind("\\") + 1:] for item in models]
+                else:
+                    gptlist = [item.strip()
+                               for item in models if item.startswith("gpt")]
+                gptlist.sort()
+        except APIConnectionError as e:
+            pass
         except Exception as e:
             print(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
             sys.exit()
-        if "/" in models[0] or "\\" in models[0]:
-            # lmstudio returns full paths to models. Iterate and truncate everything before and including the last slash
-            gptlist = [item[item.rfind(
-                "/") + 1:] if "/" in item else item[item.rfind("\\") + 1:] for item in models]
-        else:
-            # Keep items that start with "gpt"
-            gptlist = [item.strip()
-                       for item in models if item.startswith("gpt")]
-        gptlist.sort()
+
         import ollama
         try:
-            default_modelollamaList = ollama.list()['models']
+            remoteOllamaServer = getattr(self.args, 'remoteOllamaServer', None)
+            if remoteOllamaServer:
+                client = ollama.Client(host=self.args.remoteOllamaServer)
+                default_modelollamaList = client.list()['models']
+            else:
+                default_modelollamaList = ollama.list()['models']
             for model in default_modelollamaList:
                 fullOllamaList.append(model['name'])
         except:
             fullOllamaList = []
+
         return gptlist, fullOllamaList, claudeList
 
     def get_cli_input(self):
@@ -329,6 +356,23 @@ class Standalone:
                 return input("Enter Question: ")
         else:
             return sys.stdin.read()
+
+    def agents(self, userInput):
+        from praisonai import PraisonAI
+        model = self.model
+        os.environ["OPENAI_MODEL_NAME"] = model
+        if model in self.sorted_gpt_models:
+            os.environ["OPENAI_API_BASE"] = "https://api.openai.com/v1/"
+        elif model in self.ollamaList:
+            os.environ["OPENAI_API_BASE"] = "http://localhost:11434/v1"
+            os.environ["OPENAI_API_KEY"] = "NA"
+
+        elif model in self.claudeList:
+            print("Claude is not supported in this mode")
+            sys.exit()
+        print("Starting PraisonAI...")
+        praison_ai = PraisonAI(auto=userInput, framework="autogen")
+        praison_ai.main()
 
 
 class Update:
@@ -657,3 +701,37 @@ class AgentSetup:
             else:
                 # If it does not end with a newline, add one before the new entries
                 f.write(f"\n{browserless_entry}\n{serper_entry}\n")
+
+
+def run_electron_app():
+    # Step 1: Set CWD to the directory of the script
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
+    # Step 2: Check for the './installer/client/gui' directory
+    target_dir = '../gui'
+    if not os.path.exists(target_dir):
+        print(f"""The directory {
+              target_dir} does not exist. Please check the path and try again.""")
+        return
+
+    # Step 3: Check for NPM installation
+    try:
+        subprocess.run(['npm', '--version'], check=True,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except subprocess.CalledProcessError:
+        print("NPM is not installed. Please install NPM and try again.")
+        return
+
+    # If this point is reached, NPM is installed.
+    # Step 4: Change directory to the Electron app's directory
+    os.chdir(target_dir)
+
+    # Step 5: Run 'npm install' and 'npm start'
+    try:
+        print("Running 'npm install'... This might take a few minutes.")
+        subprocess.run(['npm', 'install'], check=True)
+        print(
+            "'npm install' completed successfully. Starting the Electron app with 'npm start'...")
+        subprocess.run(['npm', 'start'], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred while executing NPM commands: {e}")
