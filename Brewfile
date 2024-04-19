@@ -1,0 +1,2 @@
+brew "pipx"
+brew "ffmpeg"

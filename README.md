@@ -159,12 +159,12 @@ git clone https://github.com/danielmiessler/fabric.git
 cd fabric
 ```
 
-4. Install pipx:
+4. Install pipx and ffmpeg via Homebrew:
 
 macOS:
 
 ```bash
-brew install pipx
+brew bundle
 ```
 
 Linux:
