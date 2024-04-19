@@ -132,7 +132,7 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 ## Quickstart
 
-The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/client">`/client`</a> directory in this repository.
+The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/installer/client">`/client`</a> directory in this repository.
 
 ### Setting up the fabric commands
 
@@ -264,7 +264,7 @@ pbpaste | fabric --stream --pattern analyze_claims
 3. Run the `extract_wisdom` Pattern with the `--stream` option to get immediate and streaming results from any Youtube video (much like in the original introduction video).
 
 ```bash
-yt --transcript https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --pattern extract_wisdom
+yt --transcript "https://youtube.com/watch?v=uXs-zPc63kM" | fabric --stream --pattern extract_wisdom
 ```
 
 4. **new** All of the patterns have been added as aliases to your bash (or zsh) config file
@@ -341,7 +341,7 @@ Even better, you can also have your [Mill](https://github.com/danielmiessler/fab
 Here's what that looks like in code:
 
 ```bash
-https://github.com/danielmiessler/fabric/blob/main/server/fabric_api_server.py
+https://github.com/danielmiessler/fabric/blob/main/installer/server/api/fabric_api_server.py
 ```
 
 ```python
@@ -360,7 +360,7 @@ def extwis():
 
     # Set the system and user URLs
     system_url = "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/system.md"
-    user_url = "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/user.md"
+    user_url = "https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/README.md"
 
     # Fetch the prompt content
     system_content = fetch_content_from_url(system_url)
