@@ -49,3 +49,9 @@ class Session:
                 os.remove(os.path.join(self.sessions_folder, file))
         else:
             os.remove(os.path.join(self.sessions_folder, session))
+    def session_log(self, session):
+        file = os.path.join(self.sessions_folder, session)
+        if not os.path.exists(file):
+            return None
+        with open(file, "r") as f:
+            return f.read()
