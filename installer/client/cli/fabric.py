@@ -30,6 +30,7 @@ def main():
     )
     parser.add_argument('--session', '-S',
                         help="Continue your previous conversation. Default is your previous conversation", nargs="?", const="default")
+    parser.add_argument('--clearsession', help="deletes indicated session. Use 'all' to delete all dessions")
     parser.add_argument(
         "--gui", help="Use the GUI (Node and npm need to be installed)", action="store_true")
     parser.add_argument(
@@ -123,6 +124,15 @@ def main():
                 args.session = "default"
             else:
                 args.session = session_file.split("/")[-1]
+    if args.clearsession:
+        from .helper import Session
+        session = Session()
+        session.clear_session(args.clearsession)
+        if args.clearsession == "all":
+            print(f"All sessions cleared")
+        else:
+            print(f"Session {args.clearsession} cleared")
+        sys.exit()
     standalone = Standalone(args, args.pattern)
     if args.list:
         try:

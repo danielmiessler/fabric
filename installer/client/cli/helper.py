@@ -43,3 +43,9 @@ class Session:
             return None
         with open(file, "r") as f:
             return f.read()
+    def clear_session(self, session):
+        if session == "all":
+            for file in os.listdir(self.sessions_folder):
+                os.remove(os.path.join(self.sessions_folder, file))
+        else:
+            os.remove(os.path.join(self.sessions_folder, session))
