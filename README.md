@@ -209,7 +209,8 @@ Once you have it all set up, here's how to use it.
    `fabric -h`
 
 ```bash
-usage: fabric [-h] [--text TEXT] [--copy] [--agents] [--output [OUTPUT]] [--gui] [--stream] [--list] [--temp TEMP] [--top_p TOP_P] [--frequency_penalty FREQUENCY_PENALTY]
+usage: fabric -h
+usage: fabric [-h] [--text TEXT] [--copy] [--agents] [--output [OUTPUT]] [--session [SESSION]] [--gui] [--stream] [--list] [--temp TEMP] [--top_p TOP_P] [--frequency_penalty FREQUENCY_PENALTY]
               [--presence_penalty PRESENCE_PENALTY] [--update] [--pattern PATTERN] [--setup] [--changeDefaultModel CHANGEDEFAULTMODEL] [--model MODEL] [--listmodels]
               [--remoteOllamaServer REMOTEOLLAMASERVER] [--context]
 
@@ -222,6 +223,8 @@ options:
   --agents, -a          Use praisonAI to create an AI agent and then use it. ex: 'write me a movie script'
   --output [OUTPUT], -o [OUTPUT]
                         Save the response to a file
+  --session [SESSION], -S [SESSION]
+                        Continue your previous conversation. Default is your previous conversation
   --gui                 Use the GUI (Node and npm need to be installed)
   --stream, -s          Use this option if you want to see the results in realtime. NOTE: You will not be able to pipe the output into another command.
   --list, -l            List available patterns
@@ -238,7 +241,7 @@ options:
   --changeDefaultModel CHANGEDEFAULTMODEL
                         Change the default model. For a list of available models, use the --listmodels flag.
   --model MODEL, -m MODEL
-                        Select the model to use. NOTE: Will not work if you have set a default model. please use --clear to clear persistence before using this flag
+                        Select the model to use
   --listmodels          List all available models
   --remoteOllamaServer REMOTEOLLAMASERVER
                         The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-deault location or port

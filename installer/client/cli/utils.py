@@ -112,12 +112,18 @@ class Standalone:
         if self.args.output:
             with open(self.args.output, "w") as f:
                 f.write(buffer)
+        if self.args.session:
+            from .helper import Session
+            session = Session()
+            session.save_to_session(
+                system, user, buffer, self.args.session)
         message = await stream.get_final_message()
 
     async def claudeChat(self, system, user, copy=False):
         from anthropic import Anthropic
         self.claudeApiKey = os.environ["CLAUDE_API_KEY"]
         client = Anthropic(api_key=self.claudeApiKey)
+        message = None
         message = client.messages.create(
             max_tokens=4096,
             system=system,
@@ -132,6 +138,11 @@ class Standalone:
         if self.args.output:
             with open(self.args.output, "w") as f:
                 f.write(message.content[0].text)
+        if self.args.session:
+            from .helper import Session
+            session = Session()
+            session.save_to_session(
+                system, user, message.content[0].text, self.args.session)
 
     def streamMessage(self, input_data: str, context="", host=''):
         """        Stream a message and handle exceptions.
@@ -149,23 +160,38 @@ class Standalone:
         wisdomFilePath = os.path.join(
             config_directory, f"patterns/{self.pattern}/system.md"
         )
+        session_message = ""
+        if self.args.session:
+            from .helper import Session
+            session = Session()
+            session_message = session.read_from_session(
+                self.args.session)
+        user = session_message + '\n' + input_data
+        user = input_data
         user_message = {"role": "user", "content": f"{input_data}"}
         wisdom_File = os.path.join(current_directory, wisdomFilePath)
-        system = ""
         buffer = ""
+        system = ""
         if self.pattern:
             try:
                 with open(wisdom_File, "r") as f:
                     if context:
                         system = context + '\n\n' + f.read()
+                        if session_message:
+                            system = session_message + '\n' + system
                     else:
                         system = f.read()
+                        if session_message:
+                            system = session_message + '\n' + system
                     system_message = {"role": "system", "content": system}
                 messages = [system_message, user_message]
             except FileNotFoundError:
                 print("pattern not found")
                 return
         else:
+            if session_message:
+                user_message['content'] = session_message + \
+                    '\n' + user_message['content']
             if context:
                 messages = [
                     {"role": "system", "content": context}, user_message]
@@ -219,6 +245,11 @@ class Standalone:
         if self.args.output:
             with open(self.args.output, "w") as f:
                 f.write(buffer)
+        if self.args.session:
+            from .helper import Session
+            session = Session()
+            session.save_to_session(
+                system, user, buffer, self.args.session)
 
     def sendMessage(self, input_data: str, context="", host=''):
         """        Send a message using the input data and generate a response.
@@ -236,22 +267,38 @@ class Standalone:
         wisdomFilePath = os.path.join(
             config_directory, f"patterns/{self.pattern}/system.md"
         )
+        user = input_data
         user_message = {"role": "user", "content": f"{input_data}"}
         wisdom_File = os.path.join(current_directory, wisdomFilePath)
         system = ""
+        session_message = ""
+        if self.args.session:
+            from .helper import Session
+            session = Session()
+            session_message = session.read_from_session(
+                self.args.session)
         if self.pattern:
             try:
                 with open(wisdom_File, "r") as f:
                     if context:
-                        system = context + '\n\n' + f.read()
+                        if session_message:
+                            system = session_message + '\n' + context + '\n\n' + f.read()
+                        else:
+                            system = context + '\n\n' + f.read()
                     else:
-                        system = f.read()
+                        if session_message:
+                            system = session_message + '\n' + f.read()
+                        else:
+                            system = f.read()
                     system_message = {"role": "system", "content": system}
                 messages = [system_message, user_message]
             except FileNotFoundError:
                 print("pattern not found")
                 return
         else:
+            if session_message:
+                user_message['content'] = session_message + \
+                    '\n' + user_message['content']
             if context:
                 messages = [
                     {'role': 'system', 'content': context}, user_message]
@@ -280,6 +327,11 @@ class Standalone:
                 if self.args.output:
                     with open(self.args.output, "w") as f:
                         f.write(response.choices[0].message.content)
+                if self.args.session:
+                    from .helper import Session
+                    session = Session()
+                    session.save_to_session(
+                        system, user, response.choices[0], self.args.session)
         except Exception as e:
             if "All connection attempts failed" in str(e):
                 print(

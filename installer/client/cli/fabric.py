@@ -28,6 +28,8 @@ def main():
         const="analyzepaper.txt",
         default=None,
     )
+    parser.add_argument('--session', '-S',
+                        help="Continue your previous conversation. Default is your previous conversation", nargs="?", const="default")
     parser.add_argument(
         "--gui", help="Use the GUI (Node and npm need to be installed)", action="store_true")
     parser.add_argument(
@@ -57,7 +59,7 @@ def main():
                         help="Change the default model. For a list of available models, use the --listmodels flag.")
 
     parser.add_argument(
-        "--model", "-m", help="Select the model to use. NOTE: Will not work if you have set a default model. please use --clear to clear persistence before using this flag"
+        "--model", "-m", help="Select the model to use"
     )
     parser.add_argument(
         "--listmodels", help="List all available models", action="store_true"
@@ -112,6 +114,15 @@ def main():
             standalone = Standalone(args)
             standalone.agents(text)
             sys.exit()
+    if args.session:
+        from .helper import Session
+        session = Session()
+        if args.session == "default":
+            session_file = session.find_most_recent_file()
+            if session_file is None:
+                args.session = "default"
+            else:
+                args.session = session_file.split("/")[-1]
     standalone = Standalone(args, args.pattern)
     if args.list:
         try:
