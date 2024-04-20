@@ -31,7 +31,7 @@ def main():
     parser.add_argument('--session', '-S',
                         help="Continue your previous conversation. Default is your previous conversation", nargs="?", const="default")
     parser.add_argument(
-        '--clearsession', help="deletes indicated session. Use 'all' to delete all dessions")
+        '--clearsession', help="deletes indicated session. Use 'all' to delete all sessions")
     parser.add_argument('--sessionlog', help="View the log of a session")
     parser.add_argument(
         '--listsessions', help="List all sessions", action="store_true")
