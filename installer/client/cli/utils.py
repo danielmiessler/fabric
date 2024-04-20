@@ -161,13 +161,16 @@ class Standalone:
             config_directory, f"patterns/{self.pattern}/system.md"
         )
         session_message = ""
+        user = ""
         if self.args.session:
             from .helper import Session
             session = Session()
             session_message = session.read_from_session(
                 self.args.session)
-        user = session_message + '\n' + input_data
-        user = input_data
+        if session_message:
+            user = session_message + '\n' + input_data
+        else:
+            user = input_data
         user_message = {"role": "user", "content": f"{input_data}"}
         wisdom_File = os.path.join(current_directory, wisdomFilePath)
         buffer = ""

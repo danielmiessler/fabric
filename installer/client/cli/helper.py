@@ -23,7 +23,6 @@ class Session:
 
         # If no files are found, return None
         if not full_path_files:
-            print("No files found in the directory.")
             return None
 
         # Find the file with the most recent modification time
