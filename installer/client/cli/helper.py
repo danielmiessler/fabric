@@ -43,15 +43,29 @@ class Session:
             return None
         with open(file, "r") as f:
             return f.read()
+
     def clear_session(self, session):
         if session == "all":
             for file in os.listdir(self.sessions_folder):
                 os.remove(os.path.join(self.sessions_folder, file))
         else:
             os.remove(os.path.join(self.sessions_folder, session))
+
     def session_log(self, session):
         file = os.path.join(self.sessions_folder, session)
         if not os.path.exists(file):
             return None
         with open(file, "r") as f:
             return f.read()
+
+    def list_sessions(self):
+        sessionlist = os.listdir(self.sessions_folder)
+        most_recent = self.find_most_recent_file().split("/")[-1]
+        for session in sessionlist:
+            with open(os.path.join(self.sessions_folder, session), "r") as f:
+                firstline = f.readline().strip()
+                secondline = f.readline().strip()
+                if session == most_recent:
+                    print(f"{session} **default** \"{firstline}\n{secondline}\n\"")
+                else:
+                    print(f"{session} \"{firstline}\n{secondline}\n\"")

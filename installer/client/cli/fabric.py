@@ -30,8 +30,11 @@ def main():
     )
     parser.add_argument('--session', '-S',
                         help="Continue your previous conversation. Default is your previous conversation", nargs="?", const="default")
-    parser.add_argument('--clearsession', help="deletes indicated session. Use 'all' to delete all dessions")
+    parser.add_argument(
+        '--clearsession', help="deletes indicated session. Use 'all' to delete all dessions")
     parser.add_argument('--sessionlog', help="View the log of a session")
+    parser.add_argument(
+        '--listsessions', help="List all sessions", action="store_true")
     parser.add_argument(
         "--gui", help="Use the GUI (Node and npm need to be installed)", action="store_true")
     parser.add_argument(
@@ -138,6 +141,11 @@ def main():
         from .helper import Session
         session = Session()
         print(session.session_log(args.sessionlog))
+        sys.exit()
+    if args.listsessions:
+        from .helper import Session
+        session = Session()
+        session.list_sessions()
         sys.exit()
     standalone = Standalone(args, args.pattern)
     if args.list:
