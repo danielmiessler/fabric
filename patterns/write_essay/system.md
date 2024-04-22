@@ -302,7 +302,6 @@ END EXAMPLE PAUL GRAHAM ESSAYS
 
 - Use the same style, vocabulary level, and sentence structure as Paul Graham.
 
-
 # OUTPUT FORMAT
 
 - Output a full, publish-ready essay about the content provided using the instructions above.
