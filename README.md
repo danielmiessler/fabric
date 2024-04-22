@@ -360,7 +360,7 @@ def extwis():
 
     # Set the system and user URLs
     system_url = "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/system.md"
-    user_url = "https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/README.md"
+    user_url = "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/README.md"
 
     # Fetch the prompt content
     system_content = fetch_content_from_url(system_url)
