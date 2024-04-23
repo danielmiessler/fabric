@@ -95,7 +95,7 @@ Our approach is to break problems into individual pieces (see below) and then ap
 
 ### Too many prompts
 
-Prompts are good for this, but the biggest challenge I faced in 2023——which still exists today—is **the sheer number of AI prompts out there**. We all have prompts that are useful, but it's hard to discover new ones, know if they are good or not, _and manage different versions of the ones we like_.
+Prompts are good for this, but the biggest challenge I faced in 2023—which still exists today—is **the sheer number of AI prompts out there**. We all have prompts that are useful, but it's hard to discover new ones, know if they are good or not, _and manage different versions of the ones we like_.
 
 One of <code>fabric</code>'s primary features is helping people collect and integrate prompts, which we call _Patterns_, into various parts of their lives.
 
@@ -116,7 +116,7 @@ Fabric has Patterns for all sorts of life and work activities, including:
 
 Fabric _Patterns_ are different than most prompts you'll see.
 
-- **First, we use `Markdown` to help ensure maximum readability and editability**. This not only helps the creator make a good one, but also anyone who wants to deeply understand what it does. _Importantly, this also includes the AI you're sending it to!_
+- **First, we use `Markdown` to help ensure maximum readability and editability**. This not only helps the creator make a good prompt, but also anyone who wants to deeply understand what it does. _Importantly, this also includes the AI you're sending it to!_  
 
 Here's an example of a Fabric Pattern.
 
@@ -472,7 +472,7 @@ The content features a conversation between two individuals discussing various t
 
 You can also use Custom Patterns with Fabric, meaning Patterns you keep locally and don't upload to Fabric.
 
-One possible place to store PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAIthem is `~/.config/custom-fabric-patterns`.
+One possible place to store them is `~/.config/custom-fabric-patterns`.
 
 Then when you want to use them, simply copy them into `~/.config/fabric/patterns`.
 
@@ -494,7 +494,7 @@ NEW FEATURE! We have incorporated PraisonAI with fabric. For more information ab
 echo "Search for recent articles about the future of AI and write me a 500 word essay on the findings" | fabric --agents
 ```
 
-This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
+This feature works with all OpenAI and Ollama models but does NOT work with Claude. You can specify your model with the -m flag
 
 ## Helper Apps
 
