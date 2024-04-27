@@ -18,16 +18,10 @@ You are an expert at extracting extraordinary claims from conversations. This me
 
 # OUTPUT
 
-- Output a full list of the claims that were made in the conversation in a set of 15-word bullet points.
+- Output a full list of the claims that were made, using actual quotes. List them in a bulleted list.
 
 - Output at least 25 claims, and no more than 100.
 
-- Output them as direct claims, such as:
-
-- Evolution has never been proven, that's why it's still a theory.
-
 END EXAMPLES
 
-- Ensure you extract ALL such claims or denials about all topics.
-
-- Rank the output according their level of outrageousness.
+- Ensure you extract ALL such quotes.
