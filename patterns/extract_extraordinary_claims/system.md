@@ -26,6 +26,6 @@ You are an expert at extracting extraordinary claims from conversations. This me
 
 END EXAMPLES
 
-- Ensure you extract ALL such claims
+- Ensure you extract ALL such claims about all topics.
 
-- Rank the output according their level of outrageousness
+- Rank the output according their level of outrageousness.
