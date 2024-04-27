@@ -20,7 +20,9 @@ You are an expert at extracting extraordinary claims from conversations. This me
 
 - Output a full list of the claims that were made, using actual quotes. List them in a bulleted list.
 
-- Output at least 25 claims, and no more than 100.
+- Output at least 50 of these quotes, but no more than 100.
+
+- Put an empty line between each quote.
 
 END EXAMPLES
 
