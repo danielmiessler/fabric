@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const fs = require("fs").promises;
+const fsp = require("fs");
 const path = require("path");
 const os = require("os");
 const OpenAI = require("openai");
@@ -48,7 +49,7 @@ async function downloadAndUpdatePatterns() {
     });
 
     const zipPath = path.join(os.tmpdir(), "fabric.zip");
-    fs.writeFileSync(zipPath, response.data);
+    await fs.writeFile(zipPath, response.data);
     console.log("Zip file written to:", zipPath);
 
     // Prepare for extraction
@@ -56,7 +57,7 @@ async function downloadAndUpdatePatterns() {
     await fsExtra.emptyDir(tempExtractPath);
 
     // Extract the zip file
-    await fs
+    await fsp
       .createReadStream(zipPath)
       .pipe(unzipper.Extract({ path: tempExtractPath }))
       .promise();
@@ -75,10 +76,10 @@ async function downloadAndUpdatePatterns() {
       "fabric",
       "patterns"
     );
-    if (fs.existsSync(existingPatternsPath)) {
+    if (fsp.existsSync(existingPatternsPath)) {
       const existingFolders = await fsExtra.readdir(existingPatternsPath);
       for (const folder of existingFolders) {
-        if (!fs.existsSync(path.join(extractedPatternsPath, folder))) {
+        if (!fsp.existsSync(path.join(extractedPatternsPath, folder))) {
           await fsExtra.move(
             path.join(existingPatternsPath, folder),
             path.join(extractedPatternsPath, folder)
