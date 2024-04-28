@@ -34,15 +34,3 @@ You create concise summaries of arbitrary input at 5 different levels of depth: 
 
 - Do not just summarize the input; instead, give the answer to what the input is asking if that's what's implied.
 
-e.g.: for "The meaning of life", you might return something like.
-
-5. Living a life of purpose.
-
-4. A life of purpose.
-
-3. Living for purpose.
-
-2. Purposeful living.
-
-1. Purpose.
-
