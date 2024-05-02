@@ -472,7 +472,7 @@ The content features a conversation between two individuals discussing various t
 
 You can also use Custom Patterns with Fabric, meaning Patterns you keep locally and don't upload to Fabric.
 
-One possible place to store PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAIthem is `~/.config/custom-fabric-patterns`.
+One possible place to store them is `~/.config/custom-fabric-patterns`. 
 
 Then when you want to use them, simply copy them into `~/.config/fabric/patterns`.
 
@@ -488,13 +488,15 @@ pbpaste | fabric -p your_custom_pattern
 
 ## Agents
 
-NEW FEATURE! We have incorporated PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAI. This feature CREATES AI agents and then uses them to perform a task
+NEW FEATURE! We have incorporated (PraisonAI)[https://github.com/MervinPraison/PraisonAI] into Fabric. This feature creates AI agents and then uses them to perform a task.
 
 ```bash
-echo "Search for recent articles about the future of AI and write me a 500 word essay on the findings" | fabric --agents
+echo "Search for recent articles about the future of AI and write me a 500-word essay on the findings" | fabric --agents
 ```
 
-This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
+This feature works with all OpenAI and Ollama models but does NOT work with Claude. You can specify your model with the -m flag.
+
+For more information about this amazing project, please visit https://github.com/MervinPraison/PraisonAI.
 
 ## Helper Apps
 
