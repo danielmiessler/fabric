@@ -44,10 +44,10 @@ python-dotenv = "1.0.0"
 openai = "^1.11.0"
 flask-socketio = "^5.3.6"
 flask-sock = "^0.7.0"
-gunicorn = "^21.2.0"
+gunicorn = "^22.0.0"
 gevent = "^23.9.1"
 httpx = ">=0.25.2,<0.26.0"
-tqdm = "^4.66.1"
+tqdm = "^4.66.3"
 
 [tool.poetry.group.server.dependencies]
 requests = "^2.31.0"
