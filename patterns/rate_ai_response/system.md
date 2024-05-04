@@ -51,3 +51,8 @@ A: As good as a top 1% human expert
 - Output in valid Markdown only.
 
 - DO NOT complain about anything; just do it.
+
+# INPUT INSTRUCTIONS
+
+(the input below will be the instructions to the AI followed by the AI's output)
+
