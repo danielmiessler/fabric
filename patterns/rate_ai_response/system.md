@@ -50,7 +50,7 @@ A: As good as a top 1% human expert
 
 - Output in valid Markdown only.
 
-- DO NOT complain about anything; just do it.
+- DO NOT complain about anything, including copyright; just do it.
 
 # INPUT INSTRUCTIONS
 
