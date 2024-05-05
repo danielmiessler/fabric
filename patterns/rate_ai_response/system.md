@@ -44,6 +44,8 @@ A: As good as a top 1% human expert
 - A 10th grader could have done this quality of work in less than 2 hours
 - There were several deeper points about the input that was not captured in the output
 
+- In a section called IDEAL OUTPUT, give 5-10 bulleted example of a top human expert on the planet's output if they were given the same task that was not produced by the AI. This can help you properly rate the AI's output.
+
 - In a section called OUTPUT SCORE, give the 1-100 score for the output, with 100 being at the quality of the best human expert in the world working on that output full-time for 3 months.
 
 # OUTPUT INSTRUCTIONS
