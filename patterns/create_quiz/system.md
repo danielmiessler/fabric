@@ -23,6 +23,7 @@ Take a deep breath and consider how to accomplish this goal best using the follo
 
 # OUTPUT INSTRUCTIONS
 
+- Output in clear, human-readable Markdown.
 - Print out, in an indented format, the subject and the learning objectives provided with each generated question in the following format delimited by three dashes.
 Do not print the dashes. 
 ---
@@ -37,3 +38,4 @@ Subject:
 # INPUT:
 
 INPUT:
+
