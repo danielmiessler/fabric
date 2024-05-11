@@ -3,6 +3,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from youtube_transcript_api import YouTubeTranscriptApi
 from dotenv import load_dotenv
+from datetime import datetime
 import os
 import json
 import isodate
@@ -79,12 +80,18 @@ def main_function(url, options):
 
         # Get video details
         video_response = youtube.videos().list(
-            id=video_id, part="contentDetails").execute()
+            id=video_id, part="contentDetails,snippet").execute()
 
         # Extract video duration and convert to minutes
         duration_iso = video_response["items"][0]["contentDetails"]["duration"]
         duration_seconds = isodate.parse_duration(duration_iso).total_seconds()
         duration_minutes = round(duration_seconds / 60)
+        # Set up metadata
+        metadata = {}
+        metadata['id'] = video_response['items'][0]['id']
+        metadata['title'] = video_response['items'][0]['snippet']['title']
+        metadata['channel'] = video_response['items'][0]['snippet']['channelTitle']
+        metadata['published_at'] = video_response['items'][0]['snippet']['publishedAt']
 
         # Get video transcript
         try:
@@ -106,12 +113,15 @@ def main_function(url, options):
             print(transcript_text.encode('utf-8').decode('unicode-escape'))
         elif options.comments:
             print(json.dumps(comments, indent=2))
+        elif options.metadata:
+            print(json.dumps(metadata, indent=2))
         else:
             # Create JSON object with all data
             output = {
                 "transcript": transcript_text,
                 "duration": duration_minutes,
-                "comments": comments
+                "comments": comments,
+                "metadata": metadata
             }
             # Print JSON object
             print(json.dumps(output, indent=2))
@@ -126,6 +136,7 @@ def main():
     parser.add_argument('--duration', action='store_true', help='Output only the duration')
     parser.add_argument('--transcript', action='store_true', help='Output only the transcript')
     parser.add_argument('--comments', action='store_true', help='Output the comments on the video')
+    parser.add_argument('--metadata', action='store_true', help='Output the video metadata')
     parser.add_argument('--lang', default='en', help='Language for the transcript (default: English)')
     
     args = parser.parse_args()
