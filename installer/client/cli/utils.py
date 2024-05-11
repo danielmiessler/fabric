@@ -531,6 +531,21 @@ class Setup:
         except:
             pass
 
+    def __ensure_env_file_created(self):
+        """        Ensure that the environment file is created.
+
+        Returns:
+            None
+
+        Raises:
+            OSError: If the environment file cannot be created.
+        """
+        print("Creating empty environment file...")
+        if not os.path.exists(self.env_file):
+            with open(self.env_file, "w") as f:
+                f.write("#No API key set\n")
+        print("Environment file created.")
+
     def update_shconfigs(self):
         bootstrap_file = os.path.join(
             self.config_directory, "fabric-bootstrap.inc")
@@ -697,6 +712,7 @@ class Setup:
         self.youtube_key(youtubekey)
         self.patterns()
         self.update_shconfigs()
+        self.__ensure_env_file_created()
 
 
 class Transcribe:
