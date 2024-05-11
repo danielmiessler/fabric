@@ -172,7 +172,7 @@ class Standalone:
         else:
             user = input_data
         user_message = {"role": "user", "content": f"{input_data}"}
-        wisdom_File = os.path.join(current_directory, wisdomFilePath)
+        wisdom_File = wisdomFilePath
         buffer = ""
         system = ""
         if self.pattern:
