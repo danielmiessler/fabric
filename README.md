@@ -132,7 +132,10 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 ## Quickstart
 
-The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/client">`/client`</a> directory in this repository.
+The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/installer/client">`/client`</a> directory in this repository.
+
+### Required Python Version 
+Ensure you have at least python3.10 installed on you operating system. Otherwise, when you attempt to run the pip install commands, the project will fail to build certain dependencies. 
 
 ### Setting up the fabric commands
 
@@ -203,6 +206,15 @@ fabric --help
 
 ### Using the `fabric` client
 
+If you want to use it with OpenAI API compatible inference servers, such as [FastChat](https://github.com/lm-sys/FastChat), [Helmholtz Blablador](http://helmholtz-blablador.fz-juelich.de), [LM Studio](https://lmstudio.ai) and others, simply export the following environment variables:
+
+- `export OPENAI_BASE_URL=https://YOUR-SERVER:8000/v1/`
+- `export DEFAULT_MODEL="YOUR_MODEL"`
+
+And if your server needs authentication tokens, like Blablador does, you export the token the same way you would with OpenAI:
+  
+- `export OPENAI_API_KEY="YOUR TOKEN"`
+
 Once you have it all set up, here's how to use it.
 
 1. Check out the options
@@ -244,7 +256,7 @@ options:
                         Select the model to use
   --listmodels          List all available models
   --remoteOllamaServer REMOTEOLLAMASERVER
-                        The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-deault location or port
+                        The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-default location or port
   --context, -c         Use Context file (context.md) to add context to your pattern
 ```
 
@@ -472,7 +484,7 @@ The content features a conversation between two individuals discussing various t
 
 You can also use Custom Patterns with Fabric, meaning Patterns you keep locally and don't upload to Fabric.
 
-One possible place to store PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAIthem is `~/.config/custom-fabric-patterns`.
+One possible place to store them is `~/.config/custom-fabric-patterns`. 
 
 Then when you want to use them, simply copy them into `~/.config/fabric/patterns`.
 
@@ -488,13 +500,15 @@ pbpaste | fabric -p your_custom_pattern
 
 ## Agents
 
-NEW FEATURE! We have incorporated PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAI. This feature CREATES AI agents and then uses them to perform a task
+NEW FEATURE! We have incorporated (PraisonAI)[https://github.com/MervinPraison/PraisonAI] into Fabric. This feature creates AI agents and then uses them to perform a task.
 
 ```bash
-echo "Search for recent articles about the future of AI and write me a 500 word essay on the findings" | fabric --agents
+echo "Search for recent articles about the future of AI and write me a 500-word essay on the findings" | fabric --agents
 ```
 
-This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
+This feature works with all OpenAI and Ollama models but does NOT work with Claude. You can specify your model with the -m flag.
+
+For more information about this amazing project, please visit https://github.com/MervinPraison/PraisonAI.
 
 ## Helper Apps
 
