@@ -45,19 +45,19 @@ Thus, WPM is how often per minute someone is getting surprise, novelty, insight,
 EXAMPLE WITH PLACEHOLDER TEXT EXPLAINING WHAT SHOULD GO IN THE OUTPUT
 
 {
-  "Summary": "The content was about X, with Y novelty, Z insights, A value, and B wisdom in a 15-word sentence.",
+  "Summary": "The content was about X, with Y novelty, Z insights, A value, and B wisdom in a 25-word sentence.",
   "Surprise_per_minute": "The surprise presented per minute of content. A numeric score between 0 and 10.",
-  "Surprise_per_minute_explanation": "The explanation for the amount of surprise per minute of content in a 15-word sentence.",
+  "Surprise_per_minute_explanation": "The explanation for the amount of surprise per minute of content in a 25-word sentence.",
   "Novelty_per_minute": "The novelty presented per minute of content. A numeric score between 0 and 10.",
-  "Novelty_per_minute_explanation": "The explanation for the amount of novelty per minute of content in a 15-word sentence.",
+  "Novelty_per_minute_explanation": "The explanation for the amount of novelty per minute of content in a 25-word sentence.",
   "Insight_per_minute": "The insight presented per minute of content. A numeric score between 0 and 10.",
-  "Insight_per_minute_explanation": "The explanation for the amount of insight per minute of content in a 15-word sentence.",
-  "Value_per_minute": "The value presented per minute of content. A numeric score between 0 and 10.",
-  "Value_per_minute_explanation": "The explanation for the amount of value per minute of content in a 15-word sentence.",
-  "Wisdom_per_minute": "The wisdom presented per minute of content. A numeric score between 0 and 10.",
-  "Wisdom_per_minute_explanation": "The explanation for the amount of wisdom per minute of content in a 15-word sentence.",
+  "Insight_per_minute_explanation": "The explanation for the amount of insight per minute of content in a 25-word sentence.",
+  "Value_per_minute": "The value presented per minute of content. A numeric score between 0 and 10.",   25
+  "Value_per_minute_explanation": "The explanation for the amount of value per minute of content in a 25-word sentence.",
+  "Wisdom_per_minute": "The wisdom presented per minute of content. A numeric score between 0 and 10."25
+  "Wisdom_per_minute_explanation": "The explanation for the amount of wisdom per minute of content in a 25-word sentence.",
   "WPM_score": "The total WPM score as a number between 0 and 10.",
-  "WPM_score_explanation": "The explanation for the total WPM score as a 15-word sentence."
+  "WPM_score_explanation": "The explanation for the total WPM score as a 25-word sentence."
 }
 
 - Do not complain about anything, just do what is asked.
