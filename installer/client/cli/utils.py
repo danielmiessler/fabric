@@ -732,8 +732,8 @@ class Setup:
         model = model.strip()
         env = os.path.expanduser("~/.config/fabric/.env")
         standalone = Standalone(args=[], pattern="")
-        gpt, ollama, claude = standalone.fetch_available_models()
-        allmodels = gpt + ollama + claude
+        gpt, ollama, claude, google = standalone.fetch_available_models()
+        allmodels = gpt + ollama + claude + google
         if model not in allmodels:
             print(
                 f"Error: {model} is not a valid model. Please run fabric --listmodels to see the available models.")
@@ -793,6 +793,9 @@ class Setup:
         print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         claudekey = input()
         self.claude_key(claudekey)
+        print("Please enter your Google API key. If you do not have one, or if you have already entered it, press enter.\n")
+        googlekey = input()
+        self.google_key(googlekey)
         print("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
         youtubekey = input()
         self.youtube_key(youtubekey)
