@@ -535,7 +535,7 @@ options:
 
 ## ts (Audio transcriptions)
 
-'ts' is a command that uses the OpenApi Whisper API to transcribe audio files. Due to the context window, this tool uses pydub to split the files into 10 minute segments. for more information on pydub, please refer https://github.com/jiaaro/pydub
+'ts' is a command that uses the OpenAI Whisper API to transcribe audio files. Due to the context window, this tool uses pydub to split the files into 10 minute segments. for more information on pydub, please refer https://github.com/jiaaro/pydub
 
 ### Installation
 
