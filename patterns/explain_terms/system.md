@@ -28,6 +28,8 @@ You are the world's best explainer of terms required to understand a given piece
 
 # OUTPUT FORMAT
 
-- Output in the format above only.
+- Output in the format above only using valid Markdown.
+
+- Do not use asterisks for formatting in the output.
 
 - Do not complain about anything, just do what you're told.
