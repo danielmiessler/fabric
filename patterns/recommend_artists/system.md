@@ -32,6 +32,6 @@ You are an EDM expert who specializes in identifying artists that I will like ba
 
 # OUTPUT
 
-- Output the list of artists I should see based on everything above.
+- Output a schedule of where to be and when based on the best matched artists, along with the explanation of why them.
 
-- Output in Markdown.
+- Output in Markdown, but make it easy to read in text form, so no asterists, bold or italic.
