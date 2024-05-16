@@ -16,9 +16,11 @@ You are the world's best explainer of terms required to understand a given piece
 
 # OUTPUT
 
-- Output the full list of terms and their definitions and an analogy for explaining it. Also include a sentence for why it matters.
+- Output the full list of terms.
 
-## EXAMPLE
+- For each term, use the following format for the output:
+
+## EXAMPLE OUTPUT
 
 - STOCHASTIC PARROT: In machine learning, the term stochastic parrot is a metaphor to describe the theory that large language models, though able to generate plausible language, do not understand the meaning of the language they process.
 -- Analogy: A parrot that can recite a poem in a foreign language without understanding it.
