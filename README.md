@@ -135,7 +135,7 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/installer/client">`/client`</a> directory in this repository.
 
 ### Required Python Version 
-Ensure you have at least python3.10 installed on you operating system. Otherwise, when you attempt to run the pip install commands, the project will fail to build certain dependencies. 
+Ensure you have at least python3.10 installed on you operating system. Otherwise, when you attempt to run the pip install commands, the project will fail to build due to certain dependencies. 
 
 ### Setting up the fabric commands
 
