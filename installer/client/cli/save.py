@@ -54,12 +54,12 @@ def main(tag, tags, silent, fabric):
     # Prevent a NoneType ending up in the tags
     frontmatter_tags = ""
     if fabric:
-        frontmatter_tags = os.getenv(FM_KEY)
+        frontmatter_tags = os.getenv(FM_KEY) or ""
 
     with open(target, "w") as fp:
         if frontmatter_tags or len(tags) != 0:
             fp.write("---\n")
-            now = datetime.now().strftime(f"{DATE_FORMAT} %H:%M")
+            now = datetime.now().strftime(f"%Y-%m-%d %H:%M")
             fp.write(f"generation_date: {now}\n")
             fp.write(f"tags: {frontmatter_tags} {tag} {' '.join(tags)}\n")
             fp.write("---\n")
