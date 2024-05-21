@@ -1,4 +1,4 @@
-# Analize answers for the given question
+# Analyze answers for the given question
 
 This pattern is the complementary part of the `create_quiz` pattern. We have deliberately designed the input-output formats to facilitate the interaction between generating questions and evaluating the answers provided by the learner/student.
 
