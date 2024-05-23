@@ -55,7 +55,7 @@
 > [!NOTE]
 > We are adding functionality to the project so often that you should update often as well. That means: `git pull; pipx install . --force; fabric --update; source ~/.zshrc (or ~/.bashrc)` in the main directory!
 
-**April 21, 2024** — We now have context in Fabric, so you can build on previous queries! Be sure to update and check `fabric -h` for the latest!
+**May 23, 2024** — We will be switching Fabric to Go in a few weeks to avoid all the installation issues with Python. The Go version will be dead-simple to install and will be even faster. Plus easier to update. We already have it working thanks to the heroic efforts of @xssdoctor, and we're just working on testing now! Stay tuned for more info on the release date!
 
 ## Introduction videos
 
