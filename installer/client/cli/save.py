@@ -8,9 +8,8 @@ from dotenv import load_dotenv
 DEFAULT_CONFIG = "~/.config/fabric/.env"
 PATH_KEY = "FABRIC_OUTPUT_PATH"
 FM_KEY = "FABRIC_FRONTMATTER_TAGS"
-DATE_FORMAT = "%Y-%m-%d"
 load_dotenv(os.path.expanduser(DEFAULT_CONFIG))
-
+DATE_FORMAT = os.getenv("SAVE_DATE_FORMAT", "%Y-%m-%d")
 
 def main(tag, tags, silent, fabric):
     out = os.getenv(PATH_KEY)
@@ -31,15 +30,21 @@ def main(tag, tags, silent, fabric):
         print(f"'{sys.argv[0]}' takes a single argument to tag your summary")
         sys.exit(1)
 
-    yyyymmdd = datetime.now().strftime(DATE_FORMAT)
-    target = f"{out}{yyyymmdd}-{tag}.md"
+    if DATE_FORMAT:
+        yyyymmdd = datetime.now().strftime(DATE_FORMAT)
+        target = f"{out}{yyyymmdd}-{tag}.md"
+    else:
+        target = f"{out}{tag}.md"
 
     # don't clobber existing files- add an incremented number to the end instead
     would_clobber = True
     inc = 0
     while would_clobber:
         if inc > 0:
-            target = f"{out}{yyyymmdd}-{tag}-{inc}.md"
+            if DATE_FORMAT:
+                target = f"{out}{yyyymmdd}-{tag}-{inc}.md"
+            else:
+                target = f"{out}{tag}-{inc}.md"
         if os.path.exists(target):
             inc += 1
         else:
@@ -49,12 +54,12 @@ def main(tag, tags, silent, fabric):
     # Prevent a NoneType ending up in the tags
     frontmatter_tags = ""
     if fabric:
-        frontmatter_tags = os.getenv(FM_KEY)
+        frontmatter_tags = os.getenv(FM_KEY) or ""
 
     with open(target, "w") as fp:
         if frontmatter_tags or len(tags) != 0:
             fp.write("---\n")
-            now = datetime.now().strftime(f"{DATE_FORMAT} %H:%M")
+            now = datetime.now().strftime(f"%Y-%m-%d %H:%M")
             fp.write(f"generation_date: {now}\n")
             fp.write(f"tags: {frontmatter_tags} {tag} {' '.join(tags)}\n")
             fp.write("---\n")
