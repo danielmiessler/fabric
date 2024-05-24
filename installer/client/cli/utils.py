@@ -244,6 +244,8 @@ class Standalone:
             else:
                 messages = [user_message]
         try:
+            if self.args.debug:
+                print(messages)
             if self.local:
                 if host:
                     asyncio.run(self.localStream(messages, host=host))
@@ -355,6 +357,8 @@ class Standalone:
             else:
                 messages = [user_message]
         try:
+            if self.args.debug:
+                print(messages)
             if self.local:
                 if host:
                     asyncio.run(self.localChat(messages, host=host))

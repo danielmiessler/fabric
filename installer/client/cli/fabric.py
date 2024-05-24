@@ -73,6 +73,8 @@ def main():
                         help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-default location or port')
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
+    parser.add_argument('--debug',
+                        help="Print out entire LLM prompt for debugging", action="store_true")
 
     args = parser.parse_args()
     home_holder = os.path.expanduser("~")
