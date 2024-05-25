@@ -63,12 +63,16 @@ class Standalone:
         self.google = self.model in googleList
 
     async def localChat(self, messages, host=''):
-        from ollama import AsyncClient
+        from ollama import AsyncClient, Options
         response = None
         if host:
-            response = await AsyncClient(host=host).chat(model=self.model, messages=messages)
+            response = await AsyncClient(host=host).chat(model=self.model, messages=messages,
+                                                       options=Options(temperature=self.args.temp,
+                                                                       top_p=self.args.top_p))
         else:
-            response = await AsyncClient().chat(model=self.model, messages=messages)
+            response = await AsyncClient().chat(model=self.model, messages=messages,
+                                                       options=Options(temperature=self.args.temp,
+                                                                       top_p=self.args.top_p))
         print(response['message']['content'])
         copy = self.args.copy
         if copy:
@@ -78,14 +82,19 @@ class Standalone:
                 f.write(response['message']['content'])
 
     async def localStream(self, messages, host=''):
-        from ollama import AsyncClient
+        from ollama import AsyncClient, Options
         buffer = ""
         if host:
-            async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True):
+            # local ollama with stream and spec host
+            async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True,
+                                                       options=Options(temperature=self.args.temp,
+                                                                       top_p=self.args.top_p)):
                 buffer += part['message']['content']
                 print(part['message']['content'], end='', flush=True)
         else:
-            async for part in await AsyncClient().chat(model=self.model, messages=messages, stream=True):
+            async for part in await AsyncClient().chat(model=self.model, messages=messages, stream=True,
+                                                       options=Options(temperature=self.args.temp,
+                                                                       top_p=self.args.top_p)):
                 buffer += part['message']['content']
                 print(part['message']['content'], end='', flush=True)
         if self.args.output:
