@@ -67,12 +67,11 @@ class Standalone:
         response = None
         if host:
             response = await AsyncClient(host=host).chat(model=self.model, messages=messages,
-                                                       options=Options(temperature=self.args.temp,
-                                                                       top_p=self.args.top_p))
+                                                         options=Options(temperature=self.args.temp,
+                                                                         top_p=self.args.top_p))
         else:
             response = await AsyncClient().chat(model=self.model, messages=messages,
-                                                       options=Options(temperature=self.args.temp,
-                                                                       top_p=self.args.top_p))
+                                                options=Options(temperature=self.args.temp, top_p=self.args.top_p))
         print(response['message']['content'])
         copy = self.args.copy
         if copy:
@@ -87,8 +86,8 @@ class Standalone:
         if host:
             # local ollama with stream and spec host
             async for part in await AsyncClient(host=host).chat(model=self.model, messages=messages, stream=True,
-                                                       options=Options(temperature=self.args.temp,
-                                                                       top_p=self.args.top_p)):
+                                                                options=Options(temperature=self.args.temp,
+                                                                                top_p=self.args.top_p)):
                 buffer += part['message']['content']
                 print(part['message']['content'], end='', flush=True)
         else:
