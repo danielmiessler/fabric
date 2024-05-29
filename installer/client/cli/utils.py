@@ -1,6 +1,7 @@
 import requests
 import os
 from openai import OpenAI, APIConnectionError
+from groq import Groq
 import asyncio
 import pyperclip
 import sys
@@ -39,10 +40,16 @@ class Standalone:
             args = type('Args', (), {})()
         env_file = os.path.expanduser(env_file)
         self.client = None
+        self.client_name = None
         load_dotenv(env_file)
         if "OPENAI_API_KEY" in os.environ:
             api_key = os.environ['OPENAI_API_KEY']
             self.client = OpenAI(api_key=api_key)
+            self.client_name = "OPENAI"
+        elif "GROQ_API_KEY" in  os.environ:
+            api_key = os.environ['GROQ_API_KEY']
+            self.client = Groq(api_key=api_key)
+            self.client_name = "GROQ"
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
@@ -53,14 +60,16 @@ class Standalone:
             if not self.model:
                 self.model = 'gpt-4-turbo-preview'
         self.claude = False
-        sorted_gpt_models, ollamaList, claudeList, googleList = self.fetch_available_models()
+        sorted_gpt_models, ollamaList, claudeList, googleList, groqList = self.fetch_available_models()
         self.sorted_gpt_models = sorted_gpt_models
         self.ollamaList = ollamaList
         self.claudeList = claudeList
         self.googleList = googleList
+        self.groqList = groqList
         self.local = self.model in ollamaList
         self.claude = self.model in claudeList
         self.google = self.model in googleList
+        self.groq = self.model in  groqList
 
     async def localChat(self, messages, host=''):
         from ollama import AsyncClient
@@ -403,6 +412,7 @@ class Standalone:
                 print(e)
 
     def fetch_available_models(self):
+        groqList = []
         gptlist = []
         fullOllamaList = []
         googleList = []
@@ -414,14 +424,15 @@ class Standalone:
 
         try:
             if self.client:
-                models = [model.id.strip()
-                          for model in self.client.models.list().data]
+                models = [model.id.strip() for model in self.client.models.list().data]
                 if "/" in models[0] or "\\" in models[0]:
                     gptlist = [item[item.rfind(
                         "/") + 1:] if "/" in item else item[item.rfind("\\") + 1:] for item in models]
-                else:
+                elif self.client_name=="OPENAI":
                     gptlist = [item.strip()
                                for item in models if item.startswith("gpt")]
+                elif self.client_name=="GROQ":
+                    groqList = models
                 gptlist.sort()
         except APIConnectionError as e:
             pass
@@ -450,7 +461,7 @@ class Standalone:
         except:
             googleList = []
 
-        return gptlist, fullOllamaList, claudeList, googleList
+        return gptlist, fullOllamaList, claudeList, googleList, groqList
 
     def get_cli_input(self):
         """ aided by ChatGPT; uses platform library
@@ -621,6 +632,33 @@ class Setup:
                         f.write(line)
                 f.write(sourceLine)
 
+    def groq_api_key(self, api_key):
+        """        Set the GROQ API key in the environment file.
+
+        Args:
+            api_key (str): The API key to be set.
+
+        Returns:
+            None
+
+        Raises:
+            OSError: If the environment file does not exist or cannot be accessed.
+        """
+        api_key = api_key.strip()
+        if not os.path.exists(self.env_file) and api_key:
+            with open(self.env_file, "w") as f:
+                f.write(f"GROQ_API_KEY={api_key}\n")
+            print(f"GROQ API key set to {api_key}")
+        elif api_key:
+            # erase the line OPENAI_API_KEY=key and write the new key
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "GROQ_API_KEY" not in line:
+                        f.write(line)
+                f.write(f"GROQ_API_KEY={api_key}\n")
+                
     def api_key(self, api_key):
         """        Set the OpenAI API key in the environment file.
 
@@ -647,7 +685,7 @@ class Setup:
                     if "OPENAI_API_KEY" not in line:
                         f.write(line)
                 f.write(f"OPENAI_API_KEY={api_key}\n")
-
+    
     def claude_key(self, claude_key):
         """        Set the Claude API key in the environment file.
 
@@ -732,8 +770,8 @@ class Setup:
         model = model.strip()
         env = os.path.expanduser("~/.config/fabric/.env")
         standalone = Standalone(args=[], pattern="")
-        gpt, ollama, claude, google = standalone.fetch_available_models()
-        allmodels = gpt + ollama + claude + google
+        gpt, ollama, claude, google, groq = standalone.fetch_available_models()
+        allmodels = gpt + ollama + claude + google +groq
         if model not in allmodels:
             print(
                 f"Error: {model} is not a valid model. Please run fabric --listmodels to see the available models.")
@@ -796,6 +834,9 @@ class Setup:
         print("Please enter your Google API key. If you do not have one, or if you have already entered it, press enter.\n")
         googlekey = input()
         self.google_key(googlekey)
+        print("Please enter your Groq API key. If you do not have one, or if you have already entered it, press enter.\n")
+        groqkey = input()
+        self.groq_api_key(groqkey)
         print("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
         youtubekey = input()
         self.youtube_key(youtubekey)

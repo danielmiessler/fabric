@@ -158,7 +158,7 @@ def main():
             print("No patterns found")
             sys.exit()
     if args.listmodels:
-        gptmodels, localmodels, claudemodels, googlemodels = standalone.fetch_available_models()
+        gptmodels, localmodels, claudemodels, googlemodels, groqmodels = standalone.fetch_available_models()
         print("GPT Models:")
         for model in gptmodels:
             print(model)
@@ -170,6 +170,9 @@ def main():
             print(model)
         print("\nGoogle Models:")
         for model in googlemodels:
+            print(model)
+        print("\nGroq Models")
+        for model in groqmodels:
             print(model)
         sys.exit()
     if args.text is not None:
