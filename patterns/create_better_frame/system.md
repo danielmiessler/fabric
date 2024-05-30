@@ -64,7 +64,7 @@ A couple of books
 
 Two books that this makes me think of are Bobos in Paradise, by David Brooks, and Bowling Alone, by Robert Putman.
 They both highlight, in different ways, how groups are separating in the US, and how subgroups shoot off from what used to be the mainstream and become something else.
-When our frames our different, our realities are different.
+When our frames are different, our realities are different.
 That’s a key point in both books, actually: America used to largely be one group. The same cars. The same neighborhoods. The same washing machines. The same newspapers.
 Most importantly, the same frames.
 There were different religions and different preferences for things, but we largely interpreted reality the same way.
