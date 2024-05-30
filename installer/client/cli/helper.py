@@ -60,7 +60,12 @@ class Session:
 
     def list_sessions(self):
         sessionlist = os.listdir(self.sessions_folder)
-        most_recent = self.find_most_recent_file().split("/")[-1]
+        most_recent = self.find_most_recent_file()
+        if most_recent:
+            most_recent = most_recent.split("/")[-1]
+        else:
+            print("no recent sessions found")
+            return
         for session in sessionlist:
             with open(os.path.join(self.sessions_folder, session), "r") as f:
                 firstline = f.readline().strip()
