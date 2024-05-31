@@ -60,11 +60,11 @@
 **NOTE**: These videos use the `./setup.sh` install method, which is now replaced with the easier `pipx install .` method. Other than that everything else is still the same.
 
 <div align="center">
-<a href="https://youtu.be/wPEyyigh10g">
+<a href="https://youtu.be/wPEyyigh10g](https://youtu.be/UbDyjIIGaxQ">
 <img width="972" alt="fabric_intro_video" src="https://github.com/danielmiessler/fabric/assets/50654/1eb1b9be-0bab-4c77-8ed2-ed265e8a3435"></a>
     <br /><br />
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=lEXd6TXPw7E target="_blank">
- <img src="http://img.youtube.com/vi/lEXd6TXPw7E/mqdefault.jpg" alt="Watch the video" width="972" " />
+<a href=["[http://www.youtube.com/watch?feature=player_embedded&v=lEXd6TXPw7E](https://youtu.be/wPEyyigh10g](https://youtu.be/UbDyjIIGaxQ)"](https://youtu.be/wPEyyigh10g](https://youtu.be/UbDyjIIGaxQ) target="_blank">
+ <img src="http://img.youtube.com/vi/lEXd6TXPw7E/mqdefault.jpg](https://i.ytimg.com/vi/UbDyjIIGaxQ/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBenHOfBJfb1AB9Muf59bUkQfEZ0g" alt="Watch the video" width="972" " />
 </a>
 </div>
 
