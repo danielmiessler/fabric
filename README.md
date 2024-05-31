@@ -492,7 +492,7 @@ pbpaste | fabric -p your_custom_pattern
 
 ## Agents
 
-NEW FEATURE! We have incorporated (PraisonAI)[https://github.com/MervinPraison/PraisonAI] into Fabric. This feature creates AI agents and then uses them to perform a task.
+NEW FEATURE! We have incorporated [PraisonAI](https://github.com/MervinPraison/PraisonAI) into Fabric. This feature creates AI agents and then uses them to perform a task.
 
 ```bash
 echo "Search for recent articles about the future of AI and write me a 500-word essay on the findings" | fabric --agents
