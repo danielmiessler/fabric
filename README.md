@@ -57,9 +57,9 @@
 
 ## Introduction videos
 
-**NOTE**: These videos use the `./setup.sh` install method, which is now replaced with the easier `pipx install .` method. Other than that everything else is still the same.
+**NOTE**: These videos use the `./setup.sh` install method, which has been replaced with the easier `pipx install .` method. Other than that, everything else is the same.
 
-https://youtu.be/wPEyyigh10g](https://youtu.be/UbDyjIIGaxQ)
+<a href="https://youtu.be/UbDyjIIGaxQ"><img width="800" alt="image" src="https://github.com/danielmiessler/fabric/assets/50654/a6a61885-7bb1-48d7-8ea9-777ebb2fdb94"></a>
 
 ## What and why
 
