@@ -55,9 +55,9 @@
 > [!NOTE]
 > May 23, 2024 — We will be switching Fabric to Go in a few weeks to avoid all the installation issues with Python. The Go version will be dead-simple to install and will be even faster. Plus easier to update. We already have it working thanks to the heroic efforts of @xssdoctor, and we're just working on testing now! Stay tuned for more info on the release date!
 
-## Introduction videos
+## Introduction video by Network Chuck!
 
-**NOTE**: These videos use the `./setup.sh` install method, which has been replaced with the easier `pipx install .` method. Other than that, everything else is the same.
+This is a **brilliant** video by Network Chuck that goes over why he's started using Fabric for all things AI. He talks aboutg the spirit of the project, how to install it, how he uses it, and just generally articulates the spirit of what we're doing here SO WELL. Thanks to Chuck for this!
 
 <a href="https://youtu.be/UbDyjIIGaxQ"><img width="800" alt="image" src="https://github.com/danielmiessler/fabric/assets/50654/a6a61885-7bb1-48d7-8ea9-777ebb2fdb94"></a>
 
