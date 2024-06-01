@@ -618,3 +618,9 @@ test
 `fabric` was created by <a href="https://danielmiessler.com/subscribe" target="_blank">Daniel Miessler</a> in January of 2024.
 <br /><br />
 <a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
+
+
+##One liner command to setup app in ubuntu:
+ sudo apt update &&  git clone https://github.com/danielmiessler/fabric.git && cd fabric && sudo apt install pipx ffmpeg -y && pipx ensurepath && pipx install . && export PATH=$PATH:/root/.local/bin && fabric --setup
+
+now, enter your Api keys.
