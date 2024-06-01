@@ -1,6 +1,6 @@
 import requests
 import os
-from openai import OpenAI, APIConnectionError
+from openai import OpenAI, APIConnectionError, AzureOpenAI
 import asyncio
 import pyperclip
 import sys
@@ -40,18 +40,25 @@ class Standalone:
         env_file = os.path.expanduser(env_file)
         self.client = None
         load_dotenv(env_file)
-        if "OPENAI_API_KEY" in os.environ:
-            api_key = os.environ['OPENAI_API_KEY']
-            self.client = OpenAI(api_key=api_key)
+        if "AZURE_OPENAI_API_KEY" in os.environ:
+            endpoint = os.environ["AZURE_OPENAI_ENDPOINT"]
+            api_version=os.environ["AZURE_OPENAI_API_VERSION"]
+            self.client = AzureOpenAI(azure_endpoint=endpoint,api_version=api_version)
+        else:    
+            if "OPENAI_API_KEY" in os.environ:
+                api_key = os.environ['OPENAI_API_KEY']
+                self.client = OpenAI(api_key=api_key)
         self.local = False
         self.config_pattern_directory = config_directory
         self.pattern = pattern
         self.args = args
-        self.model = getattr(args, 'model', None)
+        self.model = getattr(args, 'model', None) 
+        if not self.model:
+            self.model = os.environ.get('AZURE_OPENAI_MODEL', None)
         if not self.model:
             self.model = os.environ.get('DEFAULT_MODEL', None)
-            if not self.model:
-                self.model = 'gpt-4-turbo-preview'
+        if not self.model:
+            self.model = 'gpt-4-turbo-preview'
         self.claude = False
         sorted_gpt_models, ollamaList, claudeList, googleList = self.fetch_available_models()
         self.sorted_gpt_models = sorted_gpt_models
