@@ -7,7 +7,7 @@ import { FabricPatternSelect } from "@/components/FabricPatternSelect";
 import type { FabricQueryProps } from './fetchFabricQuery';
 
 export function FabricText({ onUpdate }: { onUpdate: (p: FabricQueryProps) => void }) {
-  const [data, setData] = React.useState({ query: "", apiurl: 'api/query', pattern: '' })
+  const [data, setData] = React.useState({ query: "", apiurl: 'api/query', pattern: 'ai' })
   const update = (change: Partial<FabricQueryProps>) => {
     setData({ ...data, ...change })
     onUpdate(data)

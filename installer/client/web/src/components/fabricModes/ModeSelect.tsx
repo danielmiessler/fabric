@@ -13,18 +13,23 @@ import { FabricText } from './FabricText';
 import { FabricYoutube } from './FabricYoutube';
 import { fetchFabricQuery, defaultFabricQueryProps } from './fetchFabricQuery';
 import type { FabricQueryProps } from './fetchFabricQuery';
+import type { ExecuteOutput } from '@/lib/execute';
 
 const MODES = [
   { key: 'text', title: 'Document / Query Input', desc: "", component: FabricText },
   { key: 'youtube', title: 'Youtube Transcript', desc: "", component: FabricYoutube }
 ]
 
-export function ModeSelectTabs() {
+type ModeSelectTabsProps = { onResult: (response: ExecuteOutput) => void }
+
+export function ModeSelectTabs({ onResult }: ModeSelectTabsProps) {
   const [payload, setState] = React.useState<FabricQueryProps>(defaultFabricQueryProps)
 
   const runFabricQuery = async () => {
+    console.log({ runFabricQuery: new Date() })
     const response = await fetchFabricQuery(payload)
     console.log({ payload, response })
+    onResult(response)
   }
 
   console.log({ payload })

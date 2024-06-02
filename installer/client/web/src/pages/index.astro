@@ -1,7 +1,7 @@
 ---
 import "@/styles/globals.css";
 import Layout from "@/layouts/Layout.astro";
-import FabricApp from "@/components/FabricApp.astro";
+import { FabricApp } from "@/components/FabricApp";
 ---
 
 <Layout title="Welcome to Fabric.">
@@ -13,7 +13,7 @@ import FabricApp from "@/components/FabricApp.astro";
 			and then choose the pattern you want to run.
 		</p>
 
-		<FabricApp />
+		<FabricApp client:load />
 	</main>
 </Layout>
 
