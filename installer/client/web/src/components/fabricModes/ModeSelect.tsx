@@ -14,6 +14,7 @@ import { FabricYoutube } from './FabricYoutube';
 import { fetchFabricQuery, defaultFabricQueryProps } from './fetchFabricQuery';
 import type { FabricQueryProps } from './fetchFabricQuery';
 import type { ExecuteOutput } from '@/lib/execute';
+import { Spinner } from '../ui/spinner';
 
 const MODES = [
   { key: 'text', title: 'Document / Query Input', desc: "", component: FabricText },
@@ -24,12 +25,15 @@ type ModeSelectTabsProps = { onResult: (response: ExecuteOutput) => void }
 
 export function ModeSelectTabs({ onResult }: ModeSelectTabsProps) {
   const [payload, setState] = React.useState<FabricQueryProps>(defaultFabricQueryProps)
+  const [spinner, setSpinner] = React.useState<boolean>(false)
 
   const runFabricQuery = async () => {
     console.log({ runFabricQuery: new Date() })
+    setSpinner(true)
     const response = await fetchFabricQuery(payload)
     console.log({ payload, response })
     onResult(response)
+    setSpinner(false)
   }
 
   console.log({ payload })
@@ -54,6 +58,7 @@ export function ModeSelectTabs({ onResult }: ModeSelectTabsProps) {
             </CardContent>
             <CardFooter>
               <Button onClick={runFabricQuery}>Run Fabric</Button>
+              <Spinner size="medium" show={spinner} />
             </CardFooter>
           </Card>
         </TabsContent>

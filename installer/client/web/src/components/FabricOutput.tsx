@@ -22,13 +22,13 @@ export const FabricOutput = ({ output }: Props) => {
         <Button variant="outline">Open Response</Button>
       </DrawerTrigger>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
+        <div className="mx-auto w-full max-w-full">
           <DrawerHeader>
             <DrawerTitle>Fabric Response</DrawerTitle>
             <DrawerDescription><code>{output.command}</code></DrawerDescription>
           </DrawerHeader>
           <div className="p-4 pb-0">
-            <div className="flex items-center justify-center space-x-2 w-1/2 md:w-full">
+            <div className="flex items-center justify-center space-x-2 w-1/2 md:w-full h-dvh overflow-auto">
               {output.ok
                 ? (<Success data={output.data} />)
                 : (<Error error={output.error} />)
@@ -55,8 +55,10 @@ const Error = ({ error }: { error: string[] }) => {
 }
 const Success = ({ data }: { data: string[] }) => {
   return (
-    <pre className="text-xl max-w-prose bg-green-950 text-white">
-      {data.join("\n")}
-    </pre>
+    <div className="text-xl max-w-prose bg-green-950 text-white">
+      {data.map(line => (
+        <p>{line}</p>
+      ))}
+    </div>
   )
 }
