@@ -895,3 +895,36 @@ def run_electron_app():
         subprocess.run(['npm', 'start'], check=True)
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while executing NPM commands: {e}")
+
+def run_astro_app():
+    # Step 1: Set CWD to the directory of the script
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
+    # Step 2: Check for the './installer/client/gui' directory
+    target_dir = '../web'
+    if not os.path.exists(target_dir):
+        print(f"""The directory {
+              target_dir} does not exist. Please check the path and try again.""")
+        return
+
+    # Step 3: Check for NPM installation
+    try:
+        subprocess.run(['npm', '--version'], check=True,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except subprocess.CalledProcessError:
+        print("NPM is not installed. Please install NPM and try again.")
+        return
+
+    # If this point is reached, NPM is installed.
+    # Step 4: Change directory to the Electron app's directory
+    os.chdir(target_dir)
+
+    # Step 5: Run 'npm install' and 'npm start'
+    try:
+        print("Running 'npm install'... This might take a few minutes.")
+        subprocess.run(['npm', 'install'], check=True)
+        print(
+            "'npm install' completed successfully. Starting the Electron app with 'npm start'...")
+        subprocess.run(['npm', 'start'], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred while executing NPM commands: {e}")

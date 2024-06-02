@@ -1,4 +1,4 @@
-from .utils import Standalone, Update, Setup, Alias, run_electron_app
+from .utils import Standalone, Update, Setup, Alias, run_electron_app, run_astro_app
 import argparse
 import sys
 import os
@@ -37,6 +37,8 @@ def main():
         '--listsessions', help="List all sessions", action="store_true")
     parser.add_argument(
         "--gui", help="Use the GUI (Node and npm need to be installed)", action="store_true")
+    parser.add_argument(
+        "--web", help="Use the Web GUI (Node and npm need to be installed)", action="store_true")
     parser.add_argument(
         "--stream",
         "-s",
@@ -98,6 +100,9 @@ def main():
         sys.exit()
     if args.gui:
         run_electron_app()
+        sys.exit()
+    if args.web:
+        run_astro_app()
         sys.exit()
     if args.update:
         Update()
