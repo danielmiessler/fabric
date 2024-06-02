@@ -18,7 +18,7 @@ export function FabricText({ onUpdate }: { onUpdate: (p: FabricQueryProps) => vo
       <div className="space-y-1">
         <Label htmlFor="textinput">Document/Query</Label>
         <Textarea placeholder="Input your query here" id="textinput"
-          onChange={({ target }) => update({ query: target.value })} />
+          onChangeCapture={({ currentTarget }) => update({ query: currentTarget.value })} />
       </div>
       <div className="space-y-1">
         <FabricPatternSelect onChange={(v) => update({ pattern: v })} />

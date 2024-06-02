@@ -21,22 +21,21 @@ const MODES = [
   { key: 'youtube', title: 'Youtube Transcript', desc: "", component: FabricYoutube }
 ]
 
-type ModeSelectTabsProps = { onResult: (response: ExecuteOutput) => void }
+type ModeSelectTabsProps = { onResult: (query: FabricQueryProps, response: ExecuteOutput) => void }
 
 export function ModeSelectTabs({ onResult }: ModeSelectTabsProps) {
-  const [payload, setState] = React.useState<FabricQueryProps>(defaultFabricQueryProps)
+  const [query, setQuery] = React.useState<FabricQueryProps>(defaultFabricQueryProps)
   const [spinner, setSpinner] = React.useState<boolean>(false)
 
   const runFabricQuery = async () => {
     console.log({ runFabricQuery: new Date() })
     setSpinner(true)
-    const response = await fetchFabricQuery(payload)
-    console.log({ payload, response })
-    onResult(response)
+    const response = await fetchFabricQuery(query)
+    console.log({ response })
+    onResult(query, response)
     setSpinner(false)
   }
 
-  console.log({ payload })
   return (
     <Tabs defaultValue={MODES[0].key}>
       <TabsList className="grid w-full grid-cols-2">
@@ -54,7 +53,7 @@ export function ModeSelectTabs({ onResult }: ModeSelectTabsProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              {React.createElement(component, { onUpdate: setState })}
+              {React.createElement(component, { onUpdate: setQuery })}
             </CardContent>
             <CardFooter>
               <Button onClick={runFabricQuery}>Run Fabric</Button>
