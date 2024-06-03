@@ -14,8 +14,8 @@
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 </p>
 
-[Introduction Video](#introduction-video) •
-[What and Why](#whatandwhy) •
+[Introduction Video](#introduction-video-by-network-chuck) •
+[What and Why](#what-and-why) •
 [Philosophy](#philosophy) •
 [Quickstart](#quickstart) •
 [Structure](#structure) •
@@ -29,7 +29,7 @@
 
 ## Navigation
 
-- [Introduction Videos](#introduction-videos)
+- [Introduction Videos](#introduction-video-by-network-chuck)
 - [What and Why](#what-and-why)
 - [Philosophy](#philosophy)
   - [Breaking problems into components](#breaking-problems-into-components)
