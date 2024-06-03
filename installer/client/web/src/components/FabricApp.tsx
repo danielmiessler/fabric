@@ -1,13 +1,12 @@
-import * as React from 'react';
-import { ModeSelectTabs } from "./fabricModes/ModeSelect";
-import type { ExecuteOutput } from '@/lib/execute';
-import type { FabricQueryProps } from './fabricModes/fetchFabricQuery';
-import { getMemory, saveMemory } from '@/lib/localStorage';
-import { nanoid } from 'nanoid';
-import { FabricMemory } from './FabricMemory';
-import { Separator } from './ui/separator';
-import { Button } from './ui/button';
-
+import * as React from 'react'
+import { nanoid } from 'nanoid'
+import type { ExecuteOutput } from '@/lib/execute'
+import { getMemory, saveMemory } from '@/lib/localStorage'
+import type { FabricQueryProps } from './fabricModes/fetchFabricQuery'
+import { ModeSelectTabs } from './fabricModes/ModeSelect'
+import { FabricMemory } from './FabricMemory'
+import { Separator } from './ui/separator'
+import { Button } from './ui/button'
 
 export const FabricApp = () => {
   const [output, setOutput] = React.useState(null as ExecuteOutput | null)
@@ -23,7 +22,7 @@ export const FabricApp = () => {
       title: query.query || query.youtubeUrl,
       pattern: query.pattern,
       command: response.command,
-      output: response.ok ? response.data : response.error
+      output: response.ok ? response.data : response.error,
     })
     saveMemory(memory)
     setOutput(response)
@@ -43,5 +42,9 @@ const ClearFabricMemory = () => {
   const clear = () => {
     saveMemory([])
   }
-  return <Button onClick={clear} className="block">Clear all Memory</Button>
+  return (
+    <Button onClick={clear} className="block">
+      Clear all Memory
+    </Button>
+  )
 }
