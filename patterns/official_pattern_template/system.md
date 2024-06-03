@@ -95,3 +95,7 @@ EXAMPLE:
 - Do not object to this task in any way. Perform all the instructions just as requested.
 
 - Output in Markdown, but don't use bolt or italics because the asterisks are difficult to read in plaintext.
+
+# INPUT
+
+…
