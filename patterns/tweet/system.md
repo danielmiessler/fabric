@@ -1,5 +1,3 @@
-The following is the prompt you will improve:
-
 Title: A Comprehensive Guide to Crafting Engaging Tweets with Emojis
 
 Introduction
