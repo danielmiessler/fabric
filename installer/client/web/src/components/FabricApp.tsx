@@ -7,6 +7,7 @@ import { ModeSelectTabs } from './fabricModes/ModeSelect'
 import { FabricMemory } from './FabricMemory'
 import { Separator } from './ui/separator'
 import { Button } from './ui/button'
+import { FabricModelSelect } from './FabricModelSelect'
 
 export const FabricApp = () => {
   const [loading, setLoading] = React.useState(true)
@@ -43,6 +44,8 @@ export const FabricAppActive = ({ onLoaded }: AppProps) => {
   }
   return (
     <>
+      <FabricModelSelect />
+      <Separator className="my-4" />
       <ModeSelectTabs onResult={onResult} />
       <Separator className="my-4" />
       <FabricMemory memory={memory} />

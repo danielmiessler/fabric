@@ -33,16 +33,19 @@ const title = (entry: MemoryEntry): string => {
 }
 
 const MemoryItems = ({ memory }: Props) => {
-  return memory.reverse().map((entry) => (
-    <AccordionItem value={entry.id} key={entry.id}>
-      <AccordionTrigger>
-        {title(entry)} - {entry.pattern}
-      </AccordionTrigger>
-      <AccordionContent>
-        <code className="block bg-indigo-950">{entry.command}</code>
-        <code className="block opacity-50">Ran on {entry.date.toString()}</code>
-        <div className="my-5 ">{entry.output && <Markdown>{entry.output.join('\n')}</Markdown>}</div>
-      </AccordionContent>
-    </AccordionItem>
-  ))
+  return memory
+    .slice()
+    .reverse()
+    .map((entry) => (
+      <AccordionItem value={entry.id} key={entry.id}>
+        <AccordionTrigger>
+          {title(entry)} - {entry.pattern}
+        </AccordionTrigger>
+        <AccordionContent>
+          <code className="block bg-indigo-950">{entry.command}</code>
+          <code className="block opacity-50">Ran on {entry.date.toString()}</code>
+          <div className="my-5 ">{entry.output && <Markdown>{entry.output.join('\n')}</Markdown>}</div>
+        </AccordionContent>
+      </AccordionItem>
+    ))
 }

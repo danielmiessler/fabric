@@ -12,6 +12,7 @@ export function FabricYoutube({ onUpdate }: Props) {
     youtubeUrl: '',
     apiurl: 'api/youtube',
     pattern: 'extract_wisdom',
+    temp: 1,
   })
   const update = (change: Partial<FabricQueryProps>) => {
     const changes = { ...data, ...change }

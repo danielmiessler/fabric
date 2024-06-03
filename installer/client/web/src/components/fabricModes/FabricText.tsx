@@ -13,6 +13,7 @@ export function FabricText({ onUpdate }: Props) {
     query: '',
     apiurl: 'api/query',
     pattern: 'ai',
+    temp: 1,
   })
   const update = (change: Partial<FabricQueryProps>) => {
     const changes = { ...data, ...change }

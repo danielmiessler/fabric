@@ -3,27 +3,11 @@ export const prerender = false
 
 import * as React from 'react'
 import { Check, ChevronsUpDown } from 'lucide-react'
-import {
-  useQuery,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { Button } from '@/components/ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Badge } from './ui/badge'
 import { cn } from '@/lib/utils'
 
@@ -69,17 +53,12 @@ export function PatternSelectCombo({ onChange }: SelectEvents) {
   return (
     <Popover open={open} onOpenChange={setOpen} modal={true}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[500px] justify-between"
-        >
+        <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between w-1/2">
           {value || 'Select pattern...'}
           <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[500px] p-0">
+      <PopoverContent className="w-1/2 p-0">
         <Command>
           <CommandInput placeholder="Search patterns..." />
           <CommandEmpty>No pattern found.</CommandEmpty>
@@ -95,12 +74,7 @@ export function PatternSelectCombo({ onChange }: SelectEvents) {
                     setOpen(false)
                   }}
                 >
-                  <Check
-                    className={cn(
-                      'mr-2 h-4 w-4',
-                      value === item ? 'opacity-100' : 'opacity-0'
-                    )}
-                  />
+                  <Check className={cn('mr-2 h-4 w-4', value === item ? 'opacity-100' : 'opacity-0')} />
                   {item}
                 </CommandItem>
               ))}

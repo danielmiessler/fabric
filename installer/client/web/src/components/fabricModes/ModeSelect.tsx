@@ -8,6 +8,7 @@ import { fetchFabricQuery, defaultFabricQueryProps } from './fetchFabricQuery'
 import type { FabricQueryProps } from './fetchFabricQuery'
 import type { ExecuteOutput } from '../../lib/execute'
 import { Spinner } from '../ui/spinner'
+import { FabricTemperature } from './FabricTemperature'
 
 const MODES = [
   {
@@ -30,9 +31,10 @@ type ModeSelectTabsProps = {
 
 export function ModeSelectTabs({ onResult }: ModeSelectTabsProps) {
   const [query, setQuery] = React.useState<FabricQueryProps>(defaultFabricQueryProps)
-  const updateQuery = (newQuery: FabricQueryProps) => {
-    console.log({ updateQuery: new Date(), newQuery })
-    setQuery(newQuery)
+  const updateQuery = (newQuery: Partial<FabricQueryProps>) => {
+    const merged = { ...query, ...newQuery }
+    console.log({ updateQuery: new Date(), merged })
+    setQuery(merged)
   }
   const [spinner, setSpinner] = React.useState<boolean>(false)
 
@@ -63,8 +65,9 @@ export function ModeSelectTabs({ onResult }: ModeSelectTabsProps) {
             </CardHeader>
             <CardContent className="space-y-2">{React.createElement(component, { onUpdate: updateQuery })}</CardContent>
             <CardFooter>
+              <FabricTemperature onUpdate={updateQuery} />
               <Button onClick={runFabricQuery}>Run Fabric</Button>
-              <Spinner size="medium" show={spinner} />
+              <Spinner size="medium" className="mx-4" show={spinner} />
               {spinner && `Running ${query.pattern}...`}
             </CardFooter>
           </Card>
