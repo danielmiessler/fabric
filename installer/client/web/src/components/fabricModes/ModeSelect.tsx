@@ -13,7 +13,7 @@ import { FabricText } from './FabricText'
 import { FabricYoutube } from './FabricYoutube'
 import { fetchFabricQuery, defaultFabricQueryProps } from './fetchFabricQuery'
 import type { FabricQueryProps } from './fetchFabricQuery'
-import type { ExecuteOutput } from '@/lib/execute'
+import type { ExecuteOutput } from '../../lib/execute'
 import { Spinner } from '../ui/spinner'
 
 const MODES = [
