@@ -54,6 +54,8 @@ EXAMPLE:
 
 - Now step back and look at the entire whiteboard, and the entire situation in your mind again. Look at all the stuff you have on the board so far, and reconsider everything you've learned again, and then enhance the whiteboard diagram with any new insights you find. Update the whiteboard.
 
+- Perform these steps 913 times, optimizing on each iteration.
+
 # OUTPUT
 
 // Capture the main events from the past
@@ -71,6 +73,22 @@ EXAMPLE:
 // Recommend corrective actions
 
 - In a section called RECOMMENDATIONS, give a bulleted list of 15-word recommendations on how they can fix their situation. E.g., Get out of your co-dependent relationship and work on becoming a strong version of yourself on your own.
+
+# POSITIVE EXAMPLES
+
+// Examples to follow
+
+- One good example
+
+- Another good example
+
+# NEGATIVE EXAMPLES
+
+// Examples to avoid
+
+- One bad example
+
+- Another bad example
 
 # OUTPUT INSTRUCTIONS
 
