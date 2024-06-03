@@ -9,11 +9,25 @@ import { Separator } from './ui/separator'
 import { Button } from './ui/button'
 
 export const FabricApp = () => {
+  const [loading, setLoading] = React.useState(true)
+
+  return (
+    <>
+      <FabricAppActive onLoaded={() => setLoading(false)} />
+    </>
+  )
+}
+
+type AppProps = { onLoaded: () => void }
+export const FabricAppActive = ({ onLoaded }: AppProps) => {
   const [output, setOutput] = React.useState(null as ExecuteOutput | null)
   const [latest, setLatest] = React.useState(nanoid() as string)
   const memory = React.useMemo(() => {
-    return getMemory()
+    const mem = getMemory()
+    // onLoaded()
+    return mem
   }, [latest])
+
   const onResult = async (query: FabricQueryProps, response: ExecuteOutput) => {
     setLatest(nanoid())
     memory.push({

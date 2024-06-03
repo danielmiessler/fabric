@@ -12,11 +12,13 @@ export type MemoryEntry = {
 const STORAGE_SLOT = 'fabric_memory'
 
 export const getMemory = (): MemoryEntry[] => {
+  if (window === undefined) return []
   const mem = window.localStorage.getItem(STORAGE_SLOT) || '[]'
   return JSON.parse(mem)
 }
 
 export const saveMemory = (mem: MemoryEntry[]): void => {
+  if (window === undefined) return
   const str = JSON.stringify(mem)
   window.localStorage.setItem(STORAGE_SLOT, str)
 }

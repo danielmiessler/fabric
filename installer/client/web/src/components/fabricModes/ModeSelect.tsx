@@ -1,12 +1,5 @@
 import * as React from 'react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { FabricText } from './FabricText'
@@ -36,9 +29,11 @@ type ModeSelectTabsProps = {
 }
 
 export function ModeSelectTabs({ onResult }: ModeSelectTabsProps) {
-  const [query, setQuery] = React.useState<FabricQueryProps>(
-    defaultFabricQueryProps
-  )
+  const [query, setQuery] = React.useState<FabricQueryProps>(defaultFabricQueryProps)
+  const updateQuery = (newQuery: FabricQueryProps) => {
+    console.log({ updateQuery: new Date(), newQuery })
+    setQuery(newQuery)
+  }
   const [spinner, setSpinner] = React.useState<boolean>(false)
 
   const runFabricQuery = async () => {
@@ -66,12 +61,11 @@ export function ModeSelectTabs({ onResult }: ModeSelectTabsProps) {
               <CardTitle>{title}</CardTitle>
               <CardDescription>{desc}</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-2">
-              {React.createElement(component, { onUpdate: setQuery })}
-            </CardContent>
+            <CardContent className="space-y-2">{React.createElement(component, { onUpdate: updateQuery })}</CardContent>
             <CardFooter>
               <Button onClick={runFabricQuery}>Run Fabric</Button>
               <Spinner size="medium" show={spinner} />
+              {spinner && `Running ${query.pattern}...`}
             </CardFooter>
           </Card>
         </TabsContent>

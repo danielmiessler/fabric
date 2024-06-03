@@ -22,18 +22,7 @@ import { FabricApp } from "@/components/FabricApp";
 		margin: auto;
 		padding: 1rem;
 		max-width: calc(100% - 2rem);
-		color: white;
-		font-size: 20px;
-		line-height: 1.6;
-	}
-	.astro-a {
-		position: absolute;
-		top: -32px;
-		left: 50%;
-		transform: translatex(-50%);
-		width: 220px;
-		height: auto;
-		z-index: -1;
+		min-height: 100vh;
 	}
 	h1 {
 		font-size: 4rem;
@@ -69,11 +58,5 @@ import { FabricApp } from "@/components/FabricApp";
 	}
 	.instructions strong {
 		color: rgb(var(--accent-light));
-	}
-	.link-card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-		gap: 2rem;
-		padding: 0;
 	}
 </style>
