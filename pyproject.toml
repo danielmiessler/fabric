@@ -13,6 +13,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
+pymupdf = "^1.24.5"
 crewai = "^0.22.5"
 unstructured = "0.10.25"
 pyowm = "3.3.0"
@@ -71,3 +72,4 @@ fabric-webui = 'installer:run_webui_server'
 ts = 'installer:main_ts'
 yt = 'installer:main_yt'
 save = 'installer:main_save'
+pe= 'installer:main_pE'

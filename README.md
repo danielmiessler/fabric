@@ -280,6 +280,13 @@ yt --transcript https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --patt
 pbpaste | analyze_claims --stream
 ```
 
+5. **new** Extract pdfs contents directly into your pattern
+
+```bash
+pe filename | fabrich -p extract_wisdom 
+```
+
+
 > [!NOTE]
 > More examples coming in the next few days, including a demo video!
 
