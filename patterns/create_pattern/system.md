@@ -37,6 +37,10 @@
 
 </TEMPLATE>
 
-Now apply this template to the following piece of text while only replacing text between square brackets.
+# TASK
 
-INPUT: 
+Now apply this template to the following text while only replacing text between square brackets in the template.
+Make sure to not skip any part of the following text.
+Don't output template tag.
+
+TEXT: 
