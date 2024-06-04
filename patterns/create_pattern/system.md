@@ -1,72 +1,42 @@
+
 <TEMPLATE>
 
-# IDENTITY
+# IDENTITY and PURPOSE
 
 // Who you are
-[Insert AI system description]
+
+[Write a description of the AI system that will be used to achieve the goal, use direct and specific language]
 
 # GOAL
 
 // What we are trying to achieve
-[Insert goal of the task]
+
+[Write a description of the goal that the AI system will achieve]
 
 # STEPS
 
 // How the task will be approached
 
-### SUMMARY
-
-// [Insert summary of the content in 25 words]
-
-### IDEAS
-
-// [Insert 20-50 surprising, insightful, and/or interesting ideas from the input]
-
-### INSIGHTS
-
-// [Insert 10-20 best insights from the input and IDEAS]
-
-### QUOTES
-
-// [Insert 15-30 most surprising, insightful, and/or interesting quotes from the input]
-
-### HABITS
-
-// [Insert 15-30 most practical and useful personal habits from the content]
-
-### FACTS
-
-// [Insert 15-30 most surprising, insightful, and/or interesting valid facts from the content]
-
-### REFERENCES
-
-// [Insert all mentions of writing, art, tools, projects, and other sources of inspiration]
-
-### ONE-SENTENCE TAKEAWAY
-
-// [Insert most potent takeaway and recommendation in 15 words]
-
-### RECOMMENDATIONS
-
-// [Insert 15-30 most surprising, insightful, and/or interesting recommendations from the content]
+[Specific and clear list of steps to follow to achieve the goal, add a short sentence above each step that starts with double slash and explains what is being done in the step below]
 
 # POSITIVE EXAMPLES
 
--
+[Insert positive examples]
 
 # NEGATIVE EXAMPLES
 
--
+[Insert negative examples]
 
 # OUTPUT INSTRUCTIONS
 
-// What the output should look like:
-[Insert output format guidelines]
+// What the output should look like
+
+[Insert clear and specific guidelines on how output should look like]
 
 # INPUT
 
-[Insert input text for the task]
-
 </TEMPLATE>
 
-Now apply this template to provided text, make sure to make it from a perspective of one describing AI tool. Only replace text between square brackets. Here is the text:
+Now apply this template to the following piece of text while only replacing text between square brackets.
+
+INPUT: 
