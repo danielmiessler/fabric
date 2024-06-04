@@ -481,7 +481,7 @@ One possible place to store them is `~/.config/custom-fabric-patterns`.
 Then when you want to use them, simply copy them into `~/.config/fabric/patterns`.
 
 ```bash
-cp -a ~/.config/custom-fabric-patterns/* ~/.config/fabric/patterns/`
+cp -a ~/.config/custom-fabric-patterns/* ~/.config/fabric/patterns/
 ```
 
 Now you can run them with:
