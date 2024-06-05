@@ -20,10 +20,8 @@
 [Quickstart](#quickstart) •
 [Structure](#structure) •
 [Examples](#examples) •
-[Custom Patterns](#custom-patterns) •
+[Custom Patterns](docs/custom-patterns.md) •
 [Helper Apps](docs/helper-apps.md) •
-[Examples](#examples) •
-[Meta](#meta) •
 [Documentation](docs/README.md)
 
 </div>
@@ -46,7 +44,6 @@
   - [CLI-native](#cli-native)
   - [Directly calling Patterns](#directly-calling-patterns)
 - [Examples](#examples)
-- [Custom Patterns](#custom-patterns)
 - [Meta](#meta)
   - [Primary contributors](#primary-contributors)
 
@@ -472,23 +469,6 @@ The content features a conversation between two individuals discussing various t
 10. Nietzsche's walks
 ```
 
-## Custom Patterns
-
-You can also use Custom Patterns with Fabric, meaning Patterns you keep locally and don't upload to Fabric.
-
-One possible place to store them is `~/.config/custom-fabric-patterns`. 
-
-Then when you want to use them, simply copy them into `~/.config/fabric/patterns`.
-
-```bash
-cp -a ~/.config/custom-fabric-patterns/* ~/.config/fabric/patterns/`
-```
-
-Now you can run them with:
-
-```bash
-pbpaste | fabric -p your_custom_pattern
-```
 
 ## Agents
 
