@@ -14,8 +14,8 @@
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 </p>
 
-[Introduction Video](#introduction-video) •
-[What and Why](#whatandwhy) •
+[Introduction Video](#introduction-video-by-network-chuck) •
+[What and Why](#what-and-why) •
 [Philosophy](#philosophy) •
 [Quickstart](#quickstart) •
 [Structure](#structure) •
@@ -29,7 +29,7 @@
 
 ## Navigation
 
-- [Introduction Videos](#introduction-videos)
+- [Introduction Videos](#introduction-video-by-network-chuck)
 - [What and Why](#what-and-why)
 - [Philosophy](#philosophy)
   - [Breaking problems into components](#breaking-problems-into-components)
@@ -333,7 +333,7 @@ echo "An idea that coding is like speaking with rules." | write_essay
 
 ### Directly calling Patterns
 
-One key feature of `fabric` and its Markdown-based format is the ability to _ directly reference_ (and edit) individual [patterns](https://github.com/danielmiessler/fabric/tree/main#naming) directly—on their own—without surrounding code.
+One key feature of `fabric` and its Markdown-based format is the ability to _directly reference_ (and edit) individual [Patterns](#components) directly—on their own—without any surrounding code.
 
 As an example, here's how to call _the direct location_ of the `extract_wisdom` pattern.
 
@@ -343,7 +343,7 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 This means you can cleanly, and directly reference any pattern for use in a web-based AI app, your own code, or wherever!
 
-Even better, you can also have your [Mill](https://github.com/danielmiessler/fabric/tree/main#naming) functionality directly call _system_ and _user_ prompts from `fabric`, meaning you can have your personal AI ecosystem automatically kept up to date with the latest version of your favorite [Patterns](https://github.com/danielmiessler/fabric/tree/main#naming).
+Even better, you can also have your [Mill](#components) functionality directly call _system_ and _user_ prompts from `fabric`, meaning you can have your personal AI ecosystem automatically kept up to date with the latest version of your favorite [Patterns](#components).
 
 Here's what that looks like in code:
 
