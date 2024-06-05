@@ -8,3 +8,4 @@ Welcome to the Fabric documentation! This documentation is a work in progress, a
 ## Table of Contents
 - [Getting Started](getting-started.md)
 - [Helper Apps](helper-apps.md)
+- [Advanced Installation](advanced-installation.md)
