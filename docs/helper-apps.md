@@ -1,9 +1,9 @@
-## Helper Apps
-
+# Helper Apps
 These are helper tools to work with Fabric. Examples include things like getting transcripts from media files, getting metadata about media, etc.
 
-## yt (YouTube)
 
+
+## yt (YouTube)
 `yt` is a command that uses the YouTube API to pull transcripts, pull user comments, get video duration, and other functions. It's primary function is to get a transcript from a video that can then be stitched (piped) into other Fabric Patterns.
 
 ```bash
@@ -21,14 +21,14 @@ options:
   --comments    Output only the user comments
 ```
 
-## ts (Audio transcriptions)
+**`yt` requires a YouTube API key.** How to get one is described in the [Getting Started](getting-started.md#youtube-api) section.
 
+
+## ts (Audio transcriptions)
 'ts' is a command that uses the OpenAI Whisper API to transcribe audio files. Due to the context window, this tool uses pydub to split the files into 10 minute segments. for more information on pydub, please refer https://github.com/jiaaro/pydub
 
 ### Installation
-
 ```bash
-
 mac:
 brew install ffmpeg
 
@@ -52,15 +52,14 @@ options:
   -h, --help  show this help message and exit
 ```
 
-## Save
 
+## Save
 `save` is a "tee-like" utility to pipeline saving of content, while keeping the output stream intact. Can optionally generate "frontmatter" for PKM utilities like Obsidian via the
 "FABRIC_FRONTMATTER" environment variable
 
 If you'd like to default variables, set them in `~/.config/fabric/.env`. `FABRIC_OUTPUT_PATH` needs to be set so `save` where to write. `FABRIC_FRONTMATTER_TAGS` is optional, but useful for tracking how tags have entered your PKM, if that's important to you.
 
 ### usage
-
 ```bash
 usage: save [-h] [-t, TAG] [-n] [-s] [stub]
 
@@ -78,7 +77,6 @@ options:
 ```
 
 ### Example
-
 ```bash
 echo test | save --tag extra-tag stub-for-name
 test
