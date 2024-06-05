@@ -126,8 +126,13 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/installer/client">`/client`</a> directory in this repository.
 
+### Requirements
+- Python 3.10 or higher
+
+<!--
 ### Required Python Version 
 Ensure you have at least python3.10 installed on you operating system. Otherwise, when you attempt to run the pip install commands, the project will fail to build due to certain dependencies. 
+-->
 
 ### Setting up the fabric commands
 
@@ -196,13 +201,14 @@ fabric --help
 > [!NOTE]
 > If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in distinct terminal windows.
 
+
 If you want to use `fabric` with Inference Server, such as [FastChat](https://github.com/lm-sys/FastChat), [Helmholtz Blablador](http://helmholtz-blablador.fz-juelich.de), [LM Studio](https://lmstudio.ai) and others check out the [Advanced Installation](docs/advanced-installation.md#using-fabric-with-inference-server) guide.
+
 
 ### Using the `fabric` client
 Once you have it all set up, here's how to use it.
 
-1. Check out the options
-   `fabric -h`
+1. Check out the options `fabric -h`
 
 ```bash
 usage: fabric -h
@@ -243,6 +249,7 @@ options:
                         The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-default location or port
   --context, -c         Use Context file (context.md) to add context to your pattern
 ```
+
 
 #### Example commands
 
@@ -288,6 +295,7 @@ We hope that if you used nothing else from Fabric, the Patterns by themselves wi
 You can use any of the Patterns you see there in any AI application that you have, whether that's ChatGPT or some other app or website. Our plan and prediction is that people will soon be sharing many more than those we've published, and they will be way better than ours.
 
 The wisdom of crowds for the win.
+
 
 ### Create your own Fabric Mill
 
