@@ -5,7 +5,7 @@ Creating Custom Patterns is a key feature of Fabric. This section will cover how
 
 ## Table of Contents
 - [Storing Custom Patterns](#storing-custom-patterns)
-
+- [Writing Custom Patterns](#writing-custom-patterns)
 
 
 ## Storing Custom Patterns
