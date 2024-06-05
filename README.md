@@ -21,7 +21,7 @@
 [Structure](#structure) •
 [Examples](#examples) •
 [Custom Patterns](#custom-patterns) •
-[Helper Apps](#helper-apps) •
+[Helper Apps](docs/helper-apps.md) •
 [Examples](#examples) •
 [Meta](#meta) •
 [Documentation](docs/README.md)
@@ -47,7 +47,6 @@
   - [Directly calling Patterns](#directly-calling-patterns)
 - [Examples](#examples)
 - [Custom Patterns](#custom-patterns)
-- [Helper Apps](#helper-apps)
 - [Meta](#meta)
   - [Primary contributors](#primary-contributors)
 
