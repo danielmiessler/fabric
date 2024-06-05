@@ -23,7 +23,8 @@
 [Custom Patterns](#custom-patterns) •
 [Helper Apps](#helper-apps) •
 [Examples](#examples) •
-[Meta](#meta)
+[Meta](#meta) •
+[Documentation](docs/README.md)
 
 </div>
 
