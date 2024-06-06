@@ -13,8 +13,8 @@ import shutil
 from youtube_transcript_api import YouTubeTranscriptApi
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
-config_directory = os.path.expanduser("~/.config/fabric")
-env_file = os.path.join(config_directory, ".env")
+config_directory = os.path.expanduser("~/.config/fabric").replace("\\", "/")
+env_file = os.path.join(config_directory, ".env").replace("\\", "/")
 
 
 class Standalone:
@@ -37,7 +37,7 @@ class Standalone:
         # Expand the tilde to the full path
         if args is None:
             args = type('Args', (), {})()
-        env_file = os.path.expanduser(env_file)
+        env_file = os.path.expanduser(env_file).replace("\\", "/")
         self.client = None
         load_dotenv(env_file)
         if "OPENAI_API_KEY" in os.environ:
@@ -494,9 +494,9 @@ class Update:
     def __init__(self):
         """Initialize the object with default values."""
         self.repo_zip_url = "https://github.com/danielmiessler/fabric/archive/refs/heads/main.zip"
-        self.config_directory = os.path.expanduser("~/.config/fabric")
+        self.config_directory = os.path.expanduser("~/.config/fabric").replace("\\", "/")
         self.pattern_directory = os.path.join(
-            self.config_directory, "patterns")
+            self.config_directory, "patterns").replace("\\", "/")
         os.makedirs(self.pattern_directory, exist_ok=True)
         print("Updating patterns...")
         self.update_patterns()  # Start the update process immediately
@@ -551,11 +551,11 @@ class Alias:
         self.config_files = []
         self.home_directory = os.path.expanduser("~")
         patternsFolder = os.path.join(
-            self.home_directory, ".config/fabric/patterns")
+            self.home_directory, ".config/fabric/patterns").replace("\\", "/")
         self.patterns = os.listdir(patternsFolder)
 
     def execute(self):
-        with open(os.path.join(self.home_directory, ".config/fabric/fabric-bootstrap.inc"), "w") as w:
+        with open(os.path.join(self.home_directory, ".config/fabric/fabric-bootstrap.inc").replace("\\", "/"), "w") as w:
             for pattern in self.patterns:
                 w.write(f"alias {pattern}='fabric --pattern {pattern}'\n")
 
@@ -568,19 +568,19 @@ class Setup:
             OSError: If there is an error in creating the pattern directory.
         """
 
-        self.config_directory = os.path.expanduser("~/.config/fabric")
+        self.config_directory = os.path.expanduser("~/.config/fabric").replace("\\", "/")
         self.pattern_directory = os.path.join(
-            self.config_directory, "patterns")
+            self.config_directory, "patterns").replace("\\", "/")
         os.makedirs(self.pattern_directory, exist_ok=True)
         self.shconfigs = []
         home = os.path.expanduser("~")
         if os.path.exists(os.path.join(home, ".bashrc")):
-            self.shconfigs.append(os.path.join(home, ".bashrc"))
+            self.shconfigs.append(os.path.join(home, ".bashrc").replace("\\", "/"))
         if os.path.exists(os.path.join(home, ".bash_profile")):
-            self.shconfigs.append(os.path.join(home, ".bash_profile"))
+            self.shconfigs.append(os.path.join(home, ".bash_profile").replace("\\", "/"))
         if os.path.exists(os.path.join(home, ".zshrc")):
-            self.shconfigs.append(os.path.join(home, ".zshrc"))
-        self.env_file = os.path.join(self.config_directory, ".env")
+            self.shconfigs.append(os.path.join(home, ".zshrc").replace("\\", "/"))
+        self.env_file = os.path.join(self.config_directory, ".env").replace("\\", "/")
         self.gptlist = []
         self.fullOllamaList = []
         self.googleList = []
@@ -609,7 +609,7 @@ class Setup:
 
     def update_shconfigs(self):
         bootstrap_file = os.path.join(
-            self.config_directory, "fabric-bootstrap.inc")
+            self.config_directory, "fabric-bootstrap.inc").replace("\\", "/")
         sourceLine = f'if [ -f "{bootstrap_file}" ]; then . "{bootstrap_file}"; fi'
         for config in self.shconfigs:
             lines = None
@@ -730,7 +730,7 @@ class Setup:
             model (str): The model to be set.
         """
         model = model.strip()
-        env = os.path.expanduser("~/.config/fabric/.env")
+        env = os.path.expanduser("~/.config/fabric/.env").replace("\\", "/")
         standalone = Standalone(args=[], pattern="")
         gpt, ollama, claude, google = standalone.fetch_available_models()
         allmodels = gpt + ollama + claude + google

@@ -4,7 +4,7 @@ import sys
 import os
 
 
-script_directory = os.path.dirname(os.path.realpath(__file__))
+script_directory = os.path.dirname(os.path.realpath(__file__)).replace("\\", "/")
 
 
 def main():
@@ -75,11 +75,11 @@ def main():
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
 
     args = parser.parse_args()
-    home_holder = os.path.expanduser("~")
-    config = os.path.join(home_holder, ".config", "fabric")
-    config_patterns_directory = os.path.join(config, "patterns")
-    config_context = os.path.join(config, "context.md")
-    env_file = os.path.join(config, ".env")
+    home_holder = os.path.expanduser("~").replace("\\", "/")
+    config = os.path.join(home_holder, ".config", "fabric").replace("\\", "/")
+    config_patterns_directory = os.path.join(config, "patterns").replace("\\", "/")
+    config_context = os.path.join(config, "context.md").replace("\\", "/")
+    env_file = os.path.join(config, ".env").replace("\\", "/")
     if not os.path.exists(config):
         os.makedirs(config)
     if args.setup:

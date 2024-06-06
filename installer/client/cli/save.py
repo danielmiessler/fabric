@@ -5,7 +5,7 @@ from datetime import datetime
 
 from dotenv import load_dotenv
 
-DEFAULT_CONFIG = "~/.config/fabric/.env"
+DEFAULT_CONFIG = os.path.expanduser("~/.config/fabric/.env").replace("\\", "/")
 PATH_KEY = "FABRIC_OUTPUT_PATH"
 FM_KEY = "FABRIC_FRONTMATTER_TAGS"
 load_dotenv(os.path.expanduser(DEFAULT_CONFIG))

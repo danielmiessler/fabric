@@ -170,7 +170,10 @@ sudo apt install pipx
 
 Windows:
 
-Use WSL and follow the Linux instructions.
+```bash
+pip install pipx
+pipx install fabric
+```
 
 5. Install fabric
 

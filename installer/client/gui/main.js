@@ -22,8 +22,8 @@ let openai;
 let ollama = new Ollama.Ollama();
 
 async function ensureFabricFoldersExist() {
-  const fabricPath = path.join(os.homedir(), ".config", "fabric");
-  const patternsPath = path.join(fabricPath, "patterns");
+  const fabricPath = path.join(os.homedir(), ".config", "fabric").replace(/\\/g, "/");
+  const patternsPath = path.join(fabricPath, "patterns").replace(/\\/g, "/");
 
   try {
     await fs
@@ -75,7 +75,7 @@ async function downloadAndUpdatePatterns() {
       ".config",
       "fabric",
       "patterns"
-    );
+    ).replace(/\\/g, "/");
     if (fsp.existsSync(existingPatternsPath)) {
       const existingFolders = await fsExtra.readdir(existingPatternsPath);
       for (const folder of existingFolders) {
@@ -104,7 +104,7 @@ async function downloadAndUpdatePatterns() {
   }
 }
 function getPatternFolders() {
-  const patternsPath = path.join(os.homedir(), ".config", "fabric", "patterns");
+  const patternsPath = path.join(os.homedir(), ".config", "fabric", "patterns").replace(/\\/g, "/");
   return new Promise((resolve, reject) => {
     fs.readdir(patternsPath, { withFileTypes: true }, (error, dirents) => {
       if (error) {
@@ -121,7 +121,7 @@ function getPatternFolders() {
 }
 
 async function checkApiKeyExists() {
-  const configPath = path.join(os.homedir(), ".config", "fabric", ".env");
+  const configPath = path.join(os.homedir(), ".config", "fabric", ".env").replace(/\\/g, "/");
   try {
     await fs.access(configPath, fsConstants.F_OK);
     return true; // The file exists
@@ -131,7 +131,7 @@ async function checkApiKeyExists() {
 }
 
 async function loadApiKeys() {
-  const configPath = path.join(os.homedir(), ".config", "fabric", ".env");
+  const configPath = path.join(os.homedir(), ".config", "fabric", ".env").replace(/\\/g, "/");
   let keys = { openAIKey: null, claudeKey: null };
 
   try {
@@ -154,7 +154,7 @@ async function loadApiKeys() {
 
 async function saveApiKeys(openAIKey, claudeKey) {
   const configPath = path.join(os.homedir(), ".config", "fabric");
-  const envFilePath = path.join(configPath, ".env");
+  const envFilePath = path.join(configPath, ".env").replace(/\\/g, "/");
 
   try {
     await fs.access(configPath);
@@ -277,7 +277,7 @@ async function getPatternContent(patternName) {
     "patterns",
     patternName,
     "system.md"
-  );
+  ).replace(/\\/g, "/");
   try {
     const content = await fs.readFile(patternPath, "utf8");
     return content;
@@ -398,14 +398,14 @@ async function createPatternFolder(patternName, patternBody) {
       ".config",
       "fabric",
       "patterns"
-    );
-    const patternFolderPath = path.join(patternsPath, patternName);
+    ).replace(/\\/g, "/");
+    const patternFolderPath = path.join(patternsPath, patternName).replace(/\\/g, "/");
 
     // Create the pattern folder using the promise-based API
     await fs.mkdir(patternFolderPath, { recursive: true });
 
     // Create the system.md file inside the pattern folder
-    const filePath = path.join(patternFolderPath, "system.md");
+    const filePath = path.join(patternFolderPath, "system.md").replace(/\\/g, "/");
     await fs.writeFile(filePath, patternBody);
 
     console.log(
@@ -515,7 +515,7 @@ ipcMain.handle("get-patterns", async (event) => {
 });
 
 ipcMain.on("update-patterns", () => {
-  const patternsPath = path.join(os.homedir(), ".config", "fabric", "patterns");
+  const patternsPath = path.join(os.homedir(), ".config", "fabric", "patterns").replace(/\\/g, "/");
   downloadAndUpdatePatterns(patternsPath);
 });
 
