@@ -65,9 +65,10 @@ build-backend = "poetry.core.masonry.api"
 
 # Creates python "binaries"
 [tool.poetry.scripts]
-fabric = 'installer:cli'
+fabric = 'installer.client.cli.fabric:main'
 fabric-api = 'installer:run_api_server'
 fabric-webui = 'installer:run_webui_server'
 ts = 'installer:main_ts'
 yt = 'installer:main_yt'
 save = 'installer:main_save'
+
