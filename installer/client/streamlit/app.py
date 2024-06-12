@@ -1,8 +1,8 @@
 import streamlit as st
 from utils import Standalone, Update, Alias, Setup, Transcribe
-import sys, os, io
+import sys, os, io, re
 from contextlib import redirect_stdout
-
+import streamlit_shadcn_ui as ui
 
 class Args:
     def __init__(self):
@@ -23,6 +23,11 @@ def fetch_available_models(standalone):
     )
     return gptmodels, localmodels, claudemodels, googlemodels
 
+def get_video_id(url):
+    # Extract video ID from URL
+    pattern = r"(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})"
+    match = re.search(pattern, url)
+    return match.group(1) if match else None
 
 def main():
     st.set_page_config(
@@ -33,7 +38,8 @@ def main():
     )
 
     st.title("Fabric")
-    st.markdown("---")
+
+    tab = ui.tabs(options=['Main', 'YouTube', 'Settings'] , key="tabs", default_value="Main")
 
     current_directory = os.path.dirname(os.path.realpath(__file__))
     config_directory = os.path.expanduser("~/.config/fabric")
@@ -96,46 +102,68 @@ def main():
         )
         top_p = st.slider("Top P", min_value=0.0, max_value=1.0, value=0.9, step=0.1)
 
-    user_input = st.chat_input(
-        "Paste YouTube link or ask something", max_chars=None, key="user_input"
-    )
+    if tab == "Main":
+        user_input = st.chat_input(
+            "Ask me any anything", max_chars=None, key="user_input"
+        )
 
-    transcribe = Transcribe()
+        transcribe = Transcribe()
 
-    if user_input:
-        args.model = selected_model
-        args.temp = temp
-        args.top_p = top_p
+        if user_input:
+            args.model = selected_model
+            args.temp = temp
+            args.top_p = top_p
 
-        with st.chat_message("user"):
-            st.markdown(user_input)
+            with st.chat_message("user"):
+                st.markdown(user_input)
 
-            # Initialize Standalone instance with Args object
-        args = Args()
-        standalone = Standalone(args=args, pattern=selected_pattern, env_file=env_file)
+                # Initialize Standalone instance with Args object
+            args = Args()
+            standalone = Standalone(args=args, pattern=selected_pattern, env_file=env_file)
 
-        output = io.StringIO()
-        with st.chat_message("assistant"):
-            with st.spinner("Generating response..."):
-                with redirect_stdout(output):
-                    standalone.streamMessage(user_input, context="", host="")
-            response = output.getvalue()
+            output = io.StringIO()
+            with st.chat_message("assistant"):
+                with st.spinner("Generating response..."):
+                    with redirect_stdout(output):
+                        standalone.streamMessage(user_input, context="", host="")
+                response = output.getvalue()
 
-            # Display the response
-            st.write(response)
+                # Display the response
+                st.write(response)
+
+    elif tab == 'YouTube':
+        url = ui.input(type="text", placeholder="Paste YouTube link here", key="url")
+
+        if not url=="":
+            video_id = get_video_id(url)
+            if video_id:
+                ui.button(text="Transcribe", className="w-full", variant="outline")
+            else:
+                st.error("Invalid YouTube link")
+
+    elif tab == 'Settings':
+        ui.badges(
+            badge_list=[
+                ("Fabric", "secondary"),
+                ("v1.4.0", "secondary"),
+                ("15.9k ⭐", "secondary")
+            ],
+            class_name="flex gap-4"
+        )
 
     update = Update()
     alias = Alias()
     with st.sidebar:
-        if st.button("Update Patterns", use_container_width=True):
+        if ui.button(text="Update Patterns", className="w-full", variant="outline"):
             update.update_patterns()
             alias.execute()
             st.success("Patterns updated successfully!")
 
-        if st.button(
-            "Default Model",
+        if ui.button(
+            text = "Default Model",
             help="Set the selected model from above as default model",
-            use_container_width=True,
+            className="w-full",
+            variant="outline"
         ):
             setup = Setup()
             try:
