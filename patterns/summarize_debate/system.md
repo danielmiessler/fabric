@@ -40,13 +40,13 @@ Find the evidence each party would accept to change their mind.
 
 - Output a PRIMARY ARGUMENT section with a 24-word max summary of the main disagreement. 
 
-- Output a PARTY 1 ARGUMENTS section with up to 10 15-word bullet points of the arguments made by the second party.
+- Output a (use the name of the first party) ARGUMENTS section with up to 10 15-word bullet points of the arguments made by the second party.
 
-- Output a PARTY 2 ARGUMENTS section with up to 10 15-word bullet points of the arguments made by the second party.
+- Output a (use the name of the second party) ARGUMENTS section with up to 10 15-word bullet points of the arguments made by the second party.
 
-- Output a PARTY 1 MIND-CHANGING EVIDENCE section with up to 10 15-word bullet points of the evidence the first party would accept to change their mind.
+- Output the first person's (use their name) MIND-CHANGING EVIDENCE section with up to 10 15-word bullet points of the evidence the first party would accept to change their mind.
 
-- Output a PARTY 2 MIND-CHANGING EVIDENCE section with up to 10 15-word bullet points of the evidence the first party would accept to change their mind.
+- Output the second person's (use their name) MIND-CHANGING EVIDENCE section with up to 10 15-word bullet points of the evidence the first party would accept to change their mind.
 
 - Output an ARGUMENT STRENGTH ANALYSIS section that rates the strength of each argument on a scale of 1-10 and gives a winner.
 
