@@ -107,7 +107,6 @@ def main():
             "Ask me any anything", max_chars=None, key="user_input"
         )
 
-        transcribe = Transcribe()
 
         if user_input:
             args.model = selected_model
@@ -132,12 +131,45 @@ def main():
                 st.write(response)
 
     elif tab == 'YouTube':
-        url = ui.input(type="text", placeholder="Paste YouTube link here", key="url")
+        url = st.text_input(label="URL", placeholder="Paste YouTube link here", key="url")
 
-        if not url=="":
-            video_id = get_video_id(url)
-            if video_id:
-                ui.button(text="Transcribe", className="w-full", variant="outline")
+        pattern = r"(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})"
+        match = re.search(pattern, url)
+        video_id = match.group(1) if match else None
+
+        transcription = None
+
+        if url!="":
+            if video_id and selected_pattern is None:
+                st.info("Now please select a pattern")
+            elif video_id and selected_pattern is not None:
+                transcribe = Transcribe()
+                if st.button(
+                    "Submit",
+                    use_container_width=True
+                ):
+                    with st.spinner("Transcribing Video..."):
+                        transcription = transcribe.youtube(video_id)
+
+                if transcription is not None:
+                    args.model = selected_model
+                    args.temp = temp
+                    args.top_p = top_p
+
+                    args = Args()
+                    standalone = Standalone(args=args, pattern=selected_pattern, env_file=env_file)
+
+                    output = io.StringIO()
+                    with st.chat_message("assistant"):
+                        with st.spinner("Generating response..."):
+                            with redirect_stdout(output):
+                                standalone.streamMessage(transcription, context="", host="")
+                        response = output.getvalue()
+
+                        # Display the response
+                        st.write(response)
+                else:
+                    pass
             else:
                 st.error("Invalid YouTube link")
 
@@ -154,16 +186,18 @@ def main():
     update = Update()
     alias = Alias()
     with st.sidebar:
-        if ui.button(text="Update Patterns", className="w-full", variant="outline"):
+        if st.button(
+            "Update Patterns",
+            use_container_width=True
+        ):
             update.update_patterns()
             alias.execute()
             st.success("Patterns updated successfully!")
 
-        if ui.button(
-            text = "Default Model",
+        if st.button(
+            "Default Model",
             help="Set the selected model from above as default model",
-            className="w-full",
-            variant="outline"
+            use_container_width=True
         ):
             setup = Setup()
             try:
