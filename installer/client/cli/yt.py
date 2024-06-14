@@ -110,11 +110,20 @@ def main_function(url, options):
         if options.duration:
             print(duration_minutes)
         elif options.transcript:
-            print(transcript_text.encode('utf-8').decode('unicode-escape'))
+            try:
+                 print(transcript_text)
+            except UnicodeEncodeError:
+                print(transcript_text.encode('utf-8').decode('unicode-escape'))
         elif options.comments:
-            print(json.dumps(comments, indent=2))
+            try:
+                print(json.dumps(comments, indent=2, ensure_ascii=False))
+            except UnicodeEncodeError:
+                print(json.dumps(comments, indent=2))
         elif options.metadata:
-            print(json.dumps(metadata, indent=2))
+            try:
+                print(json.dumps(metadata, indent=2, ensure_ascii=False))
+            except UnicodeEncodeError:
+                print(json.dumps(metadata, indent=2))
         else:
             # Create JSON object with all data
             output = {
@@ -124,7 +133,10 @@ def main_function(url, options):
                 "metadata": metadata
             }
             # Print JSON object
-            print(json.dumps(output, indent=2))
+            try:
+                print(json.dumps(output, indent=2, ensure_ascii=False))
+            except UnicodeEncodeError:
+                print(json.dumps(output, indent=2))
     except HttpError as e:
         print(f"Error: Failed to access YouTube API. Please check your YOUTUBE_API_KEY and ensure it is valid: {e}")
 
