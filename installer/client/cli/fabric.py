@@ -73,6 +73,8 @@ def main():
                         help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-default location or port')
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
+    parser.add_argument('--output-language', '-L',
+                        help="Output language for cli input. Default is English", default="english")
 
     args = parser.parse_args()
     home_holder = os.path.expanduser("~")
@@ -176,6 +178,8 @@ def main():
         text = args.text
     else:
         text = standalone.get_cli_input()
+        if args.output_language != "english":
+            text = f"{text}\nPlease output in {args.output_language}."
     if args.stream and not args.context:
         if args.remoteOllamaServer:
             standalone.streamMessage(text, host=args.remoteOllamaServer)
