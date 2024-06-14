@@ -529,6 +529,14 @@ options:
 
 'ts' is a command that uses the OpenAI Whisper API to transcribe audio files. Due to the context window, this tool uses pydub to split the files into 10 minute segments. for more information on pydub, please refer https://github.com/jiaaro/pydub
 
+While OpenAI's API Whisper is more accurate than the local openai-whisper, it does come with a cost. So, if your local PC has enough resources, you can use the local openai-whisper for transcription to save money. This allows you to choose between the accuracy of the API and the cost-effectiveness of local processing based on your needs and available resources.
+
+To use the local openai-whisper, run the following command to add the package:
+
+```bash
+pipx inject fabric openai-whisper
+```
+
 ### Installation
 
 ```bash
