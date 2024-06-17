@@ -431,9 +431,9 @@ class Standalone:
 
         import ollama
         try:
-            remoteOllamaServer = getattr(self.args, 'remoteOllamaServer', None)
+            remoteOllamaServer = os.environ["REMOTE_OLLAMA_SERVER"] or getattr(self.args, 'remoteOllamaServer', None)
             if remoteOllamaServer:
-                client = ollama.Client(host=self.args.remoteOllamaServer)
+                client = ollama.Client(host=remoteOllamaServer)
                 default_modelollamaList = client.list()['models']
             else:
                 default_modelollamaList = ollama.list()['models']

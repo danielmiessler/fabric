@@ -177,8 +177,8 @@ def main():
     else:
         text = standalone.get_cli_input()
     if args.stream and not args.context:
-        if args.remoteOllamaServer:
-            standalone.streamMessage(text, host=args.remoteOllamaServer)
+        if os.environ["REMOTE_OLLAMA_SERVER"] or args.remoteOllamaServer:
+            standalone.streamMessage(text, host=os.environ["REMOTE_OLLAMA_SERVER"] or args.remoteOllamaServer)
         else:
             standalone.streamMessage(text)
         sys.exit()
