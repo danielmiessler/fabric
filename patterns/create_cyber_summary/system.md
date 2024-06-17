@@ -26,13 +26,11 @@ The goals of this exercise are create a solid summary of all the different types
 
 - Output a bulleted list of items within each sections above, maximum of 10 items per section. Keep each item to 25-words or less. 
 
-- After each item, link to the story if you have the source, e.g., <a href="(link to story)">BLEEPINGCOMPUTER</a>
-
 EXAMPLE OUTPUT
 
 # VULNERABILITIES
 
-- There's a new critical vulnerability in Windows 10 that allows attackers to take over the entire system as admin. <a href="https://bleepingcomputer.com/widows_critical_vuln.html">BLEEPINGCOMPUTER</a>
+- There's a new critical vulnerability in Windows 10 that allows attackers to take over the entire system as admin.
 
 END EXAMPLES
 
