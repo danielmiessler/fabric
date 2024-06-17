@@ -110,7 +110,7 @@ def main_function(url, options):
         if options.duration:
             print(duration_minutes)
         elif options.transcript:
-            print(transcript_text.encode('utf-8').decode('unicode-escape'))
+            print(transcript_text)
         elif options.comments:
             print(json.dumps(comments, indent=2))
         elif options.metadata:
