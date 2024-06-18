@@ -1,5 +1,6 @@
 from .utils import Standalone, Update, Setup, Alias, run_electron_app
 import argparse
+from importlib.metadata import version
 import sys
 import os
 
@@ -73,6 +74,9 @@ def main():
                         help='The URL of the remote ollamaserver to use. ONLY USE THIS if you are using a local ollama server in an non-default location or port')
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
+    parser.add_argument(
+        "--version", "-v", help="Show current version", action="store_true"
+    )
 
     args = parser.parse_args()
     home_holder = os.path.expanduser("~")
@@ -82,6 +86,9 @@ def main():
     env_file = os.path.join(config, ".env")
     if not os.path.exists(config):
         os.makedirs(config)
+    if args.version:
+        print(f'fabric {version("fabric")}')
+        sys.exit()
     if args.setup:
         Setup().run()
         Alias().execute()
