@@ -479,7 +479,7 @@ class Standalone:
         if model in self.sorted_gpt_models:
             os.environ["OPENAI_API_BASE"] = "https://api.openai.com/v1/"
         elif model in self.ollamaList:
-            os.environ["OPENAI_API_BASE"] = "http://localhost:11434/v1"
+            os.environ["OPENAI_API_BASE"] = f"http://{getattr(self.args, 'remoteOllamaServer', None) or os.environ.get('REMOTE_OLLAMA_SERVER', 'localhost')}/v1"  # if nothing about remote was passed - localhost it would be; also user flag takes precedence over the env variable.
             os.environ["OPENAI_API_KEY"] = "NA"
 
         elif model in self.claudeList:
