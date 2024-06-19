@@ -177,32 +177,32 @@ def main():
     else:
         text = standalone.get_cli_input()
     if args.stream and not args.context:
-        if os.environ["REMOTE_OLLAMA_SERVER"] or args.remoteOllamaServer:
-            standalone.streamMessage(text, host=args.remoteOllamaServer or os.environ["REMOTE_OLLAMA_SERVER"])
+        if os.environ.get('REMOTE_OLLAMA_SERVER', None) or args.remoteOllamaServer:
+            standalone.streamMessage(text, host=os.environ.get('REMOTE_OLLAMA_SERVER', None) or args.remoteOllamaServer)
         else:
             standalone.streamMessage(text)
         sys.exit()
     if args.stream and args.context:
         with open(config_context, "r") as f:
             context = f.read()
-            if os.environ["REMOTE_OLLAMA_SERVER"] or args.remoteOllamaServer:
+            if os.environ.get('REMOTE_OLLAMA_SERVER', None) or args.remoteOllamaServer:
                 standalone.streamMessage(
-                    text, context=context, host=args.remoteOllamaServer or os.environ["REMOTE_OLLAMA_SERVER"])
+                    text, context=context, host=os.environ.get('REMOTE_OLLAMA_SERVER', None) or args.remoteOllamaServer)
             else:
                 standalone.streamMessage(text, context=context)
         sys.exit()
     elif args.context:
         with open(config_context, "r") as f:
             context = f.read()
-            if os.environ["REMOTE_OLLAMA_SERVER"] or args.remoteOllamaServer:
+            if os.environ.get('REMOTE_OLLAMA_SERVER', None) or args.remoteOllamaServer:
                 standalone.sendMessage(
-                    text, context=context, host=args.remoteOllamaServer or os.environ["REMOTE_OLLAMA_SERVER"])
+                    text, context=context, host=os.environ.get('REMOTE_OLLAMA_SERVER', None) or args.remoteOllamaServer)
             else:
                 standalone.sendMessage(text, context=context)
         sys.exit()
     else:
-        if os.environ["REMOTE_OLLAMA_SERVER"] or args.remoteOllamaServer:
-            standalone.sendMessage(text, host=args.remoteOllamaServer or os.environ["REMOTE_OLLAMA_SERVER"])
+        if os.environ.get('REMOTE_OLLAMA_SERVER', None) or args.remoteOllamaServer:
+            standalone.sendMessage(text, host=os.environ.get('REMOTE_OLLAMA_SERVER', None) or args.remoteOllamaServer)
         else:
             standalone.sendMessage(text)
         sys.exit()
