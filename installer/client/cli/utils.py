@@ -407,7 +407,7 @@ class Standalone:
         fullOllamaList = []
         googleList = []
         if "CLAUDE_API_KEY" in os.environ:
-            claudeList = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229',
+            claudeList = ['claude-3-5-sonnet-20240620','claude-3-opus-20240229', 'claude-3-sonnet-20240229',
                           'claude-3-haiku-20240307', 'claude-2.1']
         else:
             claudeList = []
