@@ -53,7 +53,7 @@ class Standalone:
             if not self.model:
                 self.model = 'gpt-4-turbo-preview'
         self.claude = False
-        sorted_gpt_models, ollamaList, claudeList, googleList = self.fetch_available_models()
+        sorted_gpt_models, ollamaList, claudeList, googleList, mistralaiList = (self.fetch_available_models())
         self.sorted_gpt_models = sorted_gpt_models
         self.ollamaList = ollamaList
         self.claudeList = claudeList
@@ -61,6 +61,7 @@ class Standalone:
         self.local = self.model in ollamaList
         self.claude = self.model in claudeList
         self.google = self.model in googleList
+        self.mistralai = self.model in mistralaiList
 
     async def localChat(self, messages, host=''):
         from ollama import AsyncClient
@@ -187,6 +188,69 @@ class Standalone:
             session.save_to_session(
                 system, user, buffer, self.args.session)
 
+    async def mistralaiStream(self, system, user):
+        from mistralai.async_client import MistralAsyncClient
+        from mistralai.models.chat_completion import ChatMessage
+
+        self.mistralApiKey = os.environ["MISTRAL_API_KEY"]
+        streamingClient = MistralAsyncClient(api_key=self.mistralApiKey)
+        buffer = ""
+        response = streamingClient.chat_stream(
+            messages=[
+                ChatMessage(role="system", content=system),
+                ChatMessage(role="user", content=user),
+            ],
+            model=self.model,
+            temperature=self.args.temp,
+            top_p=self.args.top_p,
+        )
+        async for text in response:
+            chunk = text.choices[0].delta.content
+            if chunk:
+                buffer += chunk
+                print(chunk, end="", flush=True)
+        print()
+        if self.args.copy:
+            pyperclip.copy(buffer)
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(buffer)
+        if self.args.session:
+            from .helper import Session
+
+            session = Session()
+            session.save_to_session(system, user, buffer, self.args.session)
+
+    async def mistralaiChat(self, system, user, copy=False):
+        from mistralai.client import MistralClient
+        from mistralai.models.chat_completion import ChatMessage
+
+        self.mistralApiKey = os.environ["MISTRAL_API_KEY"]
+        client = MistralClient(api_key=self.mistralApiKey)
+        response = None
+        response = client.chat(
+            messages=[
+                ChatMessage(role="system", content=system),
+                ChatMessage(role="user", content=user),
+            ],
+            model=self.model,
+            temperature=self.args.temp,
+            top_p=self.args.top_p,
+        )
+        print(response.choices[0].message.content)
+        copy = self.args.copy
+        if copy:
+            pyperclip.copy(response.choices[0].message.content)
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(response.choices[0].message.content)
+        if self.args.session:
+            from .helper import Session
+
+            session = Session()
+            session.save_to_session(
+                system, user, buffer, self.args.session)
+
     def streamMessage(self, input_data: str, context="", host=''):
         """        Stream a message and handle exceptions.
 
@@ -256,6 +320,10 @@ class Standalone:
                 if system == "":
                     system = " "
                 asyncio.run(self.googleStream(system, user_message['content']))
+            elif self.mistralai:
+                if system == "":
+                    system = " "
+                asyncio.run(self.mistralaiStream(system, user_message["content"]))
             else:
                 stream = self.client.chat.completions.create(
                     model=self.model,
@@ -366,6 +434,10 @@ class Standalone:
                 if system == "":
                     system = " "
                 asyncio.run(self.googleChat(system, user_message['content']))
+            elif self.mistralai:
+                if system == "":
+                    system = " "
+                asyncio.run(self.mistralaiChat(system, user_message["content"]))
             else:
                 response = self.client.chat.completions.create(
                     model=self.model,
@@ -406,6 +478,7 @@ class Standalone:
         gptlist = []
         fullOllamaList = []
         googleList = []
+        mistralaiList = []
         if "CLAUDE_API_KEY" in os.environ:
             claudeList = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229',
                           'claude-3-haiku-20240307', 'claude-2.1']
@@ -450,7 +523,16 @@ class Standalone:
         except:
             googleList = []
 
-        return gptlist, fullOllamaList, claudeList, googleList
+        try:
+            from mistralai.client import MistralClient
+
+            client = MistralClient(api_key=os.environ["MISTRAL_API_KEY"])
+            for m in client.list_models().data:
+                mistralaiList.append(m.id)
+        except:
+            mistralaiList = []
+
+        return gptlist, fullOllamaList, claudeList, googleList, mistralaiList
 
     def get_cli_input(self):
         """ aided by ChatGPT; uses platform library
@@ -584,6 +666,7 @@ class Setup:
         self.gptlist = []
         self.fullOllamaList = []
         self.googleList = []
+        self.mistralaiList = []
         self.claudeList = ['claude-3-opus-20240229']
         load_dotenv(self.env_file)
         try:
@@ -698,6 +781,31 @@ class Setup:
             with open(self.env_file, "w") as f:
                 f.write(f"GOOGLE_API_KEY={google_key}\n")
 
+    def mistralai_key(self, mistralai_key):
+        """Set the Mistral AI API key in the environment file.
+
+        Args:
+            mistralai_key (str): The API key to be set.
+
+        Returns:
+            None
+
+        Raises:
+            OSError: If the environment file does not exist or cannot be accessed.
+        """
+        mistralai_key = mistralai_key.strip()
+        if os.path.exists(self.env_file) and mistralai_key:
+            with open(self.env_file, "r") as f:
+                lines = f.readlines()
+            with open(self.env_file, "w") as f:
+                for line in lines:
+                    if "MISTRAL_API_KEY" not in line:
+                        f.write(line)
+                f.write(f"MISTRAL_API_KEY={mistralai_key}\n")
+        elif mistralai_key:
+            with open(self.env_file, "w") as f:
+                f.write(f"MISTRAL_API_KEY={mistralai_key}\n")
+
     def youtube_key(self, youtube_key):
         """        Set the YouTube API key in the environment file.
 
@@ -796,6 +904,9 @@ class Setup:
         print("Please enter your Google API key. If you do not have one, or if you have already entered it, press enter.\n")
         googlekey = input()
         self.google_key(googlekey)
+        print("Please enter your Mistral AI API key. If you do not have one, or if you have already entered it, press enter.\n")
+        mistralaikey = input()
+        self.mistralai_key(mistralaikey)
         print("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
         youtubekey = input()
         self.youtube_key(youtubekey)

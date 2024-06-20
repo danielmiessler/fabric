@@ -31,6 +31,7 @@ flask = "^3.0.2"
 helpers = "^0.2.0"
 praisonai = "^0.0.18"
 google-generativeai = "^0.5.3"
+mistralai = "^0.4.1"
 
 [tool.poetry.group.cli.dependencies]
 pyyaml = "^6.0.1"
