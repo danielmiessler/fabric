@@ -53,7 +53,7 @@ class Standalone:
             if not self.model:
                 self.model = 'gpt-4-turbo-preview'
         self.claude = False
-        sorted_gpt_models, ollamaList, claudeList, googleList, mistralaiList = (self.fetch_available_models())
+        sorted_gpt_models, ollamaList, claudeList, googleList, mistralaiList = self.fetch_available_models()
         self.sorted_gpt_models = sorted_gpt_models
         self.ollamaList = ollamaList
         self.claudeList = claudeList
@@ -217,9 +217,9 @@ class Standalone:
                 f.write(buffer)
         if self.args.session:
             from .helper import Session
-
             session = Session()
-            session.save_to_session(system, user, buffer, self.args.session)
+            session.save_to_session(
+                system, user, buffer, self.args.session)
 
     async def mistralaiChat(self, system, user, copy=False):
         from mistralai.client import MistralClient
@@ -246,7 +246,6 @@ class Standalone:
                 f.write(response.choices[0].message.content)
         if self.args.session:
             from .helper import Session
-
             session = Session()
             session.save_to_session(
                 system, user, buffer, self.args.session)
