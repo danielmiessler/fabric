@@ -5,7 +5,7 @@ Generate wireframes and starter code for any coding ideas that you have.
 ## Usage
 
 ```bash
-echo "INSERT_YOUR_IDEA" | fabric -p create_coding_project
+echo "INSERT_YOUR_IDEA_HERE" | fabric -p create_coding_project
 ```
 
 ## Example
