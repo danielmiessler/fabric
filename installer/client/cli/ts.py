@@ -3,6 +3,7 @@ from pydub import AudioSegment
 from openai import OpenAI
 import os
 import argparse
+import tempfile
 
 
 class Whisper:
@@ -58,11 +59,11 @@ class Whisper:
             #     with tempfile.NamedTemporaryFile(delete=False) as f:
             #         f.write(response.content)
             #         audio_file = f.name
-            audio_file = open(segment, "rb")
-            response = self.client.audio.transcriptions.create(
-                model="whisper-1",
-                file=audio_file
-            )
+            with open(segment, "rb") as audio_file:
+                response = self.client.audio.transcriptions.create(
+                    model="whisper-1",
+                    file=audio_file
+                )
             self.whole_response.append(response.text)
 
         except Exception as e:
@@ -88,10 +89,11 @@ class Whisper:
 
             segments = self.split_audio(audio_file)
             for i, segment in enumerate(segments):
-                segment_file_path = f"segment_{i}.mp3"
-                segment.export(segment_file_path, format="mp3")
-                self.process_segment(segment_file_path)
-            print(' '.join(self.whole_response))
+                with tempfile.NamedTemporaryFile(suffix=".mp3") as temp_file:
+                    segment_file_path = temp_file.name
+                    segment.export(segment_file_path, format="mp3")
+                    self.process_segment(segment_file_path)
+            print(" ".join(self.whole_response))
 
         except Exception as e:
             print(f"Error: {e}")
