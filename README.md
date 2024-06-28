@@ -40,6 +40,7 @@
   - [Using the fabric client](#using-the-fabric-client)
   - [Just use the Patterns](#just-use-the-patterns)
   - [Create your own Fabric Mill](#create-your-own-fabric-mill)
+- [Updating](#updating)
 - [Structure](#structure)
   - [Components](#components)
   - [CLI-native](#cli-native)
@@ -195,6 +196,18 @@ fabric --help
 
 > [!NOTE]
 > If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in distinct terminal windows.
+
+## Updating
+
+To update Fabric, run the following commands.
+
+```bash
+# From the fabric directory
+pipx install . --force
+fabric --update
+```
+
+Then restart your shell.
 
 ### Using the `fabric` client
 
