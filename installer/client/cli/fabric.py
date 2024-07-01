@@ -55,7 +55,7 @@ def main():
     parser.add_argument(
         '--presence_penalty', help="set the presence penalty for the model. Default is 0.1", default=0.1, type=float)
     parser.add_argument(
-        "--update", "-u", help="Update patterns. NOTE: This will revert the default model to gpt4-turbo. please run --changeDefaultModel to once again set default model", action="store_true")
+        "--update", "-u", help="Update patterns", action="store_true")
     parser.add_argument("--pattern", "-p", help="The pattern (prompt) to use")
     parser.add_argument(
         "--setup", help="Set up your fabric instance", action="store_true"
