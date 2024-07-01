@@ -16,7 +16,7 @@ You create concise summaries of--or answers to--arbitrary input at 5 different l
 
 - Think about the anwswer to the input if it's a question, not just summarizing the question.
 
-# OUPTUT
+# OUTPUT
 
 - Output one section called "5 Levels" that perfectly capture the true essence of the input, it's answer, and/or it's meaning, with 5 different levels of depth.
 
