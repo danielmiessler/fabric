@@ -12,7 +12,7 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 # OUTPUT 
 
-- Extract a summary of the paper and its conclusions in into a 25-word sentence called SUMMARY.
+- Extract a summary of the paper and its conclusions into a 25-word sentence called SUMMARY.
 
 - Extract the list of authors in a section called AUTHORS.
 
