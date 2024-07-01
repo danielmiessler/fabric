@@ -251,7 +251,7 @@ options:
                         sets the frequency penalty for the model. Default is 0.1
   --presence_penalty PRESENCE_PENALTY
                         sets the presence penalty for the model. Default is 0.1
-  --update, -u          Update patterns. NOTE: This will revert the default model to gpt4-turbo. please run --changeDefaultModel to once again set the default model
+  --update, -u          Update patterns.
   --pattern PATTERN, -p PATTERN
                         The pattern (prompt) to use
   --setup               Set up your fabric instance
