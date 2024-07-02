@@ -11,11 +11,47 @@ import tempfile
 import subprocess
 import shutil
 from youtube_transcript_api import YouTubeTranscriptApi
+import structlog
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
 env_file = os.path.join(config_directory, ".env")
 
+logger = structlog.get_logger()
+
+def config_logger(args):
+    level = 10 * min(5, max(0, 3 - args.verbose + args.quiet))
+    shared_processors = [
+        # Processors that have nothing to do with output,
+        # e.g., add timestamps or log level names.
+        structlog.contextvars.merge_contextvars,
+        structlog.processors.add_log_level,
+        structlog.processors.StackInfoRenderer(),
+        structlog.dev.set_exc_info,
+        structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M:%S", utc=False),
+    ]
+
+    if sys.stderr.isatty():
+        # Pretty printing when we run in a terminal session.
+        # Automatically prints pretty tracebacks when "rich" is installed
+        processors = shared_processors + [
+            structlog.dev.ConsoleRenderer(),
+        ]
+    else:
+        # Print JSON when we run, e.g., in a Docker container.
+        # Also print structured tracebacks.
+        processors = shared_processors + [
+            structlog.processors.dict_tracebacks,
+            structlog.processors.JSONRenderer(),
+        ]
+
+    structlog.configure(
+        processors=processors,
+        wrapper_class=structlog.make_filtering_bound_logger(level),
+        context_class=dict,
+        logger_factory=structlog.PrintLoggerFactory(sys.stderr),
+        cache_logger_on_first_use=False
+    )
 
 class Standalone:
     def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
@@ -231,8 +267,8 @@ class Standalone:
                             system = session_message + '\n' + system
                     system_message = {"role": "system", "content": system}
                 messages = [system_message, user_message]
-            except FileNotFoundError:
-                print("pattern not found")
+            except FileNotFoundError as ex:
+                logger.error("pattern not found", pattern=self.pattern, exc_info=ex)
                 return
         else:
             if session_message:
@@ -279,17 +315,16 @@ class Standalone:
                     sys.stdout.flush()
         except Exception as e:
             if "All connection attempts failed" in str(e):
-                print(
-                    "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
+                logger.error(
+                    "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions", exc_info=e)
             if "CLAUDE_API_KEY" in str(e):
-                print(
-                    "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
+                logger.error(
+                    "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key", exc_info=e)
             if "overloaded_error" in str(e):
-                print(
-                    "Error: Fabric is working fine, but claude is overloaded. Please try again later.")
+                logger.error(
+                    "Error: Fabric is working fine, but claude is overloaded. Please try again later.", exc_info=e)
             else:
-                print(f"Error: {e}")
-                print(e)
+                logger.error(f"Error: {e}", exc_info=e)
         if self.args.copy:
             pyperclip.copy(buffer)
         if self.args.output:
@@ -342,8 +377,8 @@ class Standalone:
                             system = f.read()
                     system_message = {"role": "system", "content": system}
                 messages = [system_message, user_message]
-            except FileNotFoundError:
-                print("pattern not found")
+            except FileNotFoundError as e:
+                logger.error("pattern not found", pattern=self.pattern, exc_info=e)
                 return
         else:
             if session_message:
@@ -388,19 +423,18 @@ class Standalone:
                         system, user, response.choices[0], self.args.session)
         except Exception as e:
             if "All connection attempts failed" in str(e):
-                print(
-                    "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions")
+                logger.error(
+                    "Error: cannot connect to llama2. If you have not already, please visit https://ollama.com for installation instructions", exc_info=e)
             if "CLAUDE_API_KEY" in str(e):
-                print(
-                    "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key")
+                logger.error(
+                    "Error: CLAUDE_API_KEY not found in environment variables. Please run --setup and add the key", exc_info=e)
             if "overloaded_error" in str(e):
-                print(
-                    "Error: Fabric is working fine, but claude is overloaded. Please try again later.")
+                logger.error(
+                    "Error: Fabric is working fine, but claude is overloaded. Please try again later.", exc_info=e)
             if "Attempted to call a sync iterator on an async stream" in str(e):
-                print("Error: There is a problem connecting fabric with your local ollama installation. Please visit https://ollama.com for installation instructions. It is possible that you have chosen the wrong model. Please run fabric --listmodels to see the available models and choose the right one with fabric --model <model> or fabric --changeDefaultModel. If this does not work. Restart your computer (always a good idea) and try again. If you are still having problems, please visit https://ollama.com for installation instructions.")
+                logger.error("Error: There is a problem connecting fabric with your local ollama installation. Please visit https://ollama.com for installation instructions. It is possible that you have chosen the wrong model. Please run fabric --listmodels to see the available models and choose the right one with fabric --model <model> or fabric --changeDefaultModel. If this does not work. Restart your computer (always a good idea) and try again. If you are still having problems, please visit https://ollama.com for installation instructions.", exc_info=e)
             else:
-                print(f"Error: {e}")
-                print(e)
+                logger.error(f"Error: {e}", exc_info=e)
 
     def fetch_available_models(self):
         gptlist = []
@@ -426,7 +460,7 @@ class Standalone:
         except APIConnectionError as e:
             pass
         except Exception as e:
-            print(f"Error: {getattr(e.__context__, 'args', [''])[0]}")
+            logger.fatal(f"Error: {getattr(e.__context__, 'args', [''])[0]}", exc_info=e)
             sys.exit()
 
         import ollama
@@ -483,9 +517,9 @@ class Standalone:
             os.environ["OPENAI_API_KEY"] = "NA"
 
         elif model in self.claudeList:
-            print("Claude is not supported in this mode")
+            logger.fatal("Claude is not supported in this mode")
             sys.exit()
-        print("Starting PraisonAI...")
+        logger.info("Starting PraisonAI...", model=model)
         praison_ai = PraisonAI(auto=userInput, framework="autogen")
         praison_ai.main()
 
@@ -498,7 +532,8 @@ class Update:
         self.pattern_directory = os.path.join(
             self.config_directory, "patterns")
         os.makedirs(self.pattern_directory, exist_ok=True)
-        print("Updating patterns...")
+        logger = logger.bind(src=self.repo_zip_url, dst=self.pattern_directory)
+        logger.info("Updating patterns...")
         self.update_patterns()  # Start the update process immediately
 
     def update_patterns(self):
@@ -526,9 +561,9 @@ class Update:
                             shutil.move(custom_path, patterns_source_path)
                     shutil.rmtree(self.pattern_directory)
                 shutil.copytree(patterns_source_path, self.pattern_directory)
-                print("Patterns updated successfully.")
+                logger.info("Patterns updated successfully.")
             else:
-                print("Patterns folder not found in the downloaded zip.")
+                logger.warning("Patterns folder not found in the downloaded zip.")
 
     def download_zip(self, url, save_path):
         """Download the zip file from the specified URL."""
@@ -536,13 +571,13 @@ class Update:
         response.raise_for_status()  # Check if the download was successful
         with open(save_path, 'wb') as f:
             f.write(response.content)
-        print("Downloaded zip file successfully.")
+        logger.info("Downloaded zip file successfully.")
 
     def extract_zip(self, zip_path, extract_to):
         """Extract the zip file to the specified directory."""
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(extract_to)
-        print("Extracted zip file successfully.")
+        logger.info("Extracted zip file successfully.")
         return extract_to  # Return the path to the extracted contents
 
 
@@ -601,11 +636,11 @@ class Setup:
         Raises:
             OSError: If the environment file cannot be created.
         """
-        print("Creating empty environment file...")
+        logger.debug("Creating empty environment file...")
         if not os.path.exists(self.env_file):
             with open(self.env_file, "w") as f:
                 f.write("#No API key set\n")
-        print("Environment file created.")
+        logger.debug("Environment file created.")
 
     def update_shconfigs(self):
         bootstrap_file = os.path.join(
@@ -637,7 +672,7 @@ class Setup:
         if not os.path.exists(self.env_file) and api_key:
             with open(self.env_file, "w") as f:
                 f.write(f"OPENAI_API_KEY={api_key}\n")
-            print(f"OpenAI API key set to {api_key}")
+            logger.info(f"OpenAI API key set to {api_key}")
         elif api_key:
             # erase the line OPENAI_API_KEY=key and write the new key
             with open(self.env_file, "r") as f:
@@ -735,7 +770,7 @@ class Setup:
         gpt, ollama, claude, google = standalone.fetch_available_models()
         allmodels = gpt + ollama + claude + google
         if model not in allmodels:
-            print(
+            logger.fatal(
                 f"Error: {model} is not a valid model. Please run fabric --listmodels to see the available models.")
             sys.exit()
 
@@ -763,10 +798,10 @@ class Setup:
                     if not there:
                         f.write(f'DEFAULT_MODEL={model}\n')
 
-                print(
+                logger.info(
                     f"Default model changed to {model}. Please restart your terminal to use it.")
             else:
-                print("No shell configuration file found.")
+                logger.warning("No shell configuration file found.")
 
     def patterns(self):
         """        Method to update patterns and exit the system.
@@ -830,7 +865,7 @@ class Transcribe:
                 transcript += segment['text'] + " "
             return transcript.strip()
         except Exception as e:
-            print("Error:", e)
+            logger.error(f"Error: {e}", exc_info=e)
             return None
 
 
