@@ -1,6 +1,7 @@
 from .utils import Standalone, Update, Setup, Alias, run_electron_app
 import argparse
 import sys
+from dotenv import load_dotenv
 import os
 
 
@@ -159,18 +160,31 @@ def main():
             sys.exit()
     if args.listmodels:
         gptmodels, localmodels, claudemodels, googlemodels = standalone.fetch_available_models()
+        curr_model = os.environ.get('DEFAULT_MODEL', None)
         print("GPT Models:")
         for model in gptmodels:
-            print(model)
+            if curr_model == model:
+                print(model + "*")
+            else:
+                print(model)
         print("\nLocal Models:")
         for model in localmodels:
-            print(model)
+            if curr_model == model:
+                print(model + "*")
+            else:
+                print(model)
         print("\nClaude Models:")
         for model in claudemodels:
-            print(model)
+            if curr_model == model:
+                print(model + "*")
+            else:
+                print(model)
         print("\nGoogle Models:")
         for model in googlemodels:
-            print(model)
+            if curr_model == model:
+                print(model + "*")
+            else:
+                print(model)
         sys.exit()
     if args.text is not None:
         text = args.text
