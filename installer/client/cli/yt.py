@@ -3,7 +3,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from youtube_transcript_api import YouTubeTranscriptApi
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import json
 import isodate
@@ -96,8 +96,13 @@ def main_function(url, options):
         # Get video transcript
         try:
             transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=[options.lang])
-            transcript_text = " ".join([item["text"] for item in transcript_list])
-            transcript_text = transcript_text.replace("\n", " ")
+            if options.timestamps:
+                transcript_text = "\n".join([
+                              f"[{timedelta(seconds=item["start"])} --> {timedelta(seconds=item["start"] + item["duration"])}] {item['text']}"
+                              for item in transcript_list])
+            else:
+                transcript_text = " ".join([item["text"] for item in transcript_list])
+                transcript_text = transcript_text.replace("\n", " ")
         except Exception as e:
             transcript_text = f"Transcript not available in the selected language ({options.lang}). ({e})"
 
@@ -135,10 +140,11 @@ def main():
     parser.add_argument('url', help='YouTube video URL')
     parser.add_argument('--duration', action='store_true', help='Output only the duration')
     parser.add_argument('--transcript', action='store_true', help='Output only the transcript')
+    parser.add_argument('--timestamps', action='store_true', help='Include timestamps on transcript')
     parser.add_argument('--comments', action='store_true', help='Output the comments on the video')
     parser.add_argument('--metadata', action='store_true', help='Output the video metadata')
     parser.add_argument('--lang', default='en', help='Language for the transcript (default: English)')
-    
+
     args = parser.parse_args()
 
     if args.url is None:
