@@ -159,32 +159,22 @@ def main():
             print("No patterns found")
             sys.exit()
     if args.listmodels:
+        def print_models(model_type, curr_model):
+            for model in model_type:
+                if curr_model == model:
+                    print(model + " (current)")
+                else:
+                    print(model)
         gptmodels, localmodels, claudemodels, googlemodels = standalone.fetch_available_models()
         curr_model = os.environ.get('DEFAULT_MODEL', None)
         print("GPT Models:")
-        for model in gptmodels:
-            if curr_model == model:
-                print(model + "*")
-            else:
-                print(model)
+        print_models(gptmodels, curr_model)
         print("\nLocal Models:")
-        for model in localmodels:
-            if curr_model == model:
-                print(model + "*")
-            else:
-                print(model)
+        print_models(localmodels, curr_model)
         print("\nClaude Models:")
-        for model in claudemodels:
-            if curr_model == model:
-                print(model + "*")
-            else:
-                print(model)
+        print_models(claudemodels, curr_model)
         print("\nGoogle Models:")
-        for model in googlemodels:
-            if curr_model == model:
-                print(model + "*")
-            else:
-                print(model)
+        print_models(googlemodels, curr_model)
         sys.exit()
     if args.text is not None:
         text = args.text
