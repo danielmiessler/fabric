@@ -127,7 +127,7 @@ def main_function(url, options):
         elif options.transcript_ts:
             if options.transcript_ts == 'csv':
                 print(transcript_ts_text.encode('utf-8').decode('unicode-escape'))
-            else:
+            elif options.transcript_ts == 'json':
                 transcript_ts_json = json.dumps(transcript_list, indent=2)
                 print(transcript_ts_json)
         elif options.comments:
@@ -154,7 +154,7 @@ def main():
     parser.add_argument('url', help='YouTube video URL')
     parser.add_argument('--duration', action='store_true', help='Output only the duration')
     parser.add_argument('--transcript', action='store_true', help='Output only the transcript')
-    parser.add_argument('--transcript-ts', choices=['csv', 'json'], default='csv', help='Output only the transcript with timestamps')
+    parser.add_argument('--transcript-ts', choices=['csv', 'json'], help='Output only the transcript with timestamps')
     parser.add_argument('--comments', action='store_true', help='Output the comments on the video')
     parser.add_argument('--metadata', action='store_true', help='Output the video metadata')
     parser.add_argument('--lang', default='en', help='Language for the transcript (default: English)')
