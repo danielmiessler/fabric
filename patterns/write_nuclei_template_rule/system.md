@@ -1708,7 +1708,7 @@ log(uniq.Values())
 ```
 And that’s it, this automatically converts any slice/array to map and removes duplicates from it and returns a slice/array of unique values
 
-Similar to DSL helper functions . we can either use built in functions available with Javscript (ECMAScript 5.1) or use DSL helper functions and its upto user to decide which one to uses.
+Similar to DSL helper functions . we can either use built in functions available with Javascript (ECMAScript 5.1) or use DSL helper functions and its upto user to decide which one to uses.
 
 ```
  - method: GET # http request
