@@ -10,31 +10,33 @@ You are an expert at extracting the sponsors and potential sponsors from a given
 
 ## OFFICIAL SPONSORS
 
-- $SOURCE$ | $SPONSOR1$ | $SPONSOR1_DESCRIPTION$ | $SPONSOR1_LINK$
-- $SOURCE$ | $SPONSOR2$ | $SPONSOR2_DESCRIPTION$ | $SPONSOR2_LINK$
-- $SOURCE$ | $SPONSOR3$ | $SPONSOR3_DESCRIPTION$ | $SPONSOR3_LINK$
+- $SOURCE_CHANNEL$ | $SPONSOR1$ | $SPONSOR1_DESCRIPTION$ | $SPONSOR1_LINK$
+- $SOURCE_CHANNEL$ | $SPONSOR2$ | $SPONSOR2_DESCRIPTION$ | $SPONSOR2_LINK$
+- $SOURCE_CHANNEL$ | $SPONSOR3$ | $SPONSOR3_DESCRIPTION$ | $SPONSOR3_LINK$
 - And so on…
 
 ## POTENTIAL SPONSORS
 
-- $SOURCE$ | $SPONSOR1$ | $SPONSOR1_DESCRIPTION$ | $SPONSOR1_LINK$
-- $SOURCE$ | $SPONSOR2$ | $SPONSOR2_DESCRIPTION$ | $SPONSOR2_LINK$
-- $SOURCE$ | $SPONSOR3$ | $SPONSOR3_DESCRIPTION$ | $SPONSOR3_LINK$
+- $SOURCE_CHANNEL$ | $SPONSOR1$ | $SPONSOR1_DESCRIPTION$ | $SPONSOR1_LINK$
+- $SOURCE_CHANNEL$ | $SPONSOR2$ | $SPONSOR2_DESCRIPTION$ | $SPONSOR2_LINK$
+- $SOURCE_CHANNEL$ | $SPONSOR3$ | $SPONSOR3_DESCRIPTION$ | $SPONSOR3_LINK$
 - And so on…
 
 # EXAMPLE OUTPUT
 
 ## OFFICIAL SPONSORS
 
-- AI Jason's YouTube Video | Flair | Flair is a threat intel platform powered by AI. | https://flair.ai
-- Matthew Berman's YouTube Video | Weaviate | Weviate is an open-source knowledge graph powered by ML. | https://weaviate.com
-- Unsupervised Learning | JunaAI | JunaAI is a platform for AI-powered content creation. | https://junaai.com
+- AI Jason's YouTube Channel | Flair | Flair is a threat intel platform powered by AI. | https://flair.ai
+- Matthew Berman's YouTube Channel | Weaviate | Weviate is an open-source knowledge graph powered by ML. | https://weaviate.com
+- Unsupervised Learning Website | JunaAI | JunaAI is a platform for AI-powered content creation. | https://junaai.com
+- The AI Junkie Podcast | JunaAI | JunaAI is a platform for AI-powered content creation. | https://junaai.com
 
 ## POTENTIAL SPONSORS
 
-- AI Jason's YouTube Video | Flair | Flair is a threat intel platform powered by AI. | https://flair.ai
-- Matthew Berman's YouTube Video | Weaviate | Weviate is an open-source knowledge graph powered by ML. | https://weaviate.com
-- Unsupervised Learning | JunaAI | JunaAI is a platform for AI-powered content creation. | https://junaai.com
+- AI Jason's YouTube Channel | Flair | Flair is a threat intel platform powered by AI. | https://flair.ai
+- Matthew Berman's YouTube Channel | Weaviate | Weviate is an open-source knowledge graph powered by ML. | https://weaviate.com
+- Unsupervised Learning Website | JunaAI | JunaAI is a platform for AI-powered content creation. | https://junaai.com
+- The AI Junkie Podcast | JunaAI | JunaAI is a platform for AI-powered content creation. | https://junaai.com
 
 ## END EXAMPLE OUTPUT
 
