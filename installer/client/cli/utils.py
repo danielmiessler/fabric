@@ -17,6 +17,24 @@ config_directory = os.path.expanduser("~/.config/fabric")
 env_file = os.path.join(config_directory, ".env")
 
 
+def read_pattern_file(pattern_name):
+    """           Read the pattern file and return the contents. Return None if not found.
+    """
+
+    # Filename if the file is in the working directory
+    wisdom_file_working_dir = f"{os.getcwd()}/{pattern_name}/system.md"
+    # Filename if the file is in the config dir
+    wisdom_file = os.path.join(
+        config_directory, f"patterns/{pattern_name}/system.md"
+    )
+
+    for fn in [wisdom_file_working_dir, wisdom_file]:
+        try:
+            with open(fn, "r") as f:
+                return f.read()
+        except FileNotFoundError:
+            continue
+
 class Standalone:
     def __init__(self, args, pattern="", env_file="~/.config/fabric/.env"):
         """        Initialize the class with the provided arguments and environment file.
@@ -199,10 +217,6 @@ class Standalone:
         Raises:
             FileNotFoundError: If the pattern file is not found.
         """
-
-        wisdomFilePath = os.path.join(
-            config_directory, f"patterns/{self.pattern}/system.md"
-        )
         session_message = ""
         user = ""
         if self.args.session:
@@ -215,25 +229,23 @@ class Standalone:
         else:
             user = input_data
         user_message = {"role": "user", "content": f"{input_data}"}
-        wisdom_File = wisdomFilePath
         buffer = ""
         system = ""
         if self.pattern:
-            try:
-                with open(wisdom_File, "r") as f:
-                    if context:
-                        system = context + '\n\n' + f.read()
-                        if session_message:
-                            system = session_message + '\n' + system
-                    else:
-                        system = f.read()
-                        if session_message:
-                            system = session_message + '\n' + system
-                    system_message = {"role": "system", "content": system}
-                messages = [system_message, user_message]
-            except FileNotFoundError:
+            pattern_content = read_pattern_file(self.pattern)
+            if not pattern_content:
                 print("pattern not found")
                 return
+            if context:
+                system = context + '\n\n' + pattern_content
+                if session_message:
+                    system = session_message + '\n' + system
+            else:
+                system = pattern_content
+                if session_message:
+                    system = session_message + '\n' + system
+            system_message = {"role": "system", "content": system}
+            messages = [system_message, user_message]
         else:
             if session_message:
                 user_message['content'] = session_message + \
@@ -313,13 +325,8 @@ class Standalone:
         Raises:
             FileNotFoundError: If the specified pattern file is not found.
         """
-
-        wisdomFilePath = os.path.join(
-            config_directory, f"patterns/{self.pattern}/system.md"
-        )
         user = input_data
         user_message = {"role": "user", "content": f"{input_data}"}
-        wisdom_File = os.path.join(current_directory, wisdomFilePath)
         system = ""
         session_message = ""
         if self.args.session:
@@ -328,23 +335,20 @@ class Standalone:
             session_message = session.read_from_session(
                 self.args.session)
         if self.pattern:
-            try:
-                with open(wisdom_File, "r") as f:
-                    if context:
-                        if session_message:
-                            system = session_message + '\n' + context + '\n\n' + f.read()
-                        else:
-                            system = context + '\n\n' + f.read()
-                    else:
-                        if session_message:
-                            system = session_message + '\n' + f.read()
-                        else:
-                            system = f.read()
-                    system_message = {"role": "system", "content": system}
-                messages = [system_message, user_message]
-            except FileNotFoundError:
+            pattern_content = read_pattern_file(self.pattern)
+            if not pattern_content:
                 print("pattern not found")
                 return
+            if context:
+                system = context + '\n\n' + pattern_content
+                if session_message:
+                    system = session_message + '\n' + system
+            else:
+                system = pattern_content
+                if session_message:
+                    system = session_message + '\n' + system
+            system_message = {"role": "system", "content": system}
+            messages = [system_message, user_message]
         else:
             if session_message:
                 user_message['content'] = session_message + \
