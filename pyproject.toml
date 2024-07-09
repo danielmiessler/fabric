@@ -49,6 +49,7 @@ gunicorn = "^22.0.0"
 gevent = "^23.9.1"
 httpx = ">=0.25.2,<0.26.0"
 tqdm = "^4.66.3"
+rich = "^13.7.1"
 
 [tool.poetry.group.server.dependencies]
 requests = "^2.32.0"
