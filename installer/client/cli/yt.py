@@ -3,13 +3,15 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from youtube_transcript_api import YouTubeTranscriptApi
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import json
 import isodate
 import argparse
 import sys
+from cachier import cachier
 
+YT_CACHE_TTL = timedelta(hours=1)  # should probably be optional and configurable
 
 def get_video_id(url):
     # Extract video ID from URL
@@ -18,6 +20,12 @@ def get_video_id(url):
     return match.group(1) if match else None
 
 
+@cachier(stale_after=YT_CACHE_TTL)
+def get_transcript(video_id, languages):
+    return YouTubeTranscriptApi.get_transcript(video_id, languages=languages)
+
+
+@cachier(stale_after=YT_CACHE_TTL)
 def get_comments(youtube, video_id):
     comments = []
 
@@ -95,7 +103,7 @@ def main_function(url, options):
 
         # Get video transcript
         try:
-            transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=[options.lang])
+            transcript_list = get_transcript(video_id, languages=[options.lang])
             transcript_text = " ".join([item["text"] for item in transcript_list])
             transcript_text = transcript_text.replace("\n", " ")
         except Exception as e:
