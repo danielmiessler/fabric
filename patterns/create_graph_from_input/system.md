@@ -16,7 +16,7 @@ Show how a security program is improving over time.
 
 - Output a CSV file that has all the necessary data to tell the progress story.
 
-- Only ouptut numbers in the fields, no special characters.
+- Only ouptut numbers in the fields, no special characters like "<, >, =," etc..
 
 - Only output valid CSV data and nothing else. 
 
