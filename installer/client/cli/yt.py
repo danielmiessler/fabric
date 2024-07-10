@@ -73,8 +73,6 @@ def get_comments(youtube, video_id):
 
 @profile
 def main_function(url, options, cachier__verbose=True):
-    print(url)
-    print(options)
     # Load environment variables from .env file
     load_dotenv(os.path.expanduser("~/.config/fabric/.env"))
 
@@ -95,8 +93,6 @@ def main_function(url, options, cachier__verbose=True):
         youtube = build("youtube", "v3", developerKey=api_key)
 
         # Get video details
-        #video_response = youtube.videos().list(
-        #    id=video_id, part="contentDetails,snippet").execute()
         video_response = get_video_details(youtube, video_id)
 
         # Extract video duration and convert to minutes
