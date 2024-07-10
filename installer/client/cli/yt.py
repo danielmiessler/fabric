@@ -10,8 +10,9 @@ import isodate
 import argparse
 import sys
 from cachier import cachier
+from line_profiler import profile
 
-YT_CACHE_TTL = timedelta(hours=1)  # should probably be optional and configurable
+YT_CACHE_TTL = timedelta(minutes=30)  # should probably be optional and configurable
 
 def get_video_id(url):
     # Extract video ID from URL
@@ -21,11 +22,16 @@ def get_video_id(url):
 
 
 @cachier(stale_after=YT_CACHE_TTL)
+def get_video_details(youtube, video_id):
+     return youtube.videos().list(
+            id=video_id, part="contentDetails,snippet").execute()
+
+
+@cachier(stale_after=YT_CACHE_TTL)
 def get_transcript(video_id, languages):
     return YouTubeTranscriptApi.get_transcript(video_id, languages=languages)
 
 
-@cachier(stale_after=YT_CACHE_TTL)
 def get_comments(youtube, video_id):
     comments = []
 
@@ -65,8 +71,10 @@ def get_comments(youtube, video_id):
     return comments
 
 
-
-def main_function(url, options):
+@profile
+def main_function(url, options, cachier__verbose=True):
+    print(url)
+    print(options)
     # Load environment variables from .env file
     load_dotenv(os.path.expanduser("~/.config/fabric/.env"))
 
@@ -87,8 +95,9 @@ def main_function(url, options):
         youtube = build("youtube", "v3", developerKey=api_key)
 
         # Get video details
-        video_response = youtube.videos().list(
-            id=video_id, part="contentDetails,snippet").execute()
+        #video_response = youtube.videos().list(
+        #    id=video_id, part="contentDetails,snippet").execute()
+        video_response = get_video_details(youtube, video_id)
 
         # Extract video duration and convert to minutes
         duration_iso = video_response["items"][0]["contentDetails"]["duration"]
