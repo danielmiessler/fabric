@@ -12,11 +12,11 @@ Show how a security program is improving over time.
 
 - Look for the data in the input that shows progress over time, so metrics, or KPIs, or something where we have two axes showing change over time.
 
-- In the updates section, entries might be written informally, so you need to interpret how those apply to the schema above.
-
 # OUTPUT
 
 - Output a CSV file that has all the necessary data to tell the progress story.
+
+- Only ouptut numbers in the fields, no special characters.
 
 - Only output valid CSV data and nothing else. 
 
