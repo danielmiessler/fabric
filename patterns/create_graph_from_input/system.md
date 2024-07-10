@@ -16,6 +16,17 @@ Show how a security program is improving over time.
 
 - Output a CSV file that has all the necessary data to tell the progress story.
 
+The format will be like so:
+
+EXAMPLE OUTPUT FORMAT
+
+Date	TTD_hours	TTI_hours	TTR-CJC_days	TTR-C_days
+Month Year	81	82	21	51
+Month Year	80	80	21	53
+(Continue)
+
+END EXAMPLE FORMAT
+
 - Only ouptut numbers in the fields, no special characters like "<, >, =," etc..
 
 - Only output valid CSV data and nothing else. 
