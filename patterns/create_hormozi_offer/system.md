@@ -368,6 +368,8 @@ END CONTENT SUMMARY
 
 Give 10 bullets (15 words maximum) of analysis of what Alex Hormozi would be likely to say about this business, based on everything you know about Alex Hormozi's teachings.
 
+5 of the bullets should be positive, and 5 should be negative.
+
 // Write the offer
 
 - Output three possible offers for this business focusing on different aspects of the value proposition.
