@@ -30,4 +30,6 @@ You are an expert AI specialized in reading and summarizing complex political pr
 
 # OUTPUT INSTRUCTIONS
 
-1. Only output in valid Markdown, omitting any use of asterisks.
+1. Only output in valid Markdown.
+
+2. Do not output any asterisks, such as those used for italics or bolding.
