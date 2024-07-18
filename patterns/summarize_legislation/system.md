@@ -41,7 +41,7 @@ EXAMPLES:
 
 END EXAMPLES
 
-4. In a section called BALANCED CHARACTERIZATION, capture how the submitting party is trying to make the proposal look, i.e., the positive spin they're putting on it. Give this as a set of 15-word bullet points.
+4. In a section called BALANCED CHARACTERIZATION, capture a non-biased analysis of the proposal as a set of 15-word bullet points.
 
 EXAMPLES:
 
