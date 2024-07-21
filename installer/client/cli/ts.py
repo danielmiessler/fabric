@@ -18,10 +18,6 @@ class Whisper:
 
         Returns:
             None
-
-        Raises:
-            KeyError: If the "OPENAI_API_KEY" is not found in the environment variables.
-            FileNotFoundError: If no API key is found in the environment variables.
         """
         env_file = os.path.expanduser(env_file)
         load_dotenv(env_file)
@@ -127,8 +123,8 @@ class Whisper:
             #     with tempfile.NamedTemporaryFile(delete=False) as f:
             #         f.write(response.content)
             #         audio_file = f.name
-            with tempfile.NamedTemporaryFile(delete=True, suffix=".wav") as f:
-                segment.export(f.name, format="wav")
+            with tempfile.NamedTemporaryFile(delete=True, suffix=".mp3") as f:
+                segment.export(f.name, format="mp3")
                 with open(f.name, "rb") as audio_file:
                     response = self.client.audio.transcriptions.create(
                         model=self.model,
