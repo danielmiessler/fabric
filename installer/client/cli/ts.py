@@ -4,6 +4,7 @@ from openai import OpenAI
 from groq import Groq
 import os
 import argparse
+import tempfile
 import requests
 
 class Whisper:
@@ -31,30 +32,35 @@ class Whisper:
 
         self.openai_key = os.environ.get("OPENAI_API_KEY")
         self.groq_key = os.environ.get("GROQ_API_KEY")
+        if not self.openai_key and not self.groq_key:
+            print("Error: No API keys found in environment variables.")
+            exit(1)
 
-        self.openai_client = OpenAI(api_key=self.openai_key) if self.openai_key else None
-        self.groq_client = Groq(api_key=self.groq_key) if self.groq_key else None
+        try:
+            self.openai_client = OpenAI(api_key=self.openai_key) if self.openai_key else None
+        except Exception as e:
+            print(f"Error instantiating OpenAI client: {e}")
+            self.openai_client = None
 
-        openai_models, groq_models = self.fetch_available_models()
-        print(f"{openai_models=}\n{groq_models=}")
+        try:
+            self.groq_client = Groq(api_key=self.groq_key) if self.groq_key else None
+        except Exception as e:
+            print(f"Error instantiating Groq client: {e}")
+            self.groq_client = None
 
-        self.use_openai = self.model in openai_models
-        self.use_groq = self.model in groq_models
-        print(f"{ self.use_openai=}\n{self.use_groq=}")
+        self.openai_models, self.groq_models = self.fetch_available_models()
+        if not self.openai_models and not self.groq_models:
+            print("No models available. Check your API keys setup.")
+            exit(1)
 
-        self.client = self.openai_client if self.use_openai else self.groq_client
+        use_openai = self.model in self.openai_models
+        use_groq = self.model in self.groq_models
 
-        
+        if not use_openai and not use_groq:
+            print(f"The selected model '{self.model}' is not available. Use `ts --listmodels` to check the available models")
+            exit(1)
+        self.client = self.openai_client if use_openai else self.groq_client
 
-        # try:
-        #     apikey = os.environ["OPENAI_API_KEY"]
-        #     self.client = OpenAI()
-        #     self.client.api_key = apikey
-        # except KeyError:
-        #     print("OPENAI_API_KEY not found in environment variables.")
-
-        # except FileNotFoundError:
-        #     print("No API key found. Use the --apikey option to set the key")
         self.whole_response = []
 
     def fetch_available_models(self):
@@ -108,7 +114,7 @@ class Whisper:
         """        Transcribe an audio file and print the transcript.
 
         Args:
-            audio_file (str): The path to the audio file to be transcribed.
+            segment (AudioSegment): The segment audio to be transcribed.
 
         Returns:
             None
@@ -121,12 +127,14 @@ class Whisper:
             #     with tempfile.NamedTemporaryFile(delete=False) as f:
             #         f.write(response.content)
             #         audio_file = f.name
-            audio_file = open(segment, "rb")
-            response = self.client.audio.transcriptions.create(
-                model=self.model,
-                file=audio_file
-            )
-            self.whole_response.append(response.text)
+            with tempfile.NamedTemporaryFile(delete=True, suffix=".wav") as f:
+                segment.export(f.name, format="wav")
+                with open(f.name, "rb") as audio_file:
+                    response = self.client.audio.transcriptions.create(
+                        model=self.model,
+                        file=audio_file
+                    )
+                self.whole_response.append(response.text)
 
         except Exception as e:
             print(f"Error: {e}")
@@ -151,24 +159,40 @@ class Whisper:
 
             segments = self.split_audio(audio_file)
             for i, segment in enumerate(segments):
-                segment_file_path = f"segment_{i}.mp3"
-                segment.export(segment_file_path, format="mp3")
-                self.process_segment(segment_file_path)
+                self.process_segment(segment)
             print(' '.join(self.whole_response))
 
         except Exception as e:
             print(f"Error: {e}")
+    
+    def list_models(self):
+        print("OpenAI Models:")
+        for model in self.openai_models:
+            print(f" - {model}")
+
+        print("\nGroq Models:")
+        for model in self.groq_models:
+            print(f" - {model}")
 
 
 def main():
     parser = argparse.ArgumentParser(description="Transcribe an audio file.")
     parser.add_argument(
-        "audio_file", help="The path to the audio file to be transcribed.")
+        "audio_file", nargs="?", help="The path to the audio file to be transcribed.")
     parser.add_argument(
         "--model", "-m", help="Select the model to use")
+    parser.add_argument(
+        "--listmodels", help="List all available models", action="store_true")
     args = parser.parse_args()
-    whisper = Whisper(args)
-    whisper.process_file(args.audio_file)
+
+    if args.listmodels:
+        whisper = Whisper(args)
+        whisper.list_models()
+    elif args.audio_file:
+        whisper = Whisper(args)
+        whisper.process_file(args.audio_file)
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
