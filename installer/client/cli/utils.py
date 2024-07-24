@@ -53,7 +53,7 @@ class Standalone:
             if not self.model:
                 self.model = 'gpt-4-turbo-preview'
         self.claude = False
-        sorted_gpt_models, ollamaList, claudeList, googleList = self.fetch_available_models()
+        sorted_gpt_models, ollamaList, claudeList, googleList, vertexList = self.fetch_available_models()
         self.sorted_gpt_models = sorted_gpt_models
         self.ollamaList = ollamaList
         self.claudeList = claudeList
@@ -61,6 +61,8 @@ class Standalone:
         self.local = self.model in ollamaList
         self.claude = self.model in claudeList
         self.google = self.model in googleList
+        self.vertex = self.model in vertexList
+
 
     async def localChat(self, messages, host=''):
         from ollama import AsyncClient
@@ -164,6 +166,38 @@ class Standalone:
             session = Session()
             session.save_to_session(
                 system, user, response.text, self.args.session)
+    
+    async def vertexChat(self, system, user, copy=False):
+        import vertexai
+        from vertexai.generative_models import GenerativeModel
+        self.gcp_project = os.environ["GCP_PROJECT"]
+        vertexai.init(project=self.gcp_project, location="us-central1")
+        model = GenerativeModel(
+            model_name=self.model,
+            system_instruction=system,
+        )
+        generation_config = {
+            "temperature":self.args.temp,
+            "top_p":self.args.top_p,
+        }
+        response = model.generate_content(
+            user,
+            generation_config=generation_config,
+            stream=False
+        )
+        # for response in responses:
+        print(response.text, end="")
+        if copy:
+            pyperclip.copy(response.text)
+        if self.args.output:
+            with open(self.args.output, "w") as f:
+                f.write(response.text)
+        if self.args.session:
+            from .helper import Session
+            session = Session()
+            session.save_to_session(
+                system, user, response.text, self.args.session)
+
 
     async def googleStream(self, system, user, copy=False):
         import google.generativeai as genai
@@ -366,6 +400,8 @@ class Standalone:
                 if system == "":
                     system = " "
                 asyncio.run(self.googleChat(system, user_message['content']))
+            elif self.vertex:
+                asyncio.run(self.vertexChat(system, user_message['content']))
             else:
                 response = self.client.chat.completions.create(
                     model=self.model,
@@ -449,8 +485,20 @@ class Standalone:
                     googleList.append(m.name)
         except:
             googleList = []
+        
+        try:
+            import vertexai.generative_models as generative_models
+            import vertexai
+            self.gcp_project = os.environ["GCP_PROJECT"]
+            vertexai.init(project=self.gcp_project, location="us-central1")
+            vertexList = [m.name for m in generative_models.list_models()]
+            # for m in genai.list_models():
+            #     if 'generateContent' in m.supported_generation_methods:
+            #         googleList.append(m.name)
+        except Exception as e:
+            vertexList = ["gemini-1.5-flash", "gemini-1.0-pro-vision", "gemini-1.5-pro", "gemini-1.0-pro"]
 
-        return gptlist, fullOllamaList, claudeList, googleList
+        return gptlist, fullOllamaList, claudeList, googleList, vertexList
 
     def get_cli_input(self):
         """ aided by ChatGPT; uses platform library
@@ -732,8 +780,8 @@ class Setup:
         model = model.strip()
         env = os.path.expanduser("~/.config/fabric/.env")
         standalone = Standalone(args=[], pattern="")
-        gpt, ollama, claude, google = standalone.fetch_available_models()
-        allmodels = gpt + ollama + claude + google
+        gpt, ollama, claude, google, vertex = standalone.fetch_available_models()
+        allmodels = gpt + ollama + claude + google + vertex
         if model not in allmodels:
             print(
                 f"Error: {model} is not a valid model. Please run fabric --listmodels to see the available models.")
