@@ -35,6 +35,8 @@ END EXAMPLE FORMAT
 
 - Do not output any other content other than the CSV data. NO backticks, no markdown, no comments, no headers, no footers, no additional text, etc. Just the CSV data.
 
+- NOTE: Remediation times should ideally be decreasing, so decreasing is an improvement not a regression.
+
 - Only output valid CSV data and nothing else. 
 
 - Use the field names in the input; don't make up your own.
