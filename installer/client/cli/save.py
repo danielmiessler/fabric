@@ -4,6 +4,11 @@ import sys
 from datetime import datetime
 
 from dotenv import load_dotenv
+import structlog
+
+from .utils import config_logger
+
+logger = structlog.get_logger()
 
 DEFAULT_CONFIG = "~/.config/fabric/.env"
 PATH_KEY = "FABRIC_OUTPUT_PATH"
@@ -14,20 +19,20 @@ DATE_FORMAT = os.getenv("SAVE_DATE_FORMAT", "%Y-%m-%d")
 def main(tag, tags, silent, fabric):
     out = os.getenv(PATH_KEY)
     if out is None:
-        print(f"'{PATH_KEY}' not set in {DEFAULT_CONFIG} or in your environment.")
+        logger.fatal(f"'{PATH_KEY}' not set in {DEFAULT_CONFIG} or in your environment.")
         sys.exit(1)
 
     out = os.path.expanduser(out)
 
     if not os.path.isdir(out):
-        print(f"'{out}' does not exist. Create it and try again.")
+        logger.fatal(f"'{out}' does not exist. Create it and try again.")
         sys.exit(1)
 
     if not out.endswith("/"):
         out += "/"
 
     if len(sys.argv) < 2:
-        print(f"'{sys.argv[0]}' takes a single argument to tag your summary")
+        logger.fatal(f"'{sys.argv[0]}' takes a single argument to tag your summary")
         sys.exit(1)
 
     if DATE_FORMAT:
@@ -110,7 +115,15 @@ def cli():
         action="store_true",
         help="don't use STDOUT for output, only save to the file",
     )
+
+    parser.add_argument('-v', '--verbose', action='count', default=0,
+                        help="Increases log output per occurrence. ex: `-vvv` to see all all levels")
+    parser.add_argument('-q', '--quiet', action='count', default=0,
+                        help="Suppresses log output per occurrence")
+
     args = parser.parse_args()
+
+    config_logger(args)
 
     if args.stub:
         main(args.stub, args.tag, args.silent, args.nofabric)

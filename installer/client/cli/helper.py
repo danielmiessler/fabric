@@ -1,6 +1,8 @@
 import os
 import sys
+import structlog
 
+logger = structlog.get_logger()
 
 class Session:
     def __init__(self):
@@ -14,7 +16,7 @@ class Session:
         # Ensure the directory exists
         directory = self.sessions_folder
         if not os.path.exists(directory):
-            print("Directory does not exist:", directory)
+            logger.warning("Directory does not exist:", directory)
             return None
 
         # List all files in the directory
@@ -72,4 +74,4 @@ class Session:
                     else:
                         print(f"{session} \"{firstline}\n{secondline}\n\"")
         else:
-            print('No files present in sessions directory')
+            logger.warning('No files present in sessions directory')

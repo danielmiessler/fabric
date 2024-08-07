@@ -1,11 +1,11 @@
-from .utils import Standalone, Update, Setup, Alias, run_electron_app
+from .utils import Standalone, Update, Setup, Alias, config_logger, run_electron_app
 import argparse
 import sys
 import os
-
+import logging
+import structlog
 
 script_directory = os.path.dirname(os.path.realpath(__file__))
-
 
 def main():
     parser = argparse.ArgumentParser(
@@ -74,12 +74,20 @@ def main():
     parser.add_argument('--context', '-c',
                         help="Use Context file (context.md) to add context to your pattern", action="store_true")
 
+    parser.add_argument('--verbose', '-v', action='count', default=0,
+                        help="Increases log output per occurrence. ex: `-vvv` to see all all levels")
+    parser.add_argument('--quiet', '-q', action='count', default=0,
+                        help="Suppresses log output per occurrence")
+
     args = parser.parse_args()
+    config_logger(args)
+    logger = structlog.get_logger()
     home_holder = os.path.expanduser("~")
     config = os.path.join(home_holder, ".config", "fabric")
     config_patterns_directory = os.path.join(config, "patterns")
     config_context = os.path.join(config, "context.md")
     env_file = os.path.join(config, ".env")
+
     if not os.path.exists(config):
         os.makedirs(config)
     if args.setup:
