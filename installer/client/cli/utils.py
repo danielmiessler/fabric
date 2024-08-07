@@ -11,6 +11,8 @@ import tempfile
 import subprocess
 import shutil
 from youtube_transcript_api import YouTubeTranscriptApi
+from rich.console import Console
+from rich.markdown import Markdown
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
@@ -69,7 +71,7 @@ class Standalone:
             response = await AsyncClient(host=host).chat(model=self.model, messages=messages)
         else:
             response = await AsyncClient().chat(model=self.model, messages=messages)
-        print(response['message']['content'])
+        rich_print(self.args.rich, response['message']['content'])
         copy = self.args.copy
         if copy:
             pyperclip.copy(response['message']['content'])
@@ -133,7 +135,7 @@ class Standalone:
             model=self.model,
             temperature=self.args.temp, top_p=self.args.top_p
         )
-        print(message.content[0].text)
+        rich_print(self.args.rich, message.content[0].text)
         copy = self.args.copy
         if copy:
             pyperclip.copy(message.content[0].text)
@@ -153,7 +155,7 @@ class Standalone:
         model = genai.GenerativeModel(
             model_name=self.model, system_instruction=system)
         response = model.generate_content(user)
-        print(response.text)
+        rich_print(self.args.rich, response.text)
         if copy:
             pyperclip.copy(response.text)
         if self.args.output:
@@ -375,7 +377,7 @@ class Standalone:
                     frequency_penalty=self.args.frequency_penalty,
                     presence_penalty=self.args.presence_penalty,
                 )
-                print(response.choices[0].message.content)
+                rich_print(self.args.rich, response.choices[0].message.content)
                 if self.args.copy:
                     pyperclip.copy(response.choices[0].message.content)
                 if self.args.output:
@@ -895,3 +897,20 @@ def run_electron_app():
         subprocess.run(['npm', 'start'], check=True)
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while executing NPM commands: {e}")
+
+
+def rich_print(rich_enabled, text):
+    """ 
+    This method prints text using [Rich](https://github.com/Textualize/rich) library if rich_enabled is True.
+    It is suitable for printing Markdown text when the output is not a stream.
+
+    Input:
+        rich_enabled: a boolean indicating whether to use Rich or not
+        text: the text to be printed
+    """
+    if rich_enabled:
+        markdown = Markdown(text)
+        console = Console()
+        console.print(markdown)
+    else:
+        print(text)
