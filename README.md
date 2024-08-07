@@ -113,9 +113,9 @@ Fabric _Patterns_ are different than most prompts you'll see.
 
 Here's an example of a Fabric Pattern
 
-```bash
-https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
-```
+  ```bash
+  https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
+  ```
 
 <img width="1461" alt="pattern-example" src="https://github.com/danielmiessler/fabric/assets/50654/b910c551-9263-405f-9735-71ca69bbab6d">
 
@@ -136,63 +136,63 @@ Follow these steps to get all fabric-related apps installed and configured.
 
 1. Navigate to where you want the Fabric project to live on your system in a semi-permanent place on your computer.
 
-```bash
-# Find a home for Fabric
-cd /where/you/keep/code
-```
+    ```bash
+    # Find a home for Fabric
+    cd /where/you/keep/code
+    ```
 
 2. Clone the project to your computer.
 
-```bash
-# Clone Fabric to your computer
-git clone https://github.com/danielmiessler/fabric.git
-```
+    ```bash
+    # Clone Fabric to your computer
+    git clone https://github.com/danielmiessler/fabric.git
+    ```
 
 3. Enter Fabric's main directory.
 
-```bash
-# Enter the project folder (where you cloned it)
-cd fabric
-```
+    ```bash
+    # Enter the project folder (where you cloned it)
+    cd fabric
+    ```
 
 4. Install pipx:
 
-macOS:
-
-```bash
-brew install pipx
-```
-
-Linux:
-
-```bash
-sudo apt install pipx
-```
-
-Windows:
-
-Use WSL and follow the Linux instructions.
+    **macOS**:
+    
+    ```bash
+    brew install pipx
+    ```
+    
+    **Linux**:
+    
+    ```bash
+    sudo apt install pipx
+    ```
+    
+    **Windows**:
+    
+    Use WSL and follow the Linux instructions.
 
 5. Install fabric:
 
-```bash
-pipx install .
-```
+    ```bash
+    pipx install .
+    ```
 
 6. Run setup:
 
-```bash
-fabric --setup
-```
+    ```bash
+    fabric --setup
+    ```
 
 7. Restart your shell to reload everything.
 
 8. Now you are up and running! You can test by running the help.
 
-```bash
-# Making sure the paths are set up correctly
-fabric --help
-```
+    ```bash
+    # Making sure the paths are set up correctly
+    fabric --help
+    ```
 
 > [!NOTE]
 > If you're using the `server` functions, `fabric-api` and `fabric-webui` need to be run in distinct terminal windows.
@@ -201,11 +201,11 @@ fabric --help
 
 To update Fabric, run the following commands.
 
-```bash
-# From the fabric directory
-pipx install . --force
-fabric --update
-```
+  ```bash
+  # From the fabric directory
+  pipx install . --force
+  fabric --update
+  ```
 
 Then restart your shell.
 
