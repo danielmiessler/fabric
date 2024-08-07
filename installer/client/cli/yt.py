@@ -3,19 +3,33 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from youtube_transcript_api import YouTubeTranscriptApi
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import json
 import isodate
 import argparse
 import sys
+from cachier import cachier
+from line_profiler import profile
 
+YT_CACHE_TTL = timedelta(minutes=30)  # should probably be optional and configurable
 
 def get_video_id(url):
     # Extract video ID from URL
     pattern = r"(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})"
     match = re.search(pattern, url)
     return match.group(1) if match else None
+
+
+@cachier(stale_after=YT_CACHE_TTL)
+def get_video_details(youtube, video_id):
+     return youtube.videos().list(
+            id=video_id, part="contentDetails,snippet").execute()
+
+
+@cachier(stale_after=YT_CACHE_TTL)
+def get_transcript(video_id, languages):
+    return YouTubeTranscriptApi.get_transcript(video_id, languages=languages)
 
 
 def get_comments(youtube, video_id):
@@ -57,8 +71,8 @@ def get_comments(youtube, video_id):
     return comments
 
 
-
-def main_function(url, options):
+@profile
+def main_function(url, options, cachier__verbose=True):
     # Load environment variables from .env file
     load_dotenv(os.path.expanduser("~/.config/fabric/.env"))
 
@@ -79,8 +93,7 @@ def main_function(url, options):
         youtube = build("youtube", "v3", developerKey=api_key)
 
         # Get video details
-        video_response = youtube.videos().list(
-            id=video_id, part="contentDetails,snippet").execute()
+        video_response = get_video_details(youtube, video_id)
 
         # Extract video duration and convert to minutes
         duration_iso = video_response["items"][0]["contentDetails"]["duration"]
@@ -95,7 +108,7 @@ def main_function(url, options):
 
         # Get video transcript
         try:
-            transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=[options.lang])
+            transcript_list = get_transcript(video_id, languages=[options.lang])
             transcript_text = " ".join([item["text"] for item in transcript_list])
             transcript_text = transcript_text.replace("\n", " ")
         except Exception as e:
