@@ -8,7 +8,8 @@ import os
 import json
 import isodate
 import argparse
-import sys
+import io
+import csv
 
 
 def get_video_id(url):
@@ -98,6 +99,18 @@ def main_function(url, options):
             transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=[options.lang])
             transcript_text = " ".join([item["text"] for item in transcript_list])
             transcript_text = transcript_text.replace("\n", " ")
+            
+            # Create CSV output for transcript with timestamps
+            transcript_data = [["start", "duration", "text"]]
+            for item in transcript_list:
+                transcript_data.append([item["start"], item["duration"], item["text"]])
+
+            transcript_ts_output = io.StringIO()                    
+            csv_writer = csv.writer(transcript_ts_output, quoting=csv.QUOTE_NONNUMERIC)
+            csv_writer.writerows(transcript_data)
+            transcript_ts_text = transcript_ts_output.getvalue()
+            transcript_ts_output.close()
+
         except Exception as e:
             transcript_text = f"Transcript not available in the selected language ({options.lang}). ({e})"
 
@@ -111,6 +124,12 @@ def main_function(url, options):
             print(duration_minutes)
         elif options.transcript:
             print(transcript_text.encode('utf-8').decode('unicode-escape'))
+        elif options.transcript_ts:
+            if options.transcript_ts == 'csv':
+                print(transcript_ts_text.encode('utf-8').decode('unicode-escape'))
+            elif options.transcript_ts == 'json':
+                transcript_ts_json = json.dumps(transcript_list, indent=2)
+                print(transcript_ts_json)
         elif options.comments:
             print(json.dumps(comments, indent=2))
         elif options.metadata:
@@ -135,6 +154,7 @@ def main():
     parser.add_argument('url', help='YouTube video URL')
     parser.add_argument('--duration', action='store_true', help='Output only the duration')
     parser.add_argument('--transcript', action='store_true', help='Output only the transcript')
+    parser.add_argument('--transcript-ts', choices=['csv', 'json'], help='Output only the transcript with timestamps')
     parser.add_argument('--comments', action='store_true', help='Output the comments on the video')
     parser.add_argument('--metadata', action='store_true', help='Output the video metadata')
     parser.add_argument('--lang', default='en', help='Language for the transcript (default: English)')
