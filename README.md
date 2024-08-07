@@ -17,7 +17,7 @@
 [Introduction Video](#introduction-video-by-network-chuck) •
 [What and Why](#what-and-why) •
 [Philosophy](#philosophy) •
-[Quickstart](#quickstart) •
+[Quickstart Install](#quickstart) •
 [Structure](#structure) •
 [Examples](#examples) •
 [Custom Patterns](#custom-patterns) •
@@ -35,7 +35,7 @@
   - [Breaking problems into components](#breaking-problems-into-components)
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
-- [Quickstart](#quickstart)
+- [Quickstart Install](#quickstart)
   - [Setting up the fabric commands](#setting-up-the-fabric-commands)
   - [Using the fabric client](#using-the-fabric-client)
   - [Just use the Patterns](#just-use-the-patterns)
@@ -125,7 +125,7 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 ## Quickstart
 
-The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/installer/client">`/client`</a> directory in this repository.
+The most feature-rich way to use Fabric is to install the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/installer/client">`/client`</a> directory in this repository.
 
 ### Required Python Version 
 Ensure you have at least python3.10 installed on your operating system. Otherwise, when you attempt to run the pip install commands, the project will fail to build due to certain dependencies. 
