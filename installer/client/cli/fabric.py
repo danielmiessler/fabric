@@ -2,11 +2,14 @@ from .utils import Standalone, Update, Setup, Alias, run_electron_app
 import argparse
 import sys
 import os
+import agentops
 
+# Initialize AgentOps
+agentops.init(os.getenv('AGENTOPS_API_KEY'))
 
 script_directory = os.path.dirname(os.path.realpath(__file__))
 
-
+@agentops.record_function('main_function')
 def main():
     parser = argparse.ArgumentParser(
         description="An open source framework for augmenting humans using AI."
@@ -19,7 +22,6 @@ def main():
         '--agents', '-a',
         help="Use praisonAI to create an AI agent and then use it. ex: 'write me a movie script'", action="store_true"
     )
-
     parser.add_argument(
         "--output",
         "-o",
@@ -62,7 +64,6 @@ def main():
     )
     parser.add_argument('--changeDefaultModel',
                         help="Change the default model. For a list of available models, use the --listmodels flag.")
-
     parser.add_argument(
         "--model", "-m", help="Select the model to use"
     )
@@ -107,17 +108,20 @@ def main():
         if not os.path.exists(os.path.join(config, "context.md")):
             print("Please create a context.md file in ~/.config/fabric")
             sys.exit()
+    
+    @agentops.track_agent(name='ai-agent')
+    class AIAgent:
+        def __init__(self, args):
+            self.standalone = Standalone(args)
+
+        def run(self, text):
+            self.standalone.agents(text)
+
     if args.agents:
-        standalone = Standalone(args)
-        text = ""  # Initialize text variable
-        # Check if an argument was provided to --agents
-        if args.text:
-            text = args.text
-        else:
-            text = standalone.get_cli_input()
+        agent = AIAgent(args)
+        text = args.text if args.text else agent.standalone.get_cli_input()
         if text:
-            standalone = Standalone(args)
-            standalone.agents(text)
+            agent.run(text)
             sys.exit()
     if args.session:
         from .helper import Session
@@ -176,37 +180,34 @@ def main():
         text = args.text
     else:
         text = standalone.get_cli_input()
-    if args.stream and not args.context:
-        if args.remoteOllamaServer:
-            standalone.streamMessage(text, host=args.remoteOllamaServer)
-        else:
-            standalone.streamMessage(text)
-        sys.exit()
-    if args.stream and args.context:
-        with open(config_context, "r") as f:
-            context = f.read()
-            if args.remoteOllamaServer:
-                standalone.streamMessage(
-                    text, context=context, host=args.remoteOllamaServer)
+    
+    @agentops.record_function('process_request')
+    def process_request(text, stream=False, context=None, remote_server=None):
+        if stream:
+            if remote_server:
+                standalone.streamMessage(text, context=context, host=remote_server)
             else:
                 standalone.streamMessage(text, context=context)
-        sys.exit()
-    elif args.context:
-        with open(config_context, "r") as f:
-            context = f.read()
-            if args.remoteOllamaServer:
-                standalone.sendMessage(
-                    text, context=context, host=args.remoteOllamaServer)
+        else:
+            if remote_server:
+                standalone.sendMessage(text, context=context, host=remote_server)
             else:
                 standalone.sendMessage(text, context=context)
         sys.exit()
-    else:
-        if args.remoteOllamaServer:
-            standalone.sendMessage(text, host=args.remoteOllamaServer)
-        else:
-            standalone.sendMessage(text)
-        sys.exit()
 
+    if args.stream and not args.context:
+        process_request(text, stream=True, remote_server=args.remoteOllamaServer)
+    if args.stream and args.context:
+        with open(config_context, "r") as f:
+            context = f.read()
+            process_request(text, stream=True, context=context, remote_server=args.remoteOllamaServer)
+    elif args.context:
+        with open(config_context, "r") as f:
+            context = f.read()
+            process_request(text, context=context, remote_server=args.remoteOllamaServer)
+    else:
+        process_request(text, remote_server=args.remoteOllamaServer)
 
 if __name__ == "__main__":
     main()
+    agentops.end_session('Success', reason='Program completed')

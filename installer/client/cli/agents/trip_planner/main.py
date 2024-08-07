@@ -4,14 +4,23 @@ from .trip_agents import TripAgents
 from .trip_tasks import TripTasks
 import os
 from dotenv import load_dotenv
+import agentops
 
+# Load environment variables
 current_directory = os.path.dirname(os.path.realpath(__file__))
 config_directory = os.path.expanduser("~/.config/fabric")
 env_file = os.path.join(config_directory, ".env")
 load_dotenv(env_file)
 os.environ['OPENAI_MODEL_NAME'] = 'gpt-4-0125-preview'
 
+# Initialize AgentOps
+AGENTOPS_API_KEY = os.getenv("AGENTOPS_API_KEY")
+if not AGENTOPS_API_KEY:
+    raise ValueError("AGENTOPS_API_KEY not found in environment variables")
 
+agentops.init(AGENTOPS_API_KEY)
+
+@agentops.track_agent(name='TripCrew')
 class TripCrew:
 
     def __init__(self, origin, cities, date_range, interests):
@@ -20,6 +29,7 @@ class TripCrew:
         self.interests = interests
         self.date_range = date_range
 
+    @agentops.record_function('run')
     def run(self):
         agents = TripAgents()
         tasks = TripTasks()
@@ -59,8 +69,9 @@ class TripCrew:
         result = crew.kickoff()
         return result
 
-
+@agentops.track_agent(name='planner_cli')
 class planner_cli:
+    @agentops.record_function('ask')
     def ask(self):
         print("## Welcome to Trip Planner Crew")
         print('-------------------------------')
@@ -87,3 +98,16 @@ class planner_cli:
         print("## Here is you Trip Plan")
         print("########################\n")
         print(result)
+
+@agentops.record_function('main')
+def main():
+    planner = planner_cli()
+    planner.ask()
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        agentops.log_error(str(e))
+    finally:
+        agentops.end_session('Success')
