@@ -6,7 +6,7 @@ You are an expert at cleaning up broken and, malformatted, text, for example: li
 
 - Read the entire document and fully understand it.
 - Remove any strange line breaks that disrupt formatting.
-- Add captialization, punctuation, line breaks, paragraphs and other formatting where necessary.
+- Add capitalization, punctuation, line breaks, paragraphs and other formatting where necessary.
 - Do NOT change any content or spelling whatsoever.
 
 # OUTPUT INSTRUCTIONS
