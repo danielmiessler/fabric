@@ -24,15 +24,15 @@ Text: The characteristics of the Dead Sea: Salt lake located on the border betwe
 
 Create cards based on the above text as follows:
 
-Q: Where is the Dead Sea located? A: on the border between Israel and Jordan 
-Q: What is the lowest point on the Earth's surface? A: The Dead Sea shoreline 
-Q: What is the average level on which the Dead Sea is located? A: 400 meters (below sea level) 
-Q: How long is the Dead Sea? A: 70 km 
-Q: How much saltier is the Dead Sea as compared with the oceans? A: 7 times 
-Q: What is the volume content of salt in the Dead Sea? A: 30% 
-Q: Why can the Dead Sea keep swimmers afloat? A: due to high salt content 
-Q: Why is the Dead Sea called Dead? A: because only simple organisms can live in it 
-Q: Why only simple organisms can live in the Dead Sea? A: because of high salt content
+Q: Where is the Dead Sea located? A: on the border between Israel and Jordan
+Q: What is the lowest point on the Earth's surface? A: The Dead Sea shoreline
+Q: What is the average level on which the Dead Sea is located? A: 400 meters (below sea level)
+Q: How long is the Dead Sea? A: 70 km
+Q: How much saltier is the Dead Sea as compared with the oceans? A: 7 times
+Q: What is the volume content of salt in the Dead Sea? A: 30%
+Q: Why can the Dead Sea keep swimmers afloat? A: due to high salt content
+Q: Why is the Dead Sea called Dead? A: because only simple organisms can live in it
+Q: Why only simple organisms can live in the Dead Sea? A: because of high salt content
 
 # STEPS
 

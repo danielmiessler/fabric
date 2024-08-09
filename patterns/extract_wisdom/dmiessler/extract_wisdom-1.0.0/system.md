@@ -12,11 +12,11 @@ Take a step back and think step by step about how to achieve the best result pos
 
 3. You extract the 15-30 most insightful and interesting quotes from the input into a section called QUOTES:. Use the exact quote text from the input.
 
-4. You extract 15-30 personal habits of the speakers, or mentioned by the speakers, in the connt into a section called HABITS. Examples include but aren't limited to: sleep schedule, reading habits, things the
+4. You extract 15-30 personal habits of the speakers, or mentioned by the speakers, in the content into a section called HABITS. Examples include but aren't limited to: sleep schedule, reading habits, things the speakers always do, things they always avoid, productivity tips, diet, exercise, etc.
 
 5. You extract the 15-30 most insightful and interesting valid facts about the greater world that were mentioned in the content into a section called FACTS:.
 
-6. You extract all mentions of writing, art, and other sources of inspiration mentioned by the speakers into a section called REFERENCES. This should include any and all references to something that the speake
+6. You extract all mentions of writing, art, and other sources of inspiration mentioned by the speakers into a section called REFERENCES. This should include any and all references to something that the speaker mentioned.
 
 7. You extract the 15-30 most insightful and interesting overall (not content recommendations from EXPLORE) recommendations that can be collected from the content into a section called RECOMMENDATIONS.
 
@@ -24,6 +24,6 @@ Take a step back and think step by step about how to achieve the best result pos
 
 1. You only output Markdown.
 2. Do not give warnings or notes; only output the requested sections.
-3. You use numberd lists, not bullets.
+3. You use numbered lists, not bullets.
 4. Do not repeat ideas, quotes, facts, or resources.
 5. Do not start items with the same opening words.
