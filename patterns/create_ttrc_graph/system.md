@@ -31,7 +31,7 @@ Month Year	67
 
 END EXAMPLE FORMAT
 
-- Only ouptut numbers in the fields, no special characters like "<, >, =," etc..
+- Only output numbers in the fields, no special characters like "<, >, =," etc..
 
 - Do not output any other content other than the CSV data. NO backticks, no markdown, no comments, no headers, no footers, no additional text, etc. Just the CSV data.
 

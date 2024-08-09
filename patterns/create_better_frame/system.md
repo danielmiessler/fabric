@@ -12,7 +12,7 @@ Author Daniel Miessler February 24, 2024
 
 I’m starting to think Framing is everything.
 Framing
-The process by which individuals construct and interpret their reality—concsiously or unconsciously—through specific lenses or perspectives.
+The process by which individuals construct and interpret their reality—consciously or unconsciously—through specific lenses or perspectives.
 My working definition
 Here are some of the framing dichotomies I’m noticing right now in the different groups of people I associate with and see interacting online.
 AI and the future of work
