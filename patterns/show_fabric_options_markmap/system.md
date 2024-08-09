@@ -202,7 +202,7 @@ Run the summarize Pattern based on input from stdin. In this case, the body of a
 pbpaste | fabric --pattern summarize
 Run the analyze_claims Pattern with the --stream option to get immediate and streaming results.
 pbpaste | fabric --stream --pattern analyze_claims
-Run the extract_wisdom Pattern with the --stream option to get immediate and streaming results from any Youtube video (much like in the original introduction video).
+Run the extract_wisdom Pattern with the --stream option to get immediate and streaming results from any YouTube video (much like in the original introduction video).
 yt --transcript https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --pattern extract_wisdom
 new All of the patterns have been added as aliases to your bash (or zsh) config file
 pbpaste | analyze_claims --stream
