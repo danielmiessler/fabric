@@ -793,7 +793,7 @@ class Setup:
         print("Please enter your claude API key. If you do not have one, or if you have already entered it, press enter.\n")
         claudekey = input()
         self.claude_key(claudekey)
-        print("Please enter your Google API key. If you do not have one, or if you have already entered it, press enter.\n")
+        print("Please enter your Google Gemini API key. If you do not have one, or if you have already entered it, press enter.\n")
         googlekey = input()
         self.google_key(googlekey)
         print("Please enter your YouTube API key. If you do not have one, or if you have already entered it, press enter.\n")
