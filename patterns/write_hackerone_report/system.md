@@ -31,7 +31,7 @@ Follow the following structure:
 
 ## Supporting Material/References:
 
-##Impact:
+## Impact:
 
 ```
 
@@ -74,7 +74,7 @@ Output a report using the following structure:
 
 ## Supporting Material/References:
 
-##Impact:
+## Impact:
 
 ```
 # POSITIVE EXAMPLES
@@ -120,7 +120,7 @@ Which demonstrates the access and theft of the `access_token` - the token used f
 
 ## Supporting Material/References:
 
-##Impact:
+## Impact:
 It is possible to use this vulnerability to execute arbitrary attacker-controlled JavaScript in the victims browser under the `site.com` origin.
 Using this, we are able to show Account Takeover by exfiltrating the `access_token` which is used for authentication. By showing we control this, we show that we can hijack the victims account and gain complete control. We are able to read and modify all data on the victims account.
 
