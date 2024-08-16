@@ -6,13 +6,14 @@ import (
 	"github.com/samber/lo"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type Storage struct {
 	Label         string
 	Dir           string
 	ItemIsDir     bool
-	ItemExtension string
+	FileExtension string
 }
 
 func (o *Storage) Configure() (err error) {
@@ -38,12 +39,21 @@ func (o *Storage) GetNames() (ret []string, err error) {
 			return
 		})
 	} else {
-		ret = lo.FilterMap(entries, func(item os.DirEntry, index int) (ret string, ok bool) {
-			if ok = !item.IsDir() && filepath.Ext(item.Name()) == o.ItemExtension; ok {
-				ret = item.Name()
-			}
-			return
-		})
+		if o.FileExtension == "" {
+			ret = lo.FilterMap(entries, func(item os.DirEntry, index int) (ret string, ok bool) {
+				if ok = !item.IsDir(); ok {
+					ret = item.Name()
+				}
+				return
+			})
+		} else {
+			ret = lo.FilterMap(entries, func(item os.DirEntry, index int) (ret string, ok bool) {
+				if ok = !item.IsDir() && filepath.Ext(item.Name()) == o.FileExtension; ok {
+					ret = strings.TrimSuffix(item.Name(), o.FileExtension)
+				}
+				return
+			})
+		}
 	}
 	return
 }
@@ -77,7 +87,7 @@ func (o *Storage) BuildFilePath(fileName string) (ret string) {
 }
 
 func (o *Storage) buildFileName(name string) string {
-	return fmt.Sprintf("%s%v", name, o.ItemExtension)
+	return fmt.Sprintf("%s%v", name, o.FileExtension)
 }
 
 func (o *Storage) Delete(name string) (err error) {
