@@ -119,7 +119,6 @@ Application Options:
   -x, --listcontexts      List all contexts
   -X, --listsessions      List all sessions
   -U, --updatepatterns    Update patterns
-  -A, --addcontext        Add a context
   -c, --copy              Copy to clipboard
   -m, --model=            Choose model
   -u, --url=              Choose ollama url (default: http://127.0.0.1:11434)
@@ -311,6 +310,30 @@ The content features a conversation between two individuals discussing various t
 10. Nietzsche's walks
 
 This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
+
+## Helper Apps
+
+Fabric also makes use of some core helper apps (tools) to make it easier to integrate with your various workflows. Here are some examples:
+
+`yt` is a helper command that extracts the transcript from a YouTube video. You can use it like this:
+```bash
+yt https://www.youtube.com/watch?v=lQVcbY52_gY
+```
+
+This will return the transcript from the video, which you can then pipe into Fabric like this:
+```bash
+yt https://www.youtube.com/watch?v=lQVcbY52_gY | fabric --pattern extract_wisdom
+```
+
+### `yt` Installation
+
+To install `yt`, install it the same way as you install Fabric, just with a different repo name.
+
+```bash
+go install github.com/danielmiessler/yt@latest
+```
+
+Be sure to add your `YOUTUBE_API_KEY` to `~/.config/fabric/.env`.
 
 ## Meta
 
