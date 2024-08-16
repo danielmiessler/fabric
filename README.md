@@ -43,7 +43,10 @@
 <br />
 
 > [!NOTE] 
-August 16, 2024 — We have migrated to Go! The biggest thing to know is that the previous installation instructions in the various Fabric videos out there will no longer work because they were for the legacy (Python) version. Check the new install instructions below.
+August 16, 2024 — We have migrated to Go! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](Installation) below.
+
+> [!NOTE] 
+August 16, 2024 — We have cleaned up the Pull Requests and Issues in the following ways as part of the Go release: 1) We incorporated all Pattern submissions in the new version. 2) We closed all Issues related to Python/Code because we we moved to Go. If your issue still persists, just resubmit and we'll get on it. 3) We did the same with Question issues because most of them were related to Python. 4) We left the Enhancement issues because those tend to not relate as much to Python vs. Go, and we'll be working through those.
 
 ## What and why
 
