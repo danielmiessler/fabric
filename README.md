@@ -53,7 +53,7 @@
 <br />
 
 > [!NOTE]
-> We are adding functionality to the project so often that you should update often as well. That means: `go install github.com/danielmiessler/fabric` in the main directory!
+> We are adding functionality to the project so often that you should update often as well. That means: `go install github.com/danielmiessler/fabric@latest` in the main directory!
 
 ## Introduction videos
 
@@ -64,7 +64,7 @@
 bash
 
 pipx uninstall fabric
-go install github.com/danielmiessler/fabric
+go install github.com/danielmiessler/fabric@latest
 fabric --setup // THIS IS IMPORTANT AS THERE ARE ELEMENTS OF THE CONFIG THAT HAVE CHANGED
 ```
 
