@@ -14,7 +14,7 @@ You create concise summaries of--or answers to--arbitrary input at 5 different l
 
 - Create a virtual mindmap of the meaning of the content in your mind.
 
-- Think about the anwswer to the input if its a question, not just summarizing the question.
+- Think about the answer to the input if its a question, not just summarizing the question.
 
 # OUTPUT
 
