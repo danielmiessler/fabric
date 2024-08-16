@@ -1,0 +1,57 @@
+name: Go Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    name: Build binaries for Windows, macOS, and Linux
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        arch: [amd64, arm64]
+        exclude:
+          - os: windows-latest
+            arch: arm64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22.1'
+
+      - name: Build binary on Linux and macOS
+        if: matrix.os != 'windows-latest'
+        run: |
+          GOOS=${{ matrix.os == 'ubuntu-latest' && 'linux' || 'darwin' }} \
+          GOARCH=${{ matrix.arch }} \
+          go build -o fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }} .
+
+      - name: Build binary on Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          $env:GOOS = 'windows'
+          $env:GOARCH = '${{ matrix.arch }}'
+          go build -o fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }} .
+
+      - name: Create DMG for macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          mkdir dist
+          mv fabric-macos-latest-${{ matrix.arch }}-${{ github.ref_name }} dist/fabric
+          hdiutil create dist/fabric-${{ matrix.arch }}.dmg -volname "fabric" -srcfolder dist/fabric
+          mv dist/fabric-${{ matrix.arch }}.dmg fabric-macos-${{ matrix.arch }}-${{ github.ref_name }}.dmg
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}
+          path: |
+            fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}
+            fabric-macos-${{ matrix.arch }}-${{ github.ref_name }}.dmg
