@@ -12,6 +12,7 @@ import (
 	"github.com/danielmiessler/fabric/vendors/grocq"
 	"github.com/danielmiessler/fabric/vendors/ollama"
 	"github.com/danielmiessler/fabric/vendors/openai"
+	"github.com/danielmiessler/fabric/youtube"
 	"github.com/pkg/errors"
 	"os"
 	"strconv"
@@ -41,6 +42,7 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 		Db:             db,
 		VendorsAll:     NewVendorsManager(),
 		PatternsLoader: NewPatternsLoader(db.Patterns),
+		YouTube:        youtube.NewYouTube(),
 	}
 
 	label := "Default"
@@ -65,6 +67,7 @@ type Fabric struct {
 	*VendorsManager
 	VendorsAll *VendorsManager
 	*PatternsLoader
+	*youtube.YouTube
 
 	Db *db.Db
 
@@ -87,6 +90,8 @@ func (o *Fabric) SaveEnvFile() (err error) {
 	for _, vendor := range o.Vendors {
 		vendor.GetSettings().FillEnvFileContent(&envFileContent)
 	}
+
+	o.YouTube.FillEnvFileContent(&envFileContent)
 
 	err = o.Db.SaveEnv(envFileContent.String())
 	return
@@ -172,7 +177,12 @@ func (o *Fabric) configure() (err error) {
 			o.AddVendors(vendor)
 		}
 	}
-	err = o.PatternsLoader.Configure()
+	if err = o.PatternsLoader.Configure(); err != nil {
+		return
+	}
+
+	err = o.YouTube.Configure()
+
 	return
 }
 
