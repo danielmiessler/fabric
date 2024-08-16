@@ -226,6 +226,7 @@ yt --transcript https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --patt
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
 <br />
+<br />
 
 If you're not looking to do anything fancy, and you just want a lot of great prompts, you can navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring!
 
