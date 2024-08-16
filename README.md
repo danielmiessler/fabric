@@ -368,6 +368,7 @@ This feature works with all openai and ollama models but does NOT work with clau
 > Special thanks to the following people for their inspiration and contributions!
 
 - _Jonathan Dunn_ for all of his help with this project, including this new go verision, as well as the gui
+- _Eugen Eisler_ and _Frederick Ros_ for their invaluable contributions to the Go version
 - _Caleb Sima_ for pushing me over the edge of whether to make this a public project or not.
 - _Joel Parish_ for super useful input on the project's Github directory structure..
 - _Joseph Thacker_ for the idea of a `-c` context flag that adds pre-created context in the `./config/fabric/` directory to all Pattern queries.
