@@ -16,7 +16,7 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Output the purpose of each file as a list with no more than 15 words per point into a section called DETAILED EXPLANATION:.
 
-- Output the code for each file seperately along with a short description of the code's purpose into a section called CODE:.
+- Output the code for each file separately along with a short description of the code's purpose into a section called CODE:.
 
 - Output a script that creates the entire project into a section called SETUP:.
 
