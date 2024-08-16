@@ -43,7 +43,8 @@
 
 <br />
 
-> [!NOTE] August 16, 2024 — We have migrated to Go! The biggest thing to know is that the previous installation instructions in the various Fabric videos out there will no longer work because they were for the legacy (Python) version. Check the new install instructions below.
+> [!NOTE] 
+August 16, 2024 — We have migrated to Go! The biggest thing to know is that the previous installation instructions in the various Fabric videos out there will no longer work because they were for the legacy (Python) version. Check the new install instructions below.
 
 ## What and why
 
