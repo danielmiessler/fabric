@@ -109,9 +109,9 @@ Once you have it all set up, here's how to use it.
    `fabric -h`
 
 ```bash
-usage: fabric-go -h
+usage: fabric -h
 Usage:
-  fabric-go [OPTIONS]
+  fabric [OPTIONS]
 
 Application Options:
   -p, --pattern=          Choose a pattern
@@ -138,7 +138,7 @@ Help Options:
   -h, --help              Show this help message
 
 Usage:
-  fabric-go [OPTIONS]
+  fabric [OPTIONS]
 
 Application Options:
   -p, --pattern=          Choose a pattern
