@@ -17,7 +17,6 @@
 [What and Why](#whatandwhy) •
 [Philosophy](#philosophy) •
 [Installation](#Installation) •
-[Structure](#structure) •
 [Examples](#examples) •
 [Custom Patterns](#custom-patterns) •
 [Helper Apps](#helper-apps) •
