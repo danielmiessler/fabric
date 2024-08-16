@@ -28,7 +28,6 @@ type Flags struct {
 	ListAllContexts         bool    `short:"x" long:"listcontexts" description:"List all contexts"`
 	ListAllSessions         bool    `short:"X" long:"listsessions" description:"List all sessions"`
 	UpdatePatterns          bool    `short:"U" long:"updatepatterns" description:"Update patterns"`
-	AddContext              bool    `short:"A" long:"addcontext" description:"Add a context"`
 	Message                 string  `hidden:"true" description:"Message to send to chat"`
 	Copy                    bool    `short:"c" long:"copy" description:"Copy to clipboard"`
 	Model                   string  `short:"m" long:"model" description:"Choose model"`
