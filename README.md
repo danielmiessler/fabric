@@ -18,9 +18,9 @@
 [Philosophy](#philosophy) •
 [Installation](#Installation) •
 [Examples](#examples) •
+[Just Use the Patterns](#just-use-the-patterns) •
 [Custom Patterns](#custom-patterns) •
 [Helper Apps](#helper-apps) •
-[Examples](#examples) •
 [Meta](#meta)
 
 </div>
@@ -33,8 +33,8 @@
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
 - [Installation](#Installation)
-  - [Just use the Patterns](#just-use-the-patterns)
 - [Examples](#examples)
+  - [Just use the Patterns](#just-use-the-patterns)
 - [Custom Patterns](#custom-patterns)
 - [Helper Apps](#helper-apps)
 - [Meta](#meta)
@@ -157,7 +157,6 @@ Application Options:
 Help Options:
   -h, --help              Show this help message
 ```
-
 ## Migration from Legacy (Python) Version
 
 If you have the Legacy (Python) version installed and want to migrate to the Go version, here's how you do it. It's basically two steps: 1) uninstall the Python version, and 2) install the Go version.
@@ -228,6 +227,20 @@ You can use any of the Patterns you see there in any AI application that you hav
 
 The wisdom of crowds for the win.
 
+## Custom Patterns
+
+You may want to use Fabric to create your own custom Patterns—but not share them with others. No problem!
+
+Just make a directory in `~/.config/custompatterns/` (or wherever) and put your `.md` files in there. 
+
+When you're ready to use them, copy them into:
+
+```
+~/.config/fabric/patterns/
+```
+
+You can then use them like any other Patterns, but they won't be public unless you explicitly submit them as Pull Requests to the Fabric project. So don't worry—they're private to you.
+
 ## SUMMARY:
 
 The content features a conversation between two individuals discussing various topics, including the decline of Western culture, the importance of beauty and subtlety in life, the impact of technology and AI, the resonance of Rilke's poetry, the value of deep reading and revisiting texts, the captivating nature of Ayn Rand's writing, the role of philosophy in understanding the world, and the influence of drugs on society. They also touch upon creativity, attention spans, and the importance of introspection.
@@ -296,16 +309,6 @@ The content features a conversation between two individuals discussing various t
 8. Robert Pirsig's writings
 9. Bertrand Russell's definition of philosophy
 10. Nietzsche's walks
-
-````
-
-## Agents
-
-NEW FEATURE! We have incorporated PraisonAI with fabric. For more information about this amazing project please visit https://github.com/MervinPraison/PraisonAI. This feature CREATES AI agents and then uses them to perform a task
-
-```bash
-echo "Search for recent articles about the future of AI and write me a 500 word essay on the findings" | fabric --agents
-````
 
 This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
 
