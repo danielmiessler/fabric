@@ -3,10 +3,6 @@ package core
 import (
 	"bytes"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
-
 	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
@@ -17,12 +13,13 @@ import (
 	"github.com/danielmiessler/fabric/vendors/ollama"
 	"github.com/danielmiessler/fabric/vendors/openai"
 	"github.com/pkg/errors"
+	"os"
+	"strconv"
+	"strings"
 )
 
-const (
-	DefaultPatternsGitRepoUrl    = "https://github.com/danielmiessler/fabric.git"
-	DefaultPatternsGitRepoFolder = "patterns"
-)
+const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
+const DefaultPatternsGitRepoFolder = "patterns"
 
 func NewFabric(db *db.Db) (ret *Fabric, err error) {
 	ret = NewFabricBase(db)
@@ -38,10 +35,12 @@ func NewFabricForSetup(db *db.Db) (ret *Fabric) {
 
 // NewFabricBase Create a new Fabric from a list of already configured VendorsController
 func NewFabricBase(db *db.Db) (ret *Fabric) {
+
 	ret = &Fabric{
-		Db:                db,
-		VendorsController: NewVendors(),
-		PatternsLoader:    NewPatternsLoader(db.Patterns),
+		VendorsManager: NewVendorsManager(),
+		Db:             db,
+		VendorsAll:     NewVendorsManager(),
+		PatternsLoader: NewPatternsLoader(db.Patterns),
 	}
 
 	label := "Default"
@@ -55,7 +54,7 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 	ret.DefaultModel = ret.AddSetupQuestionCustom("Model", true,
 		"Enter the index the name of your default model")
 
-	ret.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), grocq.NewClient(),
+	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), grocq.NewClient(),
 		gemini.NewClient(), anthropic.NewClient())
 
 	return
@@ -63,7 +62,8 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 
 type Fabric struct {
 	*common.Configurable
-	*VendorsController
+	*VendorsManager
+	VendorsAll *VendorsManager
 	*PatternsLoader
 
 	Db *db.Db
@@ -84,7 +84,7 @@ func (o *Fabric) SaveEnvFile() (err error) {
 	o.Settings.FillEnvFileContent(&envFileContent)
 	o.PatternsLoader.FillEnvFileContent(&envFileContent)
 
-	for _, vendor := range o.Configured {
+	for _, vendor := range o.Vendors {
 		vendor.GetSettings().FillEnvFileContent(&envFileContent)
 	}
 
@@ -126,7 +126,7 @@ func (o *Fabric) SetupDefaultModel() (err error) {
 		o.DefaultVendor.Value = vendorsModels.FindVendorsByModelFirst(o.DefaultModel.Value)
 	}
 
-	// verify
+	//verify
 	vendorNames := vendorsModels.FindVendorsByModel(o.DefaultModel.Value)
 	if len(vendorNames) == 0 {
 		err = errors.Errorf("You need to chose an available default model.")
@@ -143,19 +143,19 @@ func (o *Fabric) SetupDefaultModel() (err error) {
 }
 
 func (o *Fabric) SetupVendors() (err error) {
-	o.ResetConfigured()
+	o.Reset()
 
-	for _, vendor := range o.All {
+	for _, vendor := range o.VendorsAll.Vendors {
 		fmt.Println()
 		if vendorErr := vendor.Setup(); vendorErr == nil {
 			fmt.Printf("[%v] configured\n", vendor.GetName())
-			o.AddVendorConfigured(vendor)
+			o.AddVendors(vendor)
 		} else {
 			fmt.Printf("[%v] skiped\n", vendor.GetName())
 		}
 	}
 
-	if !o.HasConfiguredVendors() {
+	if !o.HasVendors() {
 		err = errors.New("No vendors configured")
 		return
 	}
@@ -167,9 +167,9 @@ func (o *Fabric) SetupVendors() (err error) {
 
 // Configure buildClient VendorsController based on the environment variables
 func (o *Fabric) configure() (err error) {
-	for _, vendor := range o.All {
+	for _, vendor := range o.VendorsAll.Vendors {
 		if vendorErr := vendor.Configure(); vendorErr == nil {
-			o.AddVendorConfigured(vendor)
+			o.AddVendors(vendor)
 		}
 	}
 	err = o.PatternsLoader.Configure()
@@ -219,23 +219,27 @@ func (o *Fabric) CreateOutputFile(message string, fileName string) (err error) {
 	return
 }
 
-func (o *Chat) BuildMessages() (ret []*common.Message, err error) {
-	if o.Session != nil && len(o.Session.Messages) > 0 {
-		ret = append(ret, o.Session.Messages...)
+func (o *Chat) BuildChatSession() (ret *db.Session, err error) {
+	// new messages will be appended to the session and used to send the message
+	if o.Session != nil {
+		ret = o.Session
+	} else {
+		ret = &db.Session{}
 	}
 
 	systemMessage := strings.TrimSpace(o.Context) + strings.TrimSpace(o.Pattern)
 
 	if systemMessage != "" {
-		ret = append(ret, &common.Message{Role: "system", Content: systemMessage})
+		ret.Append(&common.Message{Role: "system", Content: systemMessage})
 	}
 
 	userMessage := strings.TrimSpace(o.Message)
 	if userMessage != "" {
-		ret = append(ret, &common.Message{Role: "user", Content: userMessage})
+		ret.Append(&common.Message{Role: "user", Content: userMessage})
 	}
 
-	if ret == nil {
+	if ret.IsEmpty() {
+		ret = nil
 		err = fmt.Errorf("no session, pattern or user messages provided")
 	}
 	return
