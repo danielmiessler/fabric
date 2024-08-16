@@ -14,10 +14,9 @@
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 </p>
 
-[Introduction Video](#introduction-video) •
 [What and Why](#whatandwhy) •
 [Philosophy](#philosophy) •
-[Quickstart](#quickstart) •
+[Installation](#Installation) •
 [Structure](#structure) •
 [Examples](#examples) •
 [Custom Patterns](#custom-patterns) •
@@ -29,21 +28,13 @@
 
 ## Navigation
 
-- [Introduction Videos](#introduction-videos)
 - [What and Why](#what-and-why)
 - [Philosophy](#philosophy)
   - [Breaking problems into components](#breaking-problems-into-components)
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
-- [Quickstart](#quickstart)
-  - [Setting up the fabric commands](#setting-up-the-fabric-commands)
-  - [Using the fabric client](#using-the-fabric-client)
+- [Installation](#Installation)
   - [Just use the Patterns](#just-use-the-patterns)
-  - [Create your own Fabric Mill](#create-your-own-fabric-mill)
-- [Structure](#structure)
-  - [Components](#components)
-  - [CLI-native](#cli-native)
-  - [Directly calling Patterns](#directly-calling-patterns)
 - [Examples](#examples)
 - [Custom Patterns](#custom-patterns)
 - [Helper Apps](#helper-apps)
@@ -52,34 +43,7 @@
 
 <br />
 
-> [!NOTE]
-> We are adding functionality to the project so often that you should update often as well. That means: `go install github.com/danielmiessler/fabric@latest` in the main directory!
-
-## Introduction videos
-
-> [!NOTE]
-> We have recently migrated to go. If you are migrating for the first time. please run
-
-```
-bash
-
-pipx uninstall fabric
-go install github.com/danielmiessler/fabric@latest
-fabric --setup // THIS IS IMPORTANT AS THERE ARE ELEMENTS OF THE CONFIG THAT HAVE CHANGED
-```
-
-<code>
-
-</code>
-
-<div align="center">
-<a href="https://youtu.be/wPEyyigh10g">
-<img width="972" alt="fabric_intro_video" src="https://github.com/danielmiessler/fabric/assets/50654/1eb1b9be-0bab-4c77-8ed2-ed265e8a3435"></a>
-    <br /><br />
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=lEXd6TXPw7E target="_blank">
- <img src="http://img.youtube.com/vi/lEXd6TXPw7E/mqdefault.jpg" alt="Watch the video" width="972" " />
-</a>
-</div>
+> [!NOTE] August 16, 2024 — We have migrated to Go! The biggest thing to know is that the previous installation instructions in the various Fabric videos out there will no longer work because they were for the legacy (Python) version. Check the new install instructions below.
 
 ## What and why
 
@@ -122,44 +86,13 @@ Fabric has Patterns for all sorts of life and work activities, including:
 - Creating social media posts from any content input
 - And a million more…
 
-### Our approach to prompting
+## Installation
 
-Fabric _Patterns_ are different than most prompts you'll see.
-
-- **First, we use `Markdown` to help ensure maximum readability and editability**. This not only helps the creator make a good one, but also anyone who wants to deeply understand what it does. _Importantly, this also includes the AI you're sending it to!_
-
-Here's an example of a Fabric Pattern.
-
-```bash
-https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
+To install Fabric, make sure Go is installed, and then run the following command.
 ```
-
-<img width="1461" alt="pattern-example" src="https://github.com/danielmiessler/fabric/assets/50654/b910c551-9263-405f-9735-71ca69bbab6d">
-
-- **Next, we are extremely clear in our instructions**, and we use the Markdown structure to emphasize what we want the AI to do, and in what order.
-
-- **And finally, we tend to use the System section of the prompt almost exclusively**. In over a year of being heads-down with this stuff, we've just seen more efficacy from doing that. If that changes, or we're shown data that says otherwise, we will adjust.
-
-## Quickstart
-
-The most feature-rich way to use Fabric is to use the `fabric` client, which can be found under <a href="https://github.com/danielmiessler/fabric/tree/main/client">`/client`</a> directory in this repository.
-
-### Installation
-
-To install Go, visit
-
-https://go.dev/doc/install
-
-```bash
-# Install fabric
-
-go install github.com/danielmiessler/fabric
+go install github.com/danielmiessler/fabric@latest` in the main directory!
+fabric --setup
 ```
-
-> [!NOTE]
-> the gui, the server and all of the helpers have have been migrated to different repositiories. please visit...
-
-### Using the `fabric` client
 
 Once you have it all set up, here's how to use it.
 
@@ -225,9 +158,41 @@ Help Options:
   -h, --help              Show this help message
 ```
 
-#### Example commands
+## Migration from Legacy (Python) Version
 
-The client, by default, runs Fabric patterns without needing a server (the Patterns were downloaded during setup). This means the client connects directly to OpenAI using the input given and the Fabric pattern used.
+If you have the Legacy (Python) version installed and want to migrate to the Go version, here's how you do it. It's basically two steps: 1) uninstall the Python version, and 2) install the Go version.
+
+```
+// Uninstall Legacy Fabric
+pipx uninstall fabric
+
+// Clear any old Fabric aliases
+(check your .bashrc, .zshrc, etc.)
+// Install the Go version
+go install github.com/danielmiessler/fabric@latest
+// Run setup for the new version. Important because things have changed
+fabric --setup 
+```
+
+### Our approach to prompting
+
+Fabric _Patterns_ are different than most prompts you'll see.
+
+- **First, we use `Markdown` to help ensure maximum readability and editability**. This not only helps the creator make a good one, but also anyone who wants to deeply understand what it does. _Importantly, this also includes the AI you're sending it to!_
+
+Here's an example of a Fabric Pattern.
+
+```bash
+https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/system.md
+```
+
+<img width="1461" alt="pattern-example" src="https://github.com/danielmiessler/fabric/assets/50654/b910c551-9263-405f-9735-71ca69bbab6d">
+
+- **Next, we are extremely clear in our instructions**, and we use the Markdown structure to emphasize what we want the AI to do, and in what order.
+
+- **And finally, we tend to use the System section of the prompt almost exclusively**. In over a year of being heads-down with this stuff, we've just seen more efficacy from doing that. If that changes, or we're shown data that says otherwise, we will adjust.
+
+## Examples
 
 1. Run the `summarize` Pattern based on input from `stdin`. In this case, the body of an article.
 
@@ -247,27 +212,9 @@ pbpaste | fabric --stream --pattern analyze_claims
 yt --transcript https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --pattern extract_wisdom
 ```
 
-4. create patterns- you must create a .md file with the pattern and save it to ~/.config/fabric/pattterns/[yourpatternname].
+4. Create patterns- you must create a .md file with the pattern and save it to ~/.config/fabric/pattterns/[yourpatternname].
 
-5. create contexts- you must create a .txt file with the context and then run the following command
-
-```
-bash
-
-fabric --addcontext
-```
-
-6. Sessions- sessions are persistant conversations. You can create a session by running the following command
-
-```
-bash
-
-echo 'my name is ben' | fabric --session ben
-```
-
-7. List
-
-### Just use the Patterns
+## Just use the Patterns
 
 <img width="1173" alt="fabric-patterns-screenshot" src="https://github.com/danielmiessler/fabric/assets/50654/9186a044-652b-4673-89f7-71cf066f32d8">
 
@@ -367,14 +314,13 @@ This feature works with all openai and ollama models but does NOT work with clau
 > [!NOTE]
 > Special thanks to the following people for their inspiration and contributions!
 
-- _Jonathan Dunn_ for all of his help with this project, including this new go verision, as well as the gui
-- _Eugen Eisler_ and _Frederick Ros_ for their invaluable contributions to the Go version
+- _Jonathan Dunn_ for being the absolute MVP dev on the project, including spearheading the new Go version, as well as the GUI! All this while also being a full-time medical doctor!
 - _Caleb Sima_ for pushing me over the edge of whether to make this a public project or not.
+- _Eugen Eisler_ and _Frederick Ros_ for their invaluable contributions to the Go version
 - _Joel Parish_ for super useful input on the project's Github directory structure..
 - _Joseph Thacker_ for the idea of a `-c` context flag that adds pre-created context in the `./config/fabric/` directory to all Pattern queries.
 - _Jason Haddix_ for the idea of a stitch (chained Pattern) to filter content using a local model before sending on to a cloud model, i.e., cleaning customer data using `llama2` before sending on to `gpt-4` for analysis.
-- _Dani Goland_ for enhancing the Fabric Server (Mill) infrastructure by migrating to FastAPI, breaking the server into discrete pieces, and Dockerizing the entire thing.
-- _Andre Guerra_ for simplifying installation by getting us onto Poetry for virtual environment and dependency management.
+- _Andre Guerra_ for assisting with numerous components to make things simpler and more maintainable.
 
 ### Primary contributors
 
