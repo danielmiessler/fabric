@@ -53,7 +53,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           mkdir dist
-          mv fabric-macos-latest-${{ matrix.arch }}-${{ github.ref_name }} dist/fabric
+          cp fabric-macos-latest-${{ matrix.arch }}-${{ github.ref_name }} dist/fabric
           hdiutil create dist/fabric-${{ matrix.arch }}.dmg -volname "fabric" -srcfolder dist/fabric
           mv dist/fabric-${{ matrix.arch }}.dmg fabric-macos-${{ matrix.arch }}-${{ github.ref_name }}.dmg
 
