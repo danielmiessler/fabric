@@ -49,14 +49,6 @@ jobs:
         run: |
           go build -o fabric-${OS}-${{ matrix.arch }}-${{ github.ref_name }} .
 
-      - name: Create DMG for macOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          mkdir dist
-          cp fabric-macos-latest-${{ matrix.arch }}-${{ github.ref_name }} dist/fabric
-          hdiutil create dist/fabric-${{ matrix.arch }}.dmg -volname "fabric" -srcfolder dist/fabric
-          mv dist/fabric-${{ matrix.arch }}.dmg fabric-macos-${{ matrix.arch }}-${{ github.ref_name }}.dmg
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
