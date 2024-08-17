@@ -53,9 +53,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}
-          path: |
-            fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}
-            fabric-macos-${{ matrix.arch }}-${{ github.ref_name }}.dmg
+          path: fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}
 
       - name: Upload release artifact
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
