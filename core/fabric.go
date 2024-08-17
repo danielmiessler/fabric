@@ -106,6 +106,10 @@ func (o *Fabric) Setup() (err error) {
 		return
 	}
 
+	if err = o.YouTube.Setup(); err != nil {
+		return
+	}
+
 	if err = o.PatternsLoader.Setup(); err != nil {
 		return
 	}
