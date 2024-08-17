@@ -14,7 +14,7 @@ func NewYouTube() (ret *YouTube) {
 		EnvNamePrefix: common.BuildEnvVariablePrefix(label),
 	}
 
-	ret.ApiKey = ret.AddSetupQuestion("API key", false)
+	ret.ApiKey = ret.AddSetupQuestion("API key", true)
 
 	return
 }
