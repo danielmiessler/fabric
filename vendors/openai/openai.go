@@ -30,6 +30,7 @@ func NewClientCompatible(vendorName string, configureCustom func() error) (ret *
 	}
 
 	ret.ApiKey = ret.AddSetupQuestion("API key", true)
+	ret.BaseURL = ret.AddSetupQuestion("Base URL", false)
 
 	return
 }
@@ -37,11 +38,17 @@ func NewClientCompatible(vendorName string, configureCustom func() error) (ret *
 type Client struct {
 	*common.Configurable
 	ApiKey    *common.SetupQuestion
+	BaseURL   *common.SetupQuestion
 	ApiClient *openai.Client
 }
 
 func (o *Client) configure() (ret error) {
-	o.ApiClient = openai.NewClient(o.ApiKey.Value)
+	config := openai.DefaultConfig(o.ApiKey.Value)
+	if o.BaseURL.Value != "" {
+		config.BaseURL = o.BaseURL.Value
+	}
+
+	o.ApiClient = openai.NewClientWithConfig(config)
 	return
 }
 
