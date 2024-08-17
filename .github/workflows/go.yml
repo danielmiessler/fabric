@@ -34,13 +34,14 @@ jobs:
       - name: Determine OS Name
         id: os-name
         run: |
-          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
             echo "OS=linux" >> $GITHUB_ENV
-          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
             echo "OS=darwin" >> $GITHUB_ENV
           else
             echo "OS=windows" >> $GITHUB_ENV
           fi
+        shell: bash
 
       - name: Build binary on Linux and macOS
         if: matrix.os != 'windows-latest'
