@@ -52,8 +52,8 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: fabric-*-${{ matrix.arch }}-${{ github.ref_name }}
-          path: fabric-*-${{ matrix.arch }}-${{ github.ref_name }}
+          name: fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}
+          path: fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}
 
       - name: Upload release artifact
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
