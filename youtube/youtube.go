@@ -14,12 +14,12 @@ func NewYouTube() (ret *YouTube) {
 		EnvNamePrefix: common.BuildEnvVariablePrefix(label),
 	}
 
-	ret.ApiKey = ret.AddSetting("ApiKey", false)
+	ret.ApiKey = ret.AddSetupQuestion("API key", false)
 
 	return
 }
 
 type YouTube struct {
 	*common.Configurable
-	ApiKey *common.Setting
+	ApiKey *common.SetupQuestion
 }
