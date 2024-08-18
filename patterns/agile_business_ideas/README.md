@@ -19,8 +19,6 @@ To maintain consistency and ensure high-quality output, the tool follows these s
 - **No Repetitions**: Each idea, fact, or resource is unique; the tool avoids any redundancy in the output.
 - **Diverse Openings**: The tool ensures that each list item begins with different opening words to maintain reader engagement and variety.
 
-## Example Sections
-
 ### EXTRACTED_IDEAS
 This section demonstrates the potential ideas extracted from the input content, showcasing the breadth and diversity of concepts the tool can identify. Each idea represents a distinct approach to business innovation.
 
@@ -30,8 +28,12 @@ Here, the top 10 ideas are further developed through thoughtful pivoting. Each e
 ## Input Format
 The input section allows users to provide content that the tool will analyze to extract and refine business ideas. The input content should be clear and relevant to the areas of interest defined by the tool's purpose.
 
+
+
+
 ### Example
-## INPUT: a new electronic payment system
+
+## INPUT: "a new electronic payment system"
 
 ## Extracted Ideas
 
@@ -117,6 +119,8 @@ The input section allows users to provide content that the tool will analyze to 
 **10. Split Payments Feature:**
 - **Pivot:** Develop an option that automatically divides payments according to pre-set rules, like income percentage or usage metrics.
 - **Differentiator:** This advanced splitting mechanism allows for more precise and fair distribution of costs, ideal for shared subscriptions or group purchases.
+
+
 
 
 
