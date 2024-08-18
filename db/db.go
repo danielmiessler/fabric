@@ -19,8 +19,12 @@ func NewDb(dir string) (db *Db) {
 		SystemPatternFile:      "system.md",
 		UniquePatternsFilePath: db.FilePath("unique_patterns.txt"),
 	}
-	db.Sessions = &Sessions{&Storage{Label: "Sessions", Dir: db.FilePath("sessions")}}
-	db.Contexts = &Contexts{&Storage{Label: "Contexts", Dir: db.FilePath("contexts")}}
+
+	db.Sessions = &Sessions{
+		&Storage{Label: "Sessions", Dir: db.FilePath("sessions"), FileExtension: ".json"}}
+
+	db.Contexts = &Contexts{
+		&Storage{Label: "Contexts", Dir: db.FilePath("contexts")}}
 
 	return
 }

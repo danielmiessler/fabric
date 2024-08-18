@@ -2,14 +2,18 @@ name: Go Build and Release
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
+    tags:
+      - "v*"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
     name: Build binaries for Windows, macOS, and Linux
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -20,39 +24,48 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.22.1'
+          go-version-file: ./go.mod
+
+      - name: Determine OS Name
+        id: os-name
+        run: |
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            echo "OS=linux" >> $GITHUB_ENV
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            echo "OS=darwin" >> $GITHUB_ENV
+          else
+            echo "OS=windows" >> $GITHUB_ENV
+          fi
+        shell: bash
 
       - name: Build binary on Linux and macOS
         if: matrix.os != 'windows-latest'
+        env:
+          GOOS: ${{ env.OS }}
+          GOARCH: ${{ matrix.arch }}
         run: |
-          GOOS=${{ matrix.os == 'ubuntu-latest' && 'linux' || 'darwin' }} \
-          GOARCH=${{ matrix.arch }} \
-          go build -o fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }} .
+          go build -o fabric-${OS}-${{ matrix.arch }}-${{ github.ref_name }} .
 
       - name: Build binary on Windows
         if: matrix.os == 'windows-latest'
+        env:
+          GOOS: windows
+          GOARCH: ${{ matrix.arch }}
         run: |
-          $env:GOOS = 'windows'
-          $env:GOARCH = '${{ matrix.arch }}'
-          go build -o fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }} .
-
-      - name: Create DMG for macOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          mkdir dist
-          mv fabric-macos-latest-${{ matrix.arch }}-${{ github.ref_name }} dist/fabric
-          hdiutil create dist/fabric-${{ matrix.arch }}.dmg -volname "fabric" -srcfolder dist/fabric
-          mv dist/fabric-${{ matrix.arch }}.dmg fabric-macos-${{ matrix.arch }}-${{ github.ref_name }}.dmg
+          go build -o fabric-${OS}-${{ matrix.arch }}-${{ github.ref_name }} .
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}
-          path: |
-            fabric-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}
-            fabric-macos-${{ matrix.arch }}-${{ github.ref_name }}.dmg
+          name: fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}
+          path: fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}
+
+      - name: Upload release artifact
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        run: |
+          gh release upload ${{ github.ref_name }} fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}

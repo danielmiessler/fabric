@@ -2,7 +2,6 @@ package core
 
 import (
 	"fmt"
-
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
 )
@@ -17,13 +16,14 @@ type Chatter struct {
 }
 
 func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (message string, err error) {
+
 	var chatRequest *Chat
 	if chatRequest, err = o.NewChat(request); err != nil {
 		return
 	}
 
-	var messages []*common.Message
-	if messages, err = chatRequest.BuildMessages(); err != nil {
+	var session *db.Session
+	if session, err = chatRequest.BuildChatSession(); err != nil {
 		return
 	}
 
@@ -34,7 +34,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (m
 	if o.Stream {
 		channel := make(chan string)
 		go func() {
-			if streamErr := o.vendor.SendStream(messages, opts, channel); streamErr != nil {
+			if streamErr := o.vendor.SendStream(session.Messages, opts, channel); streamErr != nil {
 				channel <- streamErr.Error()
 			}
 		}()
@@ -44,26 +44,25 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (m
 			fmt.Print(response)
 		}
 	} else {
-		if message, err = o.vendor.Send(messages, opts); err != nil {
+		if message, err = o.vendor.Send(session.Messages, opts); err != nil {
 			return
 		}
 	}
 
 	if chatRequest.Session != nil && message != "" {
-		chatRequest.Session.Append(
-			&common.Message{Role: "system", Content: message},
-			&common.Message{Role: "user", Content: chatRequest.Message})
-		err = chatRequest.Session.Save()
+		chatRequest.Session.Append(&common.Message{Role: "system", Content: message})
+		err = o.db.Sessions.SaveSession(chatRequest.Session)
 	}
 	return
 }
 
 func (o *Chatter) NewChat(request *common.ChatRequest) (ret *Chat, err error) {
+
 	ret = &Chat{}
 
 	if request.ContextName != "" {
 		var ctx *db.Context
-		if ctx, err = o.db.Contexts.LoadContext(request.ContextName); err != nil {
+		if ctx, err = o.db.Contexts.GetContext(request.ContextName); err != nil {
 			err = fmt.Errorf("could not find context %s: %v", request.ContextName, err)
 			return
 		}
@@ -72,7 +71,7 @@ func (o *Chatter) NewChat(request *common.ChatRequest) (ret *Chat, err error) {
 
 	if request.SessionName != "" {
 		var sess *db.Session
-		if sess, err = o.db.Sessions.LoadOrCreateSession(request.SessionName); err != nil {
+		if sess, err = o.db.Sessions.GetOrCreateSession(request.SessionName); err != nil {
 			err = fmt.Errorf("could not find session %s: %v", request.SessionName, err)
 			return
 		}
@@ -81,7 +80,7 @@ func (o *Chatter) NewChat(request *common.ChatRequest) (ret *Chat, err error) {
 
 	if request.PatternName != "" {
 		var pattern *db.Pattern
-		if pattern, err = o.db.Patterns.GetByName(request.PatternName); err != nil {
+		if pattern, err = o.db.Patterns.GetPattern(request.PatternName); err != nil {
 			err = fmt.Errorf("could not find pattern %s: %v", request.PatternName, err)
 			return
 		}

@@ -13,8 +13,8 @@ type Patterns struct {
 	UniquePatternsFilePath string
 }
 
-// GetByName finds a pattern by name and returns the pattern as an entry or an error
-func (o *Patterns) GetByName(name string) (ret *Pattern, err error) {
+// GetPattern finds a pattern by name and returns the pattern as an entry or an error
+func (o *Patterns) GetPattern(name string) (ret *Pattern, err error) {
 	patternPath := filepath.Join(o.Dir, name, o.SystemPatternFile)
 
 	var pattern []byte
@@ -28,7 +28,7 @@ func (o *Patterns) GetByName(name string) (ret *Pattern, err error) {
 	return
 }
 
-func (o *Patterns) LatestPatterns(latestNumber int) (err error) {
+func (o *Patterns) PrintLatestPatterns(latestNumber int) (err error) {
 	var contents []byte
 	if contents, err = os.ReadFile(o.UniquePatternsFilePath); err != nil {
 		err = fmt.Errorf("could not read unique patterns file. Pleas run --updatepatterns (%s)", err)

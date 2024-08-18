@@ -74,7 +74,6 @@ func (an *Client) SendStream(
 			fmt.Printf("Messages stream error: %v\n", err)
 		}
 	} else {
-		// TODO why closing the channel here? It was opened in the parent method, so it should be closed there
 		close(channel)
 	}
 	return
