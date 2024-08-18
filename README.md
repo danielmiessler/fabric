@@ -34,6 +34,8 @@
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
 - [Installation](#Installation)
+  - [Migrating](#Migrating)
+  - [Upgrading](#Upgrading)
 - [Usage](#Usage)
 - [Examples](#examples)
   - [Just use the Patterns](#just-use-the-patterns)
@@ -93,13 +95,34 @@ Fabric has Patterns for all sorts of life and work activities, including:
 
 ## Installation
 
-To install Fabric, make sure Go is installed, and then run the following command.
+To install Fabric, [make sure Go is installed](https://go.dev/doc/install), and then run the following command.
 
 ```bash
 # Install Fabric directly from the repo
 go install github.com/danielmiessler/fabric@latest
 # Run the setup to set up your directories and keys
 fabric --setup
+
+### Migration
+
+If you have the Legacy (Python) version installed and want to migrate to the Go version, here's how you do it. It's basically two steps: 1) uninstall the Python version, and 2) install the Go version.
+
+```bash
+# Uninstall Legacy Fabric
+pipx uninstall fabric
+
+# Clear any old Fabric aliases
+(check your .bashrc, .zshrc, etc.)
+# Install the Go version
+go install github.com/danielmiessler/fabric@latest
+# Run setup for the new version. Important because things have changed
+fabric --setup 
+```
+### Upgrading
+
+The great thing about Go is that it's super easy to upgrade. Just run the same command you used to install it in the first place and you'll always get the latest version.
+```bash
+go install github.com/danielmiessler/fabric@latest
 ```
 
 ## Usage
@@ -165,20 +188,6 @@ Application Options:
 Help Options:
   -h, --help              Show this help message
 ```
-## Migration from Legacy (Python) Version
-
-If you have the Legacy (Python) version installed and want to migrate to the Go version, here's how you do it. It's basically two steps: 1) uninstall the Python version, and 2) install the Go version.
-
-```bash
-# Uninstall Legacy Fabric
-pipx uninstall fabric
-
-# Clear any old Fabric aliases
-(check your .bashrc, .zshrc, etc.)
-# Install the Go version
-go install github.com/danielmiessler/fabric@latest
-# Run setup for the new version. Important because things have changed
-fabric --setup 
 ```
 
 ## Our approach to prompting
