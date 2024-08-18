@@ -30,7 +30,7 @@ Take a deep breath and consider how to accomplish this goal best using the follo
 
 - Provide a reasoning section to explain the correctness of the answer.
 
-- Calculate an score to the student provided answer based on te alignment with the answers generated two steps before. Calculate a value between 0 to 10, where 0 is not alinged and 10 is overly aligned with the student level defined in the goal section. For score >= 5 add the emoji ✅ next to the score. For scores < 5 use add the emoji ❌ next to the socre.
+- Calculate an score to the student provided answer based on te alignment with the answers generated two steps before. Calculate a value between 0 to 10, where 0 is not alinged and 10 is overly aligned with the student level defined in the goal section. For score >= 5 add the emoji ✅ next to the score. For scores < 5 use add the emoji ❌ next to the score.
 
 
 # OUTPUT INSTRUCTIONS
