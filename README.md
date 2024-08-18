@@ -103,6 +103,17 @@ go install github.com/danielmiessler/fabric@latest
 # Run the setup to set up your directories and keys
 fabric --setup
 
+### Environment Variables
+
+If everything works you are good to go, but you may need to set some environment variables in your `~/.bashrc` or `~/.zshrc` file. Here is an example of what you can add:
+
+```bash
+# Golang environment variables
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH:
+```
+
 ### Migration
 
 If you have the Legacy (Python) version installed and want to migrate to the Go version, here's how you do it. It's basically two steps: 1) uninstall the Python version, and 2) install the Go version.
