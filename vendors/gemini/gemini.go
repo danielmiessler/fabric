@@ -3,12 +3,16 @@ package gemini
 import (
 	"context"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
+
+const modelsNamePrefix = "models/"
 
 func NewClient() (ret *Client) {
 	vendorName := "Gemini"
@@ -27,14 +31,12 @@ func NewClient() (ret *Client) {
 type Client struct {
 	*common.Configurable
 	ApiKey *common.SetupQuestion
-
-	client *genai.Client
 }
 
-func (ge *Client) ListModels() (ret []string, err error) {
+func (o *Client) ListModels() (ret []string, err error) {
 	ctx := context.Background()
 	var client *genai.Client
-	if client, err = genai.NewClient(ctx, option.WithAPIKey(ge.ApiKey.Value)); err != nil {
+	if client, err = genai.NewClient(ctx, option.WithAPIKey(o.ApiKey.Value)); err != nil {
 		return
 	}
 	defer client.Close()
@@ -43,56 +45,68 @@ func (ge *Client) ListModels() (ret []string, err error) {
 	for {
 		var resp *genai.ModelInfo
 		if resp, err = iter.Next(); err != nil {
+			if errors.Is(err, iterator.Done) {
+				err = nil
+			}
 			break
 		}
-		ret = append(ret, resp.Name)
+
+		name := o.buildModelNameSimple(resp.Name)
+		ret = append(ret, name)
 	}
 	return
 }
 
-func (ge *Client) Send(msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
-	systemInstruction, userText := toContent(msgs)
+func (o *Client) Send(msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
+	systemInstruction, messages := toMessages(msgs)
 
 	ctx := context.Background()
 	var client *genai.Client
-	if client, err = genai.NewClient(ctx, option.WithAPIKey(ge.ApiKey.Value)); err != nil {
+	if client, err = genai.NewClient(ctx, option.WithAPIKey(o.ApiKey.Value)); err != nil {
 		return
 	}
 	defer client.Close()
 
-	model := ge.client.GenerativeModel(opts.Model)
+	model := client.GenerativeModel(o.buildModelNameFull(opts.Model))
 	model.SetTemperature(float32(opts.Temperature))
 	model.SetTopP(float32(opts.TopP))
 	model.SystemInstruction = systemInstruction
 
 	var response *genai.GenerateContentResponse
-	if response, err = model.GenerateContent(ctx, genai.Text(userText)); err != nil {
+	if response, err = model.GenerateContent(ctx, messages...); err != nil {
 		return
 	}
 
-	ret = ge.extractText(response)
+	ret = o.extractText(response)
 	return
 }
 
-func (ge *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, channel chan string) (err error) {
+func (o *Client) buildModelNameSimple(fullModelName string) string {
+	return strings.TrimPrefix(fullModelName, modelsNamePrefix)
+}
+
+func (o *Client) buildModelNameFull(modelName string) string {
+	return fmt.Sprintf("%v%v", modelsNamePrefix, modelName)
+}
+
+func (o *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, channel chan string) (err error) {
 	ctx := context.Background()
 	var client *genai.Client
-	if client, err = genai.NewClient(ctx, option.WithAPIKey(ge.ApiKey.Value)); err != nil {
+	if client, err = genai.NewClient(ctx, option.WithAPIKey(o.ApiKey.Value)); err != nil {
 		return
 	}
 	defer client.Close()
 
-	systemInstruction, userText := toContent(msgs)
+	systemInstruction, messages := toMessages(msgs)
 
-	model := client.GenerativeModel(opts.Model)
+	model := client.GenerativeModel(o.buildModelNameFull(opts.Model))
 	model.SetTemperature(float32(opts.Temperature))
 	model.SetTopP(float32(opts.TopP))
 	model.SystemInstruction = systemInstruction
 
-	iter := model.GenerateContentStream(ctx, genai.Text(userText))
+	iter := model.GenerateContentStream(ctx, messages...)
 	for {
-		var resp *genai.GenerateContentResponse
-		if resp, err = iter.Next(); err == nil {
+		if resp, iterErr := iter.Next(); iterErr == nil {
 			for _, candidate := range resp.Candidates {
 				if candidate.Content != nil {
 					for _, part := range candidate.Content.Parts {
@@ -102,16 +116,18 @@ func (ge *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, c
 					}
 				}
 			}
-		} else if errors.Is(err, iterator.Done) {
-			channel <- "\n"
+		} else {
+			if !errors.Is(iterErr, iterator.Done) {
+				channel <- fmt.Sprintf("%v\n", iterErr)
+			}
 			close(channel)
-			err = nil
+			break
 		}
-		return
 	}
+	return
 }
 
-func (ge *Client) extractText(response *genai.GenerateContentResponse) (ret string) {
+func (o *Client) extractText(response *genai.GenerateContentResponse) (ret string) {
 	for _, candidate := range response.Candidates {
 		if candidate.Content == nil {
 			break
@@ -125,20 +141,18 @@ func (ge *Client) extractText(response *genai.GenerateContentResponse) (ret stri
 	return
 }
 
-// Current implementation does not support session
-// We need to retrieve the System instruction and User instruction
-// Considering how we've built msgs, it's the last 2 messages
-// FIXME: I know it's not clean, but will make it for now
-func toContent(msgs []*common.Message) (ret *genai.Content, userText string) {
-	sys := msgs[len(msgs)-2]
-	usr := msgs[len(msgs)-1]
-
-	ret = &genai.Content{
-		Parts: []genai.Part{
-			genai.Part(genai.Text(sys.Content)),
-		},
+func toMessages(msgs []*common.Message) (systemInstruction *genai.Content, messages []genai.Part) {
+	if len(msgs) >= 2 {
+		systemInstruction = &genai.Content{
+			Parts: []genai.Part{
+				genai.Text(msgs[0].Content),
+			},
+		}
+		for _, msg := range msgs[1:] {
+			messages = append(messages, genai.Text(msg.Content))
+		}
+	} else {
+		messages = append(messages, genai.Text(msgs[0].Content))
 	}
-	userText = usr.Content
-
 	return
 }

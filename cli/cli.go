@@ -64,7 +64,7 @@ func Cli() (message string, err error) {
 			return
 		}
 
-		if err = db.Patterns.LatestPatterns(parsedToInt); err != nil {
+		if err = db.Patterns.PrintLatestPatterns(parsedToInt); err != nil {
 			return
 		}
 		return
