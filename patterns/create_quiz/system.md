@@ -20,7 +20,7 @@ Take a deep breath and consider how to accomplish this goal best using the follo
 
 - Extract the learning objectives of the input section.
 
-- Generate, upmost, three review questions for each learning objective. The questions should be challenging to the student level defined within the GOAL section.
+- Generate, at most, three review questions for each learning objective. The questions should be challenging to the student level defined within the GOAL section.
 
 
 # OUTPUT INSTRUCTIONS
