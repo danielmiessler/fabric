@@ -127,8 +127,20 @@ pipx uninstall fabric
 # Install the Go version
 go install github.com/danielmiessler/fabric@latest
 # Run setup for the new version. Important because things have changed
-fabric --setup 
+fabric --setup
 ```
+
+### Environment Variables
+
+If everything works you are good to go, but you may need to set some environment variables in your `~/.bashrc` or `~/.zshrc` file. Here is an example of what you can add:
+
+```bash
+# Golang environment variables
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH:
+```
+
 ### Upgrading
 
 The great thing about Go is that it's super easy to upgrade. Just run the same command you used to install it in the first place and you'll always get the latest version.
