@@ -160,7 +160,7 @@ func (o *Fabric) SetupVendors() (err error) {
 			fmt.Printf("[%v] configured\n", vendor.GetName())
 			o.AddVendors(vendor)
 		} else {
-			fmt.Printf("[%v] skiped\n", vendor.GetName())
+			fmt.Printf("[%v] skipped\n", vendor.GetName())
 		}
 	}
 
