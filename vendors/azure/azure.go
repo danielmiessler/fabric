@@ -10,9 +10,7 @@ import (
 
 func NewClient() (ret *Client) {
 	ret = &Client{}
-	ret.Client = openai.NewClientCompatible("Azure", ret.configure)
-
-	ret.ApiEndpoint = ret.AddSetupQuestion("API endpoint", true)
+	ret.Client = openai.NewClientCompatible("Azure", "", ret.configure)
 	ret.ApiDeployments = ret.AddSetupQuestionCustom("deployments", true,
 		"Enter your Azure deployments (comma separated)")
 
@@ -21,7 +19,6 @@ func NewClient() (ret *Client) {
 
 type Client struct {
 	*openai.Client
-	ApiEndpoint    *common.SetupQuestion
 	ApiDeployments *common.SetupQuestion
 
 	apiDeployments []string
@@ -29,7 +26,7 @@ type Client struct {
 
 func (oi *Client) configure() (err error) {
 	oi.apiDeployments = strings.Split(oi.ApiDeployments.Value, ",")
-	oi.ApiClient = goopenai.NewClientWithConfig(goopenai.DefaultAzureConfig(oi.ApiKey.Value, oi.ApiEndpoint.Value))
+	oi.ApiClient = goopenai.NewClientWithConfig(goopenai.DefaultAzureConfig(oi.ApiKey.Value, oi.ApiBaseURL.Value))
 	return
 }
 
