@@ -253,7 +253,7 @@ pbpaste | fabric --stream --pattern analyze_claims
 yt --transcript https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --pattern extract_wisdom
 ```
 
-4. Create patterns- you must create a .md file with the pattern and save it to ~/.config/fabric/pattterns/[yourpatternname].
+4. Create patterns- you must create a .md file with the pattern and save it to ~/.config/fabric/patterns/[yourpatternname].
 
 ## Just use the Patterns
 
