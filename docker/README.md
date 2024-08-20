@@ -30,6 +30,17 @@ Replace < --network traefik > with a desired name for your docker `network`. I h
 
  Docker should create a network for you automatically. The container will be detached and run in the background (with the -d flag). Container will be named as `fabric`. The volume mount is used to share the config folder with the container. This will be useful when you want to add your own `.env` file or save container files/folders such as `pattern`. The `-i` flag keeps the container open for interactive commands. The `-t` flag allocates a `pseudo-tty` to the container. `--rm` flag removes the container when it exits.
 
+ ### Getting inside the Container:
+
+ Once the container is up and running, you need to get into the container and update the `patterns` by:
+ ```
+ docker exec -it fabric /bin/bash
+
+Then run:
+ ad6796740b6c:/go$ fabric --updatepatterns
+ ```
+
+
  #### Docker Compose:
 
  I have provided a `docker-compose.yml` file as well. You can use it to run the container using `docker compose up`.
@@ -38,10 +49,10 @@ Replace < --network traefik > with a desired name for your docker `network`. I h
 
 To check if the container is running, use the command: 
 
-`$ docker ps.`
+`$ docker ps`
 
 To stop the container, use the command: `$ docker stop fabric`.
 
 To remove the container and its associated resources, use the command: 
 
-`$ docker rm fabric.`
+`$ docker rm fabric`
