@@ -185,7 +185,8 @@ func (o *Fabric) configure() (err error) {
 		return
 	}
 
-	err = o.YouTube.Configure()
+	//YouTube is not mandatory, so ignore not configured error
+	_ = o.YouTube.Configure()
 
 	return
 }
