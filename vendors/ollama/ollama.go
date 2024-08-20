@@ -43,7 +43,7 @@ func (o *Client) configure() (err error) {
 		return
 	}
 
-	o.client = ollamaapi.NewClient(o.apiUrl, &http.Client{Timeout: 10000 * time.Millisecond})
+	o.client = ollamaapi.NewClient(o.apiUrl, &http.Client{Timeout: 1200000 * time.Millisecond})
 	return
 }
 

@@ -106,8 +106,8 @@ func (o *Fabric) Setup() (err error) {
 		return
 	}
 
-	if err = o.YouTube.Setup(); err != nil {
-		return
+	if youtubeErr := o.YouTube.Setup(); youtubeErr != nil {
+		fmt.Printf("[%v] skipped\n", o.YouTube.GetName())
 	}
 
 	if err = o.PatternsLoader.Setup(); err != nil {
@@ -160,7 +160,7 @@ func (o *Fabric) SetupVendors() (err error) {
 			fmt.Printf("[%v] configured\n", vendor.GetName())
 			o.AddVendors(vendor)
 		} else {
-			fmt.Printf("[%v] skiped\n", vendor.GetName())
+			fmt.Printf("[%v] skipped\n", vendor.GetName())
 		}
 	}
 
@@ -185,7 +185,8 @@ func (o *Fabric) configure() (err error) {
 		return
 	}
 
-	err = o.YouTube.Configure()
+	//YouTube is not mandatory, so ignore not configured error
+	_ = o.YouTube.Configure()
 
 	return
 }

@@ -47,10 +47,16 @@
 <br />
 
 > [!NOTE] 
-August 16, 2024 — We have migrated to Go! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](Installation) below.
+August 206, 2024 — We have migrated to Go, and the transition has been pretty smooth! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](#Installation) below.
 
-> [!NOTE] 
-August 16, 2024 — We have cleaned up the Pull Requests and Issues in the following ways as part of the Go release: 1) We incorporated all Pattern submissions in the new version. 2) We closed all Issues related to Python/Code because we we moved to Go. If your issue still persists, just resubmit and we'll get on it. 3) We did the same with Question issues because most of them were related to Python. 4) We left the Enhancement issues because those tend to not relate as much to Python vs. Go, and we'll be working through those.
+## Intro videos
+
+Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#Installation) below.
+
+* [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
+* [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
+* [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
+* [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
 
 ## What and why
 
@@ -132,16 +138,7 @@ go install github.com/danielmiessler/fabric@latest
 fabric --setup
 ```
 
-### Environment Variables
-
-If everything works you are good to go, but you may need to set some environment variables in your `~/.bashrc` or `~/.zshrc` file. Here is an example of what you can add:
-
-```bash
-# Golang environment variables
-export GOROOT=/usr/local/go
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH:
-```
+Then [set your environmental variables](#environmental-variables) as shown above.
 
 ### Upgrading
 
@@ -153,8 +150,9 @@ go install github.com/danielmiessler/fabric@latest
 ## Usage
 Once you have it all set up, here's how to use it.
 
-1. Check out the options
-   `fabric -h`
+```bash
+fabric -h
+```
 
 ```bash
 usage: fabric -h
@@ -185,34 +183,6 @@ Application Options:
 Help Options:
   -h, --help              Show this help message
 
-Usage:
-  fabric [OPTIONS]
-
-Application Options:
-  -p, --pattern=          Choose a pattern
-  -C, --context=          Choose a context
-      --session=          Choose a session
-  -S, --setup             Run setup
-  -t, --temperature=      Set temperature (default: 0.7)
-  -T, --topp=             Set top P (default: 0.9)
-  -s, --stream            Stream
-  -P, --presencepenalty=  Set presence penalty (default: 0.0)
-  -F, --frequencypenalty= Set frequency penalty (default: 0.0)
-  -l, --listpatterns      List all patterns
-  -L, --listmodels        List all available models
-  -x, --listcontexts      List all contexts
-  -X, --listsessions      List all sessions
-  -U, --updatepatterns    Update patterns
-  -A, --addcontext        Add a context
-  -c, --copy              Copy to clipboard
-  -m, --model=            Choose model
-  -u, --url=              Choose ollama url (default: http://127.0.0.1:11434)
-  -o, --output=           Output to file
-  -n, --latest=           Number of latest patterns to list (default: 0)
-
-Help Options:
-  -h, --help              Show this help message
-```
 ```
 
 ## Our approach to prompting
@@ -235,6 +205,8 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 ## Examples
 
+Now let's look at some things you can do with Fabric.
+
 1. Run the `summarize` Pattern based on input from `stdin`. In this case, the body of an article.
 
 ```bash
@@ -253,7 +225,7 @@ pbpaste | fabric --stream --pattern analyze_claims
 yt --transcript https://youtube.com/watch?v=uXs-zPc63kM | fabric --stream --pattern extract_wisdom
 ```
 
-4. Create patterns- you must create a .md file with the pattern and save it to ~/.config/fabric/pattterns/[yourpatternname].
+4. Create patterns- you must create a .md file with the pattern and save it to ~/.config/fabric/patterns/[yourpatternname].
 
 ## Just use the Patterns
 
