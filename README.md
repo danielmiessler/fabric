@@ -47,7 +47,7 @@
 <br />
 
 > [!NOTE] 
-August 16, 2024 — We have migrated to Go! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](Installation) below.
+August 16, 2024 — We have migrated to Go! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](#Installation) below.
 
 > [!NOTE] 
 August 16, 2024 — We have cleaned up the Pull Requests and Issues in the following ways as part of the Go release: 1) We incorporated all Pattern submissions in the new version. 2) We closed all Issues related to Python/Code because we we moved to Go. If your issue still persists, just resubmit and we'll get on it. 3) We did the same with Question issues because most of them were related to Python. 4) We left the Enhancement issues because those tend to not relate as much to Python vs. Go, and we'll be working through those.
@@ -132,16 +132,7 @@ go install github.com/danielmiessler/fabric@latest
 fabric --setup
 ```
 
-### Environment Variables
-
-If everything works you are good to go, but you may need to set some environment variables in your `~/.bashrc` or `~/.zshrc` file. Here is an example of what you can add:
-
-```bash
-# Golang environment variables
-export GOROOT=/usr/local/go
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH:
-```
+Then [set your environmental variables](#environmental-variables) as shown above.
 
 ### Upgrading
 
@@ -212,7 +203,6 @@ Application Options:
 
 Help Options:
   -h, --help              Show this help message
-```
 ```
 
 ## Our approach to prompting
