@@ -183,33 +183,6 @@ Application Options:
 Help Options:
   -h, --help              Show this help message
 
-Usage:
-  fabric [OPTIONS]
-
-Application Options:
-  -p, --pattern=          Choose a pattern
-  -C, --context=          Choose a context
-      --session=          Choose a session
-  -S, --setup             Run setup
-  -t, --temperature=      Set temperature (default: 0.7)
-  -T, --topp=             Set top P (default: 0.9)
-  -s, --stream            Stream
-  -P, --presencepenalty=  Set presence penalty (default: 0.0)
-  -F, --frequencypenalty= Set frequency penalty (default: 0.0)
-  -l, --listpatterns      List all patterns
-  -L, --listmodels        List all available models
-  -x, --listcontexts      List all contexts
-  -X, --listsessions      List all sessions
-  -U, --updatepatterns    Update patterns
-  -A, --addcontext        Add a context
-  -c, --copy              Copy to clipboard
-  -m, --model=            Choose model
-  -u, --url=              Choose ollama url (default: http://127.0.0.1:11434)
-  -o, --output=           Output to file
-  -n, --latest=           Number of latest patterns to list (default: 0)
-
-Help Options:
-  -h, --help              Show this help message
 ```
 
 ## Our approach to prompting
