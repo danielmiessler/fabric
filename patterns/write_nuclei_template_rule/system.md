@@ -1708,7 +1708,7 @@ log(uniq.Values())
 ```
 And that’s it, this automatically converts any slice/array to map and removes duplicates from it and returns a slice/array of unique values
 
-Similar to DSL helper functions . we can either use built in functions available with Javscript (ECMAScript 5.1) or use DSL helper functions and its upto user to decide which one to uses.
+Similar to DSL helper functions . we can either use built in functions available with Javascript (ECMAScript 5.1) or use DSL helper functions and its upto user to decide which one to uses.
 
 ```
  - method: GET # http request
@@ -1733,7 +1733,7 @@ Important Matcher Rules:
 - Just like the XSS templates SSRF template also results in False Positives so make sure to add additional matcher from the response to the template. We have seen honeypots sending request to any URL they may receive in GET/POST data which will result in FP if we are just using the HTTP/DNS interactsh matcher.
 - For Time-based SQL Injection templates, if we must have to add duration dsl for the detection, make sure to add additional string from the vulnerable endpoint to avoid any FP that can be due to network error.
 
-Make sure there are no yaml erros in a valid nuclei templates like the following
+Make sure there are no yaml errors in a valid nuclei templates like the following
 
 - trailing spaces
 - wrong indentation errosr like: expected 10 but found 9
