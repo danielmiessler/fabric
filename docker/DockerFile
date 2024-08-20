@@ -1,0 +1,20 @@
+FROM golang:1.22.5-alpine3.20
+
+# Install required packages
+RUN apk add --no-cache git ffmpeg util-linux sudo bash
+
+# Create a non-root user
+RUN adduser -D appuser && echo "appuser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/appuser \
+    && chmod 0440 /etc/sudoers.d/appuser
+
+# Use a least privileged user
+USER appuser
+
+# Install YouTube transcription tool
+RUN go install github.com/danielmiessler/yt@latest
+
+# Install fabric with go install command
+RUN go install github.com/danielmiessler/fabric@latest
+
+# Set the entrypoint to run the fabric command directly within the container
+ENTRYPOINT ["/bin/bash"]

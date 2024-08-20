@@ -1,0 +1,110 @@
+services:
+
+# uncomment if deploying ollama, open-webui, searxng using docker with Fabric. 
+# Please make sure you have traefik installed and working
+
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: ollama
+  #   restart: unless-stopped
+  #   environment:
+  #     - PUID=${PUID:-1000}
+  #     - PGID=${PGID:-1000}
+  #     - OLLAMA_KEEP_ALIVE=24h
+  #     - ENABLE_IMAGE_GENERATION=True
+  #     - COMFYUI_BASE_URL=http://stable-diffusion-webui:7860
+  #   networks:
+  #     - traefik
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - /etc/timezone:/etc/timezone:ro
+  #     - ./ollama:/root/.ollama
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.ollama.rule=Host(`ollama.local.example.com`)"
+  #     - "traefik.http.routers.ollama.entrypoints=https"
+  #     - "traefik.http.routers.ollama.tls=true"
+  #     - "traefik.http.routers.ollama.tls.certresolver=cloudflare"
+  #     - "traefik.http.routers.ollama.middlewares=default-headers@file"
+  #     - "traefik.http.routers.ollama.middlewares=ollama-auth"
+  #     - "traefik.http.services.ollama.loadbalancer.server.port=11434"
+  #     - "traefik.http.routers.ollama.middlewares=auth"
+  #     - "traefik.http.middlewares.auth.basicauth.users=${OLLAMA_API_CREDENTIALS}"
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
+
+# open web ui
+
+  # open-webui:
+  #   image: ghcr.io/open-webui/open-webui:latest
+  #   container_name: open-webui
+  #   restart: unless-stopped
+  #   networks:
+  #     - traefik
+  #   environment:
+  #     - PUID=${PUID:-1000}
+  #     - PGID=${PGID:-1000}
+  #     - 'OLLAMA_BASE_URL=http://ollama:11434'
+  #     - ENABLE_RAG_WEB_SEARCH=True
+  #     - RAG_WEB_SEARCH_ENGINE=searxng
+  #     - RAG_WEB_SEARCH_RESULT_COUNT=3
+  #     - RAG_WEB_SEARCH_CONCURRENT_REQUESTS=10
+  #     - SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - /etc/timezone:/etc/timezone:ro
+  #     - ./open-webui:/app/backend/data
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.open-webui.rule=Host(`chat.local.example.com`)"
+  #     - "traefik.http.routers.open-webui.entrypoints=https"
+  #     - "traefik.http.routers.open-webui.tls=true"
+  #     - "traefik.http.routers.open-webui.tls.certresolver=cloudflare"
+  #     - "traefik.http.routers.open-webui.middlewares=default-headers@file"
+  #     - "traefik.http.services.open-webui.loadbalancer.server.port=8080"
+  #   depends_on:
+  #     - ollama
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
+
+  # searxng:
+  #   image: searxng/searxng:latest
+  #   container_name: searxng
+  #   networks:
+  #     - traefik
+  #   environment:
+  #     - PUID=${PUID:-1000}
+  #     - PGID=${PGID:-1000}
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - /etc/timezone:/etc/timezone:ro
+  #     - ./searxng:/etc/searxng
+  #   depends_on:
+  #     - ollama
+  #     - open-webui
+  #   restart: unless-stopped
+
+# Fabric
+
+  fabric:
+    build: ./fabric
+    image: fabric
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./fabric:/home/appuser/.config/fabric
+    # depends_on:
+    #   - ollama
+    #   - open-webui
+    tty: true
+    restart: unless-stopped
+    networks:
+      - traefik
