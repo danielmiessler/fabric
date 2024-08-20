@@ -47,10 +47,16 @@
 <br />
 
 > [!NOTE] 
-August 16, 2024 — We have migrated to Go! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](#Installation) below.
+August 206, 2024 — We have migrated to Go, and the transition has been pretty smooth! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](#Installation) below.
 
-> [!NOTE] 
-August 16, 2024 — We have cleaned up the Pull Requests and Issues in the following ways as part of the Go release: 1) We incorporated all Pattern submissions in the new version. 2) We closed all Issues related to Python/Code because we we moved to Go. If your issue still persists, just resubmit and we'll get on it. 3) We did the same with Question issues because most of them were related to Python. 4) We left the Enhancement issues because those tend to not relate as much to Python vs. Go, and we'll be working through those.
+## Intro videos
+
+Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#Installation) below.
+
+* [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
+* [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
+* [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
+* [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
 
 ## What and why
 
@@ -144,8 +150,9 @@ go install github.com/danielmiessler/fabric@latest
 ## Usage
 Once you have it all set up, here's how to use it.
 
-1. Check out the options
-   `fabric -h`
+```bash
+fabric -h
+```
 
 ```bash
 usage: fabric -h
@@ -224,6 +231,8 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 - **And finally, we tend to use the System section of the prompt almost exclusively**. In over a year of being heads-down with this stuff, we've just seen more efficacy from doing that. If that changes, or we're shown data that says otherwise, we will adjust.
 
 ## Examples
+
+Now let's look at some things you can do with Fabric.
 
 1. Run the `summarize` Pattern based on input from `stdin`. In this case, the body of an article.
 
