@@ -97,9 +97,9 @@ func Cli() (message string, err error) {
 
 	// Check for ScrapeURL flag first
 	if currentFlags.ScrapeURL != "" {
-		fmt.Println("ScrapeURL flag is set") // Debug print
 		url := currentFlags.ScrapeURL
 		curlCommand := fmt.Sprintf("curl https://r.jina.ai/%s", url)
+		fmt.Println("Executing command:", curlCommand) // Debug print
 		if err := exec.Command("sh", "-c", curlCommand).Run(); err != nil {
 			return "", fmt.Errorf("failed to run curl command: %w", err)
 		}
