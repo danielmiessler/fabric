@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strconv"
 
@@ -92,6 +93,21 @@ func Cli() (message string, err error) {
 	if currentFlags.ListAllSessions {
 		err = db.Sessions.ListNames()
 		return
+	}
+
+	// Check for ScrapeURL flag first
+	if currentFlags.ScrapeURL != "" {
+		fmt.Println("ScrapeURL flag is set") // Debug print
+		url := currentFlags.ScrapeURL
+		curlCommand := fmt.Sprintf("curl https://r.jina.ai/%s", url)
+		fmt.Println("Executing command:", curlCommand) // Debug print
+		if err := exec.Command("sh", "-c", curlCommand).Run(); err != nil {
+			return "", fmt.Errorf("failed to run curl command: %w", err)
+		}
+		fmt.Println("Curl command executed successfully") // Debug print
+		os.Exit(0)
+	} else {
+		fmt.Println("ScrapeURL flag is not set") // Debug print
 	}
 
 	// if the interactive flag is set, run the interactive function
