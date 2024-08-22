@@ -9,7 +9,7 @@ import (
 	"github.com/danielmiessler/fabric/vendors/anthropic"
 	"github.com/danielmiessler/fabric/vendors/azure"
 	"github.com/danielmiessler/fabric/vendors/gemini"
-	"github.com/danielmiessler/fabric/vendors/grocq"
+	"github.com/danielmiessler/fabric/vendors/groc"
 	"github.com/danielmiessler/fabric/vendors/ollama"
 	"github.com/danielmiessler/fabric/vendors/openai"
 	"github.com/danielmiessler/fabric/youtube"
@@ -56,7 +56,7 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 	ret.DefaultModel = ret.AddSetupQuestionCustom("Model", true,
 		"Enter the index the name of your default model")
 
-	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), grocq.NewClient(),
+	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groc.NewClient(),
 		gemini.NewClient(), anthropic.NewClient())
 
 	return
