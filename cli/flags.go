@@ -34,6 +34,9 @@ type Flags struct {
 	Output                  string  `short:"o" long:"output" description:"Output to file" default:""`
 	LatestPatterns          string  `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
 	ChangeDefaultModel      bool    `short:"d" long:"changeDefaultModel" description:"Change default pattern"`
+	YouTube                 string  `short:"y" long:"youtube" description:"YouTube video url to grab transcript, comments from it and send to chat"`
+	YouTubeTranscript       bool    `long:"transcript" description:"Grab transcript from YouTube video and send to chat"`
+	YouTubeComments         bool    `long:"comments" description:"Grab comments from YouTube video and send to chat"`
 }
 
 // Init Initialize flags. returns a Flags struct and an error
