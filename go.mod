@@ -18,7 +18,6 @@ require (
 	github.com/sashabaranov/go-openai v1.28.2
 	github.com/stretchr/testify v1.9.0
 	google.golang.org/api v0.192.0
-	gopkg.in/gookit/color.v1 v1.1.6
 )
 
 require (
