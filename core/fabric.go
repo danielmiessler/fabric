@@ -85,13 +85,13 @@ func (o *Fabric) SaveEnvFile() (err error) {
 	var envFileContent bytes.Buffer
 
 	o.Settings.FillEnvFileContent(&envFileContent)
-	o.PatternsLoader.FillEnvFileContent(&envFileContent)
+	o.PatternsLoader.SetupFillEnvFileContent(&envFileContent)
 
 	for _, vendor := range o.Vendors {
-		vendor.GetSettings().FillEnvFileContent(&envFileContent)
+		vendor.SetupFillEnvFileContent(&envFileContent)
 	}
 
-	o.YouTube.FillEnvFileContent(&envFileContent)
+	o.YouTube.SetupFillEnvFileContent(&envFileContent)
 
 	err = o.Db.SaveEnv(envFileContent.String())
 	return
