@@ -16,7 +16,7 @@ func TestConfigurable_AddSetting(t *testing.T) {
 	}
 
 	setting := conf.AddSetting("test_setting", true)
-	assert.Equal(t, "TEST_test_setting", setting.EnvVariable)
+	assert.Equal(t, "TEST_TEST_SETTING", setting.EnvVariable)
 	assert.True(t, setting.Required)
 	assert.Contains(t, conf.Settings, setting)
 }
@@ -31,7 +31,7 @@ func TestConfigurable_Configure(t *testing.T) {
 		Label:    "TestConfigurable",
 	}
 
-	os.Setenv("TEST_SETTING", "test_value")
+	_ = os.Setenv("TEST_SETTING", "test_value")
 	err := conf.Configure()
 	assert.NoError(t, err)
 	assert.Equal(t, "test_value", setting.Value)
@@ -65,7 +65,7 @@ func TestSetting_IsValid(t *testing.T) {
 }
 
 func TestSetting_Configure(t *testing.T) {
-	os.Setenv("TEST_SETTING", "test_value")
+	_ = os.Setenv("TEST_SETTING", "test_value")
 	setting := &Setting{
 		EnvVariable: "TEST_SETTING",
 		Required:    true,
@@ -129,7 +129,7 @@ func TestSettings_IsConfigured(t *testing.T) {
 }
 
 func TestSettings_Configure(t *testing.T) {
-	os.Setenv("TEST_SETTING", "test_value")
+	_ = os.Setenv("TEST_SETTING", "test_value")
 	settings := Settings{
 		{EnvVariable: "TEST_SETTING", Required: true},
 	}
@@ -159,7 +159,7 @@ func captureOutput(f func()) string {
 	f()
 	_ = w.Close()
 	os.Stdout = stdout
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 	return buf.String()
 }
 
@@ -167,7 +167,7 @@ func captureOutput(f func()) string {
 func captureInput(input string) func() {
 	r, w, _ := os.Pipe()
 	_, _ = w.WriteString(input)
-	w.Close()
+	_ = w.Close()
 	stdin := os.Stdin
 	os.Stdin = r
 	return func() {
