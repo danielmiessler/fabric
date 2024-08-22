@@ -3,29 +3,29 @@ package core
 import (
 	"context"
 	"fmt"
-	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/vendors"
 	"sync"
 )
 
 func NewVendorsManager() *VendorsManager {
 	return &VendorsManager{
-		Vendors: map[string]common.Vendor{},
+		Vendors: map[string]vendors.Vendor{},
 	}
 }
 
 type VendorsManager struct {
-	Vendors map[string]common.Vendor
+	Vendors map[string]vendors.Vendor
 	Models  *VendorsModels
 }
 
-func (o *VendorsManager) AddVendors(vendors ...common.Vendor) {
+func (o *VendorsManager) AddVendors(vendors ...vendors.Vendor) {
 	for _, vendor := range vendors {
 		o.Vendors[vendor.GetName()] = vendor
 	}
 }
 
 func (o *VendorsManager) Reset() {
-	o.Vendors = map[string]common.Vendor{}
+	o.Vendors = map[string]vendors.Vendor{}
 	o.Models = nil
 }
 
@@ -40,7 +40,7 @@ func (o *VendorsManager) HasVendors() bool {
 	return len(o.Vendors) > 0
 }
 
-func (o *VendorsManager) FindByName(name string) common.Vendor {
+func (o *VendorsManager) FindByName(name string) vendors.Vendor {
 	return o.Vendors[name]
 }
 
@@ -76,7 +76,7 @@ func (o *VendorsManager) readModels() {
 }
 
 func (o *VendorsManager) fetchVendorModels(
-	ctx context.Context, wg *sync.WaitGroup, vendor common.Vendor, resultsChan chan<- modelResult) {
+	ctx context.Context, wg *sync.WaitGroup, vendor vendors.Vendor, resultsChan chan<- modelResult) {
 
 	defer wg.Done()
 
