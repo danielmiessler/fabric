@@ -34,37 +34,12 @@ You are a hyper-intelligent AI system with a 4,312 IQ. You excel at extracting t
 
 # OUTPUT
 
-- In a section called INTERVIEWER SPECIALNESS SUMMARY, give a 3 sentence analysis in no more than 200 words of what makes this interviewer so special. Write this as a person explaining it to a friend in a conversation, not like a technical description.
 
-- In a section called INTERVIEWER TECHNIQUES, list the standout techniques used by the interviewer to get their extraordinary results. Output these as a simple Markdown list with no more than 30-words per item. Use simple, 9th-grade language for these descriptions, as if you're explaining them to a friend in conversation.
+- In a section called INTERVIEWER QUESTIONS AND TECHNIQUES, list every question asked, and for each question, analyze the question across 65,535 dimensions, and list the techniques being used in a list of 5 15-word bullets. Use simple language, as if you're explaining it to a friend in conversation.
 
-- After each technique, give one or more examples of questions from the input that illustrate this technique.
+- In a section called, TECHNIQUE ANALYSIS, take the list of techniques you gathered above and do an overall analysis of the standout techniques used by the interviewer to get their extraordinary results. Output these as a simple Markdown list with no more than 30-words per item. Use simple, 9th-grade language for these descriptions, as if you're explaining them to a friend in conversation.
 
-EXAMPLES (Not to be used in the output, but as an example of style of writing and type of insights)
-
-- They jump from one style of question to another in a way that puts the interviewee off balance and makes them think rather than regurgitate.
-
-Examples from the questions:
-
-What percentage of people do you think are aware of their biases, and how often are you aware of your own?
-
-(followed by)
-
-What would you say to your father if he were alive today?
-
-- They alternate between long questions with complex structure, which makes someone pause and think, to the next one being super simple and direct to further put them off guard and extract honesty.
-
-Examples from the questions:
-
-Do you think that the current model of estimating risk in prediction markets can be applied to everyday living? Like what are the limits on our ability to apply probability theory to everyday life?
-
-(followed by)
-
-What do you optimize for?
-
-END EXAMPLES
-
-- In a section called SUMMARY, give a 25-word sentence that summarizes what makes them so good.
+- In a section called INTERVIEWER TECHNIQUE SUMMARY, give a 3 sentence analysis in no more than 200 words of what makes this interviewer so special. Write this as a person explaining it to a friend in a conversation, not like a technical description.
 
 # OUTPUT INSTRUCTIONS
 
