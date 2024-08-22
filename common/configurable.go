@@ -67,6 +67,13 @@ func (o *Configurable) Setup() (err error) {
 	return
 }
 
+func (o *Configurable) SetupOrSkip() (err error) {
+	if err = o.Setup(); err != nil {
+		fmt.Printf("[%v] skipped\n", o.GetName())
+	}
+	return
+}
+
 func NewSetting(envVariable string, required bool) *Setting {
 	return &Setting{
 		EnvVariable: envVariable,

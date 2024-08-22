@@ -106,9 +106,7 @@ func (o *Fabric) Setup() (err error) {
 		return
 	}
 
-	if youtubeErr := o.YouTube.Setup(); youtubeErr != nil {
-		fmt.Printf("[%v] skipped\n", o.YouTube.GetName())
-	}
+	_ = o.YouTube.SetupOrSkip()
 
 	if err = o.PatternsLoader.Setup(); err != nil {
 		return
@@ -152,16 +150,9 @@ func (o *Fabric) SetupDefaultModel() (err error) {
 }
 
 func (o *Fabric) SetupVendors() (err error) {
-	o.Reset()
-
-	for _, vendor := range o.VendorsAll.Vendors {
-		fmt.Println()
-		if vendorErr := vendor.Setup(); vendorErr == nil {
-			fmt.Printf("[%v] configured\n", vendor.GetName())
-			o.AddVendors(vendor)
-		} else {
-			fmt.Printf("[%v] skipped\n", vendor.GetName())
-		}
+	o.Models = nil
+	if o.Vendors, err = o.VendorsAll.Setup(); err != nil {
+		return
 	}
 
 	if !o.HasVendors() {

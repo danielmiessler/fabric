@@ -24,11 +24,6 @@ func (o *VendorsManager) AddVendors(vendors ...vendors.Vendor) {
 	}
 }
 
-func (o *VendorsManager) Reset() {
-	o.Vendors = map[string]vendors.Vendor{}
-	o.Models = nil
-}
-
 func (o *VendorsManager) GetModels() *VendorsModels {
 	if o.Models == nil {
 		o.readModels()
@@ -88,6 +83,20 @@ func (o *VendorsManager) fetchVendorModels(
 	case resultsChan <- modelResult{vendorName: vendor.GetName(), models: models, err: err}:
 		// Result sent
 	}
+}
+
+func (o *VendorsManager) Setup() (ret map[string]vendors.Vendor, err error) {
+	ret = map[string]vendors.Vendor{}
+	for _, vendor := range o.Vendors {
+		fmt.Println()
+		if vendorErr := vendor.Setup(); vendorErr == nil {
+			fmt.Printf("[%v] configured\n", vendor.GetName())
+			ret[vendor.GetName()] = vendor
+		} else {
+			fmt.Printf("[%v] skipped\n", vendor.GetName())
+		}
+	}
+	return
 }
 
 type modelResult struct {
