@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/danielmiessler/fabric/core"
 	"github.com/danielmiessler/fabric/db"
@@ -100,6 +101,46 @@ func Cli() (message string, err error) {
 	// }
 
 	// if none of the above currentFlags are set, run the initiate chat function
+
+	if currentFlags.YouTube != "" {
+		if fabric.YouTube.IsConfigured() == false {
+			err = fmt.Errorf("YouTube is not configured, please run the setup procedure")
+			return
+		}
+
+		var videoId string
+		if videoId, err = fabric.YouTube.GetVideoId(currentFlags.YouTube); err != nil {
+			return
+		}
+
+		if currentFlags.YouTubeTranscript {
+			var transcript string
+			if transcript, err = fabric.YouTube.GrabTranscript(videoId); err != nil {
+				return
+			}
+
+			if currentFlags.Message != "" {
+				currentFlags.Message = currentFlags.Message + "\n" + transcript
+			} else {
+				currentFlags.Message = transcript
+			}
+		}
+
+		if currentFlags.YouTubeComments {
+			var comments []string
+			if comments, err = fabric.YouTube.GrabComments(videoId); err != nil {
+				return
+			}
+
+			commentsString := strings.Join(comments, "\n")
+
+			if currentFlags.Message != "" {
+				currentFlags.Message = currentFlags.Message + "\n" + commentsString
+			} else {
+				currentFlags.Message = commentsString
+			}
+		}
+	}
 
 	var chatter *core.Chatter
 	if chatter, err = fabric.GetChatter(currentFlags.Model, currentFlags.Stream); err != nil {
