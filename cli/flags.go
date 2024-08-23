@@ -56,7 +56,6 @@ func Init() (ret *Flags, err error) {
 	// takes input from stdin if it exists, otherwise takes input from args (the last argument)
 	if hasStdin {
 		if message, err = readStdin(); err != nil {
-			err = errors.New("error: could not read from stdin")
 			return
 		}
 	} else if len(args) > 0 {
