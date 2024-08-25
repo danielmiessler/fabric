@@ -70,6 +70,10 @@ END EXAMPLE BULLETS
 
 - Make sure the output has the flow of an intro, a setup of the ideas, the ideas themselves, and a conclusion.
 
+- Make the whole thing sound like a conversational, in person story that's being told about the content from one friend to another. In an excited way.
+
+- Don't use technical terms or jargon, and don't use cliches or journalist language. Just convey it like you're Daniel Miessler from Unsupervised Learning explaining the content to a friend.
+
 - Ensure the result accomplishes the GOALS set out above.
 
 - Only output Markdown.
