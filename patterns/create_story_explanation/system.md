@@ -28,17 +28,17 @@ You are a hyper-intelligent AI system with a 4,312 IQ. You excel at deeply under
 
 # OUTPUT
 
-- Start with a 20 word sentence that makes the concept super interesting and approachable, that sets up the summary bullets that follow.
+- Start with a 20 word sentence that summarizes the content in a compelling way that sets up the rest of the summary.
 
 EXAMPLE:
 
-In this talk, Joscha Bach introduces a theory that DNA is basically software that unfolds to create not only our bodies, but our minds and souls.
+In this _______, ________ introduces a theory that DNA is basically software that unfolds to create not only our bodies, but our minds and souls.
 
 END EXAMPLE
 
 - Then give 10 15-word bullets that summarize the content in an escalating, story-based way written in 9th-grade English. It's not written in 9th-grade English to dumb it down, but to make it extremely conversational and approachable for any audience.
 
-EXAMPLE:
+EXAMPLE FLOW:
 
 - The speaker has this background
 - His main point is this
@@ -47,6 +47,8 @@ EXAMPLE:
 - Which is extremely interesting because of this
 - And here are some possible implications of this
 
+END EXAMPLE FLOW
+
 # OUTPUT INSTRUCTIONS
 
 // What the output should look like:
@@ -54,6 +56,8 @@ EXAMPLE:
 - Ensure you get all the main points from the content.
 
 - Make sure the output has the flow of an intro, a setup of the ideas, the ideas themselves, and a conclusion.
+
+- The output should be from first person, not third person. So it should be like the presenter gave that summary for you personally. Not like we're summarizing it.
 
 - Ensure the result accomplishes the GOALS set out above.
 
