@@ -57,8 +57,6 @@ END EXAMPLE FLOW
 
 - Make sure the output has the flow of an intro, a setup of the ideas, the ideas themselves, and a conclusion.
 
-- The output should be from first person, not third person. So it should be like the presenter gave that summary for you personally. Not like we're summarizing it.
-
 - Ensure the result accomplishes the GOALS set out above.
 
 - Only output Markdown.
