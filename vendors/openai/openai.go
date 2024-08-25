@@ -13,10 +13,10 @@ import (
 )
 
 func NewClient() (ret *Client) {
-	return NewClientCompatible("OpenAI", nil)
+	return NewClientCompatible("OpenAI", "https://api.openai.com/v1", nil)
 }
 
-func NewClientCompatible(vendorName string, configureCustom func() error) (ret *Client) {
+func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCustom func() error) (ret *Client) {
 	ret = &Client{}
 
 	if configureCustom == nil {
@@ -29,19 +29,26 @@ func NewClientCompatible(vendorName string, configureCustom func() error) (ret *
 		ConfigureCustom: configureCustom,
 	}
 
-	ret.ApiKey = ret.AddSetupQuestion("API key", true)
+	ret.ApiKey = ret.AddSetupQuestion("API Key", true)
+	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
+	ret.ApiBaseURL.Value = defaultBaseUrl
 
 	return
 }
 
 type Client struct {
 	*common.Configurable
-	ApiKey    *common.SetupQuestion
-	ApiClient *openai.Client
+	ApiKey     *common.SetupQuestion
+	ApiBaseURL *common.SetupQuestion
+	ApiClient  *openai.Client
 }
 
 func (o *Client) configure() (ret error) {
-	o.ApiClient = openai.NewClient(o.ApiKey.Value)
+	config := openai.DefaultConfig(o.ApiKey.Value)
+	if o.ApiBaseURL.Value != "" {
+		config.BaseURL = o.ApiBaseURL.Value
+	}
+	o.ApiClient = openai.NewClientWithConfig(config)
 	return
 }
 
