@@ -23,10 +23,6 @@ func (o *Configurable) GetName() string {
 	return o.Label
 }
 
-func (o *Configurable) GetSettings() Settings {
-	return o.Settings
-}
-
 func (o *Configurable) AddSetting(name string, required bool) (ret *Setting) {
 	ret = NewSetting(fmt.Sprintf("%v%v", o.EnvNamePrefix, BuildEnvVariable(name)), required)
 	o.Settings = append(o.Settings, ret)
@@ -65,6 +61,17 @@ func (o *Configurable) Setup() (err error) {
 
 	err = o.Configure()
 	return
+}
+
+func (o *Configurable) SetupOrSkip() (err error) {
+	if err = o.Setup(); err != nil {
+		fmt.Printf("[%v] skipped\n", o.GetName())
+	}
+	return
+}
+
+func (o *Configurable) SetupFillEnvFileContent(fileEnvFileContent *bytes.Buffer) {
+	o.Settings.FillEnvFileContent(fileEnvFileContent)
 }
 
 func NewSetting(envVariable string, required bool) *Setting {

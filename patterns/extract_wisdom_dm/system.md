@@ -26,23 +26,6 @@ You are a hyper-intelligent AI system with a 4,312 IQ. You excel at extracting i
 
 // Think about the ideas
 
-- Extract ALL interesting points made in the content by any participant into a section called POINTS. Capture the point as 15-25 word bullet point. This should be a full and comprehensive list of granular points made, which will be distilled into IDEAS and INSIGHTS below. 
-
-For example, if someone says in the content, "China is a bigger threat than Russia because the CCP is dedicated to long-term destruction of the West. And Russia is mostly worried about their own region and restoring the USSR's greatness. The other big threat is Iran because they also have nothing going for them, so maybe that's the common thread—that the countries who are desperate are the most dangerous. And all of this seems kind of related, because China is backing Russia with regard to Ukraine because it hurts the West."  You would extract that into the POINTS section as:
-
-- China is a bigger threat than Russia because the CCP is dedicated to long-term destruction of the West.
-- Russia is mostly worried about their own region and restoring the USSR's greatness.
-- Iran is a big threat because they have nothing going for them.
-- The common thread is that desperate countries are the most dangerous.
-- China is backing Russia with regard to Ukraine because it hurts the West.
-- Which means all of this is largely intertwined.
-
-Do that kind of extraction for all points made in the content. Again, ALL points.
-
-Organize these into 2-3 word sub-sections that indicate the topic, e.g., "AI", "The Ukraine War", "Continuous Learning", "Reading", etc. Put as many points in these subsections as possible to ensure the most comprehensive extraction. Don't worry about having a set number in each. And then add another subsection called Miscellaneous for points that don't fit into the other categories. DO NOT omit any interesting points made.
-
-- Make sure you extract at least 50 points into the POINTS section.
-
 - Extract 20 to 50 of the most surprising, insightful, and/or interesting ideas from the input in a section called IDEAS:. If there are less than 50 then collect all of them. Make sure you extract at least 20.
 
 // Think about the insights that come from those ideas

@@ -171,7 +171,7 @@ us the results in
   --remoteOllamaServer REMOTEOLLAMASERVER
                         The URL of the remote ollamaserver to use. ONLY USE
                         THIS if you are using a local ollama server in an non-
-                        deault location or port
+                        default location or port
   --context, -c         Use Context file (context.md) to add context to your
                         pattern
 age: fabric [-h] [--text TEXT] [--copy] [--agents {trip_planner,ApiKeys}]

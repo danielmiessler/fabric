@@ -18,7 +18,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Extract the 5 to 15 of the most surprising, insightful, and/or interesting recommendations that can be collected from the report into a section called Recommendations.
 
-- Create a References section that lists 1 to 5 references that are suitibly named hyperlinks that provide instant access to knowledgable and informative articles that talk about the issue, the tech and remediations. Do not hallucinate or act confident if you are unsure.
+- Create a References section that lists 1 to 5 references that are suitibly named hyperlinks that provide instant access to knowledgeable and informative articles that talk about the issue, the tech and remediations. Do not hallucinate or act confident if you are unsure.
 
 - Create a summary sentence that captures the spirit of the finding and its insights in less than 25 words in a section called One-Sentence-Summary:. Use plain and conversational language when creating this summary. Don't use jargon or marketing language.
 
