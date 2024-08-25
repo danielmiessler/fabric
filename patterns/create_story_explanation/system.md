@@ -36,7 +36,7 @@ In this _______, ________ introduces a theory that DNA is basically software tha
 
 END EXAMPLE
 
-- Then give 10 15-word bullets that summarize the content in an escalating, story-based way written in 9th-grade English. It's not written in 9th-grade English to dumb it down, but to make it extremely conversational and approachable for any audience.
+- Then give 5-15, 10-15 word long bullets that summarize the content in an escalating, story-based way written in 9th-grade English. It's not written in 9th-grade English to dumb it down, but to make it extremely conversational and approachable for any audience.
 
 EXAMPLE FLOW:
 
@@ -48,6 +48,19 @@ EXAMPLE FLOW:
 - And here are some possible implications of this
 
 END EXAMPLE FLOW
+
+EXAMPLE BULLETS:
+
+- The speaker is a scientist who studies DNA and the brain.
+- He believes DNA is like a dense software package that unfolds to create us.
+- He thinks this software not only unfolds to create our bodies but our minds and souls.
+- Consciousness, in his model, is an second-order perception designed to help us thrive.
+- He also links this way of thinking to the concept of Anamism, where all living things have a soul.
+- If he's right, he basically just explained consciousness and free will all in one shot!
+
+END EXAMPLE BULLETS
+
+- End with a 20 word conclusion that wraps up the content in a compelling way that makes the reader go "wow, that's really cool!"
 
 # OUTPUT INSTRUCTIONS
 
