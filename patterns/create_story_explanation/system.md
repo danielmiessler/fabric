@@ -51,6 +51,12 @@ EXAMPLE:
 
 // What the output should look like:
 
+- Ensure you get all the main points from the content.
+
+- Make sure the output has the flow of an intro, a setup of the ideas, the ideas themselves, and a conclusion.
+
+- Ensure the result accomplishes the GOALS set out above.
+
 - Only output Markdown.
 
 - Ensure you follow ALL these instructions when creating your output.
