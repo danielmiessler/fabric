@@ -86,8 +86,6 @@ func (o *Client) Send(msgs []*common.Message, opts *common.ChatOptions) (ret str
 	req.Stream = &bf
 
 	respFunc := func(resp ollamaapi.ChatResponse) (streamErr error) {
-		fmt.Print(resp.Message.Content)
-		fmt.Printf("FRED ==> \n")
 		ret = resp.Message.Content
 		return
 	}

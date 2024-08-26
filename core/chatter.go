@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
+	"github.com/danielmiessler/fabric/vendors"
 )
 
 type Chatter struct {
@@ -12,7 +13,7 @@ type Chatter struct {
 	Stream bool
 
 	model  string
-	vendor common.Vendor
+	vendor vendors.Vendor
 }
 
 func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (message string, err error) {
