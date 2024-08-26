@@ -1,7 +1,9 @@
 package core
 
 import (
+	"context"
 	"fmt"
+
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
 	"github.com/danielmiessler/fabric/vendors"
@@ -17,7 +19,6 @@ type Chatter struct {
 }
 
 func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (message string, err error) {
-
 	var chatRequest *Chat
 	if chatRequest, err = o.NewChat(request); err != nil {
 		return
@@ -45,7 +46,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (m
 			fmt.Print(response)
 		}
 	} else {
-		if message, err = o.vendor.Send(session.Messages, opts); err != nil {
+		if message, err = o.vendor.Send(context.Background(), session.Messages, opts); err != nil {
 			return
 		}
 	}
@@ -58,7 +59,6 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (m
 }
 
 func (o *Chatter) NewChat(request *common.ChatRequest) (ret *Chat, err error) {
-
 	ret = &Chat{}
 
 	if request.ContextName != "" {

@@ -2,8 +2,10 @@ package core
 
 import (
 	"bytes"
-	"github.com/danielmiessler/fabric/common"
+	"context"
 	"testing"
+
+	"github.com/danielmiessler/fabric/common"
 )
 
 func TestNewVendorsManager(t *testing.T) {
@@ -90,17 +92,17 @@ type MockVendor struct {
 }
 
 func (o *MockVendor) SendStream(messages []*common.Message, options *common.ChatOptions, strings chan string) error {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
-func (o *MockVendor) Send(messages []*common.Message, options *common.ChatOptions) (string, error) {
-	//TODO implement me
+func (o *MockVendor) Send(ctx context.Context, messages []*common.Message, options *common.ChatOptions) (string, error) {
+	// TODO implement me
 	panic("implement me")
 }
 
 func (o *MockVendor) SetupFillEnvFileContent(buffer *bytes.Buffer) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
