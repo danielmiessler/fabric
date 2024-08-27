@@ -36,6 +36,15 @@ Give a 1-10 score for each dimension where 5 is meh, 7 is decent, 8 is good, 9 i
 
 - In a section called SALES CALL ANALYSIS OVERVIEW, give a 15-word summary of how good of a sales call this was, and why.
 
+- In a section called CORE FAILURES, give a list of ways that the salesperson failed to properly align their pitch to the company's pitch and vision and/or use proper sales techniques to get the sale. E.g.: 
+
+- Didn't properly differentiate the product from competitors.
+- Didn't have proper knowledge of and empathy for the customer.
+- Made the product sound like everything else.
+- Didn't push for the sale.
+- Etc.
+- (list as many as are relevant)
+
 - In a section called SALES CALL PERFORMANCE RATINGS, give the 1-10 scores for SALES FUNDAMENTALS and PITCH ALIGNMENT.
 
 - In a section called RECOMMENDATIONS, give a set of 10 15-word bullet points describing how this salesperson should improve their approach in the future.
