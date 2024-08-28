@@ -24,7 +24,7 @@ The . at the end of the command indicates that you're building the image using `
 After building the image, run the container using the following command:
 
 ```
-$ docker run --rm -i -t -d --name fabric -v ./fabric/:/home/appuser/.config/fabric --network traefik fabic:latest
+$ docker run --rm -i -t -d --name fabric -v ./fabric/:/home/appuser/.config/fabric --network traefik fabric:latest
 ```
 Replace < --network traefik > with a desired name for your docker `network`. I have `ollama`, `open-webui`, `whisper` etc. running in the same network called `traefik` so I am using that. You can delete it if you don't want `fabric` to be in a specific network.
 
