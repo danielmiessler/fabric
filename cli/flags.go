@@ -37,6 +37,7 @@ type Flags struct {
 	YouTube                 string  `short:"y" long:"youtube" description:"YouTube video url to grab transcript, comments from it and send to chat"`
 	YouTubeTranscript       bool    `long:"transcript" description:"Grab transcript from YouTube video and send to chat"`
 	YouTubeComments         bool    `long:"comments" description:"Grab comments from YouTube video and send to chat"`
+	DryRun                  bool    `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
 }
 
 // Init Initialize flags. returns a Flags struct and an error

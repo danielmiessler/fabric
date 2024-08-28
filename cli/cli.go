@@ -142,6 +142,13 @@ func Cli() (message string, err error) {
 		}
 	}
 
+	if currentFlags.DryRun {
+		fmt.Println("Dry run: Would send the following request:")
+		fmt.Printf("Chat Request: %+v\n", currentFlags.BuildChatRequest())
+		fmt.Printf("Chat Options: %+v\n", currentFlags.BuildChatOptions())
+		return
+	}
+
 	var chatter *core.Chatter
 	if chatter, err = fabric.GetChatter(currentFlags.Model, currentFlags.Stream); err != nil {
 		return
