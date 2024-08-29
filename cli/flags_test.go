@@ -3,7 +3,6 @@ package cli
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -26,7 +25,7 @@ func TestInit(t *testing.T) {
 
 func TestReadStdin(t *testing.T) {
 	input := "test input"
-	stdin := ioutil.NopCloser(strings.NewReader(input))
+	stdin := io.NopCloser(strings.NewReader(input))
 	// No need to cast stdin to *os.File, pass it as io.ReadCloser directly
 	content, err := ReadStdin(stdin)
 	if err != nil {
