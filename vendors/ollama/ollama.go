@@ -79,7 +79,7 @@ func (o *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, ch
 	return
 }
 
-func (o *Client) Send(msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
 	bf := false
 
 	req := o.createChatRequest(msgs, opts)
@@ -89,8 +89,6 @@ func (o *Client) Send(msgs []*common.Message, opts *common.ChatOptions) (ret str
 		ret = resp.Message.Content
 		return
 	}
-
-	ctx := context.Background()
 
 	if err = o.client.Chat(ctx, &req, respFunc); err != nil {
 		fmt.Printf("FRED --> %s\n", err)

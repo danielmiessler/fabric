@@ -96,11 +96,11 @@ func (o *Client) SendStream(
 	return
 }
 
-func (o *Client) Send(msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
 	req := o.buildChatCompletionRequest(msgs, opts)
 
 	var resp goopenai.ChatCompletionResponse
-	if resp, err = o.ApiClient.CreateChatCompletion(context.Background(), req); err != nil {
+	if resp, err = o.ApiClient.CreateChatCompletion(ctx, req); err != nil {
 		return
 	}
 	ret = resp.Choices[0].Message.Content
