@@ -142,43 +142,8 @@ func Cli() (message string, err error) {
 		}
 	}
 
-	if currentFlags.DryRun {
-		var patternContent string
-		var contextContent string
-
-		if currentFlags.Pattern != "" {
-			pattern, patternErr := fabric.Db.Patterns.GetPattern(currentFlags.Pattern)
-			if patternErr != nil {
-				fmt.Printf("Error getting pattern content: %v\n", patternErr)
-				return "", patternErr
-			}
-			patternContent = pattern.Pattern // Assuming the content is stored in the 'Pattern' field
-		}
-
-		if currentFlags.Context != "" {
-			context, contextErr := fabric.Db.Contexts.GetContext(currentFlags.Context)
-			if contextErr != nil {
-				fmt.Printf("Error getting context content: %v\n", contextErr)
-				return "", contextErr
-			}
-			contextContent = context.Content
-		}
-
-		systemMessage := strings.TrimSpace(contextContent) + strings.TrimSpace(patternContent)
-		userMessage := strings.TrimSpace(currentFlags.Message)
-
-		fmt.Println("Dry run: Would send the following request:\n")
-		if systemMessage != "" {
-			fmt.Printf("System:\n%s\n\n", systemMessage)
-		}
-		if userMessage != "" {
-			fmt.Printf("User:\n%s\n", userMessage)
-		}
-		return "", nil
-	}
-
 	var chatter *core.Chatter
-	if chatter, err = fabric.GetChatter(currentFlags.Model, currentFlags.Stream); err != nil {
+	if chatter, err = fabric.GetChatter(currentFlags.Model, currentFlags.Stream, currentFlags.DryRun); err != nil {
 		return
 	}
 

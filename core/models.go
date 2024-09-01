@@ -16,8 +16,10 @@ type VendorsModels struct {
 }
 
 func (o *VendorsModels) AddVendorModels(vendor string, models []string) {
-	o.Vendors = append(o.Vendors, vendor)
-	o.VendorsModels[vendor] = models
+	if vendor != "DryRun" {
+		o.Vendors = append(o.Vendors, vendor)
+		o.VendorsModels[vendor] = models
+	}
 }
 
 func (o *VendorsModels) GetVendorAndModelByModelIndex(modelIndex int) (vendor string, model string) {

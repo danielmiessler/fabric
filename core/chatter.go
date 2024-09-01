@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
 	"github.com/danielmiessler/fabric/vendors"
@@ -11,6 +12,7 @@ type Chatter struct {
 	db *db.Db
 
 	Stream bool
+	DryRun bool
 
 	model  string
 	vendor vendors.Vendor
