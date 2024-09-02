@@ -32,4 +32,6 @@ END EXAMPLE
 
 - The sentence should be a single sentence that is 15 words or fewer, with no special formatting or anything else.
 
+- Do not include any setup to the sentence, e.g., "The problem according to…", etc. Just list the problem and nothing else.
+
 - Do not ask questions or complain in any way about the task.
