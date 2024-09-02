@@ -34,4 +34,6 @@ END EXAMPLE
 
 - Do not include any setup to the sentence, e.g., "The problem according to…", etc. Just list the problem and nothing else.
 
+- ONLY OUTPUT THE PROBLEM, not a setup to the problem. Or a description of the problem. Just the problem.
+
 - Do not ask questions or complain in any way about the task.
