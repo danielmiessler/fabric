@@ -14,16 +14,25 @@ type Patterns struct {
 }
 
 // GetPattern finds a pattern by name and returns the pattern as an entry or an error
-func (o *Patterns) GetPattern(name string) (ret *Pattern, err error) {
+func (o *Patterns) GetPattern(name string, variables map[string]string) (ret *Pattern, err error) {
 	patternPath := filepath.Join(o.Dir, name, o.SystemPatternFile)
 
 	var pattern []byte
 	if pattern, err = os.ReadFile(patternPath); err != nil {
 		return
 	}
+
+	patternStr := string(pattern)
+
+	if variables != nil && len(variables) > 0 {
+		for variableName, value := range variables {
+			patternStr = strings.ReplaceAll(patternStr, variableName, value)
+		}
+	}
+
 	ret = &Pattern{
 		Name:    name,
-		Pattern: string(pattern),
+		Pattern: patternStr,
 	}
 	return
 }

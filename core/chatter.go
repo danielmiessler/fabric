@@ -82,7 +82,7 @@ func (o *Chatter) NewChat(request *common.ChatRequest) (ret *Chat, err error) {
 
 	if request.PatternName != "" {
 		var pattern *db.Pattern
-		if pattern, err = o.db.Patterns.GetPattern(request.PatternName); err != nil {
+		if pattern, err = o.db.Patterns.GetPattern(request.PatternName, request.PatternVariables); err != nil {
 			err = fmt.Errorf("could not find pattern %s: %v", request.PatternName, err)
 			return
 		}
