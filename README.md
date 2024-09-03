@@ -179,6 +179,7 @@ Application Options:
   -u, --url=              Choose ollama url (default: http://127.0.0.1:11434)
   -o, --output=           Output to file
   -n, --latest=           Number of latest patterns to list (default: 0)
+      --dry-run           Show what would be sent to the model without actually sending it
 
 Help Options:
   -h, --help              Show this help message

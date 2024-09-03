@@ -13,6 +13,7 @@ type Chatter struct {
 	db *db.Db
 
 	Stream bool
+	DryRun bool
 
 	model  string
 	vendor vendors.Vendor
