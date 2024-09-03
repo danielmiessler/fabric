@@ -3,8 +3,9 @@ package core
 import (
 	"context"
 	"fmt"
-	"github.com/danielmiessler/fabric/vendors"
 	"sync"
+
+	"github.com/danielmiessler/fabric/vendors"
 )
 
 func NewVendorsManager() *VendorsManager {

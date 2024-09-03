@@ -17,6 +17,9 @@ import (
 	"github.com/danielmiessler/fabric/vendors/groc"
 	"github.com/danielmiessler/fabric/vendors/ollama"
 	"github.com/danielmiessler/fabric/vendors/openai"
+
+	"github.com/danielmiessler/fabric/vendors/openrouter"
+	// "github.com/danielmiessler/fabric/vendors/openrouter"
 	"github.com/danielmiessler/fabric/youtube"
 	"github.com/pkg/errors"
 )
@@ -59,7 +62,7 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 		"Enter the index the name of your default model")
 
 	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groc.NewClient(),
-		gemini.NewClient(), anthropic.NewClient())
+		gemini.NewClient(), anthropic.NewClient(), openrouter.NewClient())
 
 	return
 }
