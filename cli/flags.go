@@ -14,7 +14,7 @@ import (
 // Flags create flags struct. the users flags go into this, this will be passed to the chat struct in cli
 type Flags struct {
 	Pattern                 string            `short:"p" long:"pattern" description:"Choose a pattern" default:""`
-	PatternVariables        map[string]string `short:"v" long:"variable" description:"Values for pattern variables"`
+	PatternVariables        map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=$name:John -v=$age:30"`
 	Context                 string            `short:"C" long:"context" description:"Choose a context" default:""`
 	Session                 string            `long:"session" description:"Choose a session"`
 	Setup                   bool              `short:"S" long:"setup" description:"Run setup"`
