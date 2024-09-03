@@ -143,7 +143,7 @@ func Cli() (message string, err error) {
 	}
 
 	var chatter *core.Chatter
-	if chatter, err = fabric.GetChatter(currentFlags.Model, currentFlags.Stream); err != nil {
+	if chatter, err = fabric.GetChatter(currentFlags.Model, currentFlags.Stream, currentFlags.DryRun); err != nil {
 		return
 	}
 
