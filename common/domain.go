@@ -6,10 +6,11 @@ type Message struct {
 }
 
 type ChatRequest struct {
-	ContextName string
-	SessionName string
-	PatternName string
-	Message     string
+	ContextName      string
+	SessionName      string
+	PatternName      string
+	PatternVariables map[string]string
+	Message          string
 }
 
 type ChatOptions struct {
