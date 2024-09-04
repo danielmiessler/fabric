@@ -48,6 +48,13 @@
 
 > [!NOTE] 
 August 20, 2024 — We have migrated to Go, and the transition has been pretty smooth! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](#Installation) below.
+>
+> **There were several important changes to the command line interface during the rewrite:**
+> * You now need to use the -c option instead of -C to copy the result to the clipboard.
+> * You now need to use the -s option instead of -S to stream results in realtime.
+> * The --agents (-a), --gui, --clearsession, --remoteOllamaServer, and --sessionlog options **have been removed**
+> * You can now use --Setup (-S) to cofigure your Ollama server.
+> * **Please be patient while our developers rewrite the gui in go**
 
 ## Intro videos
 
