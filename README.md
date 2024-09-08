@@ -123,6 +123,7 @@ fabric --setup
 
 If everything works you are good to go, but you may need to set some environment variables in your `~/.bashrc` or `~/.zshrc` file. Here is an example of what you can add:
 
+For Intel based macs
 ```bash
 # Golang environment variables
 export GOROOT=/usr/local/go
@@ -130,6 +131,14 @@ export GOPATH=$HOME/go
 
 # Update PATH to include GOPATH and GOROOT binaries
 export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH
+```
+
+for Apple Silicon based macs
+```bash
+# Golang environment variables
+export GOROOT=/opt/homebrew/bin/go
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH:
 ```
 
 ### Migration
