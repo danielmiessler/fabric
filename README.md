@@ -34,7 +34,7 @@
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
 - [Installation](#Installation)
-  - [Migrating](#Migrating)
+  - [Migration](#Migration)
   - [Upgrading](#Upgrading)
 - [Usage](#Usage)
 - [Examples](#examples)
