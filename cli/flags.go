@@ -13,28 +13,33 @@ import (
 
 // Flags create flags struct. the users flags go into this, this will be passed to the chat struct in cli
 type Flags struct {
-	Pattern                 string  `short:"p" long:"pattern" description:"Choose a pattern" default:""`
-	Context                 string  `short:"C" long:"context" description:"Choose a context" default:""`
-	Session                 string  `long:"session" description:"Choose a session"`
-	Setup                   bool    `short:"S" long:"setup" description:"Run setup"`
-	SetupSkipUpdatePatterns bool    `long:"setup-skip-update-patterns" description:"Skip update patterns at setup"`
-	Temperature             float64 `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
-	TopP                    float64 `short:"T" long:"topp" description:"Set top P" default:"0.9"`
-	Stream                  bool    `short:"s" long:"stream" description:"Stream"`
-	PresencePenalty         float64 `short:"P" long:"presencepenalty" description:"Set presence penalty" default:"0.0"`
-	FrequencyPenalty        float64 `short:"F" long:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
-	ListPatterns            bool    `short:"l" long:"listpatterns" description:"List all patterns"`
-	ListAllModels           bool    `short:"L" long:"listmodels" description:"List all available models"`
-	ListAllContexts         bool    `short:"x" long:"listcontexts" description:"List all contexts"`
-	ListAllSessions         bool    `short:"X" long:"listsessions" description:"List all sessions"`
-	UpdatePatterns          bool    `short:"U" long:"updatepatterns" description:"Update patterns"`
-	Message                 string  `hidden:"true" description:"Message to send to chat"`
-	Copy                    bool    `short:"c" long:"copy" description:"Copy to clipboard"`
-	Model                   string  `short:"m" long:"model" description:"Choose model"`
-	Output                  string  `short:"o" long:"output" description:"Output to file" default:""`
-	LatestPatterns          string  `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
-	ChangeDefaultModel      bool    `short:"d" long:"changeDefaultModel" description:"Change default pattern"`
-    ScrapeURL               string  `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
+	Pattern                 string            `short:"p" long:"pattern" description:"Choose a pattern" default:""`
+	PatternVariables        map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=$name:John -v=$age:30"`
+	Context                 string            `short:"C" long:"context" description:"Choose a context" default:""`
+	Session                 string            `long:"session" description:"Choose a session"`
+	Setup                   bool              `short:"S" long:"setup" description:"Run setup"`
+	SetupSkipUpdatePatterns bool              `long:"setup-skip-update-patterns" description:"Skip update patterns at setup"`
+	Temperature             float64           `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
+	TopP                    float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
+	Stream                  bool              `short:"s" long:"stream" description:"Stream"`
+	PresencePenalty         float64           `short:"P" long:"presencepenalty" description:"Set presence penalty" default:"0.0"`
+	FrequencyPenalty        float64           `short:"F" long:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
+	ListPatterns            bool              `short:"l" long:"listpatterns" description:"List all patterns"`
+	ListAllModels           bool              `short:"L" long:"listmodels" description:"List all available models"`
+	ListAllContexts         bool              `short:"x" long:"listcontexts" description:"List all contexts"`
+	ListAllSessions         bool              `short:"X" long:"listsessions" description:"List all sessions"`
+	UpdatePatterns          bool              `short:"U" long:"updatepatterns" description:"Update patterns"`
+	Message                 string            `hidden:"true" description:"Message to send to chat"`
+	Copy                    bool              `short:"c" long:"copy" description:"Copy to clipboard"`
+	Model                   string            `short:"m" long:"model" description:"Choose model"`
+	Output                  string            `short:"o" long:"output" description:"Output to file" default:""`
+	LatestPatterns          string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
+	ChangeDefaultModel      bool              `short:"d" long:"changeDefaultModel" description:"Change default pattern"`
+	YouTube                 string            `short:"y" long:"youtube" description:"YouTube video url to grab transcript, comments from it and send to chat"`
+	YouTubeTranscript       bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat"`
+	YouTubeComments         bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
+	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
+    ScrapeURL               string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
 
 }
 
@@ -52,18 +57,17 @@ func Init() (ret *Flags, err error) {
     info, _ := os.Stdin.Stat()
     hasStdin := (info.Mode() & os.ModeCharDevice) == 0
 
-    // takes input from stdin if it exists, otherwise takes input from args (the last argument)
-    if hasStdin {
-        if message, err = readStdin(); err != nil {
-            err = errors.New("error: could not read from stdin")
-            return
-        }
-    } else if len(args) > 0 {
-        message = args[len(args)-1]
-    } else {
-        message = ""
-    }
-    ret.Message = message
+	// takes input from stdin if it exists, otherwise takes input from args (the last argument)
+	if hasStdin {
+		if message, err = readStdin(); err != nil {
+			return
+		}
+	} else if len(args) > 0 {
+		message = args[len(args)-1]
+	} else {
+		message = ""
+	}
+	ret.Message = message
 
     return
 }
@@ -97,10 +101,11 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 
 func (o *Flags) BuildChatRequest() (ret *common.ChatRequest) {
 	ret = &common.ChatRequest{
-		ContextName: o.Context,
-		SessionName: o.Session,
-		PatternName: o.Pattern,
-		Message:     o.Message,
+		ContextName:      o.Context,
+		SessionName:      o.Session,
+		PatternName:      o.Pattern,
+		PatternVariables: o.PatternVariables,
+		Message:          o.Message,
 	}
 	return
 }

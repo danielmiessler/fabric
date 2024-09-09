@@ -3,20 +3,22 @@ package core
 import (
 	"bytes"
 	"fmt"
+	"os"
+	"strconv"
+	"strings"
+
 	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
 	"github.com/danielmiessler/fabric/vendors/anthropic"
 	"github.com/danielmiessler/fabric/vendors/azure"
+	"github.com/danielmiessler/fabric/vendors/dryrun"
 	"github.com/danielmiessler/fabric/vendors/gemini"
-	"github.com/danielmiessler/fabric/vendors/grocq"
+	"github.com/danielmiessler/fabric/vendors/groc"
 	"github.com/danielmiessler/fabric/vendors/ollama"
 	"github.com/danielmiessler/fabric/vendors/openai"
 	"github.com/danielmiessler/fabric/youtube"
 	"github.com/pkg/errors"
-	"os"
-	"strconv"
-	"strings"
 )
 
 const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
@@ -56,7 +58,7 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 	ret.DefaultModel = ret.AddSetupQuestionCustom("Model", true,
 		"Enter the index the name of your default model")
 
-	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), grocq.NewClient(),
+	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groc.NewClient(),
 		gemini.NewClient(), anthropic.NewClient())
 
 	return
@@ -85,13 +87,13 @@ func (o *Fabric) SaveEnvFile() (err error) {
 	var envFileContent bytes.Buffer
 
 	o.Settings.FillEnvFileContent(&envFileContent)
-	o.PatternsLoader.FillEnvFileContent(&envFileContent)
+	o.PatternsLoader.SetupFillEnvFileContent(&envFileContent)
 
 	for _, vendor := range o.Vendors {
-		vendor.GetSettings().FillEnvFileContent(&envFileContent)
+		vendor.SetupFillEnvFileContent(&envFileContent)
 	}
 
-	o.YouTube.FillEnvFileContent(&envFileContent)
+	o.YouTube.SetupFillEnvFileContent(&envFileContent)
 
 	err = o.Db.SaveEnv(envFileContent.String())
 	return
@@ -106,9 +108,7 @@ func (o *Fabric) Setup() (err error) {
 		return
 	}
 
-	if youtubeErr := o.YouTube.Setup(); youtubeErr != nil {
-		fmt.Printf("[%v] skipped\n", o.YouTube.GetName())
-	}
+	_ = o.YouTube.SetupOrSkip()
 
 	if err = o.PatternsLoader.Setup(); err != nil {
 		return
@@ -152,16 +152,9 @@ func (o *Fabric) SetupDefaultModel() (err error) {
 }
 
 func (o *Fabric) SetupVendors() (err error) {
-	o.Reset()
-
-	for _, vendor := range o.VendorsAll.Vendors {
-		fmt.Println()
-		if vendorErr := vendor.Setup(); vendorErr == nil {
-			fmt.Printf("[%v] configured\n", vendor.GetName())
-			o.AddVendors(vendor)
-		} else {
-			fmt.Printf("[%v] skipped\n", vendor.GetName())
-		}
+	o.Models = nil
+	if o.Vendors, err = o.VendorsAll.Setup(); err != nil {
+		return
 	}
 
 	if !o.HasVendors() {
@@ -191,13 +184,20 @@ func (o *Fabric) configure() (err error) {
 	return
 }
 
-func (o *Fabric) GetChatter(model string, stream bool) (ret *Chatter, err error) {
+func (o *Fabric) GetChatter(model string, stream bool, dryRun bool) (ret *Chatter, err error) {
 	ret = &Chatter{
 		db:     o.Db,
 		Stream: stream,
+		DryRun: dryRun,
 	}
 
-	if model == "" {
+	if dryRun {
+		ret.vendor = dryrun.NewClient()
+		ret.model = model
+		if ret.model == "" {
+			ret.model = o.DefaultModel.Value
+		}
+	} else if model == "" {
 		ret.vendor = o.FindByName(o.DefaultVendor.Value)
 		ret.model = o.DefaultModel.Value
 	} else {

@@ -1,4 +1,4 @@
-package grocq
+package groc
 
 import (
 	"github.com/danielmiessler/fabric/vendors/openai"
@@ -6,7 +6,7 @@ import (
 
 func NewClient() (ret *Client) {
 	ret = &Client{}
-	ret.Client = openai.NewClientCompatible("Grocq", "https://api.groq.com/openai/v1", nil)
+	ret.Client = openai.NewClientCompatible("Groq", "https://api.groq.com/openai/v1", nil)
 	return
 }
 
