@@ -15,7 +15,6 @@ Most Common Syntax: The most common usage involves executing Fabric commands in 
 For Summarizing Content: `fabric --pattern summarize`
 For Analyzing Claims: `fabric --pattern analyze_claims`
 For Extracting Wisdom from Videos: `fabric --pattern extract_wisdom`
-For Creating AI Agents: `echo "<TASK>" | fabric --agents`
 For creating custom patterns: `fabric --pattern create_pattern`
 - One possible place to store them is ~/.config/custom-fabric-patterns.
 - Then when you want to use them, simply copy them into ~/.config/fabric/patterns.
@@ -27,19 +26,17 @@ For creating custom patterns: `fabric --pattern create_pattern`
 
 - **--pattern PATTERN, -p PATTERN**: Specifies the pattern (prompt) to use. Useful for applying specific AI prompts to your input.
   
-- **--agents, -a**: Creates an AI agent to perform a task based on the input. Great for automating complex tasks with AI.
-  
 - **--stream, -s**: Streams results in real-time. Ideal for getting immediate feedback from AI operations.
   
 - **--update, -u**: Updates patterns. Ensures you're using the latest AI prompts for your tasks.
   
 - **--model MODEL, -m MODEL**: Selects the AI model to use. Allows customization of the AI backend for different tasks.
   
-- **--setup**: Sets up your Fabric instance. Essential for first-time users to configure Fabric correctly.
+- **--setup, -S**: Sets up your Fabric instance. Essential for first-time users to configure Fabric correctly.
   
 - **--list, -l**: Lists available patterns. Helps users discover new AI prompts for various applications.
   
-- **--context, -c**: Uses a Context file to add context to your pattern. Enhances the relevance of AI responses by providing additional background information.
+- **--context, -C**: Uses a Context file to add context to your pattern. Enhances the relevance of AI responses by providing additional background information.
 
 # PATTERNS
 

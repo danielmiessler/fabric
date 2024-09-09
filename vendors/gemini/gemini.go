@@ -57,10 +57,9 @@ func (o *Client) ListModels() (ret []string, err error) {
 	return
 }
 
-func (o *Client) Send(msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
 	systemInstruction, messages := toMessages(msgs)
 
-	ctx := context.Background()
 	var client *genai.Client
 	if client, err = genai.NewClient(ctx, option.WithAPIKey(o.ApiKey.Value)); err != nil {
 		return
