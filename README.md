@@ -54,7 +54,7 @@ August 20, 2024 — We have migrated to Go, and the transition has been pretty s
 > * You now need to use the -c option instead of -C to copy the result to the clipboard.
 > * You now need to use the -s option instead of -S to stream results in realtime.
 > * The following command line options have been removed --agents (-a), --gui, --clearsession, --remoteOllamaServer, and --sessionlog options 
-> * You can now use --Setup (-S) to cofigure an Ollama server.
+> * You can now use --Setup (-S) to configure an Ollama server.
 > * **Please be patient while our developers rewrite the gui in go**
 
 ## Intro videos
