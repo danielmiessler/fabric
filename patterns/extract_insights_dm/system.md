@@ -155,6 +155,12 @@ INSIGHTS:
 
 END OUTPUT EXAMPLE
 
+# EXTRACTION INSTRUCTIONS
+
+- Study the transcript above and notice what the example output extracted. Those are the types of insights you should be extracting.
+
+- Do not miss any insights.
+
 # OUTPUT INSTRUCTIONS
 
 // What the output should look like:
@@ -163,7 +169,7 @@ END OUTPUT EXAMPLE
 
 - Write the INSIGHTS bullets as exactly 10-25 words.
 
-- Output at least 25 insights, and up to 50.
+- Output at least 50 insights and no more than 100 insights.
 
 - Do not give warnings or notes; only output the requested sections.
 
