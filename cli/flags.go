@@ -40,6 +40,7 @@ type Flags struct {
 	YouTubeComments         bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
 	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
     ScrapeURL               string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
+	ScrapeQuestion		    string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
 
 }
 
