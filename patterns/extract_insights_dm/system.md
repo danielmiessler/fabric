@@ -163,6 +163,8 @@ END OUTPUT EXAMPLE
 
 - Write the INSIGHTS bullets as exactly 10-25 words.
 
+- Output at least 25 insights, and up to 50.
+
 - Do not give warnings or notes; only output the requested sections.
 
 - You use bulleted lists for output, not numbered lists.
