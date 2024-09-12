@@ -82,5 +82,7 @@ jobs:
 
       - name: Upload release artifact
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release upload ${{ github.ref_name }} fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}
