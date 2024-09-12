@@ -2,7 +2,7 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title yt
+# @raycast.title Extract YouTube Info
 # @raycast.mode fullOutput
 
 # Optional parameters:
@@ -10,18 +10,20 @@
 # @raycast.argument1 { "type": "text", "placeholder": "YouTube link", "optional": false, "percentEncoded": true }
 
 # Documentation:
-# @raycast.description Run fabric yt on a YouTube link
+# @raycast.description Run yt on a YouTube link
 # @raycast.author Daniel Miessler
 # @raycast.authorURL https://github.com/danielmiessler
 
 # Set PATH to include common locations and $HOME/go/bin
 PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/go/bin:$PATH"
 
-# Use the PATH to find and execute fabric
-if command -v fabric >/dev/null 2>&1; then
-    yt {1}"
+# Check if yt command is available
+if command -v yt >/dev/null 2>&1; then
+    # Directly call yt with the YouTube link
+    yt "${1}"
 else
-    echo "Error: fabric command not found in PATH"
+    echo "Error: yt command not found in PATH"
     echo "Current PATH: $PATH"
     exit 1
 fi
+
