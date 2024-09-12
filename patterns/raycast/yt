@@ -2,7 +2,7 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title Extract YouTube Info
+# @raycast.title yt
 # @raycast.mode fullOutput
 
 # Optional parameters:
@@ -19,10 +19,9 @@ PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/go/bin:$PATH"
 
 # Use the PATH to find and execute fabric
 if command -v fabric >/dev/null 2>&1; then
-    fabric -sp yt "${1}"
+    yt {1}"
 else
     echo "Error: fabric command not found in PATH"
     echo "Current PATH: $PATH"
     exit 1
 fi
-
