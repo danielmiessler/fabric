@@ -80,6 +80,13 @@ jobs:
           name: fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}
           path: fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}
 
+      - name: Create release if it doesn't exist
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view ${{ github.ref_name }} || gh release create ${{ github.ref_name }} --title "Release ${{ github.ref_name }}" --notes "Automated release for ${{ github.ref_name }}"
+
       - name: Upload release artifact
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         env:
