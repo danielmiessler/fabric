@@ -11,8 +11,8 @@
 
 # Documentation:
 # @raycast.description Run fabric extract_wisdom on input text
-# @raycast.author YourName
-# @raycast.authorURL https://github.com/yourgithubusername
+# @raycast.author Daniel Miessler
+# @raycast.authorURL https://github.com/danielmiessler
 
 # Set PATH to include common locations and $HOME/go/bin
 PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/go/bin:$PATH"
