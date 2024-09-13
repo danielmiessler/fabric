@@ -19,7 +19,7 @@ Take a deep breath and think step by step about how to best accomplish this goal
     - A score that tells the user how insightful and interesting this debate is from 0 (not very interesting and insightful) to 10 (very interesting and insightful). 
     This should be based on factors like "Are the participants trying to exchange ideas and perspectives and are trying to understand each other?", "Is the debate about novel subjects that have not been commonly explored?" or "Have the participants reached some agreement?". 
     Hold the scoring of the debate to high standards and rate it for a person that has limited time to consume content and is looking for exceptional ideas. 
-    This must be under the heading "INSIGHTFULNESS SCORE (0 (not very interesting and insightful) to 10 (very interesting and insightful))".
+    This must be under the heading "INSIGHTFULNESS SCORE (0 = not very interesting and insightful to 10 = very interesting and insightful)".
     - A rating of how emotional the debate was from 0 (very calm) to 5 (very emotional). This must be under the heading "EMOTIONALITY SCORE (0 (very calm) to 5 (very emotional))".
     - A list of the participants of the debate and a score of their emotionality from 0 (very calm) to 5 (very emotional). This must be under the heading "PARTICIPANTS".
     - A list of arguments attributed to participants with names and quotes. If possible, this should include external references that disprove or back up their claims. 

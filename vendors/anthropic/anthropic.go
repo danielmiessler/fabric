@@ -79,8 +79,7 @@ func (an *Client) SendStream(
 	return
 }
 
-func (an *Client) Send(msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
-	ctx := context.Background()
+func (an *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
 	req := an.buildMessagesRequest(msgs, opts)
 	req.Stream = false
 
