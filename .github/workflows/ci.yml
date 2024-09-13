@@ -1,4 +1,4 @@
-name: Go Build and Release
+name: Go Build
 
 on:
   push:
