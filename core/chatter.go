@@ -60,7 +60,9 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (m
 }
 
 func (o *Chatter) NewChat(request *common.ChatRequest) (ret *Chat, err error) {
-	ret = &Chat{}
+	ret = &Chat{
+		Language: request.Language,
+	}
 
 	if request.ContextName != "" {
 		var ctx *db.Context
@@ -97,8 +99,9 @@ func (o *Chatter) NewChat(request *common.ChatRequest) (ret *Chat, err error) {
 }
 
 type Chat struct {
-	Context string
-	Pattern string
-	Message string
-	Session *db.Session
+	Context  string
+	Pattern  string
+	Message  string
+	Session  *db.Session
+	Language string
 }
