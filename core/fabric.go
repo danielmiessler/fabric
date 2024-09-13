@@ -253,6 +253,10 @@ func (o *Chat) BuildChatSession() (ret *db.Session, err error) {
 		ret.Append(&common.Message{Role: "user", Content: userMessage})
 	}
 
+	if o.Language != "" {
+		ret.Append(&common.Message{Role: "system", Content: "please use " + o.Language + " language"})
+	}
+
 	if ret.IsEmpty() {
 		ret = nil
 		err = fmt.Errorf("no session, pattern or user messages provided")
