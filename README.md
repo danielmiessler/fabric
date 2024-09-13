@@ -34,7 +34,7 @@
   - [Too many prompts](#too-many-prompts)
   - [The Fabric approach to prompting](#our-approach-to-prompting)
 - [Installation](#Installation)
-  - [Migrating](#Migrating)
+  - [Migration](#Migration)
   - [Upgrading](#Upgrading)
 - [Usage](#Usage)
 - [Examples](#examples)
@@ -48,6 +48,14 @@
 
 > [!NOTE] 
 August 20, 2024 — We have migrated to Go, and the transition has been pretty smooth! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](#Installation) below.
+>
+>
+> **The following command line options were changed during the migration to Go:**
+> * You now need to use the -c option instead of -C to copy the result to the clipboard.
+> * You now need to use the -s option instead of -S to stream results in realtime.
+> * The following command line options have been removed --agents (-a), --gui, --clearsession, --remoteOllamaServer, and --sessionlog options 
+> * You can now use --Setup (-S) to configure an Ollama server.
+> * **Please be patient while our developers rewrite the gui in go**
 
 ## Intro videos
 
@@ -106,21 +114,38 @@ To install Fabric, [make sure Go is installed](https://go.dev/doc/install), and 
 ```bash
 # Install Fabric directly from the repo
 go install github.com/danielmiessler/fabric@latest
-
-# Run the setup to set up your directories and keys
-fabric --setup
 ```
 
 ### Environment Variables
 
-If everything works you are good to go, but you may need to set some environment variables in your `~/.bashrc` or `~/.zshrc` file. Here is an example of what you can add:
+You may need to set some environment variables in your `~/.bashrc` on linux or `~/.zshrc` file on mac to be able to run the `fabric` command. Here is an example of what you can add:
 
+For Intel based macs or linux
 ```bash
 # Golang environment variables
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
+
+# Update PATH to include GOPATH and GOROOT binaries
+export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH
+```
+
+for Apple Silicon based macs
+```bash
+# Golang environment variables
+export GOROOT=/opt/homebrew/bin/go
+export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH:
 ```
+
+### Setup
+Now run the following command
+```bash
+# Run the setup to set up your directories and keys
+fabric --setup
+```
+If everything works you are good to go.
+
 
 ### Migration
 
@@ -288,6 +313,34 @@ go install github.com/danielmiessler/yt@latest
 ```
 
 Be sure to add your `YOUTUBE_API_KEY` to `~/.config/fabric/.env`.
+
+### `to_pdf`
+
+`to_pdf` is a helper command that converts LaTeX files to PDF format. You can use it like this:
+
+```bash
+to_pdf input.tex
+```
+
+This will create a PDF file from the input LaTeX file in the same directory.
+
+You can also use it with stdin which works perfectly with the `write_latex` pattern:
+
+```bash
+echo "ai security primer" | fabric --pattern write_latex | to_pdf
+```
+
+This will create a PDF file named `output.pdf` in the current directory.
+
+### `to_pdf` Installation
+
+To install `to_pdf`, install it the same way as you install Fabric, just with a different repo name.
+
+```bash
+go install github.com/danielmiessler/fabric/to_pdf/to_pdf@latest
+```
+
+Make sure you have a LaTeX distribution (like TeX Live or MiKTeX) installed on your system, as `to_pdf` requires `pdflatex` to be available in your system's PATH.
 
 ## Meta
 
