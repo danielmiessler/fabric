@@ -40,7 +40,7 @@ type Flags struct {
 	YouTubeTranscript       bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat"`
 	YouTubeComments         bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
 	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
-	Language                string            `short:"g" long:"language" description:"Language of the chat" default:""`
+	Language                string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
 }
 
 // Init Initialize flags. returns a Flags struct and an error
