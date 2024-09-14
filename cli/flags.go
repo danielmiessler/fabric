@@ -40,7 +40,7 @@ type Flags struct {
 	YouTubeTranscript       bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat"`
 	YouTubeComments         bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
 	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
-	Language                string            `short:"g" long:"language" description:"Language of the chat" default:"en"`
+	Language                string            `short:"g" long:"language" description:"Language of the chat" default:""`
 }
 
 // Init Initialize flags. returns a Flags struct and an error
@@ -107,10 +107,11 @@ func (o *Flags) BuildChatRequest() (ret *common.ChatRequest) {
 		PatternVariables: o.PatternVariables,
 		Message:          o.Message,
 	}
-	langTag, err := language.Parse(o.Language)
-	if err != nil {
-		langTag = language.English
+	if o.Language != "" {
+		langTag, err := language.Parse(o.Language)
+		if err == nil {
+			ret.Language = langTag.String()
+		}
 	}
-	ret.Language = langTag.String()
 	return
 }
