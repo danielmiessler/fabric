@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/danielmiessler/fabric/vendors/groq"
+	goopenai "github.com/sashabaranov/go-openai"
 	"os"
 	"strconv"
 	"strings"
@@ -236,7 +237,7 @@ func (o *Fabric) CreateOutputFile(message string, fileName string) (err error) {
 	return
 }
 
-func (o *Chat) BuildChatSession() (ret *db.Session, err error) {
+func (o *Chat) BuildChatSession(userInsteadOfSystemRole bool) (ret *db.Session, err error) {
 	// new messages will be appended to the session and used to send the message
 	if o.Session != nil {
 		ret = o.Session
@@ -245,14 +246,20 @@ func (o *Chat) BuildChatSession() (ret *db.Session, err error) {
 	}
 
 	systemMessage := strings.TrimSpace(o.Context) + strings.TrimSpace(o.Pattern)
-
-	if systemMessage != "" {
-		ret.Append(&common.Message{Role: "system", Content: systemMessage})
-	}
-
 	userMessage := strings.TrimSpace(o.Message)
-	if userMessage != "" {
-		ret.Append(&common.Message{Role: "user", Content: userMessage})
+
+	if userInsteadOfSystemRole {
+		message := systemMessage + userMessage
+		if message != "" {
+			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: message})
+		}
+	} else {
+		if systemMessage != "" {
+			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
+		}
+		if userMessage != "" {
+			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: userMessage})
+		}
 	}
 
 	if ret.IsEmpty() {

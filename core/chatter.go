@@ -3,10 +3,10 @@ package core
 import (
 	"context"
 	"fmt"
-
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
 	"github.com/danielmiessler/fabric/vendors"
+	goopenai "github.com/sashabaranov/go-openai"
 )
 
 type Chatter struct {
@@ -26,7 +26,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (m
 	}
 
 	var session *db.Session
-	if session, err = chatRequest.BuildChatSession(); err != nil {
+	if session, err = chatRequest.BuildChatSession(opts.UserInsteadOfSystemRole); err != nil {
 		return
 	}
 
@@ -53,7 +53,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (m
 	}
 
 	if chatRequest.Session != nil && message != "" {
-		chatRequest.Session.Append(&common.Message{Role: "system", Content: message})
+		chatRequest.Session.Append(&common.Message{Role: goopenai.ChatMessageRoleAssistant, Content: message})
 		err = o.db.Sessions.SaveSession(chatRequest.Session)
 	}
 	return

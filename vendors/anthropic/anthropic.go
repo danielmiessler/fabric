@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	goopenai "github.com/sashabaranov/go-openai"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/liushuangls/go-anthropic/v2"
@@ -121,10 +122,8 @@ func (an *Client) toMessages(msgs []*common.Message) (ret []anthropic.Message) {
 	for _, msg := range normalizedMessages {
 		var message anthropic.Message
 		switch msg.Role {
-		case "user":
+		case goopenai.ChatMessageRoleUser:
 			message = anthropic.NewUserTextMessage(msg.Content)
-		case "system":
-			message = anthropic.NewAssistantTextMessage(msg.Content)
 		default:
 			message = anthropic.NewAssistantTextMessage(msg.Content)
 		}

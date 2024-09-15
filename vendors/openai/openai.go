@@ -111,17 +111,7 @@ func (o *Client) buildChatCompletionRequest(
 	msgs []*common.Message, opts *common.ChatOptions,
 ) (ret goopenai.ChatCompletionRequest) {
 	messages := lo.Map(msgs, func(message *common.Message, _ int) goopenai.ChatCompletionMessage {
-		var role string
-
-		switch message.Role {
-		case "user":
-			role = goopenai.ChatMessageRoleUser
-		case "system":
-			role = goopenai.ChatMessageRoleSystem
-		default:
-			role = goopenai.ChatMessageRoleSystem
-		}
-		return goopenai.ChatCompletionMessage{Role: role, Content: message.Content}
+		return goopenai.ChatCompletionMessage{Role: message.Role, Content: message.Content}
 	})
 
 	ret = goopenai.ChatCompletionRequest{

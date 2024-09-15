@@ -195,6 +195,7 @@ Application Options:
   -T, --topp=                       Set top P (default: 0.9)
   -s, --stream                      Stream
   -P, --presencepenalty=            Set presence penalty (default: 0.0)
+  -u, --user-instead-of-system      Use the user role instead of the system role for the pattern
   -F, --frequencypenalty=           Set frequency penalty (default: 0.0)
   -l, --listpatterns                List all patterns
   -L, --listmodels                  List all available models
