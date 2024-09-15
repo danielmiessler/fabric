@@ -23,6 +23,7 @@ type Flags struct {
 	TopP                    float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
 	Stream                  bool              `short:"s" long:"stream" description:"Stream"`
 	PresencePenalty         float64           `short:"P" long:"presencepenalty" description:"Set presence penalty" default:"0.0"`
+	UserInsteadOfSystemRole bool              `short:"u" long:"user-instead-of-system" description:"Use the user role instead of the system role for the pattern"`
 	FrequencyPenalty        float64           `short:"F" long:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
 	ListPatterns            bool              `short:"l" long:"listpatterns" description:"List all patterns"`
 	ListAllModels           bool              `short:"L" long:"listmodels" description:"List all available models"`
@@ -89,10 +90,11 @@ func readStdin() (string, error) {
 
 func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 	ret = &common.ChatOptions{
-		Temperature:      o.Temperature,
-		TopP:             o.TopP,
-		PresencePenalty:  o.PresencePenalty,
-		FrequencyPenalty: o.FrequencyPenalty,
+		Temperature:             o.Temperature,
+		TopP:                    o.TopP,
+		PresencePenalty:         o.PresencePenalty,
+		FrequencyPenalty:        o.FrequencyPenalty,
+		UserInsteadOfSystemRole: o.UserInsteadOfSystemRole,
 	}
 	return
 }

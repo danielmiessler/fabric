@@ -1,5 +1,7 @@
 package common
 
+import goopenai "github.com/sashabaranov/go-openai"
+
 type Message struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
@@ -14,11 +16,12 @@ type ChatRequest struct {
 }
 
 type ChatOptions struct {
-	Model            string
-	Temperature      float64
-	TopP             float64
-	PresencePenalty  float64
-	FrequencyPenalty float64
+	Model                   string
+	Temperature             float64
+	TopP                    float64
+	PresencePenalty         float64
+	FrequencyPenalty        float64
+	UserInsteadOfSystemRole bool
 }
 
 // NormalizeMessages remove empty messages and ensure messages order user-assist-user
@@ -32,8 +35,8 @@ func NormalizeMessages(msgs []*Message, defaultUserMessage string) (ret []*Messa
 		}
 
 		// Ensure, that each odd position shall be a user message
-		if fullMessageIndex%2 == 0 && message.Role != "user" {
-			ret = append(ret, &Message{Role: "user", Content: defaultUserMessage})
+		if fullMessageIndex%2 == 0 && message.Role != goopenai.ChatMessageRoleUser {
+			ret = append(ret, &Message{Role: goopenai.ChatMessageRoleUser, Content: defaultUserMessage})
 			fullMessageIndex++
 		}
 		ret = append(ret, message)

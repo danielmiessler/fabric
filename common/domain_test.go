@@ -1,23 +1,24 @@
 package common
 
 import (
+	goopenai "github.com/sashabaranov/go-openai"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestNormalizeMessages(t *testing.T) {
 	msgs := []*Message{
-		{Role: "user", Content: "Hello"},
-		{Role: "bot", Content: "Hi there!"},
-		{Role: "bot", Content: ""},
-		{Role: "user", Content: ""},
-		{Role: "user", Content: "How are you?"},
+		{Role: goopenai.ChatMessageRoleUser, Content: "Hello"},
+		{Role: goopenai.ChatMessageRoleAssistant, Content: "Hi there!"},
+		{Role: goopenai.ChatMessageRoleUser, Content: ""},
+		{Role: goopenai.ChatMessageRoleUser, Content: ""},
+		{Role: goopenai.ChatMessageRoleUser, Content: "How are you?"},
 	}
 
 	expected := []*Message{
-		{Role: "user", Content: "Hello"},
-		{Role: "bot", Content: "Hi there!"},
-		{Role: "user", Content: "How are you?"},
+		{Role: goopenai.ChatMessageRoleUser, Content: "Hello"},
+		{Role: goopenai.ChatMessageRoleAssistant, Content: "Hi there!"},
+		{Role: goopenai.ChatMessageRoleUser, Content: "How are you?"},
 	}
 
 	actual := NormalizeMessages(msgs, "default")
