@@ -26,7 +26,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (m
 	}
 
 	var session *db.Session
-	if session, err = chatRequest.BuildChatSession(opts.UserInsteadOfSystemRole); err != nil {
+	if session, err = chatRequest.BuildChatSession(opts.Raw); err != nil {
 		return
 	}
 

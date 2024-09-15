@@ -16,12 +16,12 @@ type ChatRequest struct {
 }
 
 type ChatOptions struct {
-	Model                   string
-	Temperature             float64
-	TopP                    float64
-	PresencePenalty         float64
-	FrequencyPenalty        float64
-	UserInsteadOfSystemRole bool
+	Model            string
+	Temperature      float64
+	TopP             float64
+	PresencePenalty  float64
+	FrequencyPenalty float64
+	Raw              bool
 }
 
 // NormalizeMessages remove empty messages and ensure messages order user-assist-user

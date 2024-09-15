@@ -237,7 +237,7 @@ func (o *Fabric) CreateOutputFile(message string, fileName string) (err error) {
 	return
 }
 
-func (o *Chat) BuildChatSession(userInsteadOfSystemRole bool) (ret *db.Session, err error) {
+func (o *Chat) BuildChatSession(raw bool) (ret *db.Session, err error) {
 	// new messages will be appended to the session and used to send the message
 	if o.Session != nil {
 		ret = o.Session
@@ -248,7 +248,8 @@ func (o *Chat) BuildChatSession(userInsteadOfSystemRole bool) (ret *db.Session, 
 	systemMessage := strings.TrimSpace(o.Context) + strings.TrimSpace(o.Pattern)
 	userMessage := strings.TrimSpace(o.Message)
 
-	if userInsteadOfSystemRole {
+	if raw {
+		// use the user role instead of the system role in raw mode
 		message := systemMessage + userMessage
 		if message != "" {
 			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: message})

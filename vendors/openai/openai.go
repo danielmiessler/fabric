@@ -114,13 +114,20 @@ func (o *Client) buildChatCompletionRequest(
 		return goopenai.ChatCompletionMessage{Role: message.Role, Content: message.Content}
 	})
 
-	ret = goopenai.ChatCompletionRequest{
-		Model:            opts.Model,
-		Temperature:      float32(opts.Temperature),
-		TopP:             float32(opts.TopP),
-		PresencePenalty:  float32(opts.PresencePenalty),
-		FrequencyPenalty: float32(opts.FrequencyPenalty),
-		Messages:         messages,
+	if opts.Raw {
+		ret = goopenai.ChatCompletionRequest{
+			Model:    opts.Model,
+			Messages: messages,
+		}
+	} else {
+		ret = goopenai.ChatCompletionRequest{
+			Model:            opts.Model,
+			Temperature:      float32(opts.Temperature),
+			TopP:             float32(opts.TopP),
+			PresencePenalty:  float32(opts.PresencePenalty),
+			FrequencyPenalty: float32(opts.FrequencyPenalty),
+			Messages:         messages,
+		}
 	}
 	return
 }
