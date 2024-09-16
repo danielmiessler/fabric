@@ -215,6 +215,8 @@ Application Options:
       --transcript                  Grab transcript from YouTube video and send to chat
       --comments                    Grab comments from YouTube video and send to chat
       --dry-run                     Show what would be sent to the model without actually sending it
+  -u, --scrape_url=                 Scrape website URL to markdown using Jina AI
+  -q, --scrape_question=            Search question using Jina AI
 
 Help Options:
   -h, --help                        Show this help message
