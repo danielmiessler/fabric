@@ -195,6 +195,7 @@ Application Options:
   -T, --topp=                       Set top P (default: 0.9)
   -s, --stream                      Stream
   -P, --presencepenalty=            Set presence penalty (default: 0.0)
+  -r, --raw                         Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns
   -F, --frequencypenalty=           Set frequency penalty (default: 0.0)
   -l, --listpatterns                List all patterns
   -L, --listmodels                  List all available models
@@ -313,6 +314,34 @@ go install github.com/danielmiessler/yt@latest
 ```
 
 Be sure to add your `YOUTUBE_API_KEY` to `~/.config/fabric/.env`.
+
+### `to_pdf`
+
+`to_pdf` is a helper command that converts LaTeX files to PDF format. You can use it like this:
+
+```bash
+to_pdf input.tex
+```
+
+This will create a PDF file from the input LaTeX file in the same directory.
+
+You can also use it with stdin which works perfectly with the `write_latex` pattern:
+
+```bash
+echo "ai security primer" | fabric --pattern write_latex | to_pdf
+```
+
+This will create a PDF file named `output.pdf` in the current directory.
+
+### `to_pdf` Installation
+
+To install `to_pdf`, install it the same way as you install Fabric, just with a different repo name.
+
+```bash
+go install github.com/danielmiessler/fabric/to_pdf/to_pdf@latest
+```
+
+Make sure you have a LaTeX distribution (like TeX Live or MiKTeX) installed on your system, as `to_pdf` requires `pdflatex` to be available in your system's PATH.
 
 ## Meta
 

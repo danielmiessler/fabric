@@ -1,4 +1,4 @@
-name: Go Build and Release
+name: Go Release
 
 on:
   push:
@@ -64,7 +64,7 @@ jobs:
           GOOS: ${{ env.OS }}
           GOARCH: ${{ matrix.arch }}
         run: |
-          go build -o fabric-${OS}-${{ matrix.arch }}-${{ github.ref_name }} .
+          go build -o fabric-${OS}-${{ matrix.arch }} .
 
       - name: Build binary on Windows
         if: matrix.os == 'windows-latest'
@@ -72,15 +72,39 @@ jobs:
           GOOS: windows
           GOARCH: ${{ matrix.arch }}
         run: |
-          go build -o fabric-${OS}-${{ matrix.arch }}-${{ github.ref_name }} .
+          go build -o fabric-windows-${{ matrix.arch }}.exe .
 
       - name: Upload build artifact
+        if: matrix.os != 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}
-          path: fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}
+          name: fabric-${OS}-${{ matrix.arch }}
+          path: fabric-${OS}-${{ matrix.arch }}
+
+      - name: Upload build artifact
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: fabric-windows-${{ matrix.arch }}.exe
+          path: fabric-windows-${{ matrix.arch }}.exe
+
+      - name: Create release if it doesn't exist
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view ${{ github.ref_name }} || gh release create ${{ github.ref_name }} --title "Release ${{ github.ref_name }}" --notes "Automated release for ${{ github.ref_name }}"
 
       - name: Upload release artifact
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') && matrix.os == 'windows-latest'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload ${{ github.ref_name }} fabric-${{ env.OS }}-${{ matrix.arch }}-${{ github.ref_name }}
+          gh release upload ${{ github.ref_name }} fabric-windows-${{ matrix.arch }}.exe
+
+      - name: Upload release artifact
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') && matrix.os != 'windows-latest'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload ${{ github.ref_name }} fabric-${OS}-${{ matrix.arch }}

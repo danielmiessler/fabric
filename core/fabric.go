@@ -3,6 +3,8 @@ package core
 import (
 	"bytes"
 	"fmt"
+	"github.com/danielmiessler/fabric/vendors/groq"
+	goopenai "github.com/sashabaranov/go-openai"
 	"os"
 	"strconv"
 	"strings"
@@ -14,9 +16,10 @@ import (
 	"github.com/danielmiessler/fabric/vendors/azure"
 	"github.com/danielmiessler/fabric/vendors/dryrun"
 	"github.com/danielmiessler/fabric/vendors/gemini"
-	"github.com/danielmiessler/fabric/vendors/groc"
 	"github.com/danielmiessler/fabric/vendors/ollama"
 	"github.com/danielmiessler/fabric/vendors/openai"
+	"github.com/danielmiessler/fabric/vendors/openrouter"
+	"github.com/danielmiessler/fabric/vendors/siliconcloud"
 	"github.com/danielmiessler/fabric/youtube"
 	"github.com/pkg/errors"
 )
@@ -58,8 +61,8 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 	ret.DefaultModel = ret.AddSetupQuestionCustom("Model", true,
 		"Enter the index the name of your default model")
 
-	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groc.NewClient(),
-		gemini.NewClient(), anthropic.NewClient())
+	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groq.NewClient(),
+		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient())
 
 	return
 }
@@ -234,7 +237,7 @@ func (o *Fabric) CreateOutputFile(message string, fileName string) (err error) {
 	return
 }
 
-func (o *Chat) BuildChatSession() (ret *db.Session, err error) {
+func (o *Chat) BuildChatSession(raw bool) (ret *db.Session, err error) {
 	// new messages will be appended to the session and used to send the message
 	if o.Session != nil {
 		ret = o.Session
@@ -243,14 +246,21 @@ func (o *Chat) BuildChatSession() (ret *db.Session, err error) {
 	}
 
 	systemMessage := strings.TrimSpace(o.Context) + strings.TrimSpace(o.Pattern)
-
-	if systemMessage != "" {
-		ret.Append(&common.Message{Role: "system", Content: systemMessage})
-	}
-
 	userMessage := strings.TrimSpace(o.Message)
-	if userMessage != "" {
-		ret.Append(&common.Message{Role: "user", Content: userMessage})
+
+	if raw {
+		// use the user role instead of the system role in raw mode
+		message := systemMessage + userMessage
+		if message != "" {
+			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: message})
+		}
+	} else {
+		if systemMessage != "" {
+			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
+		}
+		if userMessage != "" {
+			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: userMessage})
+		}
 	}
 
 	if ret.IsEmpty() {
