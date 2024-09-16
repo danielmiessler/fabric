@@ -14,6 +14,7 @@
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 </p>
 
+[Updates](#updates) •
 [What and Why](#whatandwhy) •
 [Philosophy](#philosophy) •
 [Installation](#Installation) •
@@ -28,6 +29,7 @@
 
 ## Navigation
 
+- [Updates](#updates)
 - [What and Why](#what-and-why)
 - [Philosophy](#philosophy)
   - [Breaking problems into components](#breaking-problems-into-components)
@@ -45,6 +47,8 @@
   - [Primary contributors](#primary-contributors)
 
 <br />
+
+## Updates
 
 > [!NOTE] 
 September 15, 2024 — Lots of new stuff!
