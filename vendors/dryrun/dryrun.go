@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	goopenai "github.com/sashabaranov/go-openai"
 
 	"github.com/danielmiessler/fabric/common"
 )
@@ -35,9 +36,11 @@ func (c *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, ch
 
 	for _, msg := range msgs {
 		switch msg.Role {
-		case "system":
+		case goopenai.ChatMessageRoleSystem:
 			output += fmt.Sprintf("System:\n%s\n\n", msg.Content)
-		case "user":
+		case goopenai.ChatMessageRoleAssistant:
+			output += fmt.Sprintf("Assistant:\n%s\n\n", msg.Content)
+		case goopenai.ChatMessageRoleUser:
 			output += fmt.Sprintf("User:\n%s\n\n", msg.Content)
 		default:
 			output += fmt.Sprintf("%s:\n%s\n\n", msg.Role, msg.Content)
@@ -56,14 +59,16 @@ func (c *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, ch
 	return nil
 }
 
-func (c *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.ChatOptions) (string, error) {
+func (c *Client) Send(_ context.Context, msgs []*common.Message, opts *common.ChatOptions) (string, error) {
 	fmt.Println("Dry run: Would send the following request:")
 
 	for _, msg := range msgs {
 		switch msg.Role {
-		case "system":
+		case goopenai.ChatMessageRoleSystem:
 			fmt.Printf("System:\n%s\n\n", msg.Content)
-		case "user":
+		case goopenai.ChatMessageRoleAssistant:
+			fmt.Printf("Assistant:\n%s\n\n", msg.Content)
+		case goopenai.ChatMessageRoleUser:
 			fmt.Printf("User:\n%s\n\n", msg.Content)
 		default:
 			fmt.Printf("%s:\n%s\n\n", msg.Role, msg.Content)
@@ -84,6 +89,6 @@ func (c *Client) Setup() error {
 	return nil
 }
 
-func (c *Client) SetupFillEnvFileContent(buffer *bytes.Buffer) {
+func (c *Client) SetupFillEnvFileContent(_ *bytes.Buffer) {
 	// No environment variables needed for dry run
 }

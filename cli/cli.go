@@ -113,11 +113,13 @@ func Cli() (message string, err error) {
 			return
 		}
 
-		if currentFlags.YouTubeTranscript {
+		if !currentFlags.YouTubeComments || currentFlags.YouTubeTranscript {
 			var transcript string
 			if transcript, err = fabric.YouTube.GrabTranscript(videoId); err != nil {
 				return
 			}
+
+			fmt.Println(transcript)
 
 			if currentFlags.Message != "" {
 				currentFlags.Message = currentFlags.Message + "\n" + transcript
@@ -134,11 +136,18 @@ func Cli() (message string, err error) {
 
 			commentsString := strings.Join(comments, "\n")
 
+			fmt.Println(commentsString)
+
 			if currentFlags.Message != "" {
 				currentFlags.Message = currentFlags.Message + "\n" + commentsString
 			} else {
 				currentFlags.Message = commentsString
 			}
+		}
+
+		if currentFlags.Pattern == "" {
+			// if the pattern flag is not set, we wanted only to grab the transcript or comments
+			return
 		}
 	}
 

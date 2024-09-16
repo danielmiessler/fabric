@@ -23,6 +23,7 @@ type Flags struct {
 	TopP                    float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
 	Stream                  bool              `short:"s" long:"stream" description:"Stream"`
 	PresencePenalty         float64           `short:"P" long:"presencepenalty" description:"Set presence penalty" default:"0.0"`
+	Raw                     bool              `short:"r" long:"raw" description:"Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns."`
 	FrequencyPenalty        float64           `short:"F" long:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
 	ListPatterns            bool              `short:"l" long:"listpatterns" description:"List all patterns"`
 	ListAllModels           bool              `short:"L" long:"listmodels" description:"List all available models"`
@@ -93,6 +94,7 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 		TopP:             o.TopP,
 		PresencePenalty:  o.PresencePenalty,
 		FrequencyPenalty: o.FrequencyPenalty,
+		Raw:              o.Raw,
 	}
 	return
 }

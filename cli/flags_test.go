@@ -60,6 +60,7 @@ func TestBuildChatOptions(t *testing.T) {
 		TopP:             0.9,
 		PresencePenalty:  0.1,
 		FrequencyPenalty: 0.2,
+		Raw:              false,
 	}
 	options := flags.BuildChatOptions()
 	assert.Equal(t, expectedOptions, options)
