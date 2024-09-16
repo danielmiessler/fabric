@@ -51,7 +51,7 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 		VendorsAll:     NewVendorsManager(),
 		PatternsLoader: NewPatternsLoader(db.Patterns),
 		YouTube:        youtube.NewYouTube(),
-		Jina: 		 	jina.NewJinaClient(),
+		Jina:           jina.NewClient(),
 	}
 
 	label := "Default"
@@ -77,7 +77,7 @@ type Fabric struct {
 	VendorsAll *VendorsManager
 	*PatternsLoader
 	*youtube.YouTube
-	Jina *jina.JinaClient
+	Jina *jina.Client
 
 	Db *db.Db
 

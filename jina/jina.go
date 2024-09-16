@@ -10,76 +10,61 @@ import (
 	"github.com/danielmiessler/fabric/common"
 )
 
-type JinaClient struct {
+type Client struct {
 	*common.Configurable
 	ApiKey *common.SetupQuestion
 }
 
-func NewJinaClient() *JinaClient {
+func NewClient() (ret *Client) {
 
 	label := "Jina AI"
 
-	client := &JinaClient{
+	ret = &Client{
 		Configurable: &common.Configurable{
-			Label: label,
+			Label:         label,
 			EnvNamePrefix: common.BuildEnvVariablePrefix(label),
 		},
 	}
-	client.ApiKey = client.AddSetupQuestion("API Key", false)
-    return client
+
+	ret.ApiKey = ret.AddSetupQuestion("API Key", false)
+
+	return
 }
 
-// return the main content of a webpage in clean, LLM-friendly text.
-func (jc *JinaClient) ScrapeURL(url string) (string, error) {
-	requestURL := "https://r.jina.ai/" + url
-    req, err := http.NewRequest("GET", requestURL, nil)
-    if err != nil {
-        return "", fmt.Errorf("error creating request: %w", err)
-    }
+// ScrapeURL return the main content of a webpage in clean, LLM-friendly text.
+func (jc *Client) ScrapeURL(url string) (ret string, err error) {
+	return jc.request(fmt.Sprintf("https://r.jina.ai/%s", url))
+}
+
+func (jc *Client) ScrapeQuestion(question string) (ret string, err error) {
+	return jc.request(fmt.Sprintf("https://s.jina.ai/%s", question))
+}
+
+func (jc *Client) request(requestURL string) (ret string, err error) {
+	var req *http.Request
+	if req, err = http.NewRequest("GET", requestURL, nil); err != nil {
+		err = fmt.Errorf("error creating request: %w", err)
+		return
+	}
 
 	// if api keys exist, set the header
-	if apiKey := jc.ApiKey.Value; apiKey != "" {
-        req.Header.Set("Authorization", "Bearer "+apiKey)
-    }
+	if jc.ApiKey.Value != "" {
+		req.Header.Set("Authorization", "Bearer "+jc.ApiKey.Value)
+	}
 
-    client := &http.Client{}
-    resp, err := client.Do(req)
-    if err != nil {
-        return "", fmt.Errorf("error sending request: %w", err)
-    }
-    defer resp.Body.Close()
+	client := &http.Client{}
+	var resp *http.Response
+	if resp, err = client.Do(req); err != nil {
+		err = fmt.Errorf("error sending request: %w", err)
+		return
+	}
+	defer resp.Body.Close()
 
-    body, err := io.ReadAll(resp.Body)
-    if err != nil {
-        return "", fmt.Errorf("error reading response body: %w", err)
-    }
-
-    return string(body), nil
-}
-
-func (jc *JinaClient) ScrapeQuestion(question string) (string, error) {
-    requestURL := "https://s.jina.ai/" + question
-    req, err := http.NewRequest("GET", requestURL, nil)
-    if err != nil {
-        return "", fmt.Errorf("error creating request: %w", err)
-    }
-
-    // if api keys exist, set the header
-    if apiKey := jc.ApiKey.Value; apiKey != "" {
-        req.Header.Set("Authorization", "Bearer "+apiKey)
-    }
-
-    client := &http.Client{}
-    resp, err := client.Do(req)
-    if err != nil {
-        return "", fmt.Errorf("error sending request: %w", err)
-    }
-    defer resp.Body.Close()
-
-    body, err := io.ReadAll(resp.Body)
-    if err != nil {
-        return "", fmt.Errorf("error reading response body: %w", err)
-    }
-
-    return string(body), nil
+	var body []byte
+	if body, err = io.ReadAll(resp.Body); err != nil {
+		err = fmt.Errorf("error reading response body: %w", err)
+		return
+	}
+	ret = string(body)
+	return
 }
