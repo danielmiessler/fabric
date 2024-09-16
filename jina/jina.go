@@ -25,8 +25,8 @@ func NewJinaClient() *JinaClient {
 			EnvNamePrefix: common.BuildEnvVariablePrefix(label),
 		},
 	}
-	client.ApiKey = client.AddSetupQuestion("API Key", true)
-	return client
+	client.ApiKey = client.AddSetupQuestion("API Key", false)
+    return client
 }
 
 // return the main content of a webpage in clean, LLM-friendly text.
@@ -37,10 +37,10 @@ func (jc *JinaClient) ScrapeURL(url string) (string, error) {
         return "", fmt.Errorf("error creating request: %w", err)
     }
 
-	apiKey := jc.ApiKey.Value
-
-    // Set the Authorization header with the Bearer token
-    req.Header.Set("Authorization", "Bearer " + apiKey)
+	// if api keys exist, set the header
+	if apiKey := jc.ApiKey.Value; apiKey != "" {
+        req.Header.Set("Authorization", "Bearer "+apiKey)
+    }
 
     client := &http.Client{}
     resp, err := client.Do(req)
@@ -57,20 +57,29 @@ func (jc *JinaClient) ScrapeURL(url string) (string, error) {
     return string(body), nil
 }
 
-// search engine call that returns top-5 results with their URLs and contents, each in clean, LLM-friendly text.
 func (jc *JinaClient) ScrapeQuestion(question string) (string, error) {
-	url := "https://s.jina.ai/" + question
+    requestURL := "https://s.jina.ai/" + question
+    req, err := http.NewRequest("GET", requestURL, nil)
+    if err != nil {
+        return "", fmt.Errorf("error creating request: %w", err)
+    }
 
-	resp, err := http.Get(url)
-	if err != nil {
-		return "", fmt.Errorf("error making GET request: %w", err)
-	}
-	defer resp.Body.Close()
+    // if api keys exist, set the header
+    if apiKey := jc.ApiKey.Value; apiKey != "" {
+        req.Header.Set("Authorization", "Bearer "+apiKey)
+    }
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", fmt.Errorf("error reading response body: %w", err)
-	}
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return "", fmt.Errorf("error sending request: %w", err)
+    }
+    defer resp.Body.Close()
 
-	return string(body), nil
+    body, err := io.ReadAll(resp.Body)
+    if err != nil {
+        return "", fmt.Errorf("error reading response body: %w", err)
+    }
+
+    return string(body), nil
 }
