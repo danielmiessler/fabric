@@ -47,15 +47,15 @@
 <br />
 
 > [!NOTE] 
-August 20, 2024 — We have migrated to Go, and the transition has been pretty smooth! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](#Installation) below.
+September 15, 2024 — Fabric now supports calling the new `o1-preview` model using the `-r` switch (which stands for raw. Normal queries won't work with `o1-preview` because they disabled System access and don't allow us to set `Temperature`.
 >
 >
 > **The following command line options were changed during the migration to Go:**
 > * You now need to use the -c option instead of -C to copy the result to the clipboard.
 > * You now need to use the -s option instead of -S to stream results in realtime.
-> * The following command line options have been removed --agents (-a), --gui, --clearsession, --remoteOllamaServer, and --sessionlog options 
-> * You can now use --Setup (-S) to configure an Ollama server.
-> * **Please be patient while our developers rewrite the gui in go**
+> * The following command line options have been removed `--agents` (-a), `--gui`, `--clearsession`, `--remoteOllamaServer`, and `--sessionlog`
+> * You can now use (-S) to configure an Ollama server.
+> * **We're working on a GUI rewrite in Go as well**
 
 ## Intro videos
 
