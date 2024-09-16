@@ -9,6 +9,7 @@ import (
 
 	"github.com/danielmiessler/fabric/core"
 	"github.com/danielmiessler/fabric/db"
+	"github.com/danielmiessler/fabric/jina"
 )
 
 // Cli Controls the cli. It takes in the flags and runs the appropriate functions
@@ -150,6 +151,36 @@ func Cli() (message string, err error) {
 			return
 		}
 	}
+
+    // Initialize JinaClient
+    jinaClient := jina.NewJinaClient()
+
+    // Load the configuration for JinaClient, including the API key
+    if err = jinaClient.Configurable.Configure(); err != nil {
+        return "", fmt.Errorf("failed to configure JinaClient: %w", err)
+    }
+
+    // Check if the scrape_url flag is set and call ScrapeURL
+    if currentFlags.ScrapeURL != "" {
+        message, err = jinaClient.ScrapeURL(currentFlags.ScrapeURL)
+        if err != nil {
+            return "", fmt.Errorf("failed to scrape URL: %w", err)
+        }
+        fmt.Println(message)
+        return message, nil
+    }
+
+    // Check if the scrape_question flag is set and call ScrapeQuestion
+    if currentFlags.ScrapeQuestion != "" {
+        message, err = jinaClient.ScrapeQuestion(currentFlags.ScrapeQuestion)
+        if err != nil {
+            return "", fmt.Errorf("failed to scrape question: %w", err)
+        }
+        fmt.Println(message)
+        return message, nil
+    }
+
+	
 
 	var chatter *core.Chatter
 	if chatter, err = fabric.GetChatter(currentFlags.Model, currentFlags.Stream, currentFlags.DryRun); err != nil {

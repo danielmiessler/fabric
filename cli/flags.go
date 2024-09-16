@@ -40,21 +40,24 @@ type Flags struct {
 	YouTubeTranscript       bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat"`
 	YouTubeComments         bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
 	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
+    ScrapeURL               string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
+	ScrapeQuestion		    string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
+
 }
 
 // Init Initialize flags. returns a Flags struct and an error
 func Init() (ret *Flags, err error) {
-	var message string
+    var message string
 
-	ret = &Flags{}
-	parser := flags.NewParser(ret, flags.Default)
-	var args []string
-	if args, err = parser.Parse(); err != nil {
-		return
-	}
+    ret = &Flags{}
+    parser := flags.NewParser(ret, flags.Default)
+    var args []string
+    if args, err = parser.Parse(); err != nil {
+        return
+    }
 
-	info, _ := os.Stdin.Stat()
-	hasStdin := (info.Mode() & os.ModeCharDevice) == 0
+    info, _ := os.Stdin.Stat()
+    hasStdin := (info.Mode() & os.ModeCharDevice) == 0
 
 	// takes input from stdin if it exists, otherwise takes input from args (the last argument)
 	if hasStdin {
@@ -68,7 +71,7 @@ func Init() (ret *Flags, err error) {
 	}
 	ret.Message = message
 
-	return
+    return
 }
 
 // readStdin reads from stdin and returns the input as a string or an error
