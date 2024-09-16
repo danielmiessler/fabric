@@ -50,7 +50,7 @@
 September 15, 2024 — Lots of new stuff!
 > * Fabric now supports calling the new `o1-preview` model using the `-r` switch (which stands for raw. Normal queries won't work with `o1-preview` because they disabled System access and don't allow us to set `Temperature`.
 > * We have early support for Raycast! Under the `/patterns` directory there's a `raycast` directory with scripts that can be called from Raycast. If you add a scripts directory within Raycast and point it to your `~/.config/fabric/patterns/raycast` directory, you'll then be able to 1) invoke Raycast, type the name of the script, and then 2) paste in the content to be passed, and the results will return in Raycast. There's currently only one script in there but I am (Daniel) adding more.
-> **Go Migration: The following command line options were changed during the migration to Go:**
+> * **Go Migration: The following command line options were changed during the migration to Go:**
 > * You now need to use the -c option instead of -C to copy the result to the clipboard.
 > * You now need to use the -s option instead of -S to stream results in realtime.
 > * The following command line options have been removed `--agents` (-a), `--gui`, `--clearsession`, `--remoteOllamaServer`, and `--sessionlog`
