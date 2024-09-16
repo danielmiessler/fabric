@@ -3,11 +3,13 @@ package core
 import (
 	"bytes"
 	"fmt"
-	"github.com/danielmiessler/fabric/vendors/groq"
-	goopenai "github.com/sashabaranov/go-openai"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/danielmiessler/fabric/vendors/groq"
+	"github.com/danielmiessler/fabric/vendors/mistral"
+	goopenai "github.com/sashabaranov/go-openai"
 
 	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/common"
@@ -62,7 +64,7 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 		"Enter the index the name of your default model")
 
 	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groq.NewClient(),
-		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient())
+		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient(), dryrun.NewClient())
 
 	return
 }
