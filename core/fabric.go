@@ -14,6 +14,7 @@ import (
 	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
+	"github.com/danielmiessler/fabric/jina"
 	"github.com/danielmiessler/fabric/vendors/anthropic"
 	"github.com/danielmiessler/fabric/vendors/azure"
 	"github.com/danielmiessler/fabric/vendors/dryrun"
@@ -50,6 +51,7 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 		VendorsAll:     NewVendorsManager(),
 		PatternsLoader: NewPatternsLoader(db.Patterns),
 		YouTube:        youtube.NewYouTube(),
+		Jina: 		 	jina.NewJinaClient(),
 	}
 
 	label := "Default"
@@ -75,6 +77,7 @@ type Fabric struct {
 	VendorsAll *VendorsManager
 	*PatternsLoader
 	*youtube.YouTube
+	Jina *jina.JinaClient
 
 	Db *db.Db
 
@@ -99,6 +102,7 @@ func (o *Fabric) SaveEnvFile() (err error) {
 	}
 
 	o.YouTube.SetupFillEnvFileContent(&envFileContent)
+	o.Jina.SetupFillEnvFileContent(&envFileContent)
 
 	err = o.Db.SaveEnv(envFileContent.String())
 	return
@@ -114,6 +118,10 @@ func (o *Fabric) Setup() (err error) {
 	}
 
 	_ = o.YouTube.SetupOrSkip()
+
+	if err = o.Jina.SetupOrSkip(); err != nil {
+		return
+	}
 
 	if err = o.PatternsLoader.Setup(); err != nil {
 		return
@@ -183,8 +191,9 @@ func (o *Fabric) configure() (err error) {
 		return
 	}
 
-	//YouTube is not mandatory, so ignore not configured error
+	//YouTube and Jina are not mandatory, so ignore not configured error
 	_ = o.YouTube.Configure()
+	_ = o.Jina.Configure()
 
 	return
 }
