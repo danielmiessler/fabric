@@ -210,7 +210,7 @@ Application Options:
   -m, --model=                      Choose model
   -o, --output=                     Output to file
   -n, --latest=                     Number of latest patterns to list (default: 0)
-  -d, --changeDefaultModel          Change default pattern
+  -d, --changeDefaultModel          Change default model
   -y, --youtube=                    YouTube video url to grab transcript, comments from it and send to chat
       --transcript                  Grab transcript from YouTube video and send to chat
       --comments                    Grab comments from YouTube video and send to chat
