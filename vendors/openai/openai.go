@@ -82,7 +82,12 @@ func (o *Client) SendStream(
 	for {
 		var response openai.ChatCompletionStreamResponse
 		if response, err = stream.Recv(); err == nil {
-			channel <- response.Choices[0].Delta.Content
+			if len(response.Choices) > 0 {
+				channel <- response.Choices[0].Delta.Content
+			} else {
+				fmt.Printf("No response (choices) from stream\n")
+				break
+			}
 		} else if errors.Is(err, io.EOF) {
 			channel <- "\n"
 			close(channel)
