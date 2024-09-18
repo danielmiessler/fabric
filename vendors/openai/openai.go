@@ -85,7 +85,8 @@ func (o *Client) SendStream(
 			if len(response.Choices) > 0 {
 				channel <- response.Choices[0].Delta.Content
 			} else {
-				fmt.Printf("No response (choices) from stream\n")
+				channel <- "\n"
+				close(channel)
 				break
 			}
 		} else if errors.Is(err, io.EOF) {
@@ -108,7 +109,9 @@ func (o *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.
 	if resp, err = o.ApiClient.CreateChatCompletion(ctx, req); err != nil {
 		return
 	}
-	ret = resp.Choices[0].Message.Content
+	if len(resp.Choices) > 0 {
+		ret = resp.Choices[0].Message.Content
+	}
 	return
 }
 
