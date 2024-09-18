@@ -26,9 +26,9 @@ func NewClient() (ret *Client) {
 	ret.maxTokens = 4096
 	ret.defaultRequiredUserMessage = "Hi"
 	ret.models = []string{
-		anthropic.ModelClaude3Haiku20240307, anthropic.ModelClaude3Opus20240229,
-		anthropic.ModelClaude3Opus20240229, anthropic.ModelClaude2Dot0, anthropic.ModelClaude2Dot1,
-		anthropic.ModelClaudeInstant1Dot2, "claude-3-5-sonnet-20240620",
+		string(anthropic.ModelClaude3Haiku20240307), string(anthropic.ModelClaude3Opus20240229),
+		string(anthropic.ModelClaude3Opus20240229), string(anthropic.ModelClaude2Dot0), string(anthropic.ModelClaude2Dot1),
+		string(anthropic.ModelClaudeInstant1Dot2), "claude-3-5-sonnet-20240620",
 	}
 
 	return
@@ -105,7 +105,7 @@ func (an *Client) buildMessagesRequest(msgs []*common.Message, opts *common.Chat
 	messages := an.toMessages(msgs)
 
 	ret = anthropic.MessagesRequest{
-		Model:       opts.Model,
+		Model:       anthropic.Model(opts.Model),
 		Temperature: &temperature,
 		TopP:        &topP,
 		Messages:    messages,
