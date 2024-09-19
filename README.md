@@ -14,6 +14,7 @@
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 </p>
 
+[Updates](#updates) •
 [What and Why](#whatandwhy) •
 [Philosophy](#philosophy) •
 [Installation](#Installation) •
@@ -28,6 +29,7 @@
 
 ## Navigation
 
+- [Updates](#updates)
 - [What and Why](#what-and-why)
 - [Philosophy](#philosophy)
   - [Breaking problems into components](#breaking-problems-into-components)
@@ -46,16 +48,18 @@
 
 <br />
 
+## Updates
+
 > [!NOTE] 
-August 20, 2024 — We have migrated to Go, and the transition has been pretty smooth! The biggest thing to know is that **the previous installation instructions in the various Fabric videos out there will no longer work** because they were for the legacy (Python) version. Check the new [install instructions](#Installation) below.
->
->
-> **The following command line options were changed during the migration to Go:**
+September 15, 2024 — Lots of new stuff!
+> * Fabric now supports calling the new `o1-preview` model using the `-r` switch (which stands for raw. Normal queries won't work with `o1-preview` because they disabled System access and don't allow us to set `Temperature`.
+> * We have early support for Raycast! Under the `/patterns` directory there's a `raycast` directory with scripts that can be called from Raycast. If you add a scripts directory within Raycast and point it to your `~/.config/fabric/patterns/raycast` directory, you'll then be able to 1) invoke Raycast, type the name of the script, and then 2) paste in the content to be passed, and the results will return in Raycast. There's currently only one script in there but I am (Daniel) adding more.
+> * **Go Migration: The following command line options were changed during the migration to Go:**
 > * You now need to use the -c option instead of -C to copy the result to the clipboard.
 > * You now need to use the -s option instead of -S to stream results in realtime.
-> * The following command line options have been removed --agents (-a), --gui, --clearsession, --remoteOllamaServer, and --sessionlog options 
-> * You can now use --Setup (-S) to configure an Ollama server.
-> * **Please be patient while our developers rewrite the gui in go**
+> * The following command line options have been removed `--agents` (-a), `--gui`, `--clearsession`, `--remoteOllamaServer`, and `--sessionlog`
+> * You can now use (-S) to configure an Ollama server.
+> * **We're working on a GUI rewrite in Go as well**
 
 ## Intro videos
 
@@ -195,6 +199,7 @@ Application Options:
   -T, --topp=                       Set top P (default: 0.9)
   -s, --stream                      Stream
   -P, --presencepenalty=            Set presence penalty (default: 0.0)
+  -r, --raw                         Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns
   -F, --frequencypenalty=           Set frequency penalty (default: 0.0)
   -l, --listpatterns                List all patterns
   -L, --listmodels                  List all available models
@@ -211,6 +216,8 @@ Application Options:
       --comments                    Grab comments from YouTube video and send to chat
       --dry-run                     Show what would be sent to the model without actually sending it
   -g, --language=                   Specify the Language Code for the chat, e.g. -g=en -g=zh
+  -u, --scrape_url=                 Scrape website URL to markdown using Jina AI
+  -q, --scrape_question=            Search question using Jina AI
 
 Help Options:
   -h, --help                        Show this help message

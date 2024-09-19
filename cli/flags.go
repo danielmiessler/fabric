@@ -24,6 +24,7 @@ type Flags struct {
 	TopP                    float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
 	Stream                  bool              `short:"s" long:"stream" description:"Stream"`
 	PresencePenalty         float64           `short:"P" long:"presencepenalty" description:"Set presence penalty" default:"0.0"`
+	Raw                     bool              `short:"r" long:"raw" description:"Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns."`
 	FrequencyPenalty        float64           `short:"F" long:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
 	ListPatterns            bool              `short:"l" long:"listpatterns" description:"List all patterns"`
 	ListAllModels           bool              `short:"L" long:"listmodels" description:"List all available models"`
@@ -41,6 +42,8 @@ type Flags struct {
 	YouTubeComments         bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
 	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
 	Language                string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
+	ScrapeURL               string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
+	ScrapeQuestion          string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
 }
 
 // Init Initialize flags. returns a Flags struct and an error
@@ -95,6 +98,7 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 		TopP:             o.TopP,
 		PresencePenalty:  o.PresencePenalty,
 		FrequencyPenalty: o.FrequencyPenalty,
+		Raw:              o.Raw,
 	}
 	return
 }
@@ -112,6 +116,15 @@ func (o *Flags) BuildChatRequest() (ret *common.ChatRequest) {
 		if err == nil {
 			ret.Language = langTag.String()
 		}
+	}
+	return
+}
+
+func (o *Flags) AppendMessage(message string) {
+	if o.Message != "" {
+		o.Message = o.Message + "\n" + message
+	} else {
+		o.Message = message
 	}
 	return
 }

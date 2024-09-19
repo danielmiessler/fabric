@@ -10,7 +10,7 @@ func TestBuildChatSession(t *testing.T) {
 		Pattern: "test pattern",
 		Message: "test message",
 	}
-	session, err := chat.BuildChatSession()
+	session, err := chat.BuildChatSession(false)
 	if err != nil {
 		t.Fatalf("BuildChatSession() error = %v", err)
 	}

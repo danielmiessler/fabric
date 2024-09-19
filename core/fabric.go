@@ -7,16 +7,22 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/danielmiessler/fabric/vendors/groq"
+	"github.com/danielmiessler/fabric/vendors/mistral"
+	goopenai "github.com/sashabaranov/go-openai"
+
 	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
+	"github.com/danielmiessler/fabric/jina"
 	"github.com/danielmiessler/fabric/vendors/anthropic"
 	"github.com/danielmiessler/fabric/vendors/azure"
 	"github.com/danielmiessler/fabric/vendors/dryrun"
 	"github.com/danielmiessler/fabric/vendors/gemini"
-	"github.com/danielmiessler/fabric/vendors/groc"
 	"github.com/danielmiessler/fabric/vendors/ollama"
 	"github.com/danielmiessler/fabric/vendors/openai"
+	"github.com/danielmiessler/fabric/vendors/openrouter"
+	"github.com/danielmiessler/fabric/vendors/siliconcloud"
 	"github.com/danielmiessler/fabric/youtube"
 	"github.com/pkg/errors"
 )
@@ -45,6 +51,7 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 		VendorsAll:     NewVendorsManager(),
 		PatternsLoader: NewPatternsLoader(db.Patterns),
 		YouTube:        youtube.NewYouTube(),
+		Jina:           jina.NewClient(),
 	}
 
 	label := "Default"
@@ -58,8 +65,8 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 	ret.DefaultModel = ret.AddSetupQuestionCustom("Model", true,
 		"Enter the index the name of your default model")
 
-	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groc.NewClient(),
-		gemini.NewClient(), anthropic.NewClient())
+	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groq.NewClient(),
+		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient(), dryrun.NewClient())
 
 	return
 }
@@ -70,6 +77,7 @@ type Fabric struct {
 	VendorsAll *VendorsManager
 	*PatternsLoader
 	*youtube.YouTube
+	Jina *jina.Client
 
 	Db *db.Db
 
@@ -94,6 +102,7 @@ func (o *Fabric) SaveEnvFile() (err error) {
 	}
 
 	o.YouTube.SetupFillEnvFileContent(&envFileContent)
+	o.Jina.SetupFillEnvFileContent(&envFileContent)
 
 	err = o.Db.SaveEnv(envFileContent.String())
 	return
@@ -109,6 +118,10 @@ func (o *Fabric) Setup() (err error) {
 	}
 
 	_ = o.YouTube.SetupOrSkip()
+
+	if err = o.Jina.SetupOrSkip(); err != nil {
+		return
+	}
 
 	if err = o.PatternsLoader.Setup(); err != nil {
 		return
@@ -178,8 +191,9 @@ func (o *Fabric) configure() (err error) {
 		return
 	}
 
-	//YouTube is not mandatory, so ignore not configured error
+	//YouTube and Jina are not mandatory, so ignore not configured error
 	_ = o.YouTube.Configure()
+	_ = o.Jina.Configure()
 
 	return
 }
@@ -234,7 +248,7 @@ func (o *Fabric) CreateOutputFile(message string, fileName string) (err error) {
 	return
 }
 
-func (o *Chat) BuildChatSession() (ret *db.Session, err error) {
+func (o *Chat) BuildChatSession(raw bool) (ret *db.Session, err error) {
 	// new messages will be appended to the session and used to send the message
 	if o.Session != nil {
 		ret = o.Session
@@ -243,14 +257,21 @@ func (o *Chat) BuildChatSession() (ret *db.Session, err error) {
 	}
 
 	systemMessage := strings.TrimSpace(o.Context) + strings.TrimSpace(o.Pattern)
-
-	if systemMessage != "" {
-		ret.Append(&common.Message{Role: "system", Content: systemMessage})
-	}
-
 	userMessage := strings.TrimSpace(o.Message)
-	if userMessage != "" {
-		ret.Append(&common.Message{Role: "user", Content: userMessage})
+
+	if raw {
+		// use the user role instead of the system role in raw mode
+		message := systemMessage + userMessage
+		if message != "" {
+			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: message})
+		}
+	} else {
+		if systemMessage != "" {
+			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
+		}
+		if userMessage != "" {
+			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: userMessage})
+		}
 	}
 
 	if o.Language != "" {

@@ -121,11 +121,7 @@ func Cli() (message string, err error) {
 
 			fmt.Println(transcript)
 
-			if currentFlags.Message != "" {
-				currentFlags.Message = currentFlags.Message + "\n" + transcript
-			} else {
-				currentFlags.Message = transcript
-			}
+			currentFlags.AppendMessage(transcript)
 		}
 
 		if currentFlags.YouTubeComments {
@@ -138,15 +134,40 @@ func Cli() (message string, err error) {
 
 			fmt.Println(commentsString)
 
-			if currentFlags.Message != "" {
-				currentFlags.Message = currentFlags.Message + "\n" + commentsString
-			} else {
-				currentFlags.Message = commentsString
-			}
+			currentFlags.AppendMessage(commentsString)
 		}
 
 		if currentFlags.Pattern == "" {
 			// if the pattern flag is not set, we wanted only to grab the transcript or comments
+			return
+		}
+	}
+
+	if (currentFlags.ScrapeURL != "" || currentFlags.ScrapeQuestion != "") && fabric.Jina.IsConfigured() {
+		// Check if the scrape_url flag is set and call ScrapeURL
+		if currentFlags.ScrapeURL != "" {
+			if message, err = fabric.Jina.ScrapeURL(currentFlags.ScrapeURL); err != nil {
+				return
+			}
+
+			fmt.Println(message)
+
+			currentFlags.AppendMessage(message)
+		}
+
+		// Check if the scrape_question flag is set and call ScrapeQuestion
+		if currentFlags.ScrapeQuestion != "" {
+			if message, err = fabric.Jina.ScrapeQuestion(currentFlags.ScrapeQuestion); err != nil {
+				return
+			}
+
+			fmt.Println(message)
+
+			currentFlags.AppendMessage(message)
+		}
+
+		if currentFlags.Pattern == "" {
+			// if the pattern flag is not set, we wanted only to grab the url or get the answer to the question
 			return
 		}
 	}
