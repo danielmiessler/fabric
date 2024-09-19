@@ -257,6 +257,9 @@ func (o *Chat) BuildChatSession(raw bool) (ret *db.Session, err error) {
 	}
 
 	systemMessage := strings.TrimSpace(o.Context) + strings.TrimSpace(o.Pattern)
+	if o.Language != "" {
+		systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, o.Language)
+	}
 	userMessage := strings.TrimSpace(o.Message)
 
 	if raw {

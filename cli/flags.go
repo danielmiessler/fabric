@@ -9,6 +9,7 @@ import (
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/jessevdk/go-flags"
+	"golang.org/x/text/language"
 )
 
 // Flags create flags struct. the users flags go into this, this will be passed to the chat struct in cli
@@ -40,6 +41,7 @@ type Flags struct {
 	YouTubeTranscript       bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat"`
 	YouTubeComments         bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
 	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
+	Language                string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
 	ScrapeURL               string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
 	ScrapeQuestion          string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
 }
@@ -108,6 +110,12 @@ func (o *Flags) BuildChatRequest() (ret *common.ChatRequest) {
 		PatternName:      o.Pattern,
 		PatternVariables: o.PatternVariables,
 		Message:          o.Message,
+	}
+	if o.Language != "" {
+		langTag, err := language.Parse(o.Language)
+		if err == nil {
+			ret.Language = langTag.String()
+		}
 	}
 	return
 }

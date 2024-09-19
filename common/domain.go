@@ -13,6 +13,7 @@ type ChatRequest struct {
 	PatternName      string
 	PatternVariables map[string]string
 	Message          string
+	Language         string
 }
 
 type ChatOptions struct {
