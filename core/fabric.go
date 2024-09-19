@@ -257,6 +257,9 @@ func (o *Chat) BuildChatSession(raw bool) (ret *db.Session, err error) {
 	}
 
 	systemMessage := strings.TrimSpace(o.Context) + strings.TrimSpace(o.Pattern)
+	if o.Language != "" {
+		systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, o.Language)
+	}
 	userMessage := strings.TrimSpace(o.Message)
 
 	if raw {
@@ -272,10 +275,6 @@ func (o *Chat) BuildChatSession(raw bool) (ret *db.Session, err error) {
 		if userMessage != "" {
 			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: userMessage})
 		}
-	}
-
-	if o.Language != "" {
-		ret.Append(&common.Message{Role: "system", Content: "please use " + o.Language + " language"})
 	}
 
 	if ret.IsEmpty() {
