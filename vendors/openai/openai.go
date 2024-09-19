@@ -82,7 +82,13 @@ func (o *Client) SendStream(
 	for {
 		var response openai.ChatCompletionStreamResponse
 		if response, err = stream.Recv(); err == nil {
-			channel <- response.Choices[0].Delta.Content
+			if len(response.Choices) > 0 {
+				channel <- response.Choices[0].Delta.Content
+			} else {
+				channel <- "\n"
+				close(channel)
+				break
+			}
 		} else if errors.Is(err, io.EOF) {
 			channel <- "\n"
 			close(channel)
@@ -103,7 +109,9 @@ func (o *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.
 	if resp, err = o.ApiClient.CreateChatCompletion(ctx, req); err != nil {
 		return
 	}
-	ret = resp.Choices[0].Message.Content
+	if len(resp.Choices) > 0 {
+		ret = resp.Choices[0].Message.Content
+	}
 	return
 }
 
@@ -111,26 +119,23 @@ func (o *Client) buildChatCompletionRequest(
 	msgs []*common.Message, opts *common.ChatOptions,
 ) (ret goopenai.ChatCompletionRequest) {
 	messages := lo.Map(msgs, func(message *common.Message, _ int) goopenai.ChatCompletionMessage {
-		var role string
-
-		switch message.Role {
-		case "user":
-			role = goopenai.ChatMessageRoleUser
-		case "system":
-			role = goopenai.ChatMessageRoleSystem
-		default:
-			role = goopenai.ChatMessageRoleSystem
-		}
-		return goopenai.ChatCompletionMessage{Role: role, Content: message.Content}
+		return goopenai.ChatCompletionMessage{Role: message.Role, Content: message.Content}
 	})
 
-	ret = goopenai.ChatCompletionRequest{
-		Model:            opts.Model,
-		Temperature:      float32(opts.Temperature),
-		TopP:             float32(opts.TopP),
-		PresencePenalty:  float32(opts.PresencePenalty),
-		FrequencyPenalty: float32(opts.FrequencyPenalty),
-		Messages:         messages,
+	if opts.Raw {
+		ret = goopenai.ChatCompletionRequest{
+			Model:    opts.Model,
+			Messages: messages,
+		}
+	} else {
+		ret = goopenai.ChatCompletionRequest{
+			Model:            opts.Model,
+			Temperature:      float32(opts.Temperature),
+			TopP:             float32(opts.TopP),
+			PresencePenalty:  float32(opts.PresencePenalty),
+			FrequencyPenalty: float32(opts.FrequencyPenalty),
+			Messages:         messages,
+		}
 	}
 	return
 }
