@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/samber/lo"
@@ -111,6 +112,7 @@ func (o *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.
 	}
 	if len(resp.Choices) > 0 {
 		ret = resp.Choices[0].Message.Content
+		slog.Debug("SystemFingerprint: " + resp.SystemFingerprint)
 	}
 	return
 }
@@ -128,13 +130,25 @@ func (o *Client) buildChatCompletionRequest(
 			Messages: messages,
 		}
 	} else {
-		ret = goopenai.ChatCompletionRequest{
-			Model:            opts.Model,
-			Temperature:      float32(opts.Temperature),
-			TopP:             float32(opts.TopP),
-			PresencePenalty:  float32(opts.PresencePenalty),
-			FrequencyPenalty: float32(opts.FrequencyPenalty),
-			Messages:         messages,
+		if opts.Seed == 0 {
+			ret = goopenai.ChatCompletionRequest{
+				Model:            opts.Model,
+				Temperature:      float32(opts.Temperature),
+				TopP:             float32(opts.TopP),
+				PresencePenalty:  float32(opts.PresencePenalty),
+				FrequencyPenalty: float32(opts.FrequencyPenalty),
+				Messages:         messages,
+			}
+		} else {
+			ret = goopenai.ChatCompletionRequest{
+				Model:            opts.Model,
+				Temperature:      float32(opts.Temperature),
+				TopP:             float32(opts.TopP),
+				PresencePenalty:  float32(opts.PresencePenalty),
+				FrequencyPenalty: float32(opts.FrequencyPenalty),
+				Messages:         messages,
+				Seed:             &opts.Seed,
+			}
 		}
 	}
 	return
