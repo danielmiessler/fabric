@@ -10,6 +10,8 @@ import (
 	"github.com/liushuangls/go-anthropic/v2"
 )
 
+const baseUrl = "https://api.anthropic.com/v1"
+
 func NewClient() (ret *Client) {
 	vendorName := "Anthropic"
 	ret = &Client{}
@@ -20,6 +22,8 @@ func NewClient() (ret *Client) {
 		ConfigureCustom: ret.configure,
 	}
 
+	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
+	ret.ApiBaseURL.Value = baseUrl
 	ret.ApiKey = ret.Configurable.AddSetupQuestion("API key", true)
 
 	// we could provide a setup question for the following settings
@@ -36,7 +40,8 @@ func NewClient() (ret *Client) {
 
 type Client struct {
 	*common.Configurable
-	ApiKey *common.SetupQuestion
+	ApiBaseURL *common.SetupQuestion
+	ApiKey     *common.SetupQuestion
 
 	maxTokens                  int
 	defaultRequiredUserMessage string
@@ -46,7 +51,11 @@ type Client struct {
 }
 
 func (an *Client) configure() (err error) {
-	an.client = anthropic.NewClient(an.ApiKey.Value)
+	if an.ApiBaseURL.Value != "" {
+		an.client = anthropic.NewClient(an.ApiKey.Value, anthropic.WithBaseURL(an.ApiBaseURL.Value))
+	} else {
+		an.client = anthropic.NewClient(an.ApiKey.Value)
+	}
 	return
 }
 
