@@ -3,10 +3,11 @@ package db
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/samber/lo"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 type Storage struct {
@@ -69,9 +70,8 @@ func (o *Storage) ListNames() (err error) {
 		return
 	}
 
-	fmt.Printf("\n%v:\n", o.Label)
 	for _, item := range names {
-		fmt.Printf("\t%s\n", item)
+		fmt.Printf("%s\n", item)
 	}
 	return
 }
