@@ -137,9 +137,9 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH
 for Apple Silicon based macs
 ```bash
 # Golang environment variables
-export GOROOT=/opt/homebrew/bin/go
+export GOROOT=$(brew --prefix go)/libexec
 export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH:
+export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH
 ```
 
 ### Setup
