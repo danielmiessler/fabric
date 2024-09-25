@@ -218,6 +218,7 @@ Application Options:
   -g, --language=                   Specify the Language Code for the chat, e.g. -g=en -g=zh
   -u, --scrape_url=                 Scrape website URL to markdown using Jina AI
   -q, --scrape_question=            Search question using Jina AI
+  -e, --seed=                       Seed to be used for LMM generation
 
 Help Options:
   -h, --help                        Show this help message
