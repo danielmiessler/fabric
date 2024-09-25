@@ -53,6 +53,7 @@ func TestBuildChatOptions(t *testing.T) {
 		TopP:             0.9,
 		PresencePenalty:  0.1,
 		FrequencyPenalty: 0.2,
+		Seed:             1,
 	}
 
 	expectedOptions := &common.ChatOptions{
@@ -61,6 +62,27 @@ func TestBuildChatOptions(t *testing.T) {
 		PresencePenalty:  0.1,
 		FrequencyPenalty: 0.2,
 		Raw:              false,
+		Seed:             1,
+	}
+	options := flags.BuildChatOptions()
+	assert.Equal(t, expectedOptions, options)
+}
+
+func TestBuildChatOptionsDefaultSeed(t *testing.T) {
+	flags := &Flags{
+		Temperature:      0.8,
+		TopP:             0.9,
+		PresencePenalty:  0.1,
+		FrequencyPenalty: 0.2,
+	}
+
+	expectedOptions := &common.ChatOptions{
+		Temperature:      0.8,
+		TopP:             0.9,
+		PresencePenalty:  0.1,
+		FrequencyPenalty: 0.2,
+		Raw:              false,
+		Seed:             0,
 	}
 	options := flags.BuildChatOptions()
 	assert.Equal(t, expectedOptions, options)

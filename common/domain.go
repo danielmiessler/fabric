@@ -23,6 +23,7 @@ type ChatOptions struct {
 	PresencePenalty  float64
 	FrequencyPenalty float64
 	Raw              bool
+	Seed             int
 }
 
 // NormalizeMessages remove empty messages and ensure messages order user-assist-user

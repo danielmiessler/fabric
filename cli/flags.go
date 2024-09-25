@@ -44,6 +44,7 @@ type Flags struct {
 	Language                string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
 	ScrapeURL               string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
 	ScrapeQuestion          string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
+	Seed                    int               `short:"e" long:"seed" description:"Seed to be used for LMM generation"`
 }
 
 // Init Initialize flags. returns a Flags struct and an error
@@ -99,6 +100,7 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 		PresencePenalty:  o.PresencePenalty,
 		FrequencyPenalty: o.FrequencyPenalty,
 		Raw:              o.Raw,
+		Seed:             o.Seed,
 	}
 	return
 }
