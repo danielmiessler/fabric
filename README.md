@@ -346,7 +346,7 @@ This will create a PDF file named `output.pdf` in the current directory.
 To install `to_pdf`, install it the same way as you install Fabric, just with a different repo name.
 
 ```bash
-go install github.com/danielmiessler/fabric/to_pdf/to_pdf@latest
+go install github.com/danielmiessler/fabric/to_pdf@latest
 ```
 
 Make sure you have a LaTeX distribution (like TeX Live or MiKTeX) installed on your system, as `to_pdf` requires `pdflatex` to be available in your system's PATH.
