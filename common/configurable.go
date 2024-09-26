@@ -103,8 +103,9 @@ func (o *Setting) IsDefined() bool {
 }
 
 func (o *Setting) Configure() error {
-	if o.Value == "" {
-		o.Value = os.Getenv(o.EnvVariable)
+	envValue := os.Getenv(o.EnvVariable)
+	if envValue != "" {
+		o.Value = envValue
 	}
 	return o.IsValidErr()
 }
