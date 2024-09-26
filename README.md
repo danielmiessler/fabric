@@ -173,7 +173,7 @@ Then [set your environmental variables](#environmental-variables) as shown above
 
 The great thing about Go is that it's super easy to upgrade. Just run the same command you used to install it in the first place and you'll always get the latest version.
 ```bash
-go install github.com/danielmiessler/fabric@latest
+go install -ldflags "-X main.version=$(git describe --tags --always)" github.com/danielmiessler/fabric@latest
 ```
 
 ## Usage
@@ -211,14 +211,14 @@ Application Options:
   -o, --output=                     Output to file
   -n, --latest=                     Number of latest patterns to list (default: 0)
   -d, --changeDefaultModel          Change default model
-  -y, --youtube=                    YouTube video url to grab transcript, comments from it and send to chat
-      --transcript                  Grab transcript from YouTube video and send to chat
+  -y, --youtube=                    YouTube video "URL" to grab transcript, comments from it and send to chat
+      --transcript                  Grab transcript from YouTube video and send to chat (it used per default).
       --comments                    Grab comments from YouTube video and send to chat
-      --dry-run                     Show what would be sent to the model without actually sending it
   -g, --language=                   Specify the Language Code for the chat, e.g. -g=en -g=zh
   -u, --scrape_url=                 Scrape website URL to markdown using Jina AI
   -q, --scrape_question=            Search question using Jina AI
   -e, --seed=                       Seed to be used for LMM generation
+      --dry-run                     Show what would be sent to the model without actually sending it
 
 Help Options:
   -h, --help                        Show this help message
@@ -302,26 +302,6 @@ This feature works with all openai and ollama models but does NOT work with clau
 ## Helper Apps
 
 Fabric also makes use of some core helper apps (tools) to make it easier to integrate with your various workflows. Here are some examples:
-
-`yt` is a helper command that extracts the transcript from a YouTube video. You can use it like this:
-```bash
-yt https://www.youtube.com/watch?v=lQVcbY52_gY
-```
-
-This will return the transcript from the video, which you can then pipe into Fabric like this:
-```bash
-yt https://www.youtube.com/watch?v=lQVcbY52_gY | fabric --pattern extract_wisdom
-```
-
-### `yt` Installation
-
-To install `yt`, install it the same way as you install Fabric, just with a different repo name.
-
-```bash
-go install github.com/danielmiessler/yt@latest
-```
-
-Be sure to add your `YOUTUBE_API_KEY` to `~/.config/fabric/.env`.
 
 ### `to_pdf`
 

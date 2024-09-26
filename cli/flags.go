@@ -37,15 +37,15 @@ type Flags struct {
 	Output                  string            `short:"o" long:"output" description:"Output to file" default:""`
 	LatestPatterns          string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
 	ChangeDefaultModel      bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
-	YouTube                 string            `short:"y" long:"youtube" description:"YouTube video url to grab transcript, comments from it and send to chat"`
-	YouTubeTranscript       bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat"`
+	YouTube                 string            `short:"y" long:"youtube" description:"YouTube video \"URL\" to grab transcript, comments from it and send to chat"`
+	YouTubeTranscript       bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat (it used per default)."`
 	YouTubeComments         bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
-	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
 	Language                string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
 	ScrapeURL               string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
 	ScrapeQuestion          string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
 	Seed                    int               `short:"e" long:"seed" description:"Seed to be used for LMM generation"`
 	Version                 bool              `long:"version" description:"Print current version"`
+	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
 }
 
 // Init Initialize flags. returns a Flags struct and an error
