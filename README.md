@@ -219,6 +219,7 @@ Application Options:
   -q, --scrape_question=            Search question using Jina AI
   -e, --seed=                       Seed to be used for LMM generation
       --dry-run                     Show what would be sent to the model without actually sending it
+      --version                     Print current version
 
 Help Options:
   -h, --help                        Show this help message
