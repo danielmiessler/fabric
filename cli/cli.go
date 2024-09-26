@@ -12,11 +12,16 @@ import (
 )
 
 // Cli Controls the cli. It takes in the flags and runs the appropriate functions
-func Cli() (message string, err error) {
+func Cli(version string) (message string, err error) {
 	var currentFlags *Flags
 	if currentFlags, err = Init(); err != nil {
 		// we need to reset error, because we don't want to show double help messages
 		err = nil
+		return
+	}
+
+	if currentFlags.Version {
+		fmt.Println(version)
 		return
 	}
 

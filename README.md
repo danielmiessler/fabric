@@ -117,7 +117,7 @@ To install Fabric, [make sure Go is installed](https://go.dev/doc/install), and 
 
 ```bash
 # Install Fabric directly from the repo
-go install github.com/danielmiessler/fabric@latest
+go install -ldflags "-X main.version=$(git describe --tags --always)" github.com/danielmiessler/fabric@latest
 ```
 
 ### Environment Variables

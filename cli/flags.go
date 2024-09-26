@@ -45,6 +45,7 @@ type Flags struct {
 	ScrapeURL               string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
 	ScrapeQuestion          string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
 	Seed                    int               `short:"e" long:"seed" description:"Seed to be used for LMM generation"`
+	Version                 bool              `long:"version" description:"Print current version"`
 }
 
 // Init Initialize flags. returns a Flags struct and an error
