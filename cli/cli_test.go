@@ -9,7 +9,7 @@ import (
 )
 
 func TestCli(t *testing.T) {
-	message, err := Cli()
+	message, err := Cli("test")
 	assert.NoError(t, err)
 	assert.Empty(t, message)
 }
