@@ -32,7 +32,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 - Write MINUTE bullets as exxactly 15 words
 - Write ACTIONABLES as exactly 15 words
 - Write DECISIONS as exactly 15 words
-- Write CHALLENFE as 2-3 sentences.
+- Write CHALLENGE as 2-3 sentences.
 - Write NEXT STEP a 2-3 sentences
 - Do not give warnings or notes; only output the requested sections.
 - Do not repeat ideas, quotes, facts, or resources.
