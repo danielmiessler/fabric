@@ -241,9 +241,9 @@ Application Options:
   -u, --scrape_url=                 Scrape website URL to markdown using Jina AI
   -q, --scrape_question=            Search question using Jina AI
   -e, --seed=                       Seed to be used for LMM generation
-      --dry-run                     Show what would be sent to the model without actually sending it
   -w, --wipecontext=                Wipe context
   -W, --wipesession=                Wipe session
+      --dry-run                     Show what would be sent to the model without actually sending it
       --version                     Print current version
 
 Help Options:
