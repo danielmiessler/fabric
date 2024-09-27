@@ -100,6 +100,18 @@ func Cli(version string) (message string, err error) {
 		return
 	}
 
+	// if the wipe context flag is set, run the wipe context function
+	if currentFlags.WipeContext != "" {
+		err = fabricDb.Contexts.Delete(currentFlags.WipeContext)
+		return
+	}
+
+	// if the wipe session flag is set, run the wipe session function
+	if currentFlags.WipeSession != "" {
+		err = fabricDb.Sessions.Delete(currentFlags.WipeSession)
+		return
+	}
+
 	// if the interactive flag is set, run the interactive function
 	// if currentFlags.Interactive {
 	// 	interactive.Interactive()
