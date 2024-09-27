@@ -15,8 +15,6 @@ import (
 func Cli(version string) (message string, err error) {
 	var currentFlags *Flags
 	if currentFlags, err = Init(); err != nil {
-		// we need to reset error, because we don't want to show double help messages
-		err = nil
 		return
 	}
 
