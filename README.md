@@ -113,6 +113,29 @@ Fabric has Patterns for all sorts of life and work activities, including:
 
 ## Installation
 
+To install Fabric, you can use the latest release binaries or install it from the source.
+
+### Get Latest Release Binaries
+
+```bash
+# Windows:
+curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-windows-amd64.exe > fabric.exe && fabric.exe --version
+
+# MacOS (arm64):
+curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 > fabric && chmod +x fabric && ./fabric --version
+
+# MacOS (amd64): 
+curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 > fabric && chmod +x fabric && ./fabric --version
+
+# Linux (amd64): 
+curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 > fabric && chmod +x fabric && ./fabric --version
+
+# Linux (arm64):
+curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-arm64 > fabric && chmod +x fabric && ./fabric --version
+```
+
+### From Source
+
 To install Fabric, [make sure Go is installed](https://go.dev/doc/install), and then run the following command.
 
 ```bash
