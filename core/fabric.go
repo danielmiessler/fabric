@@ -30,6 +30,8 @@ import (
 const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
 const DefaultPatternsGitRepoFolder = "patterns"
 
+const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
+
 func NewFabric(db *db.Db) (ret *Fabric, err error) {
 	ret = NewFabricBase(db)
 	err = ret.Configure()
@@ -279,7 +281,7 @@ func (o *Chat) BuildChatSession(raw bool) (ret *db.Session, err error) {
 
 	if ret.IsEmpty() {
 		ret = nil
-		err = fmt.Errorf("no session, pattern or user messages provided")
+		err = fmt.Errorf(NoSessionPatternUserMessages)
 	}
 	return
 }

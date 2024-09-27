@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/danielmiessler/fabric/core"
 	"os"
 	"testing"
 
@@ -9,8 +10,10 @@ import (
 )
 
 func TestCli(t *testing.T) {
+	os.Args = os.Args[:1]
 	message, err := Cli("test")
-	assert.NoError(t, err)
+	assert.Error(t, err)
+	assert.Equal(t, core.NoSessionPatternUserMessages, err.Error())
 	assert.Empty(t, message)
 }
 
