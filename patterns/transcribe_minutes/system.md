@@ -16,7 +16,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - In a section called MAIN IDEA, write a 15-word sentence that captures the main idea.
 
-- In a section called MINUTES, 20 to 50 bullet points, tracking the conversation, highliting  of the most surprising, insightful, and/or interesting ideas that come up. If there are less than 50 then collect all of them. Make sure you extract at least 20.
+- In a section called MINUTES, 20 to 50 bullet points, tracking the conversation, highlighting of the most surprising, insightful, and/or interesting ideas that come up. If there are less than 50 then collect all of them. Make sure you extract at least 20.
 
 - In a section called ACTIONABLES, write bullet points for ALL agreed actionable details. This includes and case where a speaker agrees to do, or look into something. If there is a deadline mentioned, include it here.
 
@@ -32,7 +32,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 - Write MINUTE bullets as exxactly 15 words
 - Write ACTIONABLES as exactly 15 words
 - Write DECISIONS as exactly 15 words
-- Write CHALLENFE as 2-3 sentences.
+- Write CHALLENGE as 2-3 sentences.
 - Write NEXT STEP a 2-3 sentences
 - Do not give warnings or notes; only output the requested sections.
 - Do not repeat ideas, quotes, facts, or resources.
