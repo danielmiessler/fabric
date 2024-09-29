@@ -134,7 +134,7 @@ func Cli(version string) (message string, err error) {
 				return
 			}
 
-			fmt.Println(transcript)
+			// fmt.Println(transcript)
 
 			currentFlags.AppendMessage(transcript)
 		}
@@ -147,13 +147,14 @@ func Cli(version string) (message string, err error) {
 
 			commentsString := strings.Join(comments, "\n")
 
-			fmt.Println(commentsString)
+			// fmt.Println(commentsString)
 
 			currentFlags.AppendMessage(commentsString)
 		}
 
 		if currentFlags.Pattern == "" {
 			// if the pattern flag is not set, we wanted only to grab the transcript or comments
+			fmt.Println(currentFlags.Message)
 			return
 		}
 	}
@@ -165,7 +166,7 @@ func Cli(version string) (message string, err error) {
 				return
 			}
 
-			fmt.Println(message)
+			//fmt.Println(message)
 
 			currentFlags.AppendMessage(message)
 		}
@@ -176,13 +177,14 @@ func Cli(version string) (message string, err error) {
 				return
 			}
 
-			fmt.Println(message)
+			//fmt.Println(message)
 
 			currentFlags.AppendMessage(message)
 		}
 
 		if currentFlags.Pattern == "" {
 			// if the pattern flag is not set, we wanted only to grab the url or get the answer to the question
+			fmt.Println(currentFlags.Message)
 			return
 		}
 	}
