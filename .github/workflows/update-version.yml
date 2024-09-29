@@ -21,6 +21,7 @@ jobs:
       - name: Get the latest tag
         id: get_latest_tag
         run: |
+          ls -all
           latest_tag=$(git describe --tags --abbrev=0)
           echo "Latest tag is: $latest_tag"
           echo "::set-output name=tag::$latest_tag"
@@ -28,6 +29,7 @@ jobs:
       - name: Get the latest commit hash
         id: get_commit_hash
         run: |
+          ls -all
           commit_hash=$(git rev-parse --short HEAD)
           echo "Commit hash is: $commit_hash"
           echo "::set-output name=commit_hash::$commit_hash"
