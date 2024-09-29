@@ -5,6 +5,9 @@ on:
     branches:
       - main  # Or whichever branch you want to monitor
 
+permissions:
+  contents: write  # Ensure the workflow has write permissions
+
 jobs:
   update-version:
     runs-on: ubuntu-latest
@@ -23,7 +26,6 @@ jobs:
       - name: Get the latest tag
         id: get_latest_tag
         run: |
-          ls -all
           latest_tag=$(git describe --tags --abbrev=0)
           echo "Latest tag is: $latest_tag"
           echo "::set-output name=tag::$latest_tag"
@@ -31,12 +33,11 @@ jobs:
       - name: Get the latest commit hash
         id: get_commit_hash
         run: |
-          ls -all
           commit_hash=$(git rev-parse --short HEAD)
           echo "Commit hash is: $commit_hash"
           echo "::set-output name=commit_hash::$commit_hash"
 
-      - name: Update version file
+      - name: Update version.go file
         run: |
           latest_tag=${{ steps.get_latest_tag.outputs.tag }}
           commit_hash=${{ steps.get_commit_hash.outputs.commit_hash }}
@@ -48,4 +49,9 @@ jobs:
         run: |
           git add version.go
           git commit -m "Update version to ${{ steps.get_latest_tag.outputs.tag }} and commit ${{ steps.get_commit_hash.outputs.commit_hash }}"
+
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN to authenticate the push
+        run: |
           git push origin main  # Or the relevant branch
