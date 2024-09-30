@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main  # Or whichever branch you want to monitor
+    tags:
+      - '*'  # Trigger on any new tag
 
 permissions:
   contents: write  # Ensure the workflow has write permissions
