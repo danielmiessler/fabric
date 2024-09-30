@@ -244,6 +244,7 @@ Application Options:
   -w, --wipecontext=                Wipe context
   -W, --wipesession=                Wipe session
       --dry-run                     Show what would be sent to the model without actually sending it
+      --readability                 Turn web page into a clean view
       --version                     Print current version
 
 Help Options:
