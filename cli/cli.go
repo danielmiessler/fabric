@@ -189,6 +189,14 @@ func Cli(version string) (message string, err error) {
 		}
 	}
 
+	if currentFlags.HtmlReadability {
+		if msg, err := core.HtmlReadability(currentFlags.Message); err != nil {
+			fmt.Println("use readability parser msg err:", err)
+		} else {
+			currentFlags.Message = msg
+		}
+	}
+
 	var chatter *core.Chatter
 	if chatter, err = fabric.GetChatter(currentFlags.Model, currentFlags.Stream, currentFlags.DryRun); err != nil {
 		return
