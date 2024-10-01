@@ -130,7 +130,11 @@ func Cli(version string) (message string, err error) {
 
 		if !currentFlags.YouTubeComments || currentFlags.YouTubeTranscript {
 			var transcript string
-			if transcript, err = fabric.YouTube.GrabTranscript(videoId); err != nil {
+			var language = "en"
+			if currentFlags.Language != "" {
+				language = currentFlags.Language
+			}
+			if transcript, err = fabric.YouTube.GrabTranscript(videoId, language); err != nil {
 				return
 			}
 
