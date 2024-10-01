@@ -10,6 +10,7 @@ import (
 	"google.golang.org/api/option"
 	"google.golang.org/api/youtube/v3"
 	"log"
+	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -61,17 +62,17 @@ func (o *YouTube) GetVideoId(url string) (ret string, err error) {
 	return
 }
 
-func (o *YouTube) GrabTranscriptForUrl(url string) (ret string, err error) {
+func (o *YouTube) GrabTranscriptForUrl(url string, language string) (ret string, err error) {
 	var videoId string
 	if videoId, err = o.GetVideoId(url); err != nil {
 		return
 	}
-	return o.GrabTranscript(videoId)
+	return o.GrabTranscript(videoId, language)
 }
 
-func (o *YouTube) GrabTranscript(videoId string) (ret string, err error) {
+func (o *YouTube) GrabTranscript(videoId string, language string) (ret string, err error) {
 	var transcript string
-	if transcript, err = o.GrabTranscriptBase(videoId); err != nil {
+	if transcript, err = o.GrabTranscriptBase(videoId, language); err != nil {
 		err = fmt.Errorf("transcript not available. (%v)", err)
 		return
 	}
@@ -89,14 +90,14 @@ func (o *YouTube) GrabTranscript(videoId string) (ret string, err error) {
 	return
 }
 
-func (o *YouTube) GrabTranscriptBase(videoId string) (ret string, err error) {
+func (o *YouTube) GrabTranscriptBase(videoId string, language string) (ret string, err error) {
 	if err = o.initService(); err != nil {
 		return
 	}
 
-	url := "https://www.youtube.com/watch?v=" + videoId
+	watchUrl := "https://www.youtube.com/watch?v=" + videoId
 	var resp string
-	if resp, err = soup.Get(url); err != nil {
+	if resp, err = soup.Get(watchUrl); err != nil {
 		return
 	}
 
@@ -117,6 +118,16 @@ func (o *YouTube) GrabTranscriptBase(videoId string) (ret string, err error) {
 
 				if len(captionTracks) > 0 {
 					transcriptURL := captionTracks[0].BaseURL
+					for _, captionTrack := range captionTracks {
+						parsedUrl, error := url.Parse(captionTrack.BaseURL)
+						if error != nil {
+							err = fmt.Errorf("error parsing caption track")
+						}
+						parsedUrlParams, _ := url.ParseQuery(parsedUrl.RawQuery)
+						if parsedUrlParams["lang"][0] == language {
+							transcriptURL = captionTrack.BaseURL
+						}
+					}
 					ret, err = soup.Get(transcriptURL)
 					return
 				}
@@ -212,7 +223,7 @@ func (o *YouTube) Grab(url string, options *Options) (ret *VideoInfo, err error)
 	}
 
 	if options.Transcript {
-		if ret.Transcript, err = o.GrabTranscript(videoId); err != nil {
+		if ret.Transcript, err = o.GrabTranscript(videoId, "en"); err != nil {
 			return
 		}
 	}

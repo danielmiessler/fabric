@@ -64,7 +64,7 @@ jobs:
           GOOS: ${{ env.OS }}
           GOARCH: ${{ matrix.arch }}
         run: |
-          go build -o fabric-${OS}-${{ matrix.arch }} .
+          go build -ldflags "-X main.version=$(git describe --tags --abbrev=0)" -o fabric-${OS}-${{ matrix.arch }} .
 
       - name: Build binary on Windows
         if: matrix.os == 'windows-latest'
@@ -72,7 +72,7 @@ jobs:
           GOOS: windows
           GOARCH: ${{ matrix.arch }}
         run: |
-          go build -o fabric-windows-${{ matrix.arch }}.exe .
+          go build -ldflags "-X main.version=$(git describe --tags --abbrev=0)" -o fabric-windows-${{ matrix.arch }}.exe .
 
       - name: Upload build artifact
         if: matrix.os != 'windows-latest'

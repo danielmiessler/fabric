@@ -12,11 +12,14 @@ import (
 )
 
 // Cli Controls the cli. It takes in the flags and runs the appropriate functions
-func Cli() (message string, err error) {
+func Cli(version string) (message string, err error) {
 	var currentFlags *Flags
 	if currentFlags, err = Init(); err != nil {
-		// we need to reset error, because we don't want to show double help messages
-		err = nil
+		return
+	}
+
+	if currentFlags.Version {
+		fmt.Println(version)
 		return
 	}
 
@@ -95,6 +98,18 @@ func Cli() (message string, err error) {
 		return
 	}
 
+	// if the wipe context flag is set, run the wipe context function
+	if currentFlags.WipeContext != "" {
+		err = fabricDb.Contexts.Delete(currentFlags.WipeContext)
+		return
+	}
+
+	// if the wipe session flag is set, run the wipe session function
+	if currentFlags.WipeSession != "" {
+		err = fabricDb.Sessions.Delete(currentFlags.WipeSession)
+		return
+	}
+
 	// if the interactive flag is set, run the interactive function
 	// if currentFlags.Interactive {
 	// 	interactive.Interactive()
@@ -115,11 +130,15 @@ func Cli() (message string, err error) {
 
 		if !currentFlags.YouTubeComments || currentFlags.YouTubeTranscript {
 			var transcript string
-			if transcript, err = fabric.YouTube.GrabTranscript(videoId); err != nil {
+			var language = "en"
+			if currentFlags.Language != "" {
+				language = currentFlags.Language
+			}
+			if transcript, err = fabric.YouTube.GrabTranscript(videoId, language); err != nil {
 				return
 			}
 
-			fmt.Println(transcript)
+			// fmt.Println(transcript)
 
 			currentFlags.AppendMessage(transcript)
 		}
@@ -132,13 +151,14 @@ func Cli() (message string, err error) {
 
 			commentsString := strings.Join(comments, "\n")
 
-			fmt.Println(commentsString)
+			// fmt.Println(commentsString)
 
 			currentFlags.AppendMessage(commentsString)
 		}
 
 		if currentFlags.Pattern == "" {
 			// if the pattern flag is not set, we wanted only to grab the transcript or comments
+			fmt.Println(currentFlags.Message)
 			return
 		}
 	}
@@ -150,7 +170,7 @@ func Cli() (message string, err error) {
 				return
 			}
 
-			fmt.Println(message)
+			//fmt.Println(message)
 
 			currentFlags.AppendMessage(message)
 		}
@@ -161,13 +181,14 @@ func Cli() (message string, err error) {
 				return
 			}
 
-			fmt.Println(message)
+			//fmt.Println(message)
 
 			currentFlags.AppendMessage(message)
 		}
 
 		if currentFlags.Pattern == "" {
 			// if the pattern flag is not set, we wanted only to grab the url or get the answer to the question
+			fmt.Println(currentFlags.Message)
 			return
 		}
 	}
