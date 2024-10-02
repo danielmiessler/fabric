@@ -2,7 +2,6 @@ name: Go Release
 
 on:
   push:
-    branches: ["main"]
     tags:
       - "v*"
 
