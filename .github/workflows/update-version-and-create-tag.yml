@@ -33,7 +33,10 @@ jobs:
       - name: Increment patch version
         id: increment_version
         run: |
-          IFS='.' read -r major minor patch <<<"${{ env.tag#v }}"
+          latest_tag=${{ env.tag }}
+          major=$(echo "$latest_tag" | cut -d. -f1 | sed 's/v//')
+          minor=$(echo "$latest_tag" | cut -d. -f2)
+          patch=$(echo "$latest_tag" | cut -d. -f3)
           new_patch=$((patch + 1))
           new_tag="v${major}.${minor}.${new_patch}"
           echo "New tag is: $new_tag"
