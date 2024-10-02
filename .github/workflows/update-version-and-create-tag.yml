@@ -1,0 +1,68 @@
+name: Update Version and Create Tag
+
+on:
+  push:
+    branches:
+      - main  # Monitor the main branch
+
+permissions:
+  contents: write  # Ensure the workflow has write permissions
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history to include tags
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get the latest tag
+        id: get_latest_tag
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "Latest tag is: $latest_tag"
+          echo "::set-output name=tag::$latest_tag"
+
+      - name: Increment minor version
+        id: increment_version
+        run: |
+          latest_tag=${{ steps.get_latest_tag.outputs.tag }}
+          IFS='.' read -r major minor patch <<<"${latest_tag#v}"
+          new_minor=$((minor + 1))
+          new_tag="v${major}.${new_minor}.0"
+          echo "New tag is: $new_tag"
+          echo "::set-output name=new_tag::$new_tag"
+
+      - name: Update version.go file
+        run: |
+          new_tag=${{ steps.increment_version.outputs.new_tag }}
+          commit_hash=$(git rev-parse --short HEAD)
+          echo "package main" > version.go
+          echo "" >> version.go
+          echo "var version = \"${new_tag}-${commit_hash}\"" >> version.go
+
+      - name: Commit changes
+        run: |
+          git add version.go
+          git commit -m "Update version to ${{ steps.increment_version.outputs.new_tag }} and commit $commit_hash"
+
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN to authenticate the push
+        run: |
+          git push origin main  # Push changes to the main branch
+
+      - name: Create a new tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          new_tag=${{ steps.increment_version.outputs.new_tag }}
+          git tag $new_tag
+          git push origin $new_tag  # Push the new tag
