@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"github.com/danielmiessler/fabric/converter"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -110,6 +111,14 @@ func Cli(version string) (message string, err error) {
 		return
 	}
 
+	if currentFlags.HtmlReadability {
+		if msg, cleanErr := converter.HtmlReadability(currentFlags.Message); cleanErr != nil {
+			fmt.Println("use original input, because can't apply html readability", err)
+		} else {
+			currentFlags.Message = msg
+		}
+	}
+
 	// if the interactive flag is set, run the interactive function
 	// if currentFlags.Interactive {
 	// 	interactive.Interactive()
@@ -190,14 +199,6 @@ func Cli(version string) (message string, err error) {
 			// if the pattern flag is not set, we wanted only to grab the url or get the answer to the question
 			fmt.Println(currentFlags.Message)
 			return
-		}
-	}
-
-	if currentFlags.HtmlReadability {
-		if msg, err := core.HtmlReadability(currentFlags.Message); err != nil {
-			fmt.Println("use readability parser msg err:", err)
-		} else {
-			currentFlags.Message = msg
 		}
 	}
 
