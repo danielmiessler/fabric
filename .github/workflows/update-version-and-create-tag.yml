@@ -44,10 +44,9 @@ jobs:
 
       - name: Update version.go file
         run: |
-          commit_hash=$(git rev-parse --short HEAD)
           echo "package main" > version.go
           echo "" >> version.go
-          echo "var version = \"${{ env.new_tag }}-${commit_hash}\"" >> version.go
+          echo "var version = \"${{ env.new_tag }}\"" >> version.go
 
       - name: Commit changes
         run: |
