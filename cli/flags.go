@@ -47,6 +47,7 @@ type Flags struct {
 	WipeContext             string            `short:"w" long:"wipecontext" description:"Wipe context"`
 	WipeSession             string            `short:"W" long:"wipesession" description:"Wipe session"`
 	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
+	HtmlReadability         bool              `long:"readability" description:"Turn web page into a clean view"`
 	Version                 bool              `long:"version" description:"Print current version"`
 }
 
