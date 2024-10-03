@@ -26,7 +26,7 @@ jobs:
       - name: Get the latest tag
         id: get_latest_tag
         run: |
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          latest_tag=$(git tag --sort=-creatordate | head -n 1)
           echo "Latest tag is: $latest_tag"
           echo "tag=$latest_tag" >> $GITHUB_ENV  # Save the latest tag to environment file
 
