@@ -18,6 +18,9 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history to include tags
 
+      - name: Fetch all tags
+        run: git fetch --tags  # Ensure all tags are fetched
+
       - name: Set up Git
         run: |
           git config user.name "github-actions[bot]"
