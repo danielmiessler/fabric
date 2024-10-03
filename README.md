@@ -243,6 +243,7 @@ Application Options:
   -e, --seed=                       Seed to be used for LMM generation
   -w, --wipecontext=                Wipe context
   -W, --wipesession=                Wipe session
+      --readability                 Convert HTML input into a clean, readable view
       --dry-run                     Show what would be sent to the model without actually sending it
       --version                     Print current version
 

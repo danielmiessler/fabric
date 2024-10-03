@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"github.com/danielmiessler/fabric/converter"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -108,6 +109,14 @@ func Cli(version string) (message string, err error) {
 	if currentFlags.WipeSession != "" {
 		err = fabricDb.Sessions.Delete(currentFlags.WipeSession)
 		return
+	}
+
+	if currentFlags.HtmlReadability {
+		if msg, cleanErr := converter.HtmlReadability(currentFlags.Message); cleanErr != nil {
+			fmt.Println("use original input, because can't apply html readability", err)
+		} else {
+			currentFlags.Message = msg
+		}
 	}
 
 	// if the interactive flag is set, run the interactive function
