@@ -1,0 +1,67 @@
+name: Update Version File and Create Tag
+
+on:
+  push:
+    branches:
+      - main  # Monitor the main branch
+
+permissions:
+  contents: write  # Ensure the workflow has write permissions
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history to include tags
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get the latest tag
+        id: get_latest_tag
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "Latest tag is: $latest_tag"
+          echo "tag=$latest_tag" >> $GITHUB_ENV  # Save the latest tag to environment file
+
+      - name: Increment patch version
+        id: increment_version
+        run: |
+          latest_tag=${{ env.tag }}
+          major=$(echo "$latest_tag" | cut -d. -f1 | sed 's/v//')
+          minor=$(echo "$latest_tag" | cut -d. -f2)
+          patch=$(echo "$latest_tag" | cut -d. -f3)
+          new_patch=$((patch + 1))
+          new_tag="v${major}.${minor}.${new_patch}"
+          echo "New tag is: $new_tag"
+          echo "new_tag=$new_tag" >> $GITHUB_ENV  # Save the new tag to environment file
+
+      - name: Update version.go file
+        run: |
+          echo "package main" > version.go
+          echo "" >> version.go
+          echo "var version = \"${{ env.new_tag }}\"" >> version.go
+
+      - name: Commit changes
+        run: |
+          git add version.go
+          git commit -m "Update version to ${{ env.new_tag }} and commit $commit_hash"
+
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN to authenticate the push
+        run: |
+          git push origin main  # Push changes to the main branch
+
+      - name: Create a new tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git tag ${{ env.new_tag }}
+          git push origin ${{ env.new_tag }}  # Push the new tag
