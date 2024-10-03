@@ -2,7 +2,7 @@
 
 - The goal is to bring more encapsulation of the models management and simplified configuration management to bring increased flexibility, transparency on the overall flow, and simplicity in adding new model.
 - We need to differentiate:
-  - Vendors: the producer of models (like OpenAI, Anthropric, Ollama, ..etc) and their associated APIs
+  - Vendors: the producer of models (like OpenAI, Azure, Anthropric, Ollama, ..etc) and their associated APIs
   - Models: the LLM models these vendors are making public
 - Each vendor and operations allowed by the vendor needs to be encapsulated. This includes:
   - The questions needed to setup the model (like the API key, or the URL)
