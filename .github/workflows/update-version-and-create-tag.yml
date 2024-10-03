@@ -62,7 +62,7 @@ jobs:
 
       - name: Push changes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN to authenticate the push
+          GITHUB_TOKEN: ${{ secrets.TAG_PAT }}  # Use GITHUB_TOKEN to authenticate the push
         run: |
           git push origin main  # Push changes to the main branch
 
