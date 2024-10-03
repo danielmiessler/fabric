@@ -18,9 +18,6 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history to include tags
 
-      - name: Fetch all tags
-        run: git fetch --tags  # Ensure all tags are fetched
-
       - name: Set up Git
         run: |
           git config user.name "github-actions[bot]"
@@ -62,7 +59,7 @@ jobs:
 
       - name: Push changes
         env:
-          GITHUB_TOKEN: ${{ secrets.TAG_PAT }}  # Use GITHUB_TOKEN to authenticate the push
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN to authenticate the push
         run: |
           git push origin main  # Push changes to the main branch
 
@@ -72,3 +69,13 @@ jobs:
         run: |
           git tag ${{ env.new_tag }}
           git push origin ${{ env.new_tag }}  # Push the new tag
+
+      - name: Dispatch event to trigger release workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN to authenticate the dispatch
+        run: |
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            -d '{"event_type": "tag_created", "client_payload": {"tag": "${{ env.new_tag }}"}}'
