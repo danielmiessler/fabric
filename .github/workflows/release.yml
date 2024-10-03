@@ -1,6 +1,8 @@
 name: Go Release
 
 on:
+  repository_dispatch:
+    types: [ tag_created ]
   push:
     tags:
       - "v*"
