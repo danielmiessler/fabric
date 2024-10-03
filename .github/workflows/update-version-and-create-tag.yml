@@ -61,7 +61,7 @@ jobs:
 
       - name: Create a new tag
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TAG_PAT }}
         run: |
           git tag ${{ env.new_tag }}
           git push origin ${{ env.new_tag }}  # Push the new tag
