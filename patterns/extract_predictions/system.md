@@ -6,7 +6,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 # STEPS
 
-- Extract all predictions made within the content.
+- Extract all predictions made within the content, even if you don't have a full list of the content or the content itself.
 
 - For each prediction, extract the following:
 
