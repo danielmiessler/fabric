@@ -51,7 +51,11 @@ jobs:
       - name: Commit changes
         run: |
           git add version.go
-          git commit -m "Update version to ${{ env.new_tag }} and commit $commit_hash"
+          if ! git diff --staged --quiet; then
+            git commit -m "Update version to ${{ env.new_tag }} and commit $commit_hash"
+          else
+            echo "No changes to commit."
+          fi
 
       - name: Push changes
         env:
