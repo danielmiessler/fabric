@@ -89,20 +89,28 @@ jobs:
           name: fabric-windows-${{ matrix.arch }}.exe
           path: fabric-windows-${{ matrix.arch }}.exe
 
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          latest_tag=$(git tag --sort=-creatordate | head -n 1)
+          echo "latest_tag=$latest_tag" >> $GITHUB_ENV
+
       - name: Create release if it doesn't exist
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release view ${{ github.ref_name }} || gh release create ${{ github.ref_name }} --title "Release ${{ github.ref_name }}" --notes "Automated release for ${{ github.ref_name }}"
+          gh release view ${{ env.latest_tag }} || gh release create ${{ env.latest_tag }} --title "Release ${{ env.latest_tag }}" --notes "Automated release for ${{ env.latest_tag }}"
 
       - name: Upload release artifact
+        if: matrix.os == 'windows-latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload ${{ github.ref_name }} fabric-windows-${{ matrix.arch }}.exe
+          gh release upload ${{ env.latest_tag }} fabric-windows-${{ matrix.arch }}.exe
 
       - name: Upload release artifact
+        if: matrix.os != 'windows-latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload ${{ github.ref_name }} fabric-${OS}-${{ matrix.arch }}
+          gh release upload ${{ env.latest_tag }} fabric-${OS}-${{ matrix.arch }}
