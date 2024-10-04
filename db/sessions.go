@@ -24,7 +24,7 @@ func (o *Sessions) PrintSession(name string) (err error) {
 	if o.Exists(name) {
 		var session Session
 		if err = o.LoadAsJson(name, &session.Messages); err == nil {
-			fmt.Println(session)
+			fmt.Println(session.String())
 		}
 	}
 	return
@@ -56,7 +56,7 @@ func (o *Session) GetLastMessage() (ret *common.Message) {
 
 func (o *Session) String() (ret string) {
 	for _, message := range o.Messages {
-		ret += fmt.Sprintf("[%v] >\n\n%v\n\n", message.Role, message.Content)
+		ret += fmt.Sprintf("\n\n\n[%v]>> \n\n\n%v", message.Role, message.Content)
 	}
 	return
 }
