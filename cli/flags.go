@@ -36,6 +36,7 @@ type Flags struct {
 	Copy               bool              `short:"c" long:"copy" description:"Copy to clipboard"`
 	Model              string            `short:"m" long:"model" description:"Choose model"`
 	Output             string            `short:"o" long:"output" description:"Output to file" default:""`
+	OutputPrompt       bool              `long:"output-prompt" description:"Output used prompt before the result"`
 	LatestPatterns     string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
 	ChangeDefaultModel bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
 	YouTube            string            `short:"y" long:"youtube" description:"YouTube video \"URL\" to grab transcript, comments from it and send to chat"`
@@ -47,6 +48,8 @@ type Flags struct {
 	Seed               int               `short:"e" long:"seed" description:"Seed to be used for LMM generation"`
 	WipeContext        string            `short:"w" long:"wipecontext" description:"Wipe context"`
 	WipeSession        string            `short:"W" long:"wipesession" description:"Wipe session"`
+	PrintContext       string            `long:"printcontext" description:"Print context"`
+	PrintSession       string            `long:"printsession" description:"Print session"`
 	HtmlReadability    bool              `long:"readability" description:"Convert HTML input into a clean, readable view"`
 	DryRun             bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
 	Version            bool              `long:"version" description:"Print current version"`
@@ -133,5 +136,10 @@ func (o *Flags) AppendMessage(message string) {
 	} else {
 		o.Message = message
 	}
+	return
+}
+
+func (o *Flags) IsChatRequest() (ret bool) {
+	ret = o.Message != "" || o.Session != ""
 	return
 }
