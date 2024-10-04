@@ -19,13 +19,12 @@ type Chatter struct {
 	vendor vendors.Vendor
 }
 
-func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (message string, err error) {
+func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *db.Session, err error) {
 	var chatRequest *Chat
 	if chatRequest, err = o.NewChat(request); err != nil {
 		return
 	}
 
-	var session *db.Session
 	if session, err = chatRequest.BuildChatSession(opts.Raw); err != nil {
 		return
 	}
@@ -33,6 +32,8 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (m
 	if opts.Model == "" {
 		opts.Model = o.model
 	}
+
+	message := ""
 
 	if o.Stream {
 		channel := make(chan string)
@@ -52,9 +53,15 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (m
 		}
 	}
 
-	if chatRequest.Session != nil && message != "" {
-		chatRequest.Session.Append(&common.Message{Role: goopenai.ChatMessageRoleAssistant, Content: message})
-		err = o.db.Sessions.SaveSession(chatRequest.Session)
+	if message == "" {
+		session = nil
+		err = fmt.Errorf("empty response")
+	}
+
+	session.Append(&common.Message{Role: goopenai.ChatMessageRoleAssistant, Content: message})
+
+	if chatRequest.Session != nil {
+		err = o.db.Sessions.SaveSession(session)
 	}
 	return
 }

@@ -212,41 +212,44 @@ Usage:
   fabric [OPTIONS]
 
 Application Options:
-  -p, --pattern=                    Choose a pattern
-  -v, --variable=                   Values for pattern variables, e.g. -v=$name:John -v=$age:30
-  -C, --context=                    Choose a context
-      --session=                    Choose a session
-  -S, --setup                       Run setup for all reconfigurable parts of fabric
-      --setup-skip-patterns         Run setup for all reconfigurable parts of fabric, but skip update fabric patterns.
-      --setup-vendor=               Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI
-  -t, --temperature=                Set temperature (default: 0.7)
-  -T, --topp=                       Set top P (default: 0.9)
-  -s, --stream                      Stream
-  -P, --presencepenalty=            Set presence penalty (default: 0.0)
-  -r, --raw                         Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns
-  -F, --frequencypenalty=           Set frequency penalty (default: 0.0)
-  -l, --listpatterns                List all patterns
-  -L, --listmodels                  List all available models
-  -x, --listcontexts                List all contexts
-  -X, --listsessions                List all sessions
-  -U, --updatepatterns              Update patterns
-  -c, --copy                        Copy to clipboard
-  -m, --model=                      Choose model
-  -o, --output=                     Output to file
-  -n, --latest=                     Number of latest patterns to list (default: 0)
-  -d, --changeDefaultModel          Change default model
-  -y, --youtube=                    YouTube video "URL" to grab transcript, comments from it and send to chat
-      --transcript                  Grab transcript from YouTube video and send to chat (it used per default).
-      --comments                    Grab comments from YouTube video and send to chat
-  -g, --language=                   Specify the Language Code for the chat, e.g. -g=en -g=zh
-  -u, --scrape_url=                 Scrape website URL to markdown using Jina AI
-  -q, --scrape_question=            Search question using Jina AI
-  -e, --seed=                       Seed to be used for LMM generation
-  -w, --wipecontext=                Wipe context
-  -W, --wipesession=                Wipe session
-      --readability                 Convert HTML input into a clean, readable view
-      --dry-run                     Show what would be sent to the model without actually sending it
-      --version                     Print current version
+  -p, --pattern=             Choose a pattern
+  -v, --variable=            Values for pattern variables, e.g. -v=$name:John -v=$age:30
+  -C, --context=             Choose a context
+      --session=             Choose a session
+  -S, --setup                Run setup for all reconfigurable parts of fabric
+      --setup-skip-patterns  Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI
+      --setup-vendor=        Run Setup for specific vendor. E.g. --setup-vendor=OpenAI
+  -t, --temperature=         Set temperature (default: 0.7)
+  -T, --topp=                Set top P (default: 0.9)
+  -s, --stream               Stream
+  -P, --presencepenalty=     Set presence penalty (default: 0.0)
+  -r, --raw                  Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns.
+  -F, --frequencypenalty=    Set frequency penalty (default: 0.0)
+  -l, --listpatterns         List all patterns
+  -L, --listmodels           List all available models
+  -x, --listcontexts         List all contexts
+  -X, --listsessions         List all sessions
+  -U, --updatepatterns       Update patterns
+  -c, --copy                 Copy to clipboard
+  -m, --model=               Choose model
+  -o, --output=              Output to file
+      --output-prompt        Output used prompt before the result
+  -n, --latest=              Number of latest patterns to list (default: 0)
+  -d, --changeDefaultModel   Change default model
+  -y, --youtube=             YouTube video "URL" to grab transcript, comments from it and send to chat
+      --transcript           Grab transcript from YouTube video and send to chat (it used per default).
+      --comments             Grab comments from YouTube video and send to chat
+  -g, --language=            Specify the Language Code for the chat, e.g. -g=en -g=zh
+  -u, --scrape_url=          Scrape website URL to markdown using Jina AI
+  -q, --scrape_question=     Search question using Jina AI
+  -e, --seed=                Seed to be used for LMM generation
+  -w, --wipecontext=         Wipe context
+  -W, --wipesession=         Wipe session
+      --printcontext=        Print context
+      --printsession=        Print session
+      --readability          Convert HTML input into a clean, readable view
+      --dry-run              Show what would be sent to the model without actually sending it
+      --version              Print current version
 
 Help Options:
   -h, --help                        Show this help message
