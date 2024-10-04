@@ -182,6 +182,14 @@ func (o *Fabric) SetupVendors() (err error) {
 	return
 }
 
+func (o *Fabric) SetupVendor(vendorName string) (err error) {
+	if err = o.VendorsAll.SetupVendor(vendorName); err != nil {
+		return
+	}
+	err = o.SaveEnvFile()
+	return
+}
+
 // Configure buildClient VendorsController based on the environment variables
 func (o *Fabric) configure() (err error) {
 	for _, vendor := range o.VendorsAll.Vendors {

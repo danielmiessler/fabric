@@ -216,8 +216,9 @@ Application Options:
   -v, --variable=                   Values for pattern variables, e.g. -v=$name:John -v=$age:30
   -C, --context=                    Choose a context
       --session=                    Choose a session
-  -S, --setup                       Run setup
-      --setup-skip-update-patterns  Skip update patterns at setup
+  -S, --setup                       Run setup for all reconfigurable parts of fabric
+      --setup-skip-patterns         Run setup for all reconfigurable parts of fabric, but skip update fabric patterns.
+      --setup-vendor=               Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI
   -t, --temperature=                Set temperature (default: 0.7)
   -T, --topp=                       Set top P (default: 0.9)
   -s, --stream                      Stream

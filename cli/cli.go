@@ -32,16 +32,20 @@ func Cli(version string) (message string, err error) {
 	fabricDb := db.NewDb(filepath.Join(homedir, ".config/fabric"))
 
 	// if the setup flag is set, run the setup function
-	if currentFlags.Setup {
+	if currentFlags.Setup || currentFlags.SetupSkipPatterns || currentFlags.SetupVendor != "" {
 		_ = fabricDb.Configure()
-		_, err = Setup(fabricDb, currentFlags.SetupSkipUpdatePatterns)
+		if currentFlags.SetupVendor != "" {
+			_, err = SetupVendor(fabricDb, currentFlags.SetupVendor)
+		} else {
+			_, err = Setup(fabricDb, currentFlags.SetupSkipPatterns)
+		}
 		return
 	}
 
 	var fabric *core.Fabric
 	if err = fabricDb.Configure(); err != nil {
 		fmt.Println("init is failed, run start the setup procedure", err)
-		if fabric, err = Setup(fabricDb, currentFlags.SetupSkipUpdatePatterns); err != nil {
+		if fabric, err = Setup(fabricDb, currentFlags.SetupSkipPatterns); err != nil {
 			return
 		}
 	} else {
@@ -242,5 +246,13 @@ func Setup(db *db.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
 		}
 	}
 	ret = instance
+	return
+}
+
+func SetupVendor(db *db.Db, vendorName string) (ret *core.Fabric, err error) {
+	ret = core.NewFabricForSetup(db)
+	if err = ret.SetupVendor(vendorName); err != nil {
+		return
+	}
 	return
 }

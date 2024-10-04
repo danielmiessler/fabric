@@ -100,6 +100,19 @@ func (o *VendorsManager) Setup() (ret map[string]vendors.Vendor, err error) {
 	return
 }
 
+func (o *VendorsManager) SetupVendor(vendorName string) (err error) {
+	vendor := o.FindByName(vendorName)
+	if vendor == nil {
+		err = fmt.Errorf("vendor %s not found", vendorName)
+		return
+	}
+	err = vendor.Setup()
+	if err != nil {
+		return
+	}
+	return
+}
+
 type modelResult struct {
 	vendorName string
 	models     []string
