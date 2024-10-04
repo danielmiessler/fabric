@@ -36,7 +36,7 @@ type Flags struct {
 	Copy               bool              `short:"c" long:"copy" description:"Copy to clipboard"`
 	Model              string            `short:"m" long:"model" description:"Choose model"`
 	Output             string            `short:"o" long:"output" description:"Output to file" default:""`
-	OutputPrompt       bool              `long:"output-prompt" description:"Output used prompt before the result"`
+	OutputPrompt       bool              `long:"output-prompt" description:"Output the used prompt (or entire session) before the result"`
 	LatestPatterns     string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
 	ChangeDefaultModel bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
 	YouTube            string            `short:"y" long:"youtube" description:"YouTube video \"URL\" to grab transcript, comments from it and send to chat"`

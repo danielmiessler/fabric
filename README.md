@@ -207,6 +207,7 @@ fabric -h
 ```
 
 ```bash
+
 usage: fabric -h
 Usage:
   fabric [OPTIONS]
@@ -233,7 +234,7 @@ Application Options:
   -c, --copy                 Copy to clipboard
   -m, --model=               Choose model
   -o, --output=              Output to file
-      --output-prompt        Output used prompt before the result
+      --output-prompt        Output the used prompt (or entire session) before the result
   -n, --latest=              Number of latest patterns to list (default: 0)
   -d, --changeDefaultModel   Change default model
   -y, --youtube=             YouTube video "URL" to grab transcript, comments from it and send to chat
