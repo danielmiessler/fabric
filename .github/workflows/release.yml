@@ -94,10 +94,18 @@ jobs:
           path: fabric-windows-${{ matrix.arch }}.exe
 
       - name: Get latest tag
+        if: matrix.os != 'windows-latest'
         id: get_latest_tag
         run: |
           latest_tag=$(git tag --sort=-creatordate | head -n 1)
           echo "latest_tag=$latest_tag" >> $GITHUB_ENV
+
+      - name: Get latest tag
+        if: matrix.os == 'windows-latest'
+        id: get_latest_tag
+        run: |
+          $latest_tag = git tag --sort=-creatordate | Select-Object -First 1
+          Add-Content -Path $env:GITHUB_ENV -Value "latest_tag=$latest_tag"
 
       - name: Create release if it doesn't exist
         env:
