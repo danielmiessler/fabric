@@ -208,18 +208,17 @@ fabric -h
 
 ```bash
 
-usage: fabric -h
 Usage:
   fabric [OPTIONS]
 
 Application Options:
-  -p, --pattern=             Choose a pattern
+  -p, --pattern=             Choose a pattern from the available patterns
   -v, --variable=            Values for pattern variables, e.g. -v=$name:John -v=$age:30
-  -C, --context=             Choose a context
-      --session=             Choose a session
+  -C, --context=             Choose a context from the available contexts
+      --session=             Choose a session from the available sessions
   -S, --setup                Run setup for all reconfigurable parts of fabric
-      --setup-skip-patterns  Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI
-      --setup-vendor=        Run Setup for specific vendor. E.g. --setup-vendor=OpenAI
+      --setup-skip-patterns  Run Setup for all reconfigurable parts of fabric except patterns update
+      --setup-vendor=        Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI
   -t, --temperature=         Set temperature (default: 0.7)
   -T, --topp=                Set top P (default: 0.9)
   -s, --stream               Stream
@@ -234,7 +233,7 @@ Application Options:
   -c, --copy                 Copy to clipboard
   -m, --model=               Choose model
   -o, --output=              Output to file
-      --output-prompt        Output the used prompt (or entire session) before the result
+      --output-session       Output the entire session (also a temporary one) to the output file
   -n, --latest=              Number of latest patterns to list (default: 0)
   -d, --changeDefaultModel   Change default model
   -y, --youtube=             YouTube video "URL" to grab transcript, comments from it and send to chat
@@ -253,7 +252,7 @@ Application Options:
       --version              Print current version
 
 Help Options:
-  -h, --help                        Show this help message
+  -h, --help                 Show this help message
 
 ```
 
