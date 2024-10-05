@@ -34,7 +34,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	if o.Stream {
 		channel := make(chan string)
 		go func() {
-			if streamErr := o.vendor.SendStream(session.Messages, opts, channel); streamErr != nil {
+			if streamErr := o.vendor.SendStream(session.GetVendorMessages(), opts, channel); streamErr != nil {
 				channel <- streamErr.Error()
 			}
 		}()
