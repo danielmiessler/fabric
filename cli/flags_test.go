@@ -101,7 +101,8 @@ func TestBuildChatRequest(t *testing.T) {
 		SessionName: "test-session",
 		PatternName: "test-pattern",
 		Message:     "test-message",
+		Meta:        "test",
 	}
-	request := flags.BuildChatRequest()
+	request := flags.BuildChatRequest("test")
 	assert.Equal(t, expectedRequest, request)
 }
