@@ -36,7 +36,7 @@ type Flags struct {
 	Copy               bool              `short:"c" long:"copy" description:"Copy to clipboard"`
 	Model              string            `short:"m" long:"model" description:"Choose model"`
 	Output             string            `short:"o" long:"output" description:"Output to file" default:""`
-	OutputPrompt       bool              `long:"output-prompt" description:"Output the used prompt (or entire session) before the result"`
+	OutputSession      bool              `long:"output-session" description:"Output the entire session (also a temporary one) to th output file"`
 	LatestPatterns     string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
 	ChangeDefaultModel bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
 	YouTube            string            `short:"y" long:"youtube" description:"YouTube video \"URL\" to grab transcript, comments from it and send to chat"`
@@ -113,13 +113,14 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 	return
 }
 
-func (o *Flags) BuildChatRequest() (ret *common.ChatRequest) {
+func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest) {
 	ret = &common.ChatRequest{
 		ContextName:      o.Context,
 		SessionName:      o.Session,
 		PatternName:      o.Pattern,
 		PatternVariables: o.PatternVariables,
 		Message:          o.Message,
+		Meta:             Meta,
 	}
 	if o.Language != "" {
 		langTag, err := language.Parse(o.Language)

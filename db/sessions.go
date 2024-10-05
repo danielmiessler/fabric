@@ -37,6 +37,8 @@ func (o *Sessions) SaveSession(session *Session) (err error) {
 type Session struct {
 	Name     string
 	Messages []*common.Message
+
+	vendorMessages []*common.Message
 }
 
 func (o *Session) IsEmpty() bool {
@@ -44,7 +46,31 @@ func (o *Session) IsEmpty() bool {
 }
 
 func (o *Session) Append(messages ...*common.Message) {
-	o.Messages = append(o.Messages, messages...)
+	if o.vendorMessages != nil {
+		for _, message := range messages {
+			o.Messages = append(o.Messages, message)
+			o.appendVendorMessage(message)
+		}
+	} else {
+		o.Messages = append(o.Messages, messages...)
+	}
+}
+
+func (o *Session) GetVendorMessages() (ret []*common.Message) {
+	if o.vendorMessages == nil {
+		o.vendorMessages = []*common.Message{}
+		for _, message := range o.Messages {
+			o.appendVendorMessage(message)
+		}
+	}
+	ret = o.vendorMessages
+	return
+}
+
+func (o *Session) appendVendorMessage(message *common.Message) {
+	if message.Role != common.ChatMessageRoleMeta {
+		o.vendorMessages = append(o.vendorMessages, message)
+	}
 }
 
 func (o *Session) GetLastMessage() (ret *common.Message) {
@@ -56,7 +82,7 @@ func (o *Session) GetLastMessage() (ret *common.Message) {
 
 func (o *Session) String() (ret string) {
 	for _, message := range o.Messages {
-		ret += fmt.Sprintf("\n\n\n[%v]>> \n\n\n%v", message.Role, message.Content)
+		ret += fmt.Sprintf("\n--- \n[%v]\n\n%v", message.Role, message.Content)
 	}
 	return
 }

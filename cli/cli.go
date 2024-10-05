@@ -208,7 +208,7 @@ func Cli(version string) (err error) {
 	}
 
 	var session *db.Session
-	if session, err = chatter.Send(currentFlags.BuildChatRequest(), currentFlags.BuildChatOptions()); err != nil {
+	if session, err = chatter.Send(currentFlags.BuildChatRequest(strings.Join(os.Args[1:], " ")), currentFlags.BuildChatOptions()); err != nil {
 		return
 	}
 
@@ -228,7 +228,7 @@ func Cli(version string) (err error) {
 
 	// if the output flag is set, create an output file
 	if currentFlags.Output != "" {
-		if currentFlags.OutputPrompt {
+		if currentFlags.OutputSession {
 			sessionAsString := session.String()
 			err = fabric.CreateOutputFile(sessionAsString, currentFlags.Output)
 		} else {
