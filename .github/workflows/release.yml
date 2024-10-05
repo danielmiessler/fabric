@@ -102,7 +102,7 @@ jobs:
 
       - name: Get latest tag
         if: matrix.os == 'windows-latest'
-        id: get_latest_tag
+        id: get_latest_tag_windows
         run: |
           $latest_tag = git tag --sort=-creatordate | Select-Object -First 1
           Add-Content -Path $env:GITHUB_ENV -Value "latest_tag=$latest_tag"
