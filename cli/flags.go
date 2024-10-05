@@ -14,13 +14,13 @@ import (
 
 // Flags create flags struct. the users flags go into this, this will be passed to the chat struct in cli
 type Flags struct {
-	Pattern            string            `short:"p" long:"pattern" description:"Choose a pattern" default:""`
+	Pattern            string            `short:"p" long:"pattern" description:"Choose a pattern from the available patterns" default:""`
 	PatternVariables   map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=$name:John -v=$age:30"`
-	Context            string            `short:"C" long:"context" description:"Choose a context" default:""`
-	Session            string            `long:"session" description:"Choose a session"`
+	Context            string            `short:"C" long:"context" description:"Choose a context from the available contexts" default:""`
+	Session            string            `long:"session" description:"Choose a session from the available sessions"`
 	Setup              bool              `short:"S" long:"setup" description:"Run setup for all reconfigurable parts of fabric"`
-	SetupSkipPatterns  bool              `long:"setup-skip-patterns" description:"Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI"`
-	SetupVendor        string            `long:"setup-vendor" description:"Run Setup for specific vendor. E.g. --setup-vendor=OpenAI"`
+	SetupSkipPatterns  bool              `long:"setup-skip-patterns" description:"Run Setup for all reconfigurable parts of fabric except patterns update"`
+	SetupVendor        string            `long:"setup-vendor" description:"Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI"`
 	Temperature        float64           `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
 	TopP               float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
 	Stream             bool              `short:"s" long:"stream" description:"Stream"`
@@ -36,7 +36,7 @@ type Flags struct {
 	Copy               bool              `short:"c" long:"copy" description:"Copy to clipboard"`
 	Model              string            `short:"m" long:"model" description:"Choose model"`
 	Output             string            `short:"o" long:"output" description:"Output to file" default:""`
-	OutputSession      bool              `long:"output-session" description:"Output the entire session (also a temporary one) to th output file"`
+	OutputSession      bool              `long:"output-session" description:"Output the entire session (also a temporary one) to the output file"`
 	LatestPatterns     string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
 	ChangeDefaultModel bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
 	YouTube            string            `short:"y" long:"youtube" description:"YouTube video \"URL\" to grab transcript, comments from it and send to chat"`
