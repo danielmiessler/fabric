@@ -14,17 +14,17 @@ func NewDb(dir string) (db *Db) {
 
 	db.EnvFilePath = db.FilePath(".env")
 
-	db.Patterns = &Patterns{
-		Storage:                &Storage{Label: "Patterns", Dir: db.FilePath("patterns"), ItemIsDir: true},
+	db.Patterns = &PatternsEntity{
+		StorageEntity:          &StorageEntity{Label: "Patterns", Dir: db.FilePath("patterns"), ItemIsDir: true},
 		SystemPatternFile:      "system.md",
 		UniquePatternsFilePath: db.FilePath("unique_patterns.txt"),
 	}
 
-	db.Sessions = &Sessions{
-		&Storage{Label: "Sessions", Dir: db.FilePath("sessions"), FileExtension: ".json"}}
+	db.Sessions = &SessionsEntity{
+		&StorageEntity{Label: "Sessions", Dir: db.FilePath("sessions"), FileExtension: ".json"}}
 
-	db.Contexts = &Contexts{
-		&Storage{Label: "Contexts", Dir: db.FilePath("contexts")}}
+	db.Contexts = &ContextsEntity{
+		&StorageEntity{Label: "Contexts", Dir: db.FilePath("contexts")}}
 
 	return
 }
@@ -32,9 +32,9 @@ func NewDb(dir string) (db *Db) {
 type Db struct {
 	Dir string
 
-	Patterns *Patterns
-	Sessions *Sessions
-	Contexts *Contexts
+	Patterns *PatternsEntity
+	Sessions *SessionsEntity
+	Contexts *ContextsEntity
 
 	EnvFilePath string
 }

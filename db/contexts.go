@@ -2,12 +2,12 @@ package db
 
 import "fmt"
 
-type Contexts struct {
-	*Storage
+type ContextsEntity struct {
+	*StorageEntity
 }
 
-// GetContext Load a context from file
-func (o *Contexts) GetContext(name string) (ret *Context, err error) {
+// Get Load a context from file
+func (o *ContextsEntity) Get(name string) (ret *Context, err error) {
 	var content []byte
 	if content, err = o.Load(name); err != nil {
 		return
@@ -17,9 +17,9 @@ func (o *Contexts) GetContext(name string) (ret *Context, err error) {
 	return
 }
 
-func (o *Contexts) PrintContext(name string) (err error) {
+func (o *ContextsEntity) PrintContext(name string) (err error) {
 	var context *Context
-	if context, err = o.GetContext(name); err != nil {
+	if context, err = o.Get(name); err != nil {
 		return
 	}
 	fmt.Println(context.Content)

@@ -17,7 +17,7 @@ import (
 	"github.com/otiai10/copy"
 )
 
-func NewPatternsLoader(patterns *db.Patterns) (ret *PatternsLoader) {
+func NewPatternsLoader(patterns *db.PatternsEntity) (ret *PatternsLoader) {
 	label := "Patterns Loader"
 	ret = &PatternsLoader{
 		Patterns: patterns,
@@ -42,7 +42,7 @@ func NewPatternsLoader(patterns *db.Patterns) (ret *PatternsLoader) {
 
 type PatternsLoader struct {
 	*common.Configurable
-	Patterns *db.Patterns
+	Patterns *db.PatternsEntity
 
 	DefaultGitRepoUrl *common.SetupQuestion
 	DefaultFolder     *common.SetupQuestion
@@ -155,7 +155,7 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 	var changes []db.DirectoryChange
 	// ... iterates over the commits
 	if err = cIter.ForEach(func(c *object.Commit) (err error) {
-		// Get the files changed in this commit by comparing with its parents
+		// GetApplyVariables the files changed in this commit by comparing with its parents
 		parentIter := c.Parents()
 		if err = parentIter.ForEach(func(parent *object.Commit) (err error) {
 			var patch *object.Patch

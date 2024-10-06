@@ -65,7 +65,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *db.Session, err error) {
 	if request.SessionName != "" {
 		var sess *db.Session
-		if sess, err = o.db.Sessions.GetOrCreateSession(request.SessionName); err != nil {
+		if sess, err = o.db.Sessions.Get(request.SessionName); err != nil {
 			err = fmt.Errorf("could not find session %s: %v", request.SessionName, err)
 			return
 		}
@@ -81,7 +81,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	var contextContent string
 	if request.ContextName != "" {
 		var ctx *db.Context
-		if ctx, err = o.db.Contexts.GetContext(request.ContextName); err != nil {
+		if ctx, err = o.db.Contexts.Get(request.ContextName); err != nil {
 			err = fmt.Errorf("could not find context %s: %v", request.ContextName, err)
 			return
 		}
@@ -91,7 +91,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	var patternContent string
 	if request.PatternName != "" {
 		var pattern *db.Pattern
-		if pattern, err = o.db.Patterns.GetPattern(request.PatternName, request.PatternVariables); err != nil {
+		if pattern, err = o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables); err != nil {
 			err = fmt.Errorf("could not find pattern %s: %v", request.PatternName, err)
 			return
 		}

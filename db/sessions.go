@@ -5,11 +5,11 @@ import (
 	"github.com/danielmiessler/fabric/common"
 )
 
-type Sessions struct {
-	*Storage
+type SessionsEntity struct {
+	*StorageEntity
 }
 
-func (o *Sessions) GetOrCreateSession(name string) (session *Session, err error) {
+func (o *SessionsEntity) Get(name string) (session *Session, err error) {
 	session = &Session{Name: name}
 
 	if o.Exists(name) {
@@ -20,7 +20,7 @@ func (o *Sessions) GetOrCreateSession(name string) (session *Session, err error)
 	return
 }
 
-func (o *Sessions) PrintSession(name string) (err error) {
+func (o *SessionsEntity) PrintSession(name string) (err error) {
 	if o.Exists(name) {
 		var session Session
 		if err = o.LoadAsJson(name, &session.Messages); err == nil {
@@ -30,7 +30,7 @@ func (o *Sessions) PrintSession(name string) (err error) {
 	return
 }
 
-func (o *Sessions) SaveSession(session *Session) (err error) {
+func (o *SessionsEntity) SaveSession(session *Session) (err error) {
 	return o.SaveAsJson(session.Name, session.Messages)
 }
 

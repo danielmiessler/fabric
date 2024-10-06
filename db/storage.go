@@ -10,14 +10,14 @@ import (
 	"github.com/samber/lo"
 )
 
-type Storage struct {
+type StorageEntity struct {
 	Label         string
 	Dir           string
 	ItemIsDir     bool
 	FileExtension string
 }
 
-func (o *Storage) Configure() (err error) {
+func (o *StorageEntity) Configure() (err error) {
 	if err = os.MkdirAll(o.Dir, os.ModePerm); err != nil {
 		return
 	}
@@ -25,7 +25,7 @@ func (o *Storage) Configure() (err error) {
 }
 
 // GetNames finds all patterns in the patterns directory and enters the id, name, and pattern into a slice of Entry structs. it returns these entries or an error
-func (o *Storage) GetNames() (ret []string, err error) {
+func (o *StorageEntity) GetNames() (ret []string, err error) {
 	var entries []os.DirEntry
 	if entries, err = os.ReadDir(o.Dir); err != nil {
 		err = fmt.Errorf("could not read items from directory: %v", err)
@@ -59,7 +59,41 @@ func (o *Storage) GetNames() (ret []string, err error) {
 	return
 }
 
-func (o *Storage) ListNames() (err error) {
+func (o *StorageEntity) Delete(name string) (err error) {
+	if err = os.Remove(o.BuildFilePathByName(name)); err != nil {
+		err = fmt.Errorf("could not delete %s: %v", name, err)
+	}
+	return
+}
+
+func (o *StorageEntity) Exists(name string) (ret bool) {
+	_, err := os.Stat(o.BuildFilePathByName(name))
+	ret = !os.IsNotExist(err)
+	return
+}
+
+func (o *StorageEntity) Rename(oldName, newName string) (err error) {
+	if err = os.Rename(o.BuildFilePathByName(oldName), o.BuildFilePathByName(newName)); err != nil {
+		err = fmt.Errorf("could not rename %s to %s: %v", oldName, newName, err)
+	}
+	return
+}
+
+func (o *StorageEntity) Save(name string, content []byte) (err error) {
+	if err = os.WriteFile(o.BuildFilePathByName(name), content, 0644); err != nil {
+		err = fmt.Errorf("could not save %s: %v", name, err)
+	}
+	return
+}
+
+func (o *StorageEntity) Load(name string) (ret []byte, err error) {
+	if ret, err = os.ReadFile(o.BuildFilePathByName(name)); err != nil {
+		err = fmt.Errorf("could not load %s: %v", name, err)
+	}
+	return
+}
+
+func (o *StorageEntity) ListNames() (err error) {
 	var names []string
 	if names, err = o.GetNames(); err != nil {
 		return
@@ -76,55 +110,21 @@ func (o *Storage) ListNames() (err error) {
 	return
 }
 
-func (o *Storage) BuildFilePathByName(name string) (ret string) {
+func (o *StorageEntity) BuildFilePathByName(name string) (ret string) {
 	ret = o.BuildFilePath(o.buildFileName(name))
 	return
 }
 
-func (o *Storage) BuildFilePath(fileName string) (ret string) {
+func (o *StorageEntity) BuildFilePath(fileName string) (ret string) {
 	ret = filepath.Join(o.Dir, fileName)
 	return
 }
 
-func (o *Storage) buildFileName(name string) string {
+func (o *StorageEntity) buildFileName(name string) string {
 	return fmt.Sprintf("%s%v", name, o.FileExtension)
 }
 
-func (o *Storage) Delete(name string) (err error) {
-	if err = os.Remove(o.BuildFilePathByName(name)); err != nil {
-		err = fmt.Errorf("could not delete %s: %v", name, err)
-	}
-	return
-}
-
-func (o *Storage) Exists(name string) (ret bool) {
-	_, err := os.Stat(o.BuildFilePathByName(name))
-	ret = !os.IsNotExist(err)
-	return
-}
-
-func (o *Storage) Rename(oldName, newName string) (err error) {
-	if err = os.Rename(o.BuildFilePathByName(oldName), o.BuildFilePathByName(newName)); err != nil {
-		err = fmt.Errorf("could not rename %s to %s: %v", oldName, newName, err)
-	}
-	return
-}
-
-func (o *Storage) Save(name string, content []byte) (err error) {
-	if err = os.WriteFile(o.BuildFilePathByName(name), content, 0644); err != nil {
-		err = fmt.Errorf("could not save %s: %v", name, err)
-	}
-	return
-}
-
-func (o *Storage) Load(name string) (ret []byte, err error) {
-	if ret, err = os.ReadFile(o.BuildFilePathByName(name)); err != nil {
-		err = fmt.Errorf("could not load %s: %v", name, err)
-	}
-	return
-}
-
-func (o *Storage) SaveAsJson(name string, item interface{}) (err error) {
+func (o *StorageEntity) SaveAsJson(name string, item interface{}) (err error) {
 	var jsonString []byte
 	if jsonString, err = json.Marshal(item); err == nil {
 		err = o.Save(name, jsonString)
@@ -135,7 +135,7 @@ func (o *Storage) SaveAsJson(name string, item interface{}) (err error) {
 	return err
 }
 
-func (o *Storage) LoadAsJson(name string, item interface{}) (err error) {
+func (o *StorageEntity) LoadAsJson(name string, item interface{}) (err error) {
 	var content []byte
 	if content, err = o.Load(name); err != nil {
 		return

@@ -8,8 +8,8 @@ import (
 
 func TestContexts_GetContext(t *testing.T) {
 	dir := t.TempDir()
-	contexts := &Contexts{
-		Storage: &Storage{Dir: dir},
+	contexts := &ContextsEntity{
+		StorageEntity: &StorageEntity{Dir: dir},
 	}
 	contextName := "testContext"
 	contextPath := filepath.Join(dir, contextName)
@@ -18,7 +18,7 @@ func TestContexts_GetContext(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to write context file: %v", err)
 	}
-	context, err := contexts.GetContext(contextName)
+	context, err := contexts.Get(contextName)
 	if err != nil {
 		t.Fatalf("failed to get context: %v", err)
 	}
