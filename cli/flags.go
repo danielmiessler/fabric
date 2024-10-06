@@ -14,41 +14,45 @@ import (
 
 // Flags create flags struct. the users flags go into this, this will be passed to the chat struct in cli
 type Flags struct {
-	Pattern                 string            `short:"p" long:"pattern" description:"Choose a pattern" default:""`
-	PatternVariables        map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=$name:John -v=$age:30"`
-	Context                 string            `short:"C" long:"context" description:"Choose a context" default:""`
-	Session                 string            `long:"session" description:"Choose a session"`
-	Setup                   bool              `short:"S" long:"setup" description:"Run setup"`
-	SetupSkipUpdatePatterns bool              `long:"setup-skip-update-patterns" description:"Skip update patterns at setup"`
-	Temperature             float64           `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
-	TopP                    float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
-	Stream                  bool              `short:"s" long:"stream" description:"Stream"`
-	PresencePenalty         float64           `short:"P" long:"presencepenalty" description:"Set presence penalty" default:"0.0"`
-	Raw                     bool              `short:"r" long:"raw" description:"Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns."`
-	FrequencyPenalty        float64           `short:"F" long:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
-	ListPatterns            bool              `short:"l" long:"listpatterns" description:"List all patterns"`
-	ListAllModels           bool              `short:"L" long:"listmodels" description:"List all available models"`
-	ListAllContexts         bool              `short:"x" long:"listcontexts" description:"List all contexts"`
-	ListAllSessions         bool              `short:"X" long:"listsessions" description:"List all sessions"`
-	UpdatePatterns          bool              `short:"U" long:"updatepatterns" description:"Update patterns"`
-	Message                 string            `hidden:"true" description:"Message to send to chat"`
-	Copy                    bool              `short:"c" long:"copy" description:"Copy to clipboard"`
-	Model                   string            `short:"m" long:"model" description:"Choose model"`
-	Output                  string            `short:"o" long:"output" description:"Output to file" default:""`
-	LatestPatterns          string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
-	ChangeDefaultModel      bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
-	YouTube                 string            `short:"y" long:"youtube" description:"YouTube video \"URL\" to grab transcript, comments from it and send to chat"`
-	YouTubeTranscript       bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat (it used per default)."`
-	YouTubeComments         bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
-	Language                string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
-	ScrapeURL               string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
-	ScrapeQuestion          string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
-	Seed                    int               `short:"e" long:"seed" description:"Seed to be used for LMM generation"`
-	WipeContext             string            `short:"w" long:"wipecontext" description:"Wipe context"`
-	WipeSession             string            `short:"W" long:"wipesession" description:"Wipe session"`
-	HtmlReadability         bool              `long:"readability" description:"Convert HTML input into a clean, readable view"`
-	DryRun                  bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
-	Version                 bool              `long:"version" description:"Print current version"`
+	Pattern            string            `short:"p" long:"pattern" description:"Choose a pattern from the available patterns" default:""`
+	PatternVariables   map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=$name:John -v=$age:30"`
+	Context            string            `short:"C" long:"context" description:"Choose a context from the available contexts" default:""`
+	Session            string            `long:"session" description:"Choose a session from the available sessions"`
+	Setup              bool              `short:"S" long:"setup" description:"Run setup for all reconfigurable parts of fabric"`
+	SetupSkipPatterns  bool              `long:"setup-skip-patterns" description:"Run Setup for all reconfigurable parts of fabric except patterns update"`
+	SetupVendor        string            `long:"setup-vendor" description:"Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI"`
+	Temperature        float64           `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
+	TopP               float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
+	Stream             bool              `short:"s" long:"stream" description:"Stream"`
+	PresencePenalty    float64           `short:"P" long:"presencepenalty" description:"Set presence penalty" default:"0.0"`
+	Raw                bool              `short:"r" long:"raw" description:"Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns."`
+	FrequencyPenalty   float64           `short:"F" long:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
+	ListPatterns       bool              `short:"l" long:"listpatterns" description:"List all patterns"`
+	ListAllModels      bool              `short:"L" long:"listmodels" description:"List all available models"`
+	ListAllContexts    bool              `short:"x" long:"listcontexts" description:"List all contexts"`
+	ListAllSessions    bool              `short:"X" long:"listsessions" description:"List all sessions"`
+	UpdatePatterns     bool              `short:"U" long:"updatepatterns" description:"Update patterns"`
+	Message            string            `hidden:"true" description:"Message to send to chat"`
+	Copy               bool              `short:"c" long:"copy" description:"Copy to clipboard"`
+	Model              string            `short:"m" long:"model" description:"Choose model"`
+	Output             string            `short:"o" long:"output" description:"Output to file" default:""`
+	OutputSession      bool              `long:"output-session" description:"Output the entire session (also a temporary one) to the output file"`
+	LatestPatterns     string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
+	ChangeDefaultModel bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
+	YouTube            string            `short:"y" long:"youtube" description:"YouTube video \"URL\" to grab transcript, comments from it and send to chat"`
+	YouTubeTranscript  bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat (it used per default)."`
+	YouTubeComments    bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
+	Language           string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
+	ScrapeURL          string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
+	ScrapeQuestion     string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
+	Seed               int               `short:"e" long:"seed" description:"Seed to be used for LMM generation"`
+	WipeContext        string            `short:"w" long:"wipecontext" description:"Wipe context"`
+	WipeSession        string            `short:"W" long:"wipesession" description:"Wipe session"`
+	PrintContext       string            `long:"printcontext" description:"Print context"`
+	PrintSession       string            `long:"printsession" description:"Print session"`
+	HtmlReadability    bool              `long:"readability" description:"Convert HTML input into a clean, readable view"`
+	DryRun             bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
+	Version            bool              `long:"version" description:"Print current version"`
 }
 
 // Init Initialize flags. returns a Flags struct and an error
@@ -109,13 +113,14 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 	return
 }
 
-func (o *Flags) BuildChatRequest() (ret *common.ChatRequest) {
+func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest) {
 	ret = &common.ChatRequest{
 		ContextName:      o.Context,
 		SessionName:      o.Session,
 		PatternName:      o.Pattern,
 		PatternVariables: o.PatternVariables,
 		Message:          o.Message,
+		Meta:             Meta,
 	}
 	if o.Language != "" {
 		langTag, err := language.Parse(o.Language)
@@ -132,5 +137,10 @@ func (o *Flags) AppendMessage(message string) {
 	} else {
 		o.Message = message
 	}
+	return
+}
+
+func (o *Flags) IsChatRequest() (ret bool) {
+	ret = o.Message != "" || o.Session != ""
 	return
 }

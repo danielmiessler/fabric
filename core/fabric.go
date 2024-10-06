@@ -3,14 +3,6 @@ package core
 import (
 	"bytes"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
-
-	"github.com/danielmiessler/fabric/vendors/groq"
-	"github.com/danielmiessler/fabric/vendors/mistral"
-	goopenai "github.com/sashabaranov/go-openai"
-
 	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
@@ -19,12 +11,16 @@ import (
 	"github.com/danielmiessler/fabric/vendors/azure"
 	"github.com/danielmiessler/fabric/vendors/dryrun"
 	"github.com/danielmiessler/fabric/vendors/gemini"
+	"github.com/danielmiessler/fabric/vendors/groq"
+	"github.com/danielmiessler/fabric/vendors/mistral"
 	"github.com/danielmiessler/fabric/vendors/ollama"
 	"github.com/danielmiessler/fabric/vendors/openai"
 	"github.com/danielmiessler/fabric/vendors/openrouter"
 	"github.com/danielmiessler/fabric/vendors/siliconcloud"
 	"github.com/danielmiessler/fabric/youtube"
 	"github.com/pkg/errors"
+	"os"
+	"strconv"
 )
 
 const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
@@ -182,6 +178,14 @@ func (o *Fabric) SetupVendors() (err error) {
 	return
 }
 
+func (o *Fabric) SetupVendor(vendorName string) (err error) {
+	if err = o.VendorsAll.SetupVendor(vendorName); err != nil {
+		return
+	}
+	err = o.SaveEnvFile()
+	return
+}
+
 // Configure buildClient VendorsController based on the environment variables
 func (o *Fabric) configure() (err error) {
 	for _, vendor := range o.VendorsAll.Vendors {
@@ -246,42 +250,6 @@ func (o *Fabric) CreateOutputFile(message string, fileName string) (err error) {
 	defer file.Close()
 	if _, err = file.WriteString(message); err != nil {
 		err = fmt.Errorf("error writing to file: %v", err)
-	}
-	return
-}
-
-func (o *Chat) BuildChatSession(raw bool) (ret *db.Session, err error) {
-	// new messages will be appended to the session and used to send the message
-	if o.Session != nil {
-		ret = o.Session
-	} else {
-		ret = &db.Session{}
-	}
-
-	systemMessage := strings.TrimSpace(o.Context) + strings.TrimSpace(o.Pattern)
-	if o.Language != "" {
-		systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, o.Language)
-	}
-	userMessage := strings.TrimSpace(o.Message)
-
-	if raw {
-		// use the user role instead of the system role in raw mode
-		message := systemMessage + userMessage
-		if message != "" {
-			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: message})
-		}
-	} else {
-		if systemMessage != "" {
-			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
-		}
-		if userMessage != "" {
-			ret.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: userMessage})
-		}
-	}
-
-	if ret.IsEmpty() {
-		ret = nil
-		err = fmt.Errorf(NoSessionPatternUserMessages)
 	}
 	return
 }

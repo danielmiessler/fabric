@@ -2,6 +2,8 @@ package common
 
 import goopenai "github.com/sashabaranov/go-openai"
 
+const ChatMessageRoleMeta = "meta"
+
 type Message struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
@@ -14,6 +16,7 @@ type ChatRequest struct {
 	PatternVariables map[string]string
 	Message          string
 	Language         string
+	Meta             string
 }
 
 type ChatOptions struct {
