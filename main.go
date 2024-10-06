@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	_, err := cli.Cli(version)
+	err := cli.Cli(version)
 	if err != nil && !flags.WroteHelp(err) {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)

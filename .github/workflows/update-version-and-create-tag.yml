@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history to include tags
+          fetch-depth: 0
 
       - name: Set up Git
         run: |
@@ -26,7 +26,7 @@ jobs:
       - name: Get the latest tag
         id: get_latest_tag
         run: |
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          latest_tag=$(git tag --sort=-creatordate | head -n 1)
           echo "Latest tag is: $latest_tag"
           echo "tag=$latest_tag" >> $GITHUB_ENV  # Save the latest tag to environment file
 
@@ -51,7 +51,11 @@ jobs:
       - name: Commit changes
         run: |
           git add version.go
-          git commit -m "Update version to ${{ env.new_tag }} and commit $commit_hash"
+          if ! git diff --staged --quiet; then
+            git commit -m "Update version to ${{ env.new_tag }} and commit $commit_hash"
+          else
+            echo "No changes to commit."
+          fi
 
       - name: Push changes
         env:
@@ -61,7 +65,17 @@ jobs:
 
       - name: Create a new tag
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TAG_PAT }}
         run: |
           git tag ${{ env.new_tag }}
           git push origin ${{ env.new_tag }}  # Push the new tag
+
+      - name: Dispatch event to trigger release workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN to authenticate the dispatch
+        run: |
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            -d '{"event_type": "tag_created", "client_payload": {"tag": "${{ env.new_tag }}"}}'
