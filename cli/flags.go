@@ -53,6 +53,7 @@ type Flags struct {
 	HtmlReadability    bool              `long:"readability" description:"Convert HTML input into a clean, readable view"`
 	DryRun             bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
 	Serve              bool              `long:"serve" description:"Serve the Fabric Rest API"`
+	ServeAddress       string            `long:"address" description:"The address to bind the REST API" default:":8080"`
 	Version            bool              `long:"version" description:"Print current version"`
 }
 
