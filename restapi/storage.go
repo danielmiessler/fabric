@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/danielmiessler/fabric/db"
 	"github.com/labstack/echo/v4"
+	"io"
 	"net/http"
 )
 
@@ -21,7 +22,6 @@ func NewStorageHandler[T any](e *echo.Echo, entityType string, storage db.Storag
 	e.PUT(fmt.Sprintf("/%s/rename/:oldName/:newName", entityType), ret.Rename)
 	e.POST(fmt.Sprintf("/%s/save/:name", entityType), ret.Save)
 	e.GET(fmt.Sprintf("/%s/load/:name", entityType), ret.Load)
-	e.GET(fmt.Sprintf("/%s/list", entityType), ret.ListNames)
 	return
 }
 
@@ -74,8 +74,18 @@ func (h *StorageHandler[T]) Rename(c echo.Context) error {
 // Save handles the POST /storage/save/:name route
 func (h *StorageHandler[T]) Save(c echo.Context) error {
 	name := c.Param("name")
-	content := c.Body()
-	err := h.storage.Save(name, content)
+
+	// Read the request body
+	body := c.Request().Body
+	defer body.Close()
+
+	content, err := io.ReadAll(body)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	// Save the content to storage
+	err = h.storage.Save(name, content)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -90,13 +100,4 @@ func (h *StorageHandler[T]) Load(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, content)
-}
-
-// ListNames handles the GET /storage/list route
-func (h *StorageHandler[T]) ListNames(c echo.Context) error {
-	err := h.storage.ListNames()
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-	return c.NoContent(http.StatusOK)
 }
