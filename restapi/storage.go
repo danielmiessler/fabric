@@ -16,22 +16,22 @@ type StorageHandler[T any] struct {
 // NewStorageHandler creates a new StorageHandler
 func NewStorageHandler[T any](e *echo.Echo, entityType string, storage db.Storage[T]) (ret *StorageHandler[T]) {
 	ret = &StorageHandler[T]{storage: storage}
+	e.GET(fmt.Sprintf("/%s/:name", entityType), ret.Get)
 	e.GET(fmt.Sprintf("/%s/names", entityType), ret.GetNames)
 	e.DELETE(fmt.Sprintf("/%s/:name", entityType), ret.Delete)
 	e.GET(fmt.Sprintf("/%s/exists/:name", entityType), ret.Exists)
 	e.PUT(fmt.Sprintf("/%s/rename/:oldName/:newName", entityType), ret.Rename)
-	e.POST(fmt.Sprintf("/%s/save/:name", entityType), ret.Save)
-	e.GET(fmt.Sprintf("/%s/load/:name", entityType), ret.Load)
+	e.POST(fmt.Sprintf("/%s/:name", entityType), ret.Save)
 	return
 }
 
-func (h *ContextsHandler) Get(c echo.Context) error {
+func (h *StorageHandler[T]) Get(c echo.Context) error {
 	name := c.Param("name")
-	context, err := h.contexts.Get(name)
+	item, err := h.storage.Get(name)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, context)
+	return c.JSON(http.StatusOK, item)
 }
 
 // GetNames handles the GET /storage/names route
@@ -90,14 +90,4 @@ func (h *StorageHandler[T]) Save(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.NoContent(http.StatusOK)
-}
-
-// Load handles the GET /storage/load/:name route
-func (h *StorageHandler[T]) Load(c echo.Context) error {
-	name := c.Param("name")
-	content, err := h.storage.Load(name)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-	return c.JSON(http.StatusOK, content)
 }
