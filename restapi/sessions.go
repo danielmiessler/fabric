@@ -13,6 +13,7 @@ type SessionsHandler struct {
 
 // NewSessionsHandler creates a new SessionsHandler
 func NewSessionsHandler(e *echo.Echo, sessions *db.SessionsEntity) (ret *SessionsHandler) {
-	ret = &SessionsHandler{sessions: sessions}
+	ret = &SessionsHandler{
+		StorageHandler: NewStorageHandler[db.Session](e, "sessions", sessions), sessions: sessions}
 	return ret
 }
