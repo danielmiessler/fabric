@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func Serve(fabricDb *db.Db) {
+func Serve(fabricDb *db.Db, address string) (err error) {
 	e := echo.New()
 
 	// Middleware
@@ -15,9 +15,11 @@ func Serve(fabricDb *db.Db) {
 
 	// Register routes
 	NewPatternsHandler(e, fabricDb.Patterns)
-	NewContextsHandler(e, fabricDb.Patterns)
-	NewSessionsHandler(e, fabricDb.Patterns)
+	NewContextsHandler(e, fabricDb.Contexts)
+	NewSessionsHandler(e, fabricDb.Sessions)
 
 	// Start server
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(address))
+
+	return
 }

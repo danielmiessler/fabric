@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"github.com/danielmiessler/fabric/converter"
+	"github.com/danielmiessler/fabric/restapi"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -56,7 +57,7 @@ func Cli(version string) (err error) {
 	}
 
 	if currentFlags.Serve {
-		err = fabric.Serve()
+		err = restapi.Serve(fabricDb, currentFlags.ServeAddress)
 		return
 	}
 
