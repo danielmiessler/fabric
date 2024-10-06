@@ -55,6 +55,11 @@ func Cli(version string) (err error) {
 		}
 	}
 
+	if currentFlags.Serve {
+		err = fabric.Serve()
+		return
+	}
+
 	if currentFlags.UpdatePatterns {
 		err = fabric.PopulateDB()
 		return

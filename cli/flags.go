@@ -52,6 +52,7 @@ type Flags struct {
 	PrintSession       string            `long:"printsession" description:"Print session"`
 	HtmlReadability    bool              `long:"readability" description:"Convert HTML input into a clean, readable view"`
 	DryRun             bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
+	Serve              bool              `long:"serve" description:"Serve the Fabric Rest API"`
 	Version            bool              `long:"version" description:"Print current version"`
 }
 
