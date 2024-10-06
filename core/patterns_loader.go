@@ -190,7 +190,9 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 		return changes[i].Timestamp.Before(changes[j].Timestamp)
 	})
 
-	o.makeUniqueList(changes)
+	if err = o.makeUniqueList(changes); err != nil {
+		return
+	}
 
 	var commit *object.Commit
 	if commit, err = r.CommitObject(ref.Hash()); err != nil {
