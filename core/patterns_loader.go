@@ -90,7 +90,7 @@ func (o *PatternsLoader) PersistPatterns() (err error) {
 			if currentPattern.Name() == newPattern.Name() {
 				break
 			}
-			copy.Copy(filepath.Join(o.Patterns.Dir, newPattern.Name()), filepath.Join(newPatternsFolder, newPattern.Name()))
+			err = copy.Copy(filepath.Join(o.Patterns.Dir, newPattern.Name()), filepath.Join(newPatternsFolder, newPattern.Name()))
 		}
 	}
 	return
@@ -98,14 +98,18 @@ func (o *PatternsLoader) PersistPatterns() (err error) {
 
 // movePatterns copies the new patterns into the config directory
 func (o *PatternsLoader) movePatterns() (err error) {
-	os.MkdirAll(o.Patterns.Dir, os.ModePerm)
+	if err = os.MkdirAll(o.Patterns.Dir, os.ModePerm); err != nil {
+		return
+	}
 
 	patternsDir := o.tempPatternsFolder
 	if err = o.PersistPatterns(); err != nil {
 		return
 	}
 
-	copy.Copy(patternsDir, o.Patterns.Dir) // copies the patterns to the config directory
+	if err = copy.Copy(patternsDir, o.Patterns.Dir); err != nil { // copies the patterns to the config directory
+		return
+	}
 	err = os.RemoveAll(patternsDir)
 	return
 }
@@ -250,7 +254,7 @@ func (o *PatternsLoader) writeBlobToFile(blob *object.Blob, path string) (err er
 	return
 }
 
-func (o *PatternsLoader) makeUniqueList(changes []db.DirectoryChange) {
+func (o *PatternsLoader) makeUniqueList(changes []db.DirectoryChange) (err error) {
 	uniqueItems := make(map[string]bool)
 	for _, change := range changes {
 		if strings.TrimSpace(change.Dir) != "" && !strings.Contains(change.Dir, "=>") {
@@ -271,5 +275,6 @@ func (o *PatternsLoader) makeUniqueList(changes []db.DirectoryChange) {
 	}
 
 	joined := strings.Join(finalList, "\n")
-	os.WriteFile(o.Patterns.UniquePatternsFilePath, []byte(joined), 0o644)
+	err = os.WriteFile(o.Patterns.UniquePatternsFilePath, []byte(joined), 0o644)
+	return
 }
