@@ -3,11 +3,12 @@ package core
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
 	"github.com/danielmiessler/fabric/vendors"
 	goopenai "github.com/sashabaranov/go-openai"
-	"strings"
 )
 
 type Chatter struct {
@@ -52,6 +53,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	if message == "" {
 		session = nil
 		err = fmt.Errorf("empty response")
+		return
 	}
 
 	session.Append(&common.Message{Role: goopenai.ChatMessageRoleAssistant, Content: message})
