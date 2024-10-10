@@ -3,6 +3,9 @@ package core
 import (
 	"bytes"
 	"fmt"
+	"os"
+	"strconv"
+
 	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
@@ -20,8 +23,6 @@ import (
 	"github.com/danielmiessler/fabric/vendors/siliconcloud"
 	"github.com/danielmiessler/fabric/youtube"
 	"github.com/pkg/errors"
-	"os"
-	"strconv"
 )
 
 const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
