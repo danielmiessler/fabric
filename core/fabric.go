@@ -7,6 +7,7 @@ import (
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
 	"github.com/danielmiessler/fabric/jina"
+	"github.com/danielmiessler/fabric/lang"
 	"github.com/danielmiessler/fabric/vendors/anthropic"
 	"github.com/danielmiessler/fabric/vendors/azure"
 	"github.com/danielmiessler/fabric/vendors/dryrun"
@@ -49,6 +50,7 @@ func NewFabricBase(db *db.Db) (ret *Fabric) {
 		VendorsAll:     NewVendorsManager(),
 		PatternsLoader: NewPatternsLoader(db.Patterns),
 		YouTube:        youtube.NewYouTube(),
+		Language:       lang.NewLanguage(),
 		Jina:           jina.NewClient(),
 	}
 
@@ -75,6 +77,7 @@ type Fabric struct {
 	VendorsAll *VendorsManager
 	*PatternsLoader
 	*youtube.YouTube
+	*lang.Language
 	Jina *jina.Client
 
 	Db *db.Db
@@ -101,6 +104,7 @@ func (o *Fabric) SaveEnvFile() (err error) {
 
 	o.YouTube.SetupFillEnvFileContent(&envFileContent)
 	o.Jina.SetupFillEnvFileContent(&envFileContent)
+	o.Language.SetupFillEnvFileContent(&envFileContent)
 
 	err = o.Db.SaveEnv(envFileContent.String())
 	return
@@ -122,6 +126,10 @@ func (o *Fabric) Setup() (err error) {
 	}
 
 	if err = o.PatternsLoader.Setup(); err != nil {
+		return
+	}
+
+	if err = o.Language.SetupOrSkip(); err != nil {
 		return
 	}
 
@@ -200,6 +208,7 @@ func (o *Fabric) configure() (err error) {
 	//YouTube and Jina are not mandatory, so ignore not configured error
 	_ = o.YouTube.Configure()
 	_ = o.Jina.Configure()
+	_ = o.Language.Configure()
 
 	return
 }
