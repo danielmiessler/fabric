@@ -264,8 +264,6 @@ func Setup(db *db.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
 
 func SetupVendor(db *db.Db, vendorName string) (ret *core.Fabric, err error) {
 	ret = core.NewFabricForSetup(db)
-	if err = ret.SetupVendor(vendorName); err != nil {
-		return
-	}
+	err = ret.SetupVendor(vendorName)
 	return
 }
