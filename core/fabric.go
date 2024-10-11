@@ -188,7 +188,7 @@ func (o *Fabric) SetupVendors() (err error) {
 }
 
 func (o *Fabric) SetupVendor(vendorName string) (err error) {
-	if err = o.VendorsAll.SetupVendor(vendorName); err != nil {
+	if err = o.VendorsAll.SetupVendor(vendorName, o.Vendors); err != nil {
 		return
 	}
 	err = o.SaveEnvFile()
