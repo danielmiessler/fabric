@@ -146,8 +146,12 @@ func Cli(version string) (err error) {
 		if !currentFlags.YouTubeComments || currentFlags.YouTubeTranscript {
 			var transcript string
 			var language = "en"
-			if currentFlags.Language != "" {
-				language = currentFlags.Language
+			if currentFlags.Language != "" || fabric.DefaultLanguage.Value != "" {
+				if currentFlags.Language != "" {
+					language = currentFlags.Language
+				} else {
+					language = fabric.DefaultLanguage.Value
+				}
 			}
 			if transcript, err = fabric.YouTube.GrabTranscript(videoId, language); err != nil {
 				return
@@ -208,7 +212,11 @@ func Cli(version string) (err error) {
 	}
 
 	var session *db.Session
-	if session, err = chatter.Send(currentFlags.BuildChatRequest(strings.Join(os.Args[1:], " ")), currentFlags.BuildChatOptions()); err != nil {
+	chatReq := currentFlags.BuildChatRequest(strings.Join(os.Args[1:], " "))
+	if chatReq.Language == "" {
+		chatReq.Language = fabric.DefaultLanguage.Value
+	}
+	if session, err = chatter.Send(chatReq, currentFlags.BuildChatOptions()); err != nil {
 		return
 	}
 
