@@ -3,6 +3,9 @@ package core
 import (
 	"bytes"
 	"fmt"
+	"os"
+	"strconv"
+
 	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db/fs"
@@ -20,8 +23,6 @@ import (
 	"github.com/danielmiessler/fabric/plugins/tools/lang"
 	"github.com/danielmiessler/fabric/plugins/tools/youtube"
 	"github.com/pkg/errors"
-	"os"
-	"strconv"
 )
 
 const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
@@ -66,7 +67,7 @@ func NewFabricBase(db *fs.Db) (ret *Fabric) {
 		"Enter the index the name of your default model")
 
 	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groq.NewClient(),
-		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient(), dryrun.NewClient())
+		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient())
 
 	return
 }

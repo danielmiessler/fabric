@@ -213,7 +213,7 @@ Usage:
 
 Application Options:
   -p, --pattern=             Choose a pattern from the available patterns
-  -v, --variable=            Values for pattern variables, e.g. -v=$name:John -v=$age:30
+  -v, --variable=            Values for pattern variables, e.g. -v=#role:expert -v=#points:30"
   -C, --context=             Choose a context from the available contexts
       --session=             Choose a session from the available sessions
   -S, --setup                Run setup for all reconfigurable parts of fabric
@@ -293,7 +293,7 @@ pbpaste | fabric --stream --pattern analyze_claims
 3. Run the `extract_wisdom` Pattern with the `--stream` option to get immediate and streaming results from any Youtube video (much like in the original introduction video).
 
 ```bash
-fabric -y "https://youtube.com/watch?v=uXs-zPc63kM" | --stream --pattern extract_wisdom
+fabric -y "https://youtube.com/watch?v=uXs-zPc63kM" --stream --pattern extract_wisdom
 ```
 
 4. Create patterns- you must create a .md file with the pattern and save it to ~/.config/fabric/patterns/[yourpatternname].

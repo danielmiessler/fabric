@@ -52,6 +52,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	if message == "" {
 		session = nil
 		err = fmt.Errorf("empty response")
+		return
 	}
 
 	session.Append(&common.Message{Role: goopenai.ChatMessageRoleAssistant, Content: message})
