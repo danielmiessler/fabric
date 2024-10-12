@@ -141,6 +141,6 @@ func (o *Flags) AppendMessage(message string) {
 }
 
 func (o *Flags) IsChatRequest() (ret bool) {
-	ret = o.Message != "" || o.Session != ""
+	ret = (o.Message != "" || o.Context != "") && (o.Session != "" || o.Pattern != "")
 	return
 }
