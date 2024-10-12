@@ -89,26 +89,29 @@ func (o *VendorsManager) Setup() (ret map[string]ai.Vendor, err error) {
 	ret = map[string]ai.Vendor{}
 	for _, vendor := range o.Vendors {
 		fmt.Println()
-		if vendorErr := vendor.Setup(); vendorErr == nil {
-			fmt.Printf("[%v] configured\n", vendor.GetName())
-			ret[vendor.GetName()] = vendor
-		} else {
-			fmt.Printf("[%v] skipped\n", vendor.GetName())
-		}
+		o.setupVendorTo(vendor, ret)
 	}
 	return
 }
 
-func (o *VendorsManager) SetupVendor(vendorName string) (err error) {
+func (o *VendorsManager) setupVendorTo(vendor ai.Vendor, configuredVendors map[string]ai.Vendor) {
+	if vendorErr := vendor.Setup(); vendorErr == nil {
+		fmt.Printf("[%v] configured\n", vendor.GetName())
+		configuredVendors[vendor.GetName()] = vendor
+	} else {
+		delete(configuredVendors, vendor.GetName())
+		fmt.Printf("[%v] skipped\n", vendor.GetName())
+	}
+	return
+}
+
+func (o *VendorsManager) SetupVendor(vendorName string, configuredVendors map[string]ai.Vendor) (err error) {
 	vendor := o.FindByName(vendorName)
 	if vendor == nil {
 		err = fmt.Errorf("vendor %s not found", vendorName)
 		return
 	}
-	err = vendor.Setup()
-	if err != nil {
-		return
-	}
+	o.setupVendorTo(vendor, configuredVendors)
 	return
 }
 
