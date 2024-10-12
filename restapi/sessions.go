@@ -2,7 +2,7 @@ package restapi
 
 import (
 	"github.com/danielmiessler/fabric/db"
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 )
 
 // SessionsHandler defines the handler for sessions-related operations
@@ -12,8 +12,8 @@ type SessionsHandler struct {
 }
 
 // NewSessionsHandler creates a new SessionsHandler
-func NewSessionsHandler(e *echo.Echo, sessions *db.SessionsEntity) (ret *SessionsHandler) {
+func NewSessionsHandler(r *gin.Engine, sessions *db.SessionsEntity) (ret *SessionsHandler) {
 	ret = &SessionsHandler{
-		StorageHandler: NewStorageHandler[db.Session](e, "sessions", sessions), sessions: sessions}
+		StorageHandler: NewStorageHandler[db.Session](r, "sessions", sessions), sessions: sessions}
 	return ret
 }

@@ -1,10 +1,10 @@
 package azure
 
 import (
+	"github.com/danielmiessler/fabric/plugins/ai/openai"
 	"strings"
 
 	"github.com/danielmiessler/fabric/common"
-	"github.com/danielmiessler/fabric/vendors/openai"
 	goopenai "github.com/sashabaranov/go-openai"
 )
 
