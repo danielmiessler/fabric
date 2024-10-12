@@ -1,19 +1,19 @@
 package restapi
 
 import (
-	"github.com/danielmiessler/fabric/db"
+	"github.com/danielmiessler/fabric/db/fs"
 	"github.com/gin-gonic/gin"
 )
 
 // ContextsHandler defines the handler for contexts-related operations
 type ContextsHandler struct {
-	*StorageHandler[db.Context]
-	contexts *db.ContextsEntity
+	*StorageHandler[fs.Context]
+	contexts *fs.ContextsEntity
 }
 
 // NewContextsHandler creates a new ContextsHandler
-func NewContextsHandler(r *gin.Engine, contexts *db.ContextsEntity) (ret *ContextsHandler) {
+func NewContextsHandler(r *gin.Engine, contexts *fs.ContextsEntity) (ret *ContextsHandler) {
 	ret = &ContextsHandler{
-		StorageHandler: NewStorageHandler[db.Context](r, "contexts", contexts), contexts: contexts}
+		StorageHandler: NewStorageHandler[fs.Context](r, "contexts", contexts), contexts: contexts}
 	return
 }

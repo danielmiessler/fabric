@@ -4,14 +4,14 @@ import (
 	"context"
 	"fmt"
 	"github.com/danielmiessler/fabric/common"
-	"github.com/danielmiessler/fabric/db"
+	"github.com/danielmiessler/fabric/db/fs"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	goopenai "github.com/sashabaranov/go-openai"
 	"strings"
 )
 
 type Chatter struct {
-	db *db.Db
+	db *fs.Db
 
 	Stream bool
 	DryRun bool
@@ -20,7 +20,7 @@ type Chatter struct {
 	vendor ai.Vendor
 }
 
-func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *db.Session, err error) {
+func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *fs.Session, err error) {
 	if session, err = o.BuildSession(request, opts.Raw); err != nil {
 		return
 	}
@@ -62,16 +62,16 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	return
 }
 
-func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *db.Session, err error) {
+func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *fs.Session, err error) {
 	if request.SessionName != "" {
-		var sess *db.Session
+		var sess *fs.Session
 		if sess, err = o.db.Sessions.Get(request.SessionName); err != nil {
 			err = fmt.Errorf("could not find session %s: %v", request.SessionName, err)
 			return
 		}
 		session = sess
 	} else {
-		session = &db.Session{}
+		session = &fs.Session{}
 	}
 
 	if request.Meta != "" {
@@ -80,7 +80,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 
 	var contextContent string
 	if request.ContextName != "" {
-		var ctx *db.Context
+		var ctx *fs.Context
 		if ctx, err = o.db.Contexts.Get(request.ContextName); err != nil {
 			err = fmt.Errorf("could not find context %s: %v", request.ContextName, err)
 			return
@@ -90,7 +90,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 
 	var patternContent string
 	if request.PatternName != "" {
-		var pattern *db.Pattern
+		var pattern *fs.Pattern
 		if pattern, err = o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables); err != nil {
 			err = fmt.Errorf("could not find pattern %s: %v", request.PatternName, err)
 			return

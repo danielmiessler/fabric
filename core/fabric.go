@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/common"
-	"github.com/danielmiessler/fabric/db"
+	"github.com/danielmiessler/fabric/db/fs"
 	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
 	"github.com/danielmiessler/fabric/plugins/ai/azure"
 	"github.com/danielmiessler/fabric/plugins/ai/dryrun"
@@ -28,20 +28,20 @@ const DefaultPatternsGitRepoFolder = "patterns"
 
 const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
 
-func NewFabric(db *db.Db) (ret *Fabric, err error) {
+func NewFabric(db *fs.Db) (ret *Fabric, err error) {
 	ret = NewFabricBase(db)
 	err = ret.Configure()
 	return
 }
 
-func NewFabricForSetup(db *db.Db) (ret *Fabric) {
+func NewFabricForSetup(db *fs.Db) (ret *Fabric) {
 	ret = NewFabricBase(db)
 	_ = ret.Configure()
 	return
 }
 
 // NewFabricBase Create a new Fabric from a list of already configured VendorsController
-func NewFabricBase(db *db.Db) (ret *Fabric) {
+func NewFabricBase(db *fs.Db) (ret *Fabric) {
 
 	ret = &Fabric{
 		VendorsManager: NewVendorsManager(),
@@ -77,7 +77,7 @@ type Fabric struct {
 	*youtube.YouTube
 	Jina *jina.Client
 
-	Db *db.Db
+	Db *fs.Db
 
 	DefaultVendor *common.Setting
 	DefaultModel  *common.SetupQuestion

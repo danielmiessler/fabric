@@ -1,11 +1,11 @@
 package restapi
 
 import (
-	"github.com/danielmiessler/fabric/db"
+	"github.com/danielmiessler/fabric/db/fs"
 	"github.com/gin-gonic/gin"
 )
 
-func Serve(fabricDb *db.Db, address string) (err error) {
+func Serve(fabricDb *fs.Db, address string) (err error) {
 	r := gin.Default()
 
 	// Middleware
