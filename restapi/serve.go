@@ -2,24 +2,26 @@ package restapi
 
 import (
 	"github.com/danielmiessler/fabric/db"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/gin-gonic/gin"
 )
 
 func Serve(fabricDb *db.Db, address string) (err error) {
-	e := echo.New()
+	r := gin.Default()
 
 	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 
 	// Register routes
-	NewPatternsHandler(e, fabricDb.Patterns)
-	NewContextsHandler(e, fabricDb.Contexts)
-	NewSessionsHandler(e, fabricDb.Sessions)
+	NewPatternsHandler(r, fabricDb.Patterns)
+	NewContextsHandler(r, fabricDb.Contexts)
+	NewSessionsHandler(r, fabricDb.Sessions)
 
 	// Start server
-	e.Logger.Fatal(e.Start(address))
+	err = r.Run(address)
+	if err != nil {
+		return err
+	}
 
 	return
 }

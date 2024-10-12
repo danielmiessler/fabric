@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/db"
-	"github.com/danielmiessler/fabric/vendors"
+	"github.com/danielmiessler/fabric/plugins/ai"
 	goopenai "github.com/sashabaranov/go-openai"
 	"strings"
 )
@@ -17,7 +17,7 @@ type Chatter struct {
 	DryRun bool
 
 	model  string
-	vendor vendors.Vendor
+	vendor ai.Vendor
 }
 
 func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *db.Session, err error) {

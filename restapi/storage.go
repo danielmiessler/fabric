@@ -3,7 +3,7 @@ package restapi
 import (
 	"fmt"
 	"github.com/danielmiessler/fabric/db"
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 )
@@ -14,80 +14,87 @@ type StorageHandler[T any] struct {
 }
 
 // NewStorageHandler creates a new StorageHandler
-func NewStorageHandler[T any](e *echo.Echo, entityType string, storage db.Storage[T]) (ret *StorageHandler[T]) {
+func NewStorageHandler[T any](r *gin.Engine, entityType string, storage db.Storage[T]) (ret *StorageHandler[T]) {
 	ret = &StorageHandler[T]{storage: storage}
-	e.GET(fmt.Sprintf("/%s/:name", entityType), ret.Get)
-	e.GET(fmt.Sprintf("/%s/names", entityType), ret.GetNames)
-	e.DELETE(fmt.Sprintf("/%s/:name", entityType), ret.Delete)
-	e.GET(fmt.Sprintf("/%s/exists/:name", entityType), ret.Exists)
-	e.PUT(fmt.Sprintf("/%s/rename/:oldName/:newName", entityType), ret.Rename)
-	e.POST(fmt.Sprintf("/%s/:name", entityType), ret.Save)
+	r.GET(fmt.Sprintf("/%s/:name", entityType), ret.Get)
+	r.GET(fmt.Sprintf("/%s/names", entityType), ret.GetNames)
+	r.DELETE(fmt.Sprintf("/%s/:name", entityType), ret.Delete)
+	r.GET(fmt.Sprintf("/%s/exists/:name", entityType), ret.Exists)
+	r.PUT(fmt.Sprintf("/%s/rename/:oldName/:newName", entityType), ret.Rename)
+	r.POST(fmt.Sprintf("/%s/:name", entityType), ret.Save)
 	return
 }
 
-func (h *StorageHandler[T]) Get(c echo.Context) error {
+// Get handles the GET /storage/:name route
+func (h *StorageHandler[T]) Get(c *gin.Context) {
 	name := c.Param("name")
 	item, err := h.storage.Get(name)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
-	return c.JSON(http.StatusOK, item)
+	c.JSON(http.StatusOK, item)
 }
 
 // GetNames handles the GET /storage/names route
-func (h *StorageHandler[T]) GetNames(c echo.Context) error {
+func (h *StorageHandler[T]) GetNames(c *gin.Context) {
 	names, err := h.storage.GetNames()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
-	return c.JSON(http.StatusOK, names)
+	c.JSON(http.StatusOK, names)
 }
 
 // Delete handles the DELETE /storage/:name route
-func (h *StorageHandler[T]) Delete(c echo.Context) error {
+func (h *StorageHandler[T]) Delete(c *gin.Context) {
 	name := c.Param("name")
 	err := h.storage.Delete(name)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
-	return c.NoContent(http.StatusOK)
+	c.Status(http.StatusOK)
 }
 
 // Exists handles the GET /storage/exists/:name route
-func (h *StorageHandler[T]) Exists(c echo.Context) error {
+func (h *StorageHandler[T]) Exists(c *gin.Context) {
 	name := c.Param("name")
 	exists := h.storage.Exists(name)
-	return c.JSON(http.StatusOK, exists)
+	c.JSON(http.StatusOK, exists)
 }
 
 // Rename handles the PUT /storage/rename/:oldName/:newName route
-func (h *StorageHandler[T]) Rename(c echo.Context) error {
+func (h *StorageHandler[T]) Rename(c *gin.Context) {
 	oldName := c.Param("oldName")
 	newName := c.Param("newName")
 	err := h.storage.Rename(oldName, newName)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
-	return c.NoContent(http.StatusOK)
+	c.Status(http.StatusOK)
 }
 
 // Save handles the POST /storage/save/:name route
-func (h *StorageHandler[T]) Save(c echo.Context) error {
+func (h *StorageHandler[T]) Save(c *gin.Context) {
 	name := c.Param("name")
 
 	// Read the request body
-	body := c.Request().Body
+	body := c.Request.Body
 	defer body.Close()
 
 	content, err := io.ReadAll(body)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	// Save the content to storage
 	err = h.storage.Save(name, content)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
-	return c.NoContent(http.StatusOK)
+	c.Status(http.StatusOK)
 }

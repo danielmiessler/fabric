@@ -2,7 +2,7 @@ package cli
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/converter"
+	"github.com/danielmiessler/fabric/plugins/tools/converter"
 	"github.com/danielmiessler/fabric/restapi"
 	"os"
 	"path/filepath"
