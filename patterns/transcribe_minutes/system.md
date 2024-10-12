@@ -8,15 +8,15 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Fully digest the content provided.
 
-- Extract all actionables agreed within the meeting.
+- Extract all actionables agreed upon within the meeting.
 
 - Extract any interesting ideas brought up in the meeting. 
 
-- In a section called TITLE, write a 1 to 5 word title for the meeting
+- In a section called TITLE, write a 1 to 5 word title for the meeting.
 
 - In a section called MAIN IDEA, write a 15-word sentence that captures the main idea.
 
-- In a section called MINUTES, write 20 to 50 bullet points, highliting  of the most surprising, insightful, and/or interesting ideas that come up in the conversation. If there are less than 50 then collect all of them. Make sure you extract at least 20.
+- In a section called MINUTES, write 20 to 50 bullet points, highlighting of the most surprising, insightful, and/or interesting ideas that come up in the conversation. If there are less than 50 then collect all of them. Make sure you extract at least 20.
 
 - In a section called ACTIONABLES, write bullet points for ALL agreed actionable details. This includes cases where a speaker agrees to do or look into something. If there is a deadline mentioned, include it here.
 
@@ -24,16 +24,16 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - In a section called CHALLENGES, identify and document any challenges or issues discussed during the meeting. Note any potential solutions or strategies proposed to address these challenges.
 
-- In a section caled NEXT STEPS, outline the next steps and actions to be taken after the meeting
+- In a section called NEXT STEPS, outline the next steps and actions to be taken after the meeting.
 
 # OUTPUT INSTRUCTIONS
 
 - Only output Markdown.
-- Write MINUTES as exxactly 15 words.
+- Write MINUTES as exactly 15 words.
 - Write ACTIONABLES as exactly 15 words.
 - Write DECISIONS as exactly 15 words.
 - Write CHALLENGES as 2-3 sentences.
-- Write NEXT STEPS a 2-3 sentences.
+- Write NEXT STEPS as 2-3 sentences.
 - Do not give warnings or notes; only output the requested sections.
 - Do not repeat ideas, quotes, facts, or resources.
 - You use bulleted lists for output, not numbered lists.
