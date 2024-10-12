@@ -1,27 +1,29 @@
 package restapi
 
 import (
-	"github.com/danielmiessler/fabric/db"
+	"github.com/danielmiessler/fabric/db/fs"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 // PatternsHandler defines the handler for patterns-related operations
 type PatternsHandler struct {
-	*StorageHandler[db.Pattern]
-	patterns *db.PatternsEntity
+	*StorageHandler[fs.Pattern]
+	patterns *fs.PatternsEntity
 }
 
 // NewPatternsHandler creates a new PatternsHandler
-func NewPatternsHandler(r *gin.Engine, patterns *db.PatternsEntity) (ret *PatternsHandler) {
+func NewPatternsHandler(r *gin.Engine, patterns *fs.PatternsEntity) (ret *PatternsHandler) {
 	ret = &PatternsHandler{
-		StorageHandler: NewStorageHandler[db.Pattern](r, "patterns", patterns), patterns: patterns}
-	r.GET("/patterns/:name", ret.GetPattern)
+		StorageHandler: NewStorageHandler[fs.Pattern](r, "patterns", patterns), patterns: patterns}
+
+	// TODO: Add custom, replacement routes here
+	//r.GET("/patterns/:name", ret.Get)
 	return
 }
 
-// GetPattern handles the GET /patterns/:name route
-func (h *PatternsHandler) GetPattern(c *gin.Context) {
+// Get handles the GET /patterns/:name route
+func (h *PatternsHandler) Get(c *gin.Context) {
 	name := c.Param("name")
 	variables := make(map[string]string) // Assuming variables are passed somehow
 	pattern, err := h.patterns.GetApplyVariables(name, variables)
