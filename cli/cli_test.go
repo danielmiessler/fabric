@@ -2,6 +2,7 @@ package cli
 
 import (
 	"github.com/danielmiessler/fabric/core"
+	"github.com/danielmiessler/fabric/plugins/db/db_fs"
 	"os"
 	"testing"
 

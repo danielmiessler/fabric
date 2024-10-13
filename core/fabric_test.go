@@ -1,6 +1,7 @@
 package core
 
 import (
+	"github.com/danielmiessler/fabric/plugins/db/db_fs"
 	"os"
 	"testing"
 )
