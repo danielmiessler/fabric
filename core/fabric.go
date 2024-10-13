@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/atotto/clipboard"
+	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
 	"github.com/danielmiessler/fabric/plugins/ai/azure"
 	"github.com/danielmiessler/fabric/plugins/ai/dryrun"
@@ -14,7 +15,8 @@ import (
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
 	"github.com/danielmiessler/fabric/plugins/ai/openrouter"
 	"github.com/danielmiessler/fabric/plugins/ai/siliconcloud"
-	"github.com/danielmiessler/fabric/plugins/db/fs"
+	core2 "github.com/danielmiessler/fabric/plugins/core"
+	"github.com/danielmiessler/fabric/plugins/db/db_fs"
 	"github.com/danielmiessler/fabric/plugins/tools/jina"
 	"github.com/danielmiessler/fabric/plugins/tools/lang"
 	"github.com/danielmiessler/fabric/plugins/tools/youtube"
@@ -22,32 +24,29 @@ import (
 	"os"
 )
 
-const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
-const DefaultPatternsGitRepoFolder = "patterns"
-
 const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
 
-func NewFabric(db *fs.Db) (ret *Fabric, err error) {
+func NewFabric(db *db_fs.Db) (ret *Fabric, err error) {
 	ret = NewFabricBase(db)
 	err = ret.Configure()
 	return
 }
 
-func NewFabricForSetup(db *fs.Db) (ret *Fabric) {
+func NewFabricForSetup(db *db_fs.Db) (ret *Fabric) {
 	ret = NewFabricBase(db)
 	_ = ret.Configure()
 	return
 }
 
 // NewFabricBase Create a new Fabric from a list of already configured VendorsController
-func NewFabricBase(db *fs.Db) (ret *Fabric) {
+func NewFabricBase(db *db_fs.Db) (ret *Fabric) {
 
 	ret = &Fabric{
-		VendorManager:  NewVendorsManager(),
+		VendorManager:  ai.NewVendorsManager(),
 		Db:             db,
-		Defaults:       NeeDefaults(),
-		VendorsAll:     NewVendorsManager(),
-		PatternsLoader: NewPatternsLoader(db.Patterns),
+		Defaults:       core2.NeeDefaults(),
+		VendorsAll:     ai.NewVendorsManager(),
+		PatternsLoader: core2.NewPatternsLoader(db.Patterns),
 		YouTube:        youtube.NewYouTube(),
 		Language:       lang.NewLanguage(),
 		Jina:           jina.NewClient(),
@@ -60,15 +59,15 @@ func NewFabricBase(db *fs.Db) (ret *Fabric) {
 }
 
 type Fabric struct {
-	VendorManager  *VendorsManager
-	VendorsAll     *VendorsManager
-	PatternsLoader *PatternsLoader
+	VendorManager  *ai.VendorsManager
+	VendorsAll     *ai.VendorsManager
+	PatternsLoader *core2.PatternsLoader
 	YouTube        *youtube.YouTube
 	Language       *lang.Language
 	Jina           *jina.Client
 
-	Db       *fs.Db
-	Defaults *Defaults
+	Db       *db_fs.Db
+	Defaults *core2.Defaults
 }
 
 type ChannelName struct {

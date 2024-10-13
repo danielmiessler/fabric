@@ -1,7 +1,7 @@
 package lang
 
 import (
-	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/plugins"
 	"golang.org/x/text/language"
 )
 
@@ -10,9 +10,9 @@ func NewLanguage() (ret *Language) {
 	label := "Language"
 	ret = &Language{}
 
-	ret.Plugin = &common.Plugin{
+	ret.Plugin = &plugins.Plugin{
 		Label:           label,
-		EnvNamePrefix:   common.BuildEnvVariablePrefix(label),
+		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(label),
 		ConfigureCustom: ret.configure,
 	}
 
@@ -23,8 +23,8 @@ func NewLanguage() (ret *Language) {
 }
 
 type Language struct {
-	*common.Plugin
-	DefaultLanguage *common.SetupQuestion
+	*plugins.Plugin
+	DefaultLanguage *plugins.SetupQuestion
 }
 
 func (o *Language) configure() error {

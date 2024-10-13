@@ -2,7 +2,8 @@ package core
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/plugins"
+	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/pkg/errors"
 	"strconv"
 )
@@ -10,9 +11,9 @@ import (
 func NeeDefaults() (ret *Defaults) {
 	vendorName := "Default"
 	ret = &Defaults{
-		Plugin: &common.Plugin{
+		Plugin: &plugins.Plugin{
 			Label:         vendorName,
-			EnvNamePrefix: common.BuildEnvVariablePrefix(vendorName),
+			EnvNamePrefix: plugins.BuildEnvVariablePrefix(vendorName),
 		},
 	}
 
@@ -24,13 +25,13 @@ func NeeDefaults() (ret *Defaults) {
 }
 
 type Defaults struct {
-	*common.Plugin
+	*plugins.Plugin
 
-	Vendor *common.Setting
-	Model  *common.SetupQuestion
+	Vendor *plugins.Setting
+	Model  *plugins.SetupQuestion
 }
 
-func (o *Defaults) Setup(vendorsModels *VendorsModels) (err error) {
+func (o *Defaults) Setup(vendorsModels *ai.VendorsModels) (err error) {
 	vendorsModels.Print()
 
 	if err = o.Ask(o.Label); err != nil {

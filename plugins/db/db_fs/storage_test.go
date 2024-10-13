@@ -1,4 +1,4 @@
-package fs
+package db_fs
 
 import (
 	"testing"

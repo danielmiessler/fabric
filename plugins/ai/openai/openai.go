@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/danielmiessler/fabric/plugins"
 	"io"
 	"log/slog"
 
@@ -24,9 +25,9 @@ func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCust
 		configureCustom = ret.configure
 	}
 
-	ret.Plugin = &common.Plugin{
+	ret.Plugin = &plugins.Plugin{
 		Label:           vendorName,
-		EnvNamePrefix:   common.BuildEnvVariablePrefix(vendorName),
+		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(vendorName),
 		ConfigureCustom: configureCustom,
 	}
 
@@ -38,9 +39,9 @@ func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCust
 }
 
 type Client struct {
-	*common.Plugin
-	ApiKey     *common.SetupQuestion
-	ApiBaseURL *common.SetupQuestion
+	*plugins.Plugin
+	ApiKey     *plugins.SetupQuestion
+	ApiBaseURL *plugins.SetupQuestion
 	ApiClient  *openai.Client
 }
 

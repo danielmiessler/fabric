@@ -2,14 +2,14 @@ package core
 
 import (
 	"fmt"
-	fs2 "github.com/danielmiessler/fabric/plugins/db/fs"
+	"github.com/danielmiessler/fabric/plugins"
+	"github.com/danielmiessler/fabric/plugins/db/db_fs"
 	"io"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 
-	"github.com/danielmiessler/fabric/common"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -17,15 +17,18 @@ import (
 	"github.com/otiai10/copy"
 )
 
-func NewPatternsLoader(patterns *fs2.PatternsEntity) (ret *PatternsLoader) {
+const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
+const DefaultPatternsGitRepoFolder = "patterns"
+
+func NewPatternsLoader(patterns *db_fs.PatternsEntity) (ret *PatternsLoader) {
 	label := "Patterns Loader"
 	ret = &PatternsLoader{
 		Patterns: patterns,
 	}
 
-	ret.Plugin = &common.Plugin{
+	ret.Plugin = &plugins.Plugin{
 		Label:           label,
-		EnvNamePrefix:   common.BuildEnvVariablePrefix(label),
+		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(label),
 		ConfigureCustom: ret.configure,
 	}
 
@@ -41,11 +44,11 @@ func NewPatternsLoader(patterns *fs2.PatternsEntity) (ret *PatternsLoader) {
 }
 
 type PatternsLoader struct {
-	*common.Plugin
-	Patterns *fs2.PatternsEntity
+	*plugins.Plugin
+	Patterns *db_fs.PatternsEntity
 
-	DefaultGitRepoUrl *common.SetupQuestion
-	DefaultFolder     *common.SetupQuestion
+	DefaultGitRepoUrl *plugins.SetupQuestion
+	DefaultFolder     *plugins.SetupQuestion
 
 	pathPatternsPrefix string
 	tempPatternsFolder string
@@ -156,7 +159,7 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 		return err
 	}
 
-	var changes []fs2.DirectoryChange
+	var changes []db_fs.DirectoryChange
 	// ... iterates over the commits
 	if err = cIter.ForEach(func(c *object.Commit) (err error) {
 		// GetApplyVariables the files changed in this commit by comparing with its parents
@@ -171,7 +174,7 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 			for _, fileStat := range patch.Stats() {
 				if strings.HasPrefix(fileStat.Name, o.pathPatternsPrefix) {
 					dir := filepath.Dir(fileStat.Name)
-					changes = append(changes, fs2.DirectoryChange{Dir: dir, Timestamp: c.Committer.When})
+					changes = append(changes, db_fs.DirectoryChange{Dir: dir, Timestamp: c.Committer.When})
 				}
 			}
 			return
@@ -256,7 +259,7 @@ func (o *PatternsLoader) writeBlobToFile(blob *object.Blob, path string) (err er
 	return
 }
 
-func (o *PatternsLoader) makeUniqueList(changes []fs2.DirectoryChange) (err error) {
+func (o *PatternsLoader) makeUniqueList(changes []db_fs.DirectoryChange) (err error) {
 	uniqueItems := make(map[string]bool)
 	for _, change := range changes {
 		if strings.TrimSpace(change.Dir) != "" && !strings.Contains(change.Dir, "=>") {

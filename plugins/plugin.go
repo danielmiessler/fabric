@@ -1,4 +1,4 @@
-package common
+package plugins
 
 import (
 	"bytes"

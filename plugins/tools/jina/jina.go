@@ -4,15 +4,14 @@ package jina
 
 import (
 	"fmt"
+	"github.com/danielmiessler/fabric/plugins"
 	"io"
 	"net/http"
-
-	"github.com/danielmiessler/fabric/common"
 )
 
 type Client struct {
-	*common.Plugin
-	ApiKey *common.SetupQuestion
+	*plugins.Plugin
+	ApiKey *plugins.SetupQuestion
 }
 
 func NewClient() (ret *Client) {
@@ -20,9 +19,9 @@ func NewClient() (ret *Client) {
 	label := "Jina AI"
 
 	ret = &Client{
-		Plugin: &common.Plugin{
+		Plugin: &plugins.Plugin{
 			Label:         label,
-			EnvNamePrefix: common.BuildEnvVariablePrefix(label),
+			EnvNamePrefix: plugins.BuildEnvVariablePrefix(label),
 		},
 	}
 

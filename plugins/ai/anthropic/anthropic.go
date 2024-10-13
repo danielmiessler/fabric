@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/danielmiessler/fabric/plugins"
 	goopenai "github.com/sashabaranov/go-openai"
 
 	"github.com/danielmiessler/fabric/common"
@@ -16,9 +17,9 @@ func NewClient() (ret *Client) {
 	vendorName := "Anthropic"
 	ret = &Client{}
 
-	ret.Plugin = &common.Plugin{
+	ret.Plugin = &plugins.Plugin{
 		Label:           vendorName,
-		EnvNamePrefix:   common.BuildEnvVariablePrefix(vendorName),
+		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(vendorName),
 		ConfigureCustom: ret.configure,
 	}
 
@@ -39,9 +40,9 @@ func NewClient() (ret *Client) {
 }
 
 type Client struct {
-	*common.Plugin
-	ApiBaseURL *common.SetupQuestion
-	ApiKey     *common.SetupQuestion
+	*plugins.Plugin
+	ApiBaseURL *plugins.SetupQuestion
+	ApiKey     *plugins.SetupQuestion
 
 	maxTokens                  int
 	defaultRequiredUserMessage string

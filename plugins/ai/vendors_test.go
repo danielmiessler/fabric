@@ -1,8 +1,9 @@
-package core
+package ai
 
 import (
 	"bytes"
 	"context"
+	"github.com/danielmiessler/fabric/plugins"
 	"testing"
 
 	"github.com/danielmiessler/fabric/common"
@@ -87,7 +88,7 @@ func TestSetup(t *testing.T) {
 
 // MockVendor is a mock implementation of the Vendor interface for testing purposes.
 type MockVendor struct {
-	*common.Settings
+	*plugins.Settings
 	name string
 }
 
@@ -110,7 +111,7 @@ func (o *MockVendor) IsConfigured() bool {
 	return false
 }
 
-func (o *MockVendor) GetSettings() *common.Settings {
+func (o *MockVendor) GetSettings() *plugins.Settings {
 	return o.Settings
 }
 

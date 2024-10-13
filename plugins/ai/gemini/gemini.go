@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/danielmiessler/fabric/plugins"
 	"strings"
 
 	"github.com/danielmiessler/fabric/common"
@@ -18,9 +19,9 @@ func NewClient() (ret *Client) {
 	vendorName := "Gemini"
 	ret = &Client{}
 
-	ret.Plugin = &common.Plugin{
+	ret.Plugin = &plugins.Plugin{
 		Label:         vendorName,
-		EnvNamePrefix: common.BuildEnvVariablePrefix(vendorName),
+		EnvNamePrefix: plugins.BuildEnvVariablePrefix(vendorName),
 	}
 
 	ret.ApiKey = ret.Plugin.AddSetupQuestion("API key", true)
@@ -29,8 +30,8 @@ func NewClient() (ret *Client) {
 }
 
 type Client struct {
-	*common.Plugin
-	ApiKey *common.SetupQuestion
+	*plugins.Plugin
+	ApiKey *plugins.SetupQuestion
 }
 
 func (o *Client) ListModels() (ret []string, err error) {

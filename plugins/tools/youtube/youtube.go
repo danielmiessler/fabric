@@ -6,7 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/anaskhan96/soup"
-	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/plugins"
 	"google.golang.org/api/option"
 	"google.golang.org/api/youtube/v3"
 	"log"
@@ -21,9 +21,9 @@ func NewYouTube() (ret *YouTube) {
 	label := "YouTube"
 	ret = &YouTube{}
 
-	ret.Plugin = &common.Plugin{
+	ret.Plugin = &plugins.Plugin{
 		Label:         label,
-		EnvNamePrefix: common.BuildEnvVariablePrefix(label),
+		EnvNamePrefix: plugins.BuildEnvVariablePrefix(label),
 	}
 
 	ret.ApiKey = ret.AddSetupQuestion("API key", true)
@@ -32,8 +32,8 @@ func NewYouTube() (ret *YouTube) {
 }
 
 type YouTube struct {
-	*common.Plugin
-	ApiKey *common.SetupQuestion
+	*plugins.Plugin
+	ApiKey *plugins.SetupQuestion
 
 	service *youtube.Service
 }

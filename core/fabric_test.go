@@ -1,20 +1,19 @@
 package core
 
 import (
-	"github.com/danielmiessler/fabric/plugins/db/fs"
 	"os"
 	"testing"
 )
 
 func TestNewFabric(t *testing.T) {
-	_, err := NewFabric(fs.NewDb(os.TempDir()))
+	_, err := NewFabric(db_fs.NewDb(os.TempDir()))
 	if err == nil {
 		t.Fatal("without setup error expected")
 	}
 }
 
 func TestSaveEnvFile(t *testing.T) {
-	fabric := NewFabricBase(fs.NewDb(os.TempDir()))
+	fabric := NewFabricBase(db_fs.NewDb(os.TempDir()))
 
 	err := fabric.SaveEnvFile()
 	if err != nil {
@@ -24,7 +23,7 @@ func TestSaveEnvFile(t *testing.T) {
 
 func TestCopyToClipboard(t *testing.T) {
 	t.Skip("skipping test, because of docker env. in ci.")
-	fabric := NewFabricBase(fs.NewDb(os.TempDir()))
+	fabric := NewFabricBase(db_fs.NewDb(os.TempDir()))
 
 	message := "test message"
 	err := fabric.CopyToClipboard(message)
@@ -34,7 +33,7 @@ func TestCopyToClipboard(t *testing.T) {
 }
 
 func TestCreateOutputFile(t *testing.T) {
-	mockDb := &fs.Db{}
+	mockDb := &db_fs.Db{}
 	fabric := NewFabricBase(mockDb)
 
 	fileName := "test_output.txt"

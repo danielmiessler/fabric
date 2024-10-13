@@ -2,7 +2,6 @@ package cli
 
 import (
 	"github.com/danielmiessler/fabric/core"
-	"github.com/danielmiessler/fabric/plugins/db/fs"
 	"os"
 	"testing"
 
@@ -21,7 +20,7 @@ func TestCli(t *testing.T) {
 }
 
 func TestSetup(t *testing.T) {
-	mockDB := fs.NewDb(os.TempDir())
+	mockDB := db_fs.NewDb(os.TempDir())
 
 	fabric, err := Setup(mockDB, false)
 	assert.Error(t, err)
