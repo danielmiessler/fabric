@@ -1,7 +1,7 @@
 package mistral
 
 import (
-	"github.com/danielmiessler/fabric/vendors/openai"
+	"github.com/danielmiessler/fabric/plugins/ai/openai"
 )
 
 func NewClient() (ret *Client) {

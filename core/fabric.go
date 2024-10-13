@@ -8,20 +8,20 @@ import (
 
 	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/common"
-	"github.com/danielmiessler/fabric/db"
-	"github.com/danielmiessler/fabric/jina"
-	"github.com/danielmiessler/fabric/lang"
-	"github.com/danielmiessler/fabric/vendors/anthropic"
-	"github.com/danielmiessler/fabric/vendors/azure"
-	"github.com/danielmiessler/fabric/vendors/dryrun"
-	"github.com/danielmiessler/fabric/vendors/gemini"
-	"github.com/danielmiessler/fabric/vendors/groq"
-	"github.com/danielmiessler/fabric/vendors/mistral"
-	"github.com/danielmiessler/fabric/vendors/ollama"
-	"github.com/danielmiessler/fabric/vendors/openai"
-	"github.com/danielmiessler/fabric/vendors/openrouter"
-	"github.com/danielmiessler/fabric/vendors/siliconcloud"
-	"github.com/danielmiessler/fabric/youtube"
+	"github.com/danielmiessler/fabric/db/fs"
+	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
+	"github.com/danielmiessler/fabric/plugins/ai/azure"
+	"github.com/danielmiessler/fabric/plugins/ai/dryrun"
+	"github.com/danielmiessler/fabric/plugins/ai/gemini"
+	"github.com/danielmiessler/fabric/plugins/ai/groq"
+	"github.com/danielmiessler/fabric/plugins/ai/mistral"
+	"github.com/danielmiessler/fabric/plugins/ai/ollama"
+	"github.com/danielmiessler/fabric/plugins/ai/openai"
+	"github.com/danielmiessler/fabric/plugins/ai/openrouter"
+	"github.com/danielmiessler/fabric/plugins/ai/siliconcloud"
+	"github.com/danielmiessler/fabric/plugins/tools/jina"
+	"github.com/danielmiessler/fabric/plugins/tools/lang"
+	"github.com/danielmiessler/fabric/plugins/tools/youtube"
 	"github.com/pkg/errors"
 )
 
@@ -30,20 +30,20 @@ const DefaultPatternsGitRepoFolder = "patterns"
 
 const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
 
-func NewFabric(db *db.Db) (ret *Fabric, err error) {
+func NewFabric(db *fs.Db) (ret *Fabric, err error) {
 	ret = NewFabricBase(db)
 	err = ret.Configure()
 	return
 }
 
-func NewFabricForSetup(db *db.Db) (ret *Fabric) {
+func NewFabricForSetup(db *fs.Db) (ret *Fabric) {
 	ret = NewFabricBase(db)
 	_ = ret.Configure()
 	return
 }
 
 // NewFabricBase Create a new Fabric from a list of already configured VendorsController
-func NewFabricBase(db *db.Db) (ret *Fabric) {
+func NewFabricBase(db *fs.Db) (ret *Fabric) {
 
 	ret = &Fabric{
 		VendorsManager: NewVendorsManager(),
@@ -81,7 +81,7 @@ type Fabric struct {
 	*lang.Language
 	Jina *jina.Client
 
-	Db *db.Db
+	Db *fs.Db
 
 	DefaultVendor *common.Setting
 	DefaultModel  *common.SetupQuestion

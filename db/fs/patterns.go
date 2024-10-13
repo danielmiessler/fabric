@@ -1,4 +1,4 @@
-package db
+package fs
 
 import (
 	"fmt"
@@ -7,14 +7,13 @@ import (
 	"strings"
 )
 
-type Patterns struct {
-	*Storage
+type PatternsEntity struct {
+	*StorageEntity
 	SystemPatternFile      string
 	UniquePatternsFilePath string
 }
 
-// GetPattern finds a pattern by name and returns the pattern as an entry or an error
-func (o *Patterns) GetPattern(name string, variables map[string]string) (ret *Pattern, err error) {
+func (o *PatternsEntity) Get(name string) (ret *Pattern, err error) {
 	patternPath := filepath.Join(o.Dir, name, o.SystemPatternFile)
 
 	var pattern []byte
@@ -23,13 +22,6 @@ func (o *Patterns) GetPattern(name string, variables map[string]string) (ret *Pa
 	}
 
 	patternStr := string(pattern)
-
-	if variables != nil && len(variables) > 0 {
-		for variableName, value := range variables {
-			patternStr = strings.ReplaceAll(patternStr, variableName, value)
-		}
-	}
-
 	ret = &Pattern{
 		Name:    name,
 		Pattern: patternStr,
@@ -37,7 +29,22 @@ func (o *Patterns) GetPattern(name string, variables map[string]string) (ret *Pa
 	return
 }
 
-func (o *Patterns) PrintLatestPatterns(latestNumber int) (err error) {
+// GetApplyVariables finds a pattern by name and returns the pattern as an entry or an error
+func (o *PatternsEntity) GetApplyVariables(name string, variables map[string]string) (ret *Pattern, err error) {
+
+	if ret, err = o.Get(name); err != nil {
+		return
+	}
+
+	if variables != nil && len(variables) > 0 {
+		for variableName, value := range variables {
+			ret.Pattern = strings.ReplaceAll(ret.Pattern, variableName, value)
+		}
+	}
+	return
+}
+
+func (o *PatternsEntity) PrintLatestPatterns(latestNumber int) (err error) {
 	var contents []byte
 	if contents, err = os.ReadFile(o.UniquePatternsFilePath); err != nil {
 		err = fmt.Errorf("could not read unique patterns file. Pleas run --updatepatterns (%s)", err)

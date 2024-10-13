@@ -2,14 +2,15 @@ package cli
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/converter"
+	"github.com/danielmiessler/fabric/db/fs"
+	"github.com/danielmiessler/fabric/plugins/tools/converter"
+	"github.com/danielmiessler/fabric/restapi"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 
 	"github.com/danielmiessler/fabric/core"
-	"github.com/danielmiessler/fabric/db"
 )
 
 // Cli Controls the cli. It takes in the flags and runs the appropriate functions
@@ -29,7 +30,7 @@ func Cli(version string) (err error) {
 		return
 	}
 
-	fabricDb := db.NewDb(filepath.Join(homedir, ".config/fabric"))
+	fabricDb := fs.NewDb(filepath.Join(homedir, ".config/fabric"))
 
 	// if the setup flag is set, run the setup function
 	if currentFlags.Setup || currentFlags.SetupSkipPatterns || currentFlags.SetupVendor != "" {
@@ -53,6 +54,11 @@ func Cli(version string) (err error) {
 			fmt.Println("fabric can't initialize, please run the --setup procedure", err)
 			return
 		}
+	}
+
+	if currentFlags.Serve {
+		err = restapi.Serve(fabricDb, currentFlags.ServeAddress)
+		return
 	}
 
 	if currentFlags.UpdatePatterns {
@@ -211,7 +217,7 @@ func Cli(version string) (err error) {
 		return
 	}
 
-	var session *db.Session
+	var session *fs.Session
 	chatReq := currentFlags.BuildChatRequest(strings.Join(os.Args[1:], " "))
 	if chatReq.Language == "" {
 		chatReq.Language = fabric.DefaultLanguage.Value
@@ -246,7 +252,7 @@ func Cli(version string) (err error) {
 	return
 }
 
-func Setup(db *db.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
+func Setup(db *fs.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
 	instance := core.NewFabricForSetup(db)
 
 	if err = instance.Setup(); err != nil {
@@ -262,7 +268,7 @@ func Setup(db *db.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
 	return
 }
 
-func SetupVendor(db *db.Db, vendorName string) (ret *core.Fabric, err error) {
+func SetupVendor(db *fs.Db, vendorName string) (ret *core.Fabric, err error) {
 	ret = core.NewFabricForSetup(db)
 	err = ret.SetupVendor(vendorName)
 	return

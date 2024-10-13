@@ -1,4 +1,4 @@
-package db
+package fs
 
 import (
 	"testing"
@@ -8,11 +8,11 @@ import (
 
 func TestSessions_GetOrCreateSession(t *testing.T) {
 	dir := t.TempDir()
-	sessions := &Sessions{
-		Storage: &Storage{Dir: dir, FileExtension: ".json"},
+	sessions := &SessionsEntity{
+		StorageEntity: &StorageEntity{Dir: dir, FileExtension: ".json"},
 	}
 	sessionName := "testSession"
-	session, err := sessions.GetOrCreateSession(sessionName)
+	session, err := sessions.Get(sessionName)
 	if err != nil {
 		t.Fatalf("failed to get or create session: %v", err)
 	}
@@ -23,8 +23,8 @@ func TestSessions_GetOrCreateSession(t *testing.T) {
 
 func TestSessions_SaveSession(t *testing.T) {
 	dir := t.TempDir()
-	sessions := &Sessions{
-		Storage: &Storage{Dir: dir, FileExtension: ".json"},
+	sessions := &SessionsEntity{
+		StorageEntity: &StorageEntity{Dir: dir, FileExtension: ".json"},
 	}
 	sessionName := "testSession"
 	session := &Session{Name: sessionName, Messages: []*common.Message{{Content: "message1"}}}

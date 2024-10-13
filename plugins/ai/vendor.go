@@ -1,4 +1,4 @@
-package vendors
+package ai
 
 import (
 	"bytes"

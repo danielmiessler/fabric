@@ -3,23 +3,22 @@ package core
 import (
 	"context"
 	"fmt"
+	"github.com/danielmiessler/fabric/plugins/ai"
 	"sync"
-
-	"github.com/danielmiessler/fabric/vendors"
 )
 
 func NewVendorsManager() *VendorsManager {
 	return &VendorsManager{
-		Vendors: map[string]vendors.Vendor{},
+		Vendors: map[string]ai.Vendor{},
 	}
 }
 
 type VendorsManager struct {
-	Vendors map[string]vendors.Vendor
+	Vendors map[string]ai.Vendor
 	Models  *VendorsModels
 }
 
-func (o *VendorsManager) AddVendors(vendors ...vendors.Vendor) {
+func (o *VendorsManager) AddVendors(vendors ...ai.Vendor) {
 	for _, vendor := range vendors {
 		o.Vendors[vendor.GetName()] = vendor
 	}
@@ -36,7 +35,7 @@ func (o *VendorsManager) HasVendors() bool {
 	return len(o.Vendors) > 0
 }
 
-func (o *VendorsManager) FindByName(name string) vendors.Vendor {
+func (o *VendorsManager) FindByName(name string) ai.Vendor {
 	return o.Vendors[name]
 }
 
@@ -72,7 +71,7 @@ func (o *VendorsManager) readModels() {
 }
 
 func (o *VendorsManager) fetchVendorModels(
-	ctx context.Context, wg *sync.WaitGroup, vendor vendors.Vendor, resultsChan chan<- modelResult) {
+	ctx context.Context, wg *sync.WaitGroup, vendor ai.Vendor, resultsChan chan<- modelResult) {
 
 	defer wg.Done()
 
@@ -86,8 +85,8 @@ func (o *VendorsManager) fetchVendorModels(
 	}
 }
 
-func (o *VendorsManager) Setup() (ret map[string]vendors.Vendor, err error) {
-	ret = map[string]vendors.Vendor{}
+func (o *VendorsManager) Setup() (ret map[string]ai.Vendor, err error) {
+	ret = map[string]ai.Vendor{}
 	for _, vendor := range o.Vendors {
 		fmt.Println()
 		o.setupVendorTo(vendor, ret)
@@ -95,7 +94,7 @@ func (o *VendorsManager) Setup() (ret map[string]vendors.Vendor, err error) {
 	return
 }
 
-func (o *VendorsManager) setupVendorTo(vendor vendors.Vendor, configuredVendors map[string]vendors.Vendor) {
+func (o *VendorsManager) setupVendorTo(vendor ai.Vendor, configuredVendors map[string]ai.Vendor) {
 	if vendorErr := vendor.Setup(); vendorErr == nil {
 		fmt.Printf("[%v] configured\n", vendor.GetName())
 		configuredVendors[vendor.GetName()] = vendor
@@ -103,9 +102,10 @@ func (o *VendorsManager) setupVendorTo(vendor vendors.Vendor, configuredVendors 
 		delete(configuredVendors, vendor.GetName())
 		fmt.Printf("[%v] skipped\n", vendor.GetName())
 	}
+	return
 }
 
-func (o *VendorsManager) SetupVendor(vendorName string, configuredVendors map[string]vendors.Vendor) (err error) {
+func (o *VendorsManager) SetupVendor(vendorName string, configuredVendors map[string]ai.Vendor) (err error) {
 	vendor := o.FindByName(vendorName)
 	if vendor == nil {
 		err = fmt.Errorf("vendor %s not found", vendorName)

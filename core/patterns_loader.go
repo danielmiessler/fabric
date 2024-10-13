@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"github.com/danielmiessler/fabric/db/fs"
 	"io"
 	"os"
 	"path/filepath"
@@ -9,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/danielmiessler/fabric/common"
-	"github.com/danielmiessler/fabric/db"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -17,7 +17,7 @@ import (
 	"github.com/otiai10/copy"
 )
 
-func NewPatternsLoader(patterns *db.Patterns) (ret *PatternsLoader) {
+func NewPatternsLoader(patterns *fs.PatternsEntity) (ret *PatternsLoader) {
 	label := "Patterns Loader"
 	ret = &PatternsLoader{
 		Patterns: patterns,
@@ -42,7 +42,7 @@ func NewPatternsLoader(patterns *db.Patterns) (ret *PatternsLoader) {
 
 type PatternsLoader struct {
 	*common.Configurable
-	Patterns *db.Patterns
+	Patterns *fs.PatternsEntity
 
 	DefaultGitRepoUrl *common.SetupQuestion
 	DefaultFolder     *common.SetupQuestion
@@ -90,7 +90,7 @@ func (o *PatternsLoader) PersistPatterns() (err error) {
 			if currentPattern.Name() == newPattern.Name() {
 				break
 			}
-			copy.Copy(filepath.Join(o.Patterns.Dir, newPattern.Name()), filepath.Join(newPatternsFolder, newPattern.Name()))
+			err = copy.Copy(filepath.Join(o.Patterns.Dir, newPattern.Name()), filepath.Join(newPatternsFolder, newPattern.Name()))
 		}
 	}
 	return
@@ -98,14 +98,18 @@ func (o *PatternsLoader) PersistPatterns() (err error) {
 
 // movePatterns copies the new patterns into the config directory
 func (o *PatternsLoader) movePatterns() (err error) {
-	os.MkdirAll(o.Patterns.Dir, os.ModePerm)
+	if err = os.MkdirAll(o.Patterns.Dir, os.ModePerm); err != nil {
+		return
+	}
 
 	patternsDir := o.tempPatternsFolder
 	if err = o.PersistPatterns(); err != nil {
 		return
 	}
 
-	copy.Copy(patternsDir, o.Patterns.Dir) // copies the patterns to the config directory
+	if err = copy.Copy(patternsDir, o.Patterns.Dir); err != nil { // copies the patterns to the config directory
+		return
+	}
 	err = os.RemoveAll(patternsDir)
 	return
 }
@@ -152,10 +156,10 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 		return err
 	}
 
-	var changes []db.DirectoryChange
+	var changes []fs.DirectoryChange
 	// ... iterates over the commits
 	if err = cIter.ForEach(func(c *object.Commit) (err error) {
-		// Get the files changed in this commit by comparing with its parents
+		// GetApplyVariables the files changed in this commit by comparing with its parents
 		parentIter := c.Parents()
 		if err = parentIter.ForEach(func(parent *object.Commit) (err error) {
 			var patch *object.Patch
@@ -167,7 +171,7 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 			for _, fileStat := range patch.Stats() {
 				if strings.HasPrefix(fileStat.Name, o.pathPatternsPrefix) {
 					dir := filepath.Dir(fileStat.Name)
-					changes = append(changes, db.DirectoryChange{Dir: dir, Timestamp: c.Committer.When})
+					changes = append(changes, fs.DirectoryChange{Dir: dir, Timestamp: c.Committer.When})
 				}
 			}
 			return
@@ -186,7 +190,9 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 		return changes[i].Timestamp.Before(changes[j].Timestamp)
 	})
 
-	o.makeUniqueList(changes)
+	if err = o.makeUniqueList(changes); err != nil {
+		return
+	}
 
 	var commit *object.Commit
 	if commit, err = r.CommitObject(ref.Hash()); err != nil {
@@ -250,7 +256,7 @@ func (o *PatternsLoader) writeBlobToFile(blob *object.Blob, path string) (err er
 	return
 }
 
-func (o *PatternsLoader) makeUniqueList(changes []db.DirectoryChange) {
+func (o *PatternsLoader) makeUniqueList(changes []fs.DirectoryChange) (err error) {
 	uniqueItems := make(map[string]bool)
 	for _, change := range changes {
 		if strings.TrimSpace(change.Dir) != "" && !strings.Contains(change.Dir, "=>") {
@@ -271,5 +277,6 @@ func (o *PatternsLoader) makeUniqueList(changes []db.DirectoryChange) {
 	}
 
 	joined := strings.Join(finalList, "\n")
-	os.WriteFile(o.Patterns.UniquePatternsFilePath, []byte(joined), 0o644)
+	err = os.WriteFile(o.Patterns.UniquePatternsFilePath, []byte(joined), 0o644)
+	return
 }
