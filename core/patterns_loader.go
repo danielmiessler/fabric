@@ -23,7 +23,7 @@ func NewPatternsLoader(patterns *fs.PatternsEntity) (ret *PatternsLoader) {
 		Patterns: patterns,
 	}
 
-	ret.Configurable = &common.Configurable{
+	ret.Plugin = &common.Plugin{
 		Label:           label,
 		EnvNamePrefix:   common.BuildEnvVariablePrefix(label),
 		ConfigureCustom: ret.configure,
@@ -41,7 +41,7 @@ func NewPatternsLoader(patterns *fs.PatternsEntity) (ret *PatternsLoader) {
 }
 
 type PatternsLoader struct {
-	*common.Configurable
+	*common.Plugin
 	Patterns *fs.PatternsEntity
 
 	DefaultGitRepoUrl *common.SetupQuestion

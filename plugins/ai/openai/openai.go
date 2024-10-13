@@ -24,7 +24,7 @@ func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCust
 		configureCustom = ret.configure
 	}
 
-	ret.Configurable = &common.Configurable{
+	ret.Plugin = &common.Plugin{
 		Label:           vendorName,
 		EnvNamePrefix:   common.BuildEnvVariablePrefix(vendorName),
 		ConfigureCustom: configureCustom,
@@ -38,7 +38,7 @@ func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCust
 }
 
 type Client struct {
-	*common.Configurable
+	*common.Plugin
 	ApiKey     *common.SetupQuestion
 	ApiBaseURL *common.SetupQuestion
 	ApiClient  *openai.Client

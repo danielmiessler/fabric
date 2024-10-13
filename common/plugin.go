@@ -9,7 +9,7 @@ import (
 
 const AnswerReset = "reset"
 
-type Configurable struct {
+type Plugin struct {
 	Settings
 	SetupQuestions
 
@@ -19,21 +19,21 @@ type Configurable struct {
 	ConfigureCustom func() error
 }
 
-func (o *Configurable) GetName() string {
+func (o *Plugin) GetName() string {
 	return o.Label
 }
 
-func (o *Configurable) AddSetting(name string, required bool) (ret *Setting) {
+func (o *Plugin) AddSetting(name string, required bool) (ret *Setting) {
 	ret = NewSetting(fmt.Sprintf("%v%v", o.EnvNamePrefix, BuildEnvVariable(name)), required)
 	o.Settings = append(o.Settings, ret)
 	return
 }
 
-func (o *Configurable) AddSetupQuestion(name string, required bool) (ret *SetupQuestion) {
+func (o *Plugin) AddSetupQuestion(name string, required bool) (ret *SetupQuestion) {
 	return o.AddSetupQuestionCustom(name, required, "")
 }
 
-func (o *Configurable) AddSetupQuestionCustom(name string, required bool, question string) (ret *SetupQuestion) {
+func (o *Plugin) AddSetupQuestionCustom(name string, required bool, question string) (ret *SetupQuestion) {
 	setting := o.AddSetting(name, required)
 	ret = &SetupQuestion{Setting: setting, Question: question}
 	if ret.Question == "" {
@@ -43,7 +43,7 @@ func (o *Configurable) AddSetupQuestionCustom(name string, required bool, questi
 	return
 }
 
-func (o *Configurable) Configure() (err error) {
+func (o *Plugin) Configure() (err error) {
 	if err = o.Settings.Configure(); err != nil {
 		return
 	}
@@ -54,7 +54,7 @@ func (o *Configurable) Configure() (err error) {
 	return
 }
 
-func (o *Configurable) Setup() (err error) {
+func (o *Plugin) Setup() (err error) {
 	if err = o.Ask(o.Label); err != nil {
 		return
 	}
@@ -63,14 +63,14 @@ func (o *Configurable) Setup() (err error) {
 	return
 }
 
-func (o *Configurable) SetupOrSkip() (err error) {
+func (o *Plugin) SetupOrSkip() (err error) {
 	if err = o.Setup(); err != nil {
 		fmt.Printf("[%v] skipped\n", o.GetName())
 	}
 	return
 }
 
-func (o *Configurable) SetupFillEnvFileContent(fileEnvFileContent *bytes.Buffer) {
+func (o *Plugin) SetupFillEnvFileContent(fileEnvFileContent *bytes.Buffer) {
 	o.Settings.FillEnvFileContent(fileEnvFileContent)
 }
 

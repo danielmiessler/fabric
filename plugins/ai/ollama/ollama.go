@@ -17,20 +17,20 @@ func NewClient() (ret *Client) {
 	vendorName := "Ollama"
 	ret = &Client{}
 
-	ret.Configurable = &common.Configurable{
+	ret.Plugin = &common.Plugin{
 		Label:           vendorName,
 		EnvNamePrefix:   common.BuildEnvVariablePrefix(vendorName),
 		ConfigureCustom: ret.configure,
 	}
 
-	ret.ApiUrl = ret.Configurable.AddSetupQuestionCustom("API URL", true,
+	ret.ApiUrl = ret.Plugin.AddSetupQuestionCustom("API URL", true,
 		"Enter your Ollama URL (as a reminder, it is usually http://localhost:11434)")
 
 	return
 }
 
 type Client struct {
-	*common.Configurable
+	*common.Plugin
 	ApiUrl *common.SetupQuestion
 
 	apiUrl *url.URL

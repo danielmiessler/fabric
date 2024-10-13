@@ -56,7 +56,7 @@ func NewFabricBase(db *fs.Db) (ret *Fabric) {
 	}
 
 	label := "Default"
-	ret.Configurable = &common.Configurable{
+	ret.Plugin = &common.Plugin{
 		Label:           label,
 		EnvNamePrefix:   common.BuildEnvVariablePrefix(label),
 		ConfigureCustom: ret.configure,
@@ -73,7 +73,7 @@ func NewFabricBase(db *fs.Db) (ret *Fabric) {
 }
 
 type Fabric struct {
-	*common.Configurable
+	*common.Plugin
 	*VendorsManager
 	VendorsAll *VendorsManager
 	*PatternsLoader

@@ -9,7 +9,7 @@ import (
 )
 
 func TestConfigurable_AddSetting(t *testing.T) {
-	conf := &Configurable{
+	conf := &Plugin{
 		Settings:      Settings{},
 		Label:         "TestConfigurable",
 		EnvNamePrefix: "TEST_",
@@ -26,7 +26,7 @@ func TestConfigurable_Configure(t *testing.T) {
 		EnvVariable: "TEST_SETTING",
 		Required:    true,
 	}
-	conf := &Configurable{
+	conf := &Plugin{
 		Settings: Settings{setting},
 		Label:    "TestConfigurable",
 	}
@@ -42,7 +42,7 @@ func TestConfigurable_Setup(t *testing.T) {
 		EnvVariable: "TEST_SETTING",
 		Required:    false,
 	}
-	conf := &Configurable{
+	conf := &Plugin{
 		Settings: Settings{setting},
 		Label:    "TestConfigurable",
 	}

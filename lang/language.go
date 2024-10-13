@@ -10,20 +10,20 @@ func NewLanguage() (ret *Language) {
 	label := "Language"
 	ret = &Language{}
 
-	ret.Configurable = &common.Configurable{
+	ret.Plugin = &common.Plugin{
 		Label:           label,
 		EnvNamePrefix:   common.BuildEnvVariablePrefix(label),
 		ConfigureCustom: ret.configure,
 	}
 
-	ret.DefaultLanguage = ret.Configurable.AddSetupQuestionCustom("Output", false,
+	ret.DefaultLanguage = ret.Plugin.AddSetupQuestionCustom("Output", false,
 		"Enter your default want output lang (for example: zh_CN)")
 
 	return
 }
 
 type Language struct {
-	*common.Configurable
+	*common.Plugin
 	DefaultLanguage *common.SetupQuestion
 }
 

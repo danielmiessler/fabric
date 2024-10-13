@@ -11,7 +11,7 @@ import (
 )
 
 type Client struct {
-	*common.Configurable
+	*common.Plugin
 	ApiKey *common.SetupQuestion
 }
 
@@ -20,7 +20,7 @@ func NewClient() (ret *Client) {
 	label := "Jina AI"
 
 	ret = &Client{
-		Configurable: &common.Configurable{
+		Plugin: &common.Plugin{
 			Label:         label,
 			EnvNamePrefix: common.BuildEnvVariablePrefix(label),
 		},

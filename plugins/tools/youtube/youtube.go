@@ -21,7 +21,7 @@ func NewYouTube() (ret *YouTube) {
 	label := "YouTube"
 	ret = &YouTube{}
 
-	ret.Configurable = &common.Configurable{
+	ret.Plugin = &common.Plugin{
 		Label:         label,
 		EnvNamePrefix: common.BuildEnvVariablePrefix(label),
 	}
@@ -32,7 +32,7 @@ func NewYouTube() (ret *YouTube) {
 }
 
 type YouTube struct {
-	*common.Configurable
+	*common.Plugin
 	ApiKey *common.SetupQuestion
 
 	service *youtube.Service

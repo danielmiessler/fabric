@@ -16,7 +16,7 @@ func NewClient() (ret *Client) {
 	vendorName := "Anthropic"
 	ret = &Client{}
 
-	ret.Configurable = &common.Configurable{
+	ret.Plugin = &common.Plugin{
 		Label:           vendorName,
 		EnvNamePrefix:   common.BuildEnvVariablePrefix(vendorName),
 		ConfigureCustom: ret.configure,
@@ -24,7 +24,7 @@ func NewClient() (ret *Client) {
 
 	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
 	ret.ApiBaseURL.Value = baseUrl
-	ret.ApiKey = ret.Configurable.AddSetupQuestion("API key", true)
+	ret.ApiKey = ret.Plugin.AddSetupQuestion("API key", true)
 
 	// we could provide a setup question for the following settings
 	ret.maxTokens = 4096
@@ -39,7 +39,7 @@ func NewClient() (ret *Client) {
 }
 
 type Client struct {
-	*common.Configurable
+	*common.Plugin
 	ApiBaseURL *common.SetupQuestion
 	ApiKey     *common.SetupQuestion
 
