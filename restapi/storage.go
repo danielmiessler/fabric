@@ -2,7 +2,7 @@ package restapi
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/db"
+	"github.com/danielmiessler/fabric/plugins/db"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"

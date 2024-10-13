@@ -2,7 +2,7 @@ package cli
 
 import (
 	"github.com/danielmiessler/fabric/core"
-	"github.com/danielmiessler/fabric/db/fs"
+	"github.com/danielmiessler/fabric/plugins/db/fs"
 	"os"
 	"testing"
 

@@ -2,7 +2,7 @@ package cli
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/db/fs"
+	fs2 "github.com/danielmiessler/fabric/plugins/db/fs"
 	"github.com/danielmiessler/fabric/plugins/tools/converter"
 	"github.com/danielmiessler/fabric/restapi"
 	"os"
@@ -30,7 +30,7 @@ func Cli(version string) (err error) {
 		return
 	}
 
-	fabricDb := fs.NewDb(filepath.Join(homedir, ".config/fabric"))
+	fabricDb := fs2.NewDb(filepath.Join(homedir, ".config/fabric"))
 
 	// if the setup flag is set, run the setup function
 	if currentFlags.Setup || currentFlags.SetupSkipPatterns || currentFlags.SetupVendor != "" {
@@ -62,12 +62,12 @@ func Cli(version string) (err error) {
 	}
 
 	if currentFlags.UpdatePatterns {
-		err = fabric.PopulateDB()
+		err = fabric.PatternsLoader.PopulateDB()
 		return
 	}
 
 	if currentFlags.ChangeDefaultModel {
-		err = fabric.SetupDefaultModel()
+		err = fabric.Defaults.Setup(fabric.VendorManager.GetModels())
 		return
 	}
 
@@ -89,7 +89,7 @@ func Cli(version string) (err error) {
 	}
 
 	if currentFlags.ListAllModels {
-		fabric.GetModels().Print()
+		fabric.VendorManager.GetModels().Print()
 		return
 	}
 
@@ -152,11 +152,11 @@ func Cli(version string) (err error) {
 		if !currentFlags.YouTubeComments || currentFlags.YouTubeTranscript {
 			var transcript string
 			var language = "en"
-			if currentFlags.Language != "" || fabric.DefaultLanguage.Value != "" {
+			if currentFlags.Language != "" || fabric.Language.DefaultLanguage.Value != "" {
 				if currentFlags.Language != "" {
 					language = currentFlags.Language
 				} else {
-					language = fabric.DefaultLanguage.Value
+					language = fabric.Language.DefaultLanguage.Value
 				}
 			}
 			if transcript, err = fabric.YouTube.GrabTranscript(videoId, language); err != nil {
@@ -217,10 +217,10 @@ func Cli(version string) (err error) {
 		return
 	}
 
-	var session *fs.Session
+	var session *fs2.Session
 	chatReq := currentFlags.BuildChatRequest(strings.Join(os.Args[1:], " "))
 	if chatReq.Language == "" {
-		chatReq.Language = fabric.DefaultLanguage.Value
+		chatReq.Language = fabric.Language.DefaultLanguage.Value
 	}
 	if session, err = chatter.Send(chatReq, currentFlags.BuildChatOptions()); err != nil {
 		return
@@ -252,7 +252,7 @@ func Cli(version string) (err error) {
 	return
 }
 
-func Setup(db *fs.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
+func Setup(db *fs2.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
 	instance := core.NewFabricForSetup(db)
 
 	if err = instance.Setup(); err != nil {
@@ -260,7 +260,7 @@ func Setup(db *fs.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
 	}
 
 	if !skipUpdatePatterns {
-		if err = instance.PopulateDB(); err != nil {
+		if err = instance.PatternsLoader.PopulateDB(); err != nil {
 			return
 		}
 	}
@@ -268,7 +268,7 @@ func Setup(db *fs.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
 	return
 }
 
-func SetupVendor(db *fs.Db, vendorName string) (ret *core.Fabric, err error) {
+func SetupVendor(db *fs2.Db, vendorName string) (ret *core.Fabric, err error) {
 	ret = core.NewFabricForSetup(db)
 	err = ret.SetupVendor(vendorName)
 	return

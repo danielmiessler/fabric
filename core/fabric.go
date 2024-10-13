@@ -3,12 +3,7 @@ package core
 import (
 	"bytes"
 	"fmt"
-	"os"
-	"strconv"
-
 	"github.com/atotto/clipboard"
-	"github.com/danielmiessler/fabric/common"
-	"github.com/danielmiessler/fabric/db/fs"
 	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
 	"github.com/danielmiessler/fabric/plugins/ai/azure"
 	"github.com/danielmiessler/fabric/plugins/ai/dryrun"
@@ -19,10 +14,12 @@ import (
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
 	"github.com/danielmiessler/fabric/plugins/ai/openrouter"
 	"github.com/danielmiessler/fabric/plugins/ai/siliconcloud"
+	"github.com/danielmiessler/fabric/plugins/db/fs"
 	"github.com/danielmiessler/fabric/plugins/tools/jina"
 	"github.com/danielmiessler/fabric/plugins/tools/lang"
 	"github.com/danielmiessler/fabric/plugins/tools/youtube"
 	"github.com/pkg/errors"
+	"os"
 )
 
 const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
@@ -46,25 +43,15 @@ func NewFabricForSetup(db *fs.Db) (ret *Fabric) {
 func NewFabricBase(db *fs.Db) (ret *Fabric) {
 
 	ret = &Fabric{
-		VendorsManager: NewVendorsManager(),
+		VendorManager:  NewVendorsManager(),
 		Db:             db,
+		Defaults:       NeeDefaults(),
 		VendorsAll:     NewVendorsManager(),
 		PatternsLoader: NewPatternsLoader(db.Patterns),
 		YouTube:        youtube.NewYouTube(),
 		Language:       lang.NewLanguage(),
 		Jina:           jina.NewClient(),
 	}
-
-	label := "Default"
-	ret.Plugin = &common.Plugin{
-		Label:           label,
-		EnvNamePrefix:   common.BuildEnvVariablePrefix(label),
-		ConfigureCustom: ret.configure,
-	}
-
-	ret.DefaultVendor = ret.AddSetting("Vendor", true)
-	ret.DefaultModel = ret.AddSetupQuestionCustom("Model", true,
-		"Enter the index the name of your default model")
 
 	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groq.NewClient(),
 		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient())
@@ -73,18 +60,15 @@ func NewFabricBase(db *fs.Db) (ret *Fabric) {
 }
 
 type Fabric struct {
-	*common.Plugin
-	*VendorsManager
-	VendorsAll *VendorsManager
-	*PatternsLoader
-	*youtube.YouTube
-	*lang.Language
-	Jina *jina.Client
+	VendorManager  *VendorsManager
+	VendorsAll     *VendorsManager
+	PatternsLoader *PatternsLoader
+	YouTube        *youtube.YouTube
+	Language       *lang.Language
+	Jina           *jina.Client
 
-	Db *fs.Db
-
-	DefaultVendor *common.Setting
-	DefaultModel  *common.SetupQuestion
+	Db       *fs.Db
+	Defaults *Defaults
 }
 
 type ChannelName struct {
@@ -96,10 +80,10 @@ func (o *Fabric) SaveEnvFile() (err error) {
 	// Now create the .env with all configured VendorsController info
 	var envFileContent bytes.Buffer
 
-	o.Settings.FillEnvFileContent(&envFileContent)
+	o.Defaults.Settings.FillEnvFileContent(&envFileContent)
 	o.PatternsLoader.SetupFillEnvFileContent(&envFileContent)
 
-	for _, vendor := range o.Vendors {
+	for _, vendor := range o.VendorManager.Vendors {
 		vendor.SetupFillEnvFileContent(&envFileContent)
 	}
 
@@ -116,7 +100,10 @@ func (o *Fabric) Setup() (err error) {
 		return
 	}
 
-	if err = o.SetupDefaultModel(); err != nil {
+	if err = o.Defaults.Setup(o.VendorManager.GetModels()); err != nil {
+		return
+	}
+	if err = o.SaveEnvFile(); err != nil {
 		return
 	}
 
@@ -139,45 +126,13 @@ func (o *Fabric) Setup() (err error) {
 	return
 }
 
-func (o *Fabric) SetupDefaultModel() (err error) {
-	vendorsModels := o.GetModels()
-
-	vendorsModels.Print()
-
-	if err = o.Ask(o.Label); err != nil {
-		return
-	}
-
-	index, parseErr := strconv.Atoi(o.DefaultModel.Value)
-	if parseErr == nil {
-		o.DefaultVendor.Value, o.DefaultModel.Value = vendorsModels.GetVendorAndModelByModelIndex(index)
-	} else {
-		o.DefaultVendor.Value = vendorsModels.FindVendorsByModelFirst(o.DefaultModel.Value)
-	}
-
-	//verify
-	vendorNames := vendorsModels.FindVendorsByModel(o.DefaultModel.Value)
-	if len(vendorNames) == 0 {
-		err = errors.Errorf("You need to chose an available default model.")
-		return
-	}
-
-	fmt.Println()
-	o.DefaultVendor.Print()
-	o.DefaultModel.Print()
-
-	err = o.SaveEnvFile()
-
-	return
-}
-
 func (o *Fabric) SetupVendors() (err error) {
-	o.Models = nil
-	if o.Vendors, err = o.VendorsAll.Setup(); err != nil {
+	o.VendorManager.Models = nil
+	if o.VendorManager.Vendors, err = o.VendorsAll.Setup(); err != nil {
 		return
 	}
 
-	if !o.HasVendors() {
+	if !o.VendorManager.HasVendors() {
 		err = errors.New("No vendors configured")
 		return
 	}
@@ -188,7 +143,7 @@ func (o *Fabric) SetupVendors() (err error) {
 }
 
 func (o *Fabric) SetupVendor(vendorName string) (err error) {
-	if err = o.VendorsAll.SetupVendor(vendorName, o.Vendors); err != nil {
+	if err = o.VendorsAll.SetupVendor(vendorName, o.VendorManager.Vendors); err != nil {
 		return
 	}
 	err = o.SaveEnvFile()
@@ -196,10 +151,14 @@ func (o *Fabric) SetupVendor(vendorName string) (err error) {
 }
 
 // Configure buildClient VendorsController based on the environment variables
-func (o *Fabric) configure() (err error) {
+func (o *Fabric) Configure() (err error) {
+	if err = o.Defaults.Configure(); err != nil {
+		return
+	}
+
 	for _, vendor := range o.VendorsAll.Vendors {
 		if vendorErr := vendor.Configure(); vendorErr == nil {
-			o.AddVendors(vendor)
+			o.VendorManager.AddVendors(vendor)
 		}
 	}
 	if err = o.PatternsLoader.Configure(); err != nil {
@@ -225,20 +184,20 @@ func (o *Fabric) GetChatter(model string, stream bool, dryRun bool) (ret *Chatte
 		ret.vendor = dryrun.NewClient()
 		ret.model = model
 		if ret.model == "" {
-			ret.model = o.DefaultModel.Value
+			ret.model = o.Defaults.Model.Value
 		}
 	} else if model == "" {
-		ret.vendor = o.FindByName(o.DefaultVendor.Value)
-		ret.model = o.DefaultModel.Value
+		ret.vendor = o.VendorManager.FindByName(o.Defaults.Vendor.Value)
+		ret.model = o.Defaults.Model.Value
 	} else {
-		ret.vendor = o.FindByName(o.GetModels().FindVendorsByModelFirst(model))
+		ret.vendor = o.VendorManager.FindByName(o.VendorManager.GetModels().FindVendorsByModelFirst(model))
 		ret.model = model
 	}
 
 	if ret.vendor == nil {
 		err = fmt.Errorf(
-			"could not find vendor.\n Model = %s\n DefaultModel = %s\n DefaultVendor = %s",
-			model, o.DefaultModel.Value, o.DefaultVendor.Value)
+			"could not find vendor.\n Model = %s\n Model = %s\n Vendor = %s",
+			model, o.Defaults.Model.Value, o.Defaults.Vendor.Value)
 		return
 	}
 	return

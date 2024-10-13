@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/danielmiessler/fabric/db/fs"
+	"github.com/danielmiessler/fabric/plugins/db/fs"
 	"os"
 	"testing"
 )

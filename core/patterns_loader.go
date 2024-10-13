@@ -2,7 +2,7 @@ package core
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/db/fs"
+	fs2 "github.com/danielmiessler/fabric/plugins/db/fs"
 	"io"
 	"os"
 	"path/filepath"
@@ -17,7 +17,7 @@ import (
 	"github.com/otiai10/copy"
 )
 
-func NewPatternsLoader(patterns *fs.PatternsEntity) (ret *PatternsLoader) {
+func NewPatternsLoader(patterns *fs2.PatternsEntity) (ret *PatternsLoader) {
 	label := "Patterns Loader"
 	ret = &PatternsLoader{
 		Patterns: patterns,
@@ -42,7 +42,7 @@ func NewPatternsLoader(patterns *fs.PatternsEntity) (ret *PatternsLoader) {
 
 type PatternsLoader struct {
 	*common.Plugin
-	Patterns *fs.PatternsEntity
+	Patterns *fs2.PatternsEntity
 
 	DefaultGitRepoUrl *common.SetupQuestion
 	DefaultFolder     *common.SetupQuestion
@@ -156,7 +156,7 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 		return err
 	}
 
-	var changes []fs.DirectoryChange
+	var changes []fs2.DirectoryChange
 	// ... iterates over the commits
 	if err = cIter.ForEach(func(c *object.Commit) (err error) {
 		// GetApplyVariables the files changed in this commit by comparing with its parents
@@ -171,7 +171,7 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 			for _, fileStat := range patch.Stats() {
 				if strings.HasPrefix(fileStat.Name, o.pathPatternsPrefix) {
 					dir := filepath.Dir(fileStat.Name)
-					changes = append(changes, fs.DirectoryChange{Dir: dir, Timestamp: c.Committer.When})
+					changes = append(changes, fs2.DirectoryChange{Dir: dir, Timestamp: c.Committer.When})
 				}
 			}
 			return
@@ -256,7 +256,7 @@ func (o *PatternsLoader) writeBlobToFile(blob *object.Blob, path string) (err er
 	return
 }
 
-func (o *PatternsLoader) makeUniqueList(changes []fs.DirectoryChange) (err error) {
+func (o *PatternsLoader) makeUniqueList(changes []fs2.DirectoryChange) (err error) {
 	uniqueItems := make(map[string]bool)
 	for _, change := range changes {
 		if strings.TrimSpace(change.Dir) != "" && !strings.Contains(change.Dir, "=>") {

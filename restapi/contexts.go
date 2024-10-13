@@ -1,7 +1,7 @@
 package restapi
 
 import (
-	"github.com/danielmiessler/fabric/db/fs"
+	"github.com/danielmiessler/fabric/plugins/db/fs"
 	"github.com/gin-gonic/gin"
 )
 
