@@ -1,4 +1,4 @@
-package db_fs
+package fsdb
 
 import (
 	"fmt"

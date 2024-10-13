@@ -16,7 +16,7 @@ import (
 	"github.com/danielmiessler/fabric/plugins/ai/openrouter"
 	"github.com/danielmiessler/fabric/plugins/ai/siliconcloud"
 	core2 "github.com/danielmiessler/fabric/plugins/core"
-	"github.com/danielmiessler/fabric/plugins/db/db_fs"
+	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/plugins/tools/jina"
 	"github.com/danielmiessler/fabric/plugins/tools/lang"
 	"github.com/danielmiessler/fabric/plugins/tools/youtube"
@@ -26,20 +26,20 @@ import (
 
 const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
 
-func NewFabric(db *db_fs.Db) (ret *Fabric, err error) {
+func NewFabric(db *fsdb.Db) (ret *Fabric, err error) {
 	ret = NewFabricBase(db)
 	err = ret.Configure()
 	return
 }
 
-func NewFabricForSetup(db *db_fs.Db) (ret *Fabric) {
+func NewFabricForSetup(db *fsdb.Db) (ret *Fabric) {
 	ret = NewFabricBase(db)
 	_ = ret.Configure()
 	return
 }
 
 // NewFabricBase Create a new Fabric from a list of already configured VendorsController
-func NewFabricBase(db *db_fs.Db) (ret *Fabric) {
+func NewFabricBase(db *fsdb.Db) (ret *Fabric) {
 
 	ret = &Fabric{
 		VendorManager:  ai.NewVendorsManager(),
@@ -66,7 +66,7 @@ type Fabric struct {
 	Language       *lang.Language
 	Jina           *jina.Client
 
-	Db       *db_fs.Db
+	Db       *fsdb.Db
 	Defaults *core2.Defaults
 }
 

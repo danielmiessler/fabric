@@ -3,7 +3,7 @@ package core
 import (
 	"fmt"
 	"github.com/danielmiessler/fabric/plugins"
-	"github.com/danielmiessler/fabric/plugins/db/db_fs"
+	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"io"
 	"os"
 	"path/filepath"
@@ -20,7 +20,7 @@ import (
 const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
 const DefaultPatternsGitRepoFolder = "patterns"
 
-func NewPatternsLoader(patterns *db_fs.PatternsEntity) (ret *PatternsLoader) {
+func NewPatternsLoader(patterns *fsdb.PatternsEntity) (ret *PatternsLoader) {
 	label := "Patterns Loader"
 	ret = &PatternsLoader{
 		Patterns: patterns,
@@ -45,7 +45,7 @@ func NewPatternsLoader(patterns *db_fs.PatternsEntity) (ret *PatternsLoader) {
 
 type PatternsLoader struct {
 	*plugins.Plugin
-	Patterns *db_fs.PatternsEntity
+	Patterns *fsdb.PatternsEntity
 
 	DefaultGitRepoUrl *plugins.SetupQuestion
 	DefaultFolder     *plugins.SetupQuestion
@@ -159,7 +159,7 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 		return err
 	}
 
-	var changes []db_fs.DirectoryChange
+	var changes []fsdb.DirectoryChange
 	// ... iterates over the commits
 	if err = cIter.ForEach(func(c *object.Commit) (err error) {
 		// GetApplyVariables the files changed in this commit by comparing with its parents
@@ -174,7 +174,7 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 			for _, fileStat := range patch.Stats() {
 				if strings.HasPrefix(fileStat.Name, o.pathPatternsPrefix) {
 					dir := filepath.Dir(fileStat.Name)
-					changes = append(changes, db_fs.DirectoryChange{Dir: dir, Timestamp: c.Committer.When})
+					changes = append(changes, fsdb.DirectoryChange{Dir: dir, Timestamp: c.Committer.When})
 				}
 			}
 			return
@@ -259,7 +259,7 @@ func (o *PatternsLoader) writeBlobToFile(blob *object.Blob, path string) (err er
 	return
 }
 
-func (o *PatternsLoader) makeUniqueList(changes []db_fs.DirectoryChange) (err error) {
+func (o *PatternsLoader) makeUniqueList(changes []fsdb.DirectoryChange) (err error) {
 	uniqueItems := make(map[string]bool)
 	for _, change := range changes {
 		if strings.TrimSpace(change.Dir) != "" && !strings.Contains(change.Dir, "=>") {

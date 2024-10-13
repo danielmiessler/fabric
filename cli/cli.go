@@ -2,7 +2,7 @@ package cli
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins/db/db_fs"
+	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/plugins/tools/converter"
 	"github.com/danielmiessler/fabric/restapi"
 	"os"
@@ -30,7 +30,7 @@ func Cli(version string) (err error) {
 		return
 	}
 
-	fabricDb := db_fs.NewDb(filepath.Join(homedir, ".config/fabric"))
+	fabricDb := fsdb.NewDb(filepath.Join(homedir, ".config/fabric"))
 
 	// if the setup flag is set, run the setup function
 	if currentFlags.Setup || currentFlags.SetupSkipPatterns || currentFlags.SetupVendor != "" {
@@ -217,7 +217,7 @@ func Cli(version string) (err error) {
 		return
 	}
 
-	var session *db_fs.Session
+	var session *fsdb.Session
 	chatReq := currentFlags.BuildChatRequest(strings.Join(os.Args[1:], " "))
 	if chatReq.Language == "" {
 		chatReq.Language = fabric.Language.DefaultLanguage.Value
@@ -252,7 +252,7 @@ func Cli(version string) (err error) {
 	return
 }
 
-func Setup(db *db_fs.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
+func Setup(db *fsdb.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
 	instance := core.NewFabricForSetup(db)
 
 	if err = instance.Setup(); err != nil {
@@ -268,7 +268,7 @@ func Setup(db *db_fs.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) 
 	return
 }
 
-func SetupVendor(db *db_fs.Db, vendorName string) (ret *core.Fabric, err error) {
+func SetupVendor(db *fsdb.Db, vendorName string) (ret *core.Fabric, err error) {
 	ret = core.NewFabricForSetup(db)
 	err = ret.SetupVendor(vendorName)
 	return
