@@ -2,10 +2,10 @@ package cli
 
 import (
 	"github.com/danielmiessler/fabric/core"
+	"github.com/danielmiessler/fabric/db/fs"
 	"os"
 	"testing"
 
-	"github.com/danielmiessler/fabric/db"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,7 +21,7 @@ func TestCli(t *testing.T) {
 }
 
 func TestSetup(t *testing.T) {
-	mockDB := db.NewDb(os.TempDir())
+	mockDB := fs.NewDb(os.TempDir())
 
 	fabric, err := Setup(mockDB, false)
 	assert.Error(t, err)
