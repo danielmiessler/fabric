@@ -3,7 +3,6 @@ package core
 import (
 	"bytes"
 	"fmt"
-	"github.com/atotto/clipboard"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
 	"github.com/danielmiessler/fabric/plugins/ai/azure"
@@ -21,27 +20,10 @@ import (
 	"github.com/danielmiessler/fabric/plugins/tools/lang"
 	"github.com/danielmiessler/fabric/plugins/tools/youtube"
 	"github.com/pkg/errors"
-	"os"
 )
 
-const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
-
-func NewFabric(db *fsdb.Db) (ret *Fabric, err error) {
-	ret = NewFabricBase(db)
-	err = ret.Configure()
-	return
-}
-
-func NewFabricForSetup(db *fsdb.Db) (ret *Fabric) {
-	ret = NewFabricBase(db)
-	_ = ret.Configure()
-	return
-}
-
-// NewFabricBase Create a new Fabric from a list of already configured VendorsController
-func NewFabricBase(db *fsdb.Db) (ret *Fabric) {
-
-	ret = &Fabric{
+func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry) {
+	ret = &PluginRegistry{
 		VendorManager:  ai.NewVendorsManager(),
 		Db:             db,
 		Defaults:       core2.NeeDefaults(),
@@ -54,11 +36,11 @@ func NewFabricBase(db *fsdb.Db) (ret *Fabric) {
 
 	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groq.NewClient(),
 		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient())
-
+	_ = ret.Configure()
 	return
 }
 
-type Fabric struct {
+type PluginRegistry struct {
 	VendorManager  *ai.VendorsManager
 	VendorsAll     *ai.VendorsManager
 	PatternsLoader *core2.PatternsLoader
@@ -70,12 +52,7 @@ type Fabric struct {
 	Defaults *core2.Defaults
 }
 
-type ChannelName struct {
-	channel chan []string
-	name    string
-}
-
-func (o *Fabric) SaveEnvFile() (err error) {
+func (o *PluginRegistry) SaveEnvFile() (err error) {
 	// Now create the .env with all configured VendorsController info
 	var envFileContent bytes.Buffer
 
@@ -94,7 +71,7 @@ func (o *Fabric) SaveEnvFile() (err error) {
 	return
 }
 
-func (o *Fabric) Setup() (err error) {
+func (o *PluginRegistry) Setup() (err error) {
 	if err = o.SetupVendors(); err != nil {
 		return
 	}
@@ -125,7 +102,7 @@ func (o *Fabric) Setup() (err error) {
 	return
 }
 
-func (o *Fabric) SetupVendors() (err error) {
+func (o *PluginRegistry) SetupVendors() (err error) {
 	o.VendorManager.Models = nil
 	if o.VendorManager.Vendors, err = o.VendorsAll.Setup(); err != nil {
 		return
@@ -141,7 +118,7 @@ func (o *Fabric) SetupVendors() (err error) {
 	return
 }
 
-func (o *Fabric) SetupVendor(vendorName string) (err error) {
+func (o *PluginRegistry) SetupVendor(vendorName string) (err error) {
 	if err = o.VendorsAll.SetupVendor(vendorName, o.VendorManager.Vendors); err != nil {
 		return
 	}
@@ -150,19 +127,15 @@ func (o *Fabric) SetupVendor(vendorName string) (err error) {
 }
 
 // Configure buildClient VendorsController based on the environment variables
-func (o *Fabric) Configure() (err error) {
-	if err = o.Defaults.Configure(); err != nil {
-		return
-	}
+func (o *PluginRegistry) Configure() (err error) {
+	_ = o.Defaults.Configure()
 
 	for _, vendor := range o.VendorsAll.Vendors {
 		if vendorErr := vendor.Configure(); vendorErr == nil {
 			o.VendorManager.AddVendors(vendor)
 		}
 	}
-	if err = o.PatternsLoader.Configure(); err != nil {
-		return
-	}
+	_ = o.PatternsLoader.Configure()
 
 	//YouTube and Jina are not mandatory, so ignore not configured error
 	_ = o.YouTube.Configure()
@@ -172,52 +145,36 @@ func (o *Fabric) Configure() (err error) {
 	return
 }
 
-func (o *Fabric) GetChatter(model string, stream bool, dryRun bool) (ret *Chatter, err error) {
+func (o *PluginRegistry) GetChatter(model string, stream bool, dryRun bool) (ret *Chatter, err error) {
 	ret = &Chatter{
 		db:     o.Db,
 		Stream: stream,
 		DryRun: dryRun,
 	}
 
+	defaultModel := o.Defaults.Model.Value
+	defaultVendor := o.Defaults.Vendor.Value
+	vendorManager := o.VendorManager
+
 	if dryRun {
 		ret.vendor = dryrun.NewClient()
 		ret.model = model
 		if ret.model == "" {
-			ret.model = o.Defaults.Model.Value
+			ret.model = defaultModel
 		}
 	} else if model == "" {
-		ret.vendor = o.VendorManager.FindByName(o.Defaults.Vendor.Value)
-		ret.model = o.Defaults.Model.Value
+		ret.vendor = vendorManager.FindByName(defaultVendor)
+		ret.model = defaultModel
 	} else {
-		ret.vendor = o.VendorManager.FindByName(o.VendorManager.GetModels().FindVendorsByModelFirst(model))
+		ret.vendor = vendorManager.FindByName(vendorManager.GetModels().FindVendorsByModelFirst(model))
 		ret.model = model
 	}
 
 	if ret.vendor == nil {
 		err = fmt.Errorf(
 			"could not find vendor.\n Model = %s\n Model = %s\n Vendor = %s",
-			model, o.Defaults.Model.Value, o.Defaults.Vendor.Value)
+			model, defaultModel, defaultVendor)
 		return
-	}
-	return
-}
-
-func (o *Fabric) CopyToClipboard(message string) (err error) {
-	if err = clipboard.WriteAll(message); err != nil {
-		err = fmt.Errorf("could not copy to clipboard: %v", err)
-	}
-	return
-}
-
-func (o *Fabric) CreateOutputFile(message string, fileName string) (err error) {
-	var file *os.File
-	if file, err = os.Create(fileName); err != nil {
-		err = fmt.Errorf("error creating file: %v", err)
-		return
-	}
-	defer file.Close()
-	if _, err = file.WriteString(message); err != nil {
-		err = fmt.Errorf("error writing to file: %v", err)
 	}
 	return
 }

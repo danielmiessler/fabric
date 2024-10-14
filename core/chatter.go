@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
+
 type Chatter struct {
 	db *fsdb.Db
 
