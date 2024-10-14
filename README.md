@@ -50,25 +50,26 @@
 
 ## Updates
 
-> [!NOTE] 
-September 15, 2024 — Lots of new stuff!
-> * Fabric now supports calling the new `o1-preview` model using the `-r` switch (which stands for raw. Normal queries won't work with `o1-preview` because they disabled System access and don't allow us to set `Temperature`.
-> * We have early support for Raycast! Under the `/patterns` directory there's a `raycast` directory with scripts that can be called from Raycast. If you add a scripts directory within Raycast and point it to your `~/.config/fabric/patterns/raycast` directory, you'll then be able to 1) invoke Raycast, type the name of the script, and then 2) paste in the content to be passed, and the results will return in Raycast. There's currently only one script in there but I am (Daniel) adding more.
-> * **Go Migration: The following command line options were changed during the migration to Go:**
-> * You now need to use the -c option instead of -C to copy the result to the clipboard.
-> * You now need to use the -s option instead of -S to stream results in realtime.
-> * The following command line options have been removed `--agents` (-a), `--gui`, `--clearsession`, `--remoteOllamaServer`, and `--sessionlog`
-> * You can now use (-S) to configure an Ollama server.
-> * **We're working on a GUI rewrite in Go as well**
+> [!NOTE]
+> September 15, 2024 — Lots of new stuff!
+>
+> - Fabric now supports calling the new `o1-preview` model using the `-r` switch (which stands for raw. Normal queries won't work with `o1-preview` because they disabled System access and don't allow us to set `Temperature`.
+> - We have early support for Raycast! Under the `/patterns` directory there's a `raycast` directory with scripts that can be called from Raycast. If you add a scripts directory within Raycast and point it to your `~/.config/fabric/patterns/raycast` directory, you'll then be able to 1) invoke Raycast, type the name of the script, and then 2) paste in the content to be passed, and the results will return in Raycast. There's currently only one script in there but I am (Daniel) adding more.
+> - **Go Migration: The following command line options were changed during the migration to Go:**
+> - You now need to use the -c option instead of -C to copy the result to the clipboard.
+> - You now need to use the -s option instead of -S to stream results in realtime.
+> - The following command line options have been removed `--agents` (-a), `--gui`, `--clearsession`, `--remoteOllamaServer`, and `--sessionlog`
+> - You can now use (-S) to configure an Ollama server.
+> - **We're working on a GUI rewrite in Go as well**
 
 ## Intro videos
 
 Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#Installation) below.
 
-* [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
-* [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
-* [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
-* [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
+- [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
+- [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
+- [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
+- [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
 
 ## What and why
 
@@ -124,10 +125,10 @@ curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric
 # MacOS (arm64):
 curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 > fabric && chmod +x fabric && ./fabric --version
 
-# MacOS (amd64): 
+# MacOS (amd64):
 curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 > fabric && chmod +x fabric && ./fabric --version
 
-# Linux (amd64): 
+# Linux (amd64):
 curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 > fabric && chmod +x fabric && ./fabric --version
 
 # Linux (arm64):
@@ -148,6 +149,7 @@ go install github.com/danielmiessler/fabric@latest
 You may need to set some environment variables in your `~/.bashrc` on linux or `~/.zshrc` file on mac to be able to run the `fabric` command. Here is an example of what you can add:
 
 For Intel based macs or linux
+
 ```bash
 # Golang environment variables
 export GOROOT=/usr/local/go
@@ -158,6 +160,7 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH
 ```
 
 for Apple Silicon based macs
+
 ```bash
 # Golang environment variables
 export GOROOT=$(brew --prefix go)/libexec
@@ -166,13 +169,15 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH
 ```
 
 ### Setup
+
 Now run the following command
+
 ```bash
 # Run the setup to set up your directories and keys
 fabric --setup
 ```
-If everything works you are good to go.
 
+If everything works you are good to go.
 
 ### Migration
 
@@ -195,11 +200,13 @@ Then [set your environmental variables](#environmental-variables) as shown above
 ### Upgrading
 
 The great thing about Go is that it's super easy to upgrade. Just run the same command you used to install it in the first place and you'll always get the latest version.
+
 ```bash
 go install -ldflags "-X main.version=$(git describe --tags --always)" github.com/danielmiessler/fabric@latest
 ```
 
 ## Usage
+
 Once you have it all set up, here's how to use it.
 
 ```bash
@@ -317,7 +324,7 @@ The wisdom of crowds for the win.
 
 You may want to use Fabric to create your own custom Patterns—but not share them with others. No problem!
 
-Just make a directory in `~/.config/custompatterns/` (or wherever) and put your `.md` files in there. 
+Just make a directory in `~/.config/custompatterns/` (or wherever) and put your `.md` files in there.
 
 When you're ready to use them, copy them into:
 
@@ -327,8 +334,15 @@ When you're ready to use them, copy them into:
 
 You can then use them like any other Patterns, but they won't be public unless you explicitly submit them as Pull Requests to the Fabric project. So don't worry—they're private to you.
 
-
 This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
+
+## sessions
+
+Fabric also allows for persistant sessions. A session is a way to keep track of the context of a conversation. You can create a session with the --session flag and then use that session with the --session flag in subsequent calls. This is useful for keeping track of the context of a conversation.
+
+```bash
+pbpaste | fabric --pattern summarize --session mysession
+```
 
 ## Helper Apps
 
@@ -374,6 +388,7 @@ Make sure you have a LaTeX distribution (like TeX Live or MiKTeX) installed on y
 - _Joseph Thacker_ for the idea of a `-c` context flag that adds pre-created context in the `./config/fabric/` directory to all Pattern queries.
 - _Jason Haddix_ for the idea of a stitch (chained Pattern) to filter content using a local model before sending on to a cloud model, i.e., cleaning customer data using `llama2` before sending on to `gpt-4` for analysis.
 - _Andre Guerra_ for assisting with numerous components to make things simpler and more maintainable.
+- Dave Peters\_ for designing the frontend for FabricUI
 
 ### Primary contributors
 
