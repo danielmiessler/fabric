@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"github.com/danielmiessler/fabric/core"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/plugins/tools/converter"
 	"github.com/danielmiessler/fabric/restapi"
@@ -9,8 +10,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-
-	"github.com/danielmiessler/fabric/core"
 )
 
 // Cli Controls the cli. It takes in the flags and runs the appropriate functions
@@ -32,28 +31,17 @@ func Cli(version string) (err error) {
 
 	fabricDb := fsdb.NewDb(filepath.Join(homedir, ".config/fabric"))
 
+	registry := core.NewPluginRegistry(fabricDb)
+
 	// if the setup flag is set, run the setup function
 	if currentFlags.Setup || currentFlags.SetupSkipPatterns || currentFlags.SetupVendor != "" {
 		_ = fabricDb.Configure()
 		if currentFlags.SetupVendor != "" {
-			_, err = SetupVendor(fabricDb, currentFlags.SetupVendor)
+			err = SetupVendor(registry, currentFlags.SetupVendor)
 		} else {
-			_, err = Setup(fabricDb, currentFlags.SetupSkipPatterns)
+			err = Setup(registry, currentFlags.SetupSkipPatterns)
 		}
 		return
-	}
-
-	var fabric *core.Fabric
-	if err = fabricDb.Configure(); err != nil {
-		fmt.Println("init is failed, run start the setup procedure", err)
-		if fabric, err = Setup(fabricDb, currentFlags.SetupSkipPatterns); err != nil {
-			return
-		}
-	} else {
-		if fabric, err = core.NewFabric(fabricDb); err != nil {
-			fmt.Println("fabric can't initialize, please run the --setup procedure", err)
-			return
-		}
 	}
 
 	if currentFlags.Serve {
@@ -62,12 +50,12 @@ func Cli(version string) (err error) {
 	}
 
 	if currentFlags.UpdatePatterns {
-		err = fabric.PatternsLoader.PopulateDB()
+		err = registry.PatternsLoader.PopulateDB()
 		return
 	}
 
 	if currentFlags.ChangeDefaultModel {
-		err = fabric.Defaults.Setup(fabric.VendorManager.GetModels())
+		err = registry.Defaults.Setup(registry.VendorManager.GetModels())
 		return
 	}
 
@@ -89,7 +77,7 @@ func Cli(version string) (err error) {
 	}
 
 	if currentFlags.ListAllModels {
-		fabric.VendorManager.GetModels().Print()
+		registry.VendorManager.GetModels().Print()
 		return
 	}
 
@@ -139,27 +127,27 @@ func Cli(version string) (err error) {
 	// if none of the above currentFlags are set, run the initiate chat function
 
 	if currentFlags.YouTube != "" {
-		if fabric.YouTube.IsConfigured() == false {
+		if registry.YouTube.IsConfigured() == false {
 			err = fmt.Errorf("YouTube is not configured, please run the setup procedure")
 			return
 		}
 
 		var videoId string
-		if videoId, err = fabric.YouTube.GetVideoId(currentFlags.YouTube); err != nil {
+		if videoId, err = registry.YouTube.GetVideoId(currentFlags.YouTube); err != nil {
 			return
 		}
 
 		if !currentFlags.YouTubeComments || currentFlags.YouTubeTranscript {
 			var transcript string
 			var language = "en"
-			if currentFlags.Language != "" || fabric.Language.DefaultLanguage.Value != "" {
+			if currentFlags.Language != "" || registry.Language.DefaultLanguage.Value != "" {
 				if currentFlags.Language != "" {
 					language = currentFlags.Language
 				} else {
-					language = fabric.Language.DefaultLanguage.Value
+					language = registry.Language.DefaultLanguage.Value
 				}
 			}
-			if transcript, err = fabric.YouTube.GrabTranscript(videoId, language); err != nil {
+			if transcript, err = registry.YouTube.GrabTranscript(videoId, language); err != nil {
 				return
 			}
 
@@ -168,7 +156,7 @@ func Cli(version string) (err error) {
 
 		if currentFlags.YouTubeComments {
 			var comments []string
-			if comments, err = fabric.YouTube.GrabComments(videoId); err != nil {
+			if comments, err = registry.YouTube.GrabComments(videoId); err != nil {
 				return
 			}
 
@@ -184,11 +172,11 @@ func Cli(version string) (err error) {
 		}
 	}
 
-	if (currentFlags.ScrapeURL != "" || currentFlags.ScrapeQuestion != "") && fabric.Jina.IsConfigured() {
+	if (currentFlags.ScrapeURL != "" || currentFlags.ScrapeQuestion != "") && registry.Jina.IsConfigured() {
 		// Check if the scrape_url flag is set and call ScrapeURL
 		if currentFlags.ScrapeURL != "" {
 			var website string
-			if website, err = fabric.Jina.ScrapeURL(currentFlags.ScrapeURL); err != nil {
+			if website, err = registry.Jina.ScrapeURL(currentFlags.ScrapeURL); err != nil {
 				return
 			}
 
@@ -198,7 +186,7 @@ func Cli(version string) (err error) {
 		// Check if the scrape_question flag is set and call ScrapeQuestion
 		if currentFlags.ScrapeQuestion != "" {
 			var website string
-			if website, err = fabric.Jina.ScrapeQuestion(currentFlags.ScrapeQuestion); err != nil {
+			if website, err = registry.Jina.ScrapeQuestion(currentFlags.ScrapeQuestion); err != nil {
 				return
 			}
 
@@ -213,14 +201,14 @@ func Cli(version string) (err error) {
 	}
 
 	var chatter *core.Chatter
-	if chatter, err = fabric.GetChatter(currentFlags.Model, currentFlags.Stream, currentFlags.DryRun); err != nil {
+	if chatter, err = registry.GetChatter(currentFlags.Model, currentFlags.Stream, currentFlags.DryRun); err != nil {
 		return
 	}
 
 	var session *fsdb.Session
 	chatReq := currentFlags.BuildChatRequest(strings.Join(os.Args[1:], " "))
 	if chatReq.Language == "" {
-		chatReq.Language = fabric.Language.DefaultLanguage.Value
+		chatReq.Language = registry.Language.DefaultLanguage.Value
 	}
 	if session, err = chatter.Send(chatReq, currentFlags.BuildChatOptions()); err != nil {
 		return
@@ -235,7 +223,7 @@ func Cli(version string) (err error) {
 
 	// if the copy flag is set, copy the message to the clipboard
 	if currentFlags.Copy {
-		if err = fabric.CopyToClipboard(result); err != nil {
+		if err = CopyToClipboard(result); err != nil {
 			return
 		}
 	}
@@ -244,32 +232,28 @@ func Cli(version string) (err error) {
 	if currentFlags.Output != "" {
 		if currentFlags.OutputSession {
 			sessionAsString := session.String()
-			err = fabric.CreateOutputFile(sessionAsString, currentFlags.Output)
+			err = CreateOutputFile(sessionAsString, currentFlags.Output)
 		} else {
-			err = fabric.CreateOutputFile(result, currentFlags.Output)
+			err = CreateOutputFile(result, currentFlags.Output)
 		}
 	}
 	return
 }
 
-func Setup(db *fsdb.Db, skipUpdatePatterns bool) (ret *core.Fabric, err error) {
-	instance := core.NewFabricForSetup(db)
-
-	if err = instance.Setup(); err != nil {
+func Setup(registry *core.PluginRegistry, skipUpdatePatterns bool) (err error) {
+	if err = registry.Setup(); err != nil {
 		return
 	}
 
 	if !skipUpdatePatterns {
-		if err = instance.PatternsLoader.PopulateDB(); err != nil {
+		if err = registry.PatternsLoader.PopulateDB(); err != nil {
 			return
 		}
 	}
-	ret = instance
 	return
 }
 
-func SetupVendor(db *fsdb.Db, vendorName string) (ret *core.Fabric, err error) {
-	ret = core.NewFabricForSetup(db)
-	err = ret.SetupVendor(vendorName)
+func SetupVendor(registry *core.PluginRegistry, vendorName string) (err error) {
+	err = registry.SetupVendor(vendorName)
 	return
 }
