@@ -64,7 +64,7 @@ func (o *VendorsManager) readModels() {
 			o.Models.AddError(result.err)
 			cancel() // Cancel remaining goroutines if needed
 		} else {
-			o.Models.AddVendorModels(result.vendorName, result.models)
+			o.Models.AddGroupItems(result.vendorName, result.models...)
 		}
 	}
 }
@@ -93,6 +93,16 @@ func (o *VendorsManager) Setup() (ret map[string]Vendor, err error) {
 	return
 }
 
+func (o *VendorsManager) SetupVendor(vendorName string, configuredVendors map[string]Vendor) (err error) {
+	vendor := o.FindByName(vendorName)
+	if vendor == nil {
+		err = fmt.Errorf("vendor %s not found", vendorName)
+		return
+	}
+	o.setupVendorTo(vendor, configuredVendors)
+	return
+}
+
 func (o *VendorsManager) setupVendorTo(vendor Vendor, configuredVendors map[string]Vendor) {
 	if vendorErr := vendor.Setup(); vendorErr == nil {
 		fmt.Printf("[%v] configured\n", vendor.GetName())
@@ -101,16 +111,6 @@ func (o *VendorsManager) setupVendorTo(vendor Vendor, configuredVendors map[stri
 		delete(configuredVendors, vendor.GetName())
 		fmt.Printf("[%v] skipped\n", vendor.GetName())
 	}
-	return
-}
-
-func (o *VendorsManager) SetupVendor(vendorName string, configuredVendors map[string]Vendor) (err error) {
-	vendor := o.FindByName(vendorName)
-	if vendor == nil {
-		err = fmt.Errorf("vendor %s not found", vendorName)
-		return
-	}
-	o.setupVendorTo(vendor, configuredVendors)
 	return
 }
 

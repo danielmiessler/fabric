@@ -2,18 +2,20 @@ package core
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 func NeeDefaults() (ret *Defaults) {
 	vendorName := "Default"
 	ret = &Defaults{
-		Plugin: &plugins.Plugin{
-			Label:         vendorName,
-			EnvNamePrefix: plugins.BuildEnvVariablePrefix(vendorName),
+		PluginBase: &plugins.PluginBase{
+			Name:             vendorName,
+			SetupDescription: "Configure the default AI Vendor and Model",
+			EnvNamePrefix:    plugins.BuildEnvVariablePrefix(vendorName),
 		},
 	}
 
@@ -25,7 +27,7 @@ func NeeDefaults() (ret *Defaults) {
 }
 
 type Defaults struct {
-	*plugins.Plugin
+	*plugins.PluginBase
 
 	Vendor *plugins.Setting
 	Model  *plugins.SetupQuestion
@@ -34,19 +36,19 @@ type Defaults struct {
 func (o *Defaults) Setup(vendorsModels *ai.VendorsModels) (err error) {
 	vendorsModels.Print()
 
-	if err = o.Ask(o.Label); err != nil {
+	if err = o.Ask(o.Name); err != nil {
 		return
 	}
 
 	index, parseErr := strconv.Atoi(o.Model.Value)
 	if parseErr == nil {
-		o.Vendor.Value, o.Model.Value = vendorsModels.GetVendorAndModelByModelIndex(index)
+		o.Vendor.Value, o.Model.Value = vendorsModels.GetGroupAndItemByItemNumber(index)
 	} else {
-		o.Vendor.Value = vendorsModels.FindVendorsByModelFirst(o.Model.Value)
+		o.Vendor.Value = vendorsModels.FindGroupsByItemFirst(o.Model.Value)
 	}
 
 	//verify
-	vendorNames := vendorsModels.FindVendorsByModel(o.Model.Value)
+	vendorNames := vendorsModels.FindGroupsByItem(o.Model.Value)
 	if len(vendorNames) == 0 {
 		err = errors.Errorf("You need to chose an available default model.")
 		return
