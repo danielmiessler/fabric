@@ -4,13 +4,14 @@ package jina
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins"
 	"io"
 	"net/http"
+
+	"github.com/danielmiessler/fabric/plugins"
 )
 
 type Client struct {
-	*plugins.Plugin
+	*plugins.PluginBase
 	ApiKey *plugins.SetupQuestion
 }
 
@@ -19,9 +20,10 @@ func NewClient() (ret *Client) {
 	label := "Jina AI"
 
 	ret = &Client{
-		Plugin: &plugins.Plugin{
-			Label:         label,
-			EnvNamePrefix: plugins.BuildEnvVariablePrefix(label),
+		PluginBase: &plugins.PluginBase{
+			Name:             label,
+			SetupDescription: "Jina AI Service - to grab a webpage as clean, LLM-friendly text",
+			EnvNamePrefix:    plugins.BuildEnvVariablePrefix(label),
 		},
 	}
 

@@ -25,8 +25,8 @@ func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCust
 		configureCustom = ret.configure
 	}
 
-	ret.Plugin = &plugins.Plugin{
-		Label:           vendorName,
+	ret.PluginBase = &plugins.PluginBase{
+		Name:            vendorName,
 		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(vendorName),
 		ConfigureCustom: configureCustom,
 	}
@@ -39,7 +39,7 @@ func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCust
 }
 
 type Client struct {
-	*plugins.Plugin
+	*plugins.PluginBase
 	ApiKey     *plugins.SetupQuestion
 	ApiBaseURL *plugins.SetupQuestion
 	ApiClient  *openai.Client

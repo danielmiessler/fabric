@@ -3,6 +3,11 @@ package core
 import (
 	"bytes"
 	"fmt"
+	"github.com/danielmiessler/fabric/common"
+	"github.com/samber/lo"
+	"strconv"
+
+	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
 	"github.com/danielmiessler/fabric/plugins/ai/azure"
@@ -37,6 +42,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry) {
 	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groq.NewClient(),
 		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient())
 	_ = ret.Configure()
+
 	return
 }
 
@@ -72,29 +78,46 @@ func (o *PluginRegistry) SaveEnvFile() (err error) {
 }
 
 func (o *PluginRegistry) Setup() (err error) {
-	if err = o.SetupVendors(); err != nil {
-		return
-	}
+	setupQuestion := plugins.NewSetupQuestion("Enter the number of the plugin to setup (or something elso to exit)")
+	groupsPlugins := common.NewGroupsItemsSelector[plugins.Plugin]("Available plugins", func(plugin plugins.Plugin) string {
+		return plugin.GetSetupDescription()
+	})
 
-	if err = o.Defaults.Setup(o.VendorManager.GetModels()); err != nil {
-		return
-	}
-	if err = o.SaveEnvFile(); err != nil {
-		return
-	}
+	groupsPlugins.AddGroupItems("AI Vendors",
+		lo.MapToSlice(o.VendorsAll.Vendors, func(_ string, vendor ai.Vendor) plugins.Plugin {
+			return vendor
+		})...)
 
-	_ = o.YouTube.SetupOrSkip()
+	groupsPlugins.AddGroupItems("Tools", o.Defaults.PluginBase, o.PatternsLoader.PluginBase, o.YouTube.PluginBase, o.Language.PluginBase, o.Jina.PluginBase)
 
-	if err = o.Jina.SetupOrSkip(); err != nil {
-		return
-	}
+	for {
+		groupsPlugins.Print()
 
-	if err = o.PatternsLoader.Setup(); err != nil {
-		return
-	}
+		if answerErr := setupQuestion.Ask("Plugin Number"); answerErr != nil {
+			break
+		}
 
-	if err = o.Language.SetupOrSkip(); err != nil {
-		return
+		if setupQuestion.Value == "" {
+			break
+		}
+		number, parseErr := strconv.Atoi(setupQuestion.Value)
+		if parseErr == nil {
+
+			if len(groupsPlugins.GroupsItems) < number {
+				err = fmt.Errorf("there is no plugin with the number %v", number)
+				return
+			}
+
+			_, plugin := groupsPlugins.GetGroupAndItemByItemNumber(number)
+			if err = plugin.Setup(); err != nil {
+				return
+			}
+			if err = o.SaveEnvFile(); err != nil {
+				break
+			}
+		} else {
+			break
+		}
 	}
 
 	err = o.SaveEnvFile()
@@ -166,7 +189,7 @@ func (o *PluginRegistry) GetChatter(model string, stream bool, dryRun bool) (ret
 		ret.vendor = vendorManager.FindByName(defaultVendor)
 		ret.model = defaultModel
 	} else {
-		ret.vendor = vendorManager.FindByName(vendorManager.GetModels().FindVendorsByModelFirst(model))
+		ret.vendor = vendorManager.FindByName(vendorManager.GetModels().FindGroupsByItemFirst(model))
 		ret.model = model
 	}
 

@@ -2,13 +2,14 @@ package core
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins"
-	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"io"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/danielmiessler/fabric/plugins"
+	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -26,8 +27,8 @@ func NewPatternsLoader(patterns *fsdb.PatternsEntity) (ret *PatternsLoader) {
 		Patterns: patterns,
 	}
 
-	ret.Plugin = &plugins.Plugin{
-		Label:           label,
+	ret.PluginBase = &plugins.PluginBase{
+		Name:            label,
 		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(label),
 		ConfigureCustom: ret.configure,
 	}
@@ -44,7 +45,7 @@ func NewPatternsLoader(patterns *fsdb.PatternsEntity) (ret *PatternsLoader) {
 }
 
 type PatternsLoader struct {
-	*plugins.Plugin
+	*plugins.PluginBase
 	Patterns *fsdb.PatternsEntity
 
 	DefaultGitRepoUrl *plugins.SetupQuestion
@@ -120,7 +121,7 @@ func (o *PatternsLoader) movePatterns() (err error) {
 // checks if a pattern already exists in the directory
 // func DoesPatternExistAlready(name string) (bool, error) {
 // 	entry := db.Entry{
-// 		Label: name,
+// 		Name: name,
 // 	}
 // 	_, err := entry.GetByName()
 // 	if err != nil {

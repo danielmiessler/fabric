@@ -10,20 +10,21 @@ func NewLanguage() (ret *Language) {
 	label := "Language"
 	ret = &Language{}
 
-	ret.Plugin = &plugins.Plugin{
-		Label:           label,
-		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(label),
-		ConfigureCustom: ret.configure,
+	ret.PluginBase = &plugins.PluginBase{
+		Name:             label,
+		SetupDescription: "Language - Default AI Vendor Output Language",
+		EnvNamePrefix:    plugins.BuildEnvVariablePrefix(label),
+		ConfigureCustom:  ret.configure,
 	}
 
-	ret.DefaultLanguage = ret.Plugin.AddSetupQuestionCustom("Output", false,
-		"Enter your default want output lang (for example: zh_CN)")
+	ret.DefaultLanguage = ret.PluginBase.AddSetupQuestionCustom("Output", false,
+		"Enter your default output language (for example: zh_CN)")
 
 	return
 }
 
 type Language struct {
-	*plugins.Plugin
+	*plugins.PluginBase
 	DefaultLanguage *plugins.SetupQuestion
 }
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/danielmiessler/fabric/plugins"
 	goopenai "github.com/sashabaranov/go-openai"
 
@@ -17,15 +18,15 @@ func NewClient() (ret *Client) {
 	vendorName := "Anthropic"
 	ret = &Client{}
 
-	ret.Plugin = &plugins.Plugin{
-		Label:           vendorName,
+	ret.PluginBase = &plugins.PluginBase{
+		Name:            vendorName,
 		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(vendorName),
 		ConfigureCustom: ret.configure,
 	}
 
 	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
 	ret.ApiBaseURL.Value = baseUrl
-	ret.ApiKey = ret.Plugin.AddSetupQuestion("API key", true)
+	ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", true)
 
 	// we could provide a setup question for the following settings
 	ret.maxTokens = 4096
@@ -40,7 +41,7 @@ func NewClient() (ret *Client) {
 }
 
 type Client struct {
-	*plugins.Plugin
+	*plugins.PluginBase
 	ApiBaseURL *plugins.SetupQuestion
 	ApiKey     *plugins.SetupQuestion
 

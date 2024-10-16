@@ -19,18 +19,18 @@ func NewClient() (ret *Client) {
 	vendorName := "Gemini"
 	ret = &Client{}
 
-	ret.Plugin = &plugins.Plugin{
-		Label:         vendorName,
+	ret.PluginBase = &plugins.PluginBase{
+		Name:          vendorName,
 		EnvNamePrefix: plugins.BuildEnvVariablePrefix(vendorName),
 	}
 
-	ret.ApiKey = ret.Plugin.AddSetupQuestion("API key", true)
+	ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", true)
 
 	return
 }
 
 type Client struct {
-	*plugins.Plugin
+	*plugins.PluginBase
 	ApiKey *plugins.SetupQuestion
 }
 
