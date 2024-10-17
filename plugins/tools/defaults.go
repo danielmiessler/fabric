@@ -14,7 +14,7 @@ func NeeDefaults(getVendorsModels func() (*ai.VendorsModels, error)) (ret *Defau
 	ret = &Defaults{
 		PluginBase: &plugins.PluginBase{
 			Name:             vendorName,
-			SetupDescription: "Default AI Vendor and Model",
+			SetupDescription: "Default AI Vendor and Model [required]",
 			EnvNamePrefix:    plugins.BuildEnvVariablePrefix(vendorName),
 		},
 		GetVendorsModels: getVendorsModels,

@@ -29,9 +29,10 @@ func NewPatternsLoader(patterns *fsdb.PatternsEntity) (ret *PatternsLoader) {
 	}
 
 	ret.PluginBase = &plugins.PluginBase{
-		Name:            label,
-		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(label),
-		ConfigureCustom: ret.configure,
+		Name:             label,
+		SetupDescription: "Patterns - Downloads patterns [required]",
+		EnvNamePrefix:    plugins.BuildEnvVariablePrefix(label),
+		ConfigureCustom:  ret.configure,
 	}
 
 	ret.DefaultGitRepoUrl = ret.AddSetupQuestionCustom("Git Repo Url", true,
