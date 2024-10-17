@@ -78,7 +78,7 @@ func (o *PluginRegistry) SaveEnvFile() (err error) {
 }
 
 func (o *PluginRegistry) Setup() (err error) {
-	setupQuestion := plugins.NewSetupQuestion("Enter the number of the plugin to setup (or something elso to exit)")
+	setupQuestion := plugins.NewSetupQuestion("Enter the number of the plugin to setup")
 	groupsPlugins := common.NewGroupsItemsSelector[plugins.Plugin]("Available plugins",
 		func(plugin plugins.Plugin) string {
 			var configuredLabel string
