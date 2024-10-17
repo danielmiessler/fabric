@@ -19,4 +19,4 @@ It's a portable application and doesn't need any istallation, all the files are 
 It has been written in WPF/C# with Visual Studio 2022. Its goal is to
 facilitate fabric users on Windows platform.
 
-Salvatore
+
