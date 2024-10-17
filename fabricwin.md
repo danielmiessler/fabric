@@ -17,6 +17,6 @@ It's a portable application and doesn't need any istallation, all the files are 
 <https://drive.google.com/file/d/1cCVjR8kgKtZtDo3MyuyWo2MsalGOe5XG/view?usp=sharing>\
 \
 It has been written in WPF/C# with Visual Studio 2022. Its goal is to
-facilitate fabric users of Windows platform.
+facilitate fabric users on Windows platform.
 
 Salvatore
