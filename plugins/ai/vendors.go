@@ -1,33 +1,53 @@
 package ai
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"github.com/danielmiessler/fabric/plugins"
 	"sync"
 )
 
 func NewVendorsManager() *VendorsManager {
 	return &VendorsManager{
-		Vendors: map[string]Vendor{},
+		Vendors:       []Vendor{},
+		VendorsByName: map[string]Vendor{},
 	}
 }
 
 type VendorsManager struct {
-	Vendors map[string]Vendor
-	Models  *VendorsModels
+	*plugins.PluginBase
+	Vendors       []Vendor
+	VendorsByName map[string]Vendor
+	Models        *VendorsModels
 }
 
 func (o *VendorsManager) AddVendors(vendors ...Vendor) {
 	for _, vendor := range vendors {
-		o.Vendors[vendor.GetName()] = vendor
+		o.VendorsByName[vendor.GetName()] = vendor
+		o.Vendors = append(o.Vendors, vendor)
 	}
 }
 
-func (o *VendorsManager) GetModels() *VendorsModels {
-	if o.Models == nil {
-		o.readModels()
+func (o *VendorsManager) SetupFillEnvFileContent(envFileContent *bytes.Buffer) {
+	for _, vendor := range o.Vendors {
+		vendor.SetupFillEnvFileContent(envFileContent)
 	}
-	return o.Models
+}
+
+func (o *VendorsManager) GetModels() (ret *VendorsModels, err error) {
+	if o.Models == nil {
+		err = o.readModels()
+	}
+	ret = o.Models
+	return
+}
+
+func (o *VendorsManager) Configure() (err error) {
+	for _, vendor := range o.Vendors {
+		_ = vendor.Configure()
+	}
+	return
 }
 
 func (o *VendorsManager) HasVendors() bool {
@@ -35,10 +55,16 @@ func (o *VendorsManager) HasVendors() bool {
 }
 
 func (o *VendorsManager) FindByName(name string) Vendor {
-	return o.Vendors[name]
+	return o.VendorsByName[name]
 }
 
-func (o *VendorsManager) readModels() {
+func (o *VendorsManager) readModels() (err error) {
+	if len(o.Vendors) == 0 {
+
+		err = fmt.Errorf("no AI vendors configured to read models from. Please configure at least one AI vendor")
+		return
+	}
+
 	o.Models = NewVendorsModels()
 
 	var wg sync.WaitGroup
@@ -61,12 +87,12 @@ func (o *VendorsManager) readModels() {
 	for result := range resultsChan {
 		if result.err != nil {
 			fmt.Println(result.vendorName, result.err)
-			o.Models.AddError(result.err)
 			cancel() // Cancel remaining goroutines if needed
 		} else {
 			o.Models.AddGroupItems(result.vendorName, result.models...)
 		}
 	}
+	return
 }
 
 func (o *VendorsManager) fetchVendorModels(

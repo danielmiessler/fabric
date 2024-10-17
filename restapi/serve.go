@@ -1,11 +1,11 @@
 package restapi
 
 import (
-	"github.com/danielmiessler/fabric/plugins/db/fsdb"
+	"github.com/danielmiessler/fabric/core"
 	"github.com/gin-gonic/gin"
 )
 
-func Serve(fabricDb *fsdb.Db, address string) (err error) {
+func Serve(registry *core.PluginRegistry, address string) (err error) {
 	r := gin.Default()
 
 	// Middleware
@@ -13,6 +13,7 @@ func Serve(fabricDb *fsdb.Db, address string) (err error) {
 	r.Use(gin.Recovery())
 
 	// Register routes
+	fabricDb := registry.Db
 	NewPatternsHandler(r, fabricDb.Patterns)
 	NewContextsHandler(r, fabricDb.Contexts)
 	NewSessionsHandler(r, fabricDb.Sessions)
