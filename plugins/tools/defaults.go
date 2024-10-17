@@ -1,4 +1,4 @@
-package core
+package tools
 
 import (
 	"fmt"
@@ -9,14 +9,15 @@ import (
 	"github.com/pkg/errors"
 )
 
-func NeeDefaults() (ret *Defaults) {
+func NeeDefaults(getVendorsModels func() (*ai.VendorsModels, error)) (ret *Defaults) {
 	vendorName := "Default"
 	ret = &Defaults{
 		PluginBase: &plugins.PluginBase{
 			Name:             vendorName,
-			SetupDescription: "Configure the default AI Vendor and Model",
+			SetupDescription: "Default AI Vendor and Model",
 			EnvNamePrefix:    plugins.BuildEnvVariablePrefix(vendorName),
 		},
+		GetVendorsModels: getVendorsModels,
 	}
 
 	ret.Vendor = ret.AddSetting("Vendor", true)
@@ -29,11 +30,17 @@ func NeeDefaults() (ret *Defaults) {
 type Defaults struct {
 	*plugins.PluginBase
 
-	Vendor *plugins.Setting
-	Model  *plugins.SetupQuestion
+	Vendor           *plugins.Setting
+	Model            *plugins.SetupQuestion
+	GetVendorsModels func() (*ai.VendorsModels, error)
 }
 
-func (o *Defaults) Setup(vendorsModels *ai.VendorsModels) (err error) {
+func (o *Defaults) Setup() (err error) {
+	var vendorsModels *ai.VendorsModels
+	if vendorsModels, err = o.GetVendorsModels(); err != nil {
+		return
+	}
+
 	vendorsModels.Print()
 
 	if err = o.Ask(o.Name); err != nil {
@@ -42,7 +49,9 @@ func (o *Defaults) Setup(vendorsModels *ai.VendorsModels) (err error) {
 
 	index, parseErr := strconv.Atoi(o.Model.Value)
 	if parseErr == nil {
-		o.Vendor.Value, o.Model.Value = vendorsModels.GetGroupAndItemByItemNumber(index)
+		if o.Vendor.Value, o.Model.Value, err = vendorsModels.GetGroupAndItemByItemNumber(index); err != nil {
+			return
+		}
 	} else {
 		o.Vendor.Value = vendorsModels.FindGroupsByItemFirst(o.Model.Value)
 	}

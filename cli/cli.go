@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"github.com/danielmiessler/fabric/core"
+	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/plugins/tools/converter"
 	"github.com/danielmiessler/fabric/restapi"
@@ -31,21 +32,23 @@ func Cli(version string) (err error) {
 
 	fabricDb := fsdb.NewDb(filepath.Join(homedir, ".config/fabric"))
 
+	if err = fabricDb.Configure(); err != nil {
+		if !currentFlags.Setup {
+			println(err.Error())
+			currentFlags.Setup = true
+		}
+	}
+
 	registry := core.NewPluginRegistry(fabricDb)
 
 	// if the setup flag is set, run the setup function
-	if currentFlags.Setup || currentFlags.SetupSkipPatterns || currentFlags.SetupVendor != "" {
-		_ = fabricDb.Configure()
-		if currentFlags.SetupVendor != "" {
-			err = SetupVendor(registry, currentFlags.SetupVendor)
-		} else {
-			err = Setup(registry, currentFlags.SetupSkipPatterns)
-		}
+	if currentFlags.Setup {
+		err = registry.Setup()
 		return
 	}
 
 	if currentFlags.Serve {
-		err = restapi.Serve(fabricDb, currentFlags.ServeAddress)
+		err = restapi.Serve(registry, currentFlags.ServeAddress)
 		return
 	}
 
@@ -55,7 +58,7 @@ func Cli(version string) (err error) {
 	}
 
 	if currentFlags.ChangeDefaultModel {
-		err = registry.Defaults.Setup(registry.VendorManager.GetModels())
+		err = registry.Defaults.Setup()
 		return
 	}
 
@@ -77,7 +80,11 @@ func Cli(version string) (err error) {
 	}
 
 	if currentFlags.ListAllModels {
-		registry.VendorManager.GetModels().Print()
+		var models *ai.VendorsModels
+		if models, err = registry.VendorManager.GetModels(); err != nil {
+			return
+		}
+		models.Print()
 		return
 	}
 
@@ -237,23 +244,5 @@ func Cli(version string) (err error) {
 			err = CreateOutputFile(result, currentFlags.Output)
 		}
 	}
-	return
-}
-
-func Setup(registry *core.PluginRegistry, skipUpdatePatterns bool) (err error) {
-	if err = registry.Setup(); err != nil {
-		return
-	}
-
-	if !skipUpdatePatterns {
-		if err = registry.PatternsLoader.PopulateDB(); err != nil {
-			return
-		}
-	}
-	return
-}
-
-func SetupVendor(registry *core.PluginRegistry, vendorName string) (err error) {
-	err = registry.SetupVendor(vendorName)
 	return
 }

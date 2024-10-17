@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/plugins/ai/azure"
+	"github.com/danielmiessler/fabric/plugins/tools"
 	"github.com/samber/lo"
 	"strconv"
 
 	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
-	"github.com/danielmiessler/fabric/plugins/ai/azure"
 	"github.com/danielmiessler/fabric/plugins/ai/dryrun"
 	"github.com/danielmiessler/fabric/plugins/ai/gemini"
 	"github.com/danielmiessler/fabric/plugins/ai/groq"
@@ -19,27 +20,26 @@ import (
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
 	"github.com/danielmiessler/fabric/plugins/ai/openrouter"
 	"github.com/danielmiessler/fabric/plugins/ai/siliconcloud"
-	core2 "github.com/danielmiessler/fabric/plugins/core"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/plugins/tools/jina"
 	"github.com/danielmiessler/fabric/plugins/tools/lang"
 	"github.com/danielmiessler/fabric/plugins/tools/youtube"
-	"github.com/pkg/errors"
 )
 
 func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry) {
 	ret = &PluginRegistry{
-		VendorManager:  ai.NewVendorsManager(),
 		Db:             db,
-		Defaults:       core2.NeeDefaults(),
+		VendorManager:  ai.NewVendorsManager(),
 		VendorsAll:     ai.NewVendorsManager(),
-		PatternsLoader: core2.NewPatternsLoader(db.Patterns),
+		PatternsLoader: tools.NewPatternsLoader(db.Patterns),
 		YouTube:        youtube.NewYouTube(),
 		Language:       lang.NewLanguage(),
 		Jina:           jina.NewClient(),
 	}
 
-	ret.VendorsAll.AddVendors(openai.NewClient(), azure.NewClient(), ollama.NewClient(), groq.NewClient(),
+	ret.Defaults = tools.NeeDefaults(ret.VendorManager.GetModels)
+
+	ret.VendorsAll.AddVendors(openai.NewClient(), ollama.NewClient(), azure.NewClient(), groq.NewClient(),
 		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient())
 	_ = ret.Configure()
 
@@ -47,15 +47,15 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry) {
 }
 
 type PluginRegistry struct {
+	Db *fsdb.Db
+
 	VendorManager  *ai.VendorsManager
 	VendorsAll     *ai.VendorsManager
-	PatternsLoader *core2.PatternsLoader
+	Defaults       *tools.Defaults
+	PatternsLoader *tools.PatternsLoader
 	YouTube        *youtube.YouTube
 	Language       *lang.Language
 	Jina           *jina.Client
-
-	Db       *fsdb.Db
-	Defaults *core2.Defaults
 }
 
 func (o *PluginRegistry) SaveEnvFile() (err error) {
@@ -79,16 +79,23 @@ func (o *PluginRegistry) SaveEnvFile() (err error) {
 
 func (o *PluginRegistry) Setup() (err error) {
 	setupQuestion := plugins.NewSetupQuestion("Enter the number of the plugin to setup (or something elso to exit)")
-	groupsPlugins := common.NewGroupsItemsSelector[plugins.Plugin]("Available plugins", func(plugin plugins.Plugin) string {
-		return plugin.GetSetupDescription()
-	})
+	groupsPlugins := common.NewGroupsItemsSelector[plugins.Plugin]("Available plugins",
+		func(plugin plugins.Plugin) string {
+			var configuredLabel string
+			if plugin.IsConfigured() {
+				configuredLabel = " (configured)"
+			} else {
+				configuredLabel = ""
+			}
+			return fmt.Sprintf("%v%v", plugin.GetSetupDescription(), configuredLabel)
+		})
 
-	groupsPlugins.AddGroupItems("AI Vendors",
-		lo.MapToSlice(o.VendorsAll.Vendors, func(_ string, vendor ai.Vendor) plugins.Plugin {
+	groupsPlugins.AddGroupItems("AI Vendors", lo.Map(o.VendorsAll.Vendors,
+		func(vendor ai.Vendor, _ int) plugins.Plugin {
 			return vendor
 		})...)
 
-	groupsPlugins.AddGroupItems("Tools", o.Defaults.PluginBase, o.PatternsLoader.PluginBase, o.YouTube.PluginBase, o.Language.PluginBase, o.Jina.PluginBase)
+	groupsPlugins.AddGroupItems("Tools", o.Defaults, o.PatternsLoader, o.YouTube, o.Language, o.Jina)
 
 	for {
 		groupsPlugins.Print()
@@ -101,19 +108,26 @@ func (o *PluginRegistry) Setup() (err error) {
 			break
 		}
 		number, parseErr := strconv.Atoi(setupQuestion.Value)
+		setupQuestion.Value = ""
+
 		if parseErr == nil {
-
-			if len(groupsPlugins.GroupsItems) < number {
-				err = fmt.Errorf("there is no plugin with the number %v", number)
+			var plugin plugins.Plugin
+			if _, plugin, err = groupsPlugins.GetGroupAndItemByItemNumber(number); err != nil {
 				return
 			}
 
-			_, plugin := groupsPlugins.GetGroupAndItemByItemNumber(number)
-			if err = plugin.Setup(); err != nil {
-				return
+			if pluginSetupErr := plugin.Setup(); pluginSetupErr != nil {
+				println(pluginSetupErr.Error())
+			} else {
+				if err = o.SaveEnvFile(); err != nil {
+					break
+				}
 			}
-			if err = o.SaveEnvFile(); err != nil {
-				break
+
+			if _, ok := o.VendorManager.VendorsByName[plugin.GetName()]; !ok {
+				if vendor, ok := plugin.(ai.Vendor); ok {
+					o.VendorManager.AddVendors(vendor)
+				}
 			}
 		} else {
 			break
@@ -125,24 +139,8 @@ func (o *PluginRegistry) Setup() (err error) {
 	return
 }
 
-func (o *PluginRegistry) SetupVendors() (err error) {
-	o.VendorManager.Models = nil
-	if o.VendorManager.Vendors, err = o.VendorsAll.Setup(); err != nil {
-		return
-	}
-
-	if !o.VendorManager.HasVendors() {
-		err = errors.New("No vendors configured")
-		return
-	}
-
-	err = o.SaveEnvFile()
-
-	return
-}
-
 func (o *PluginRegistry) SetupVendor(vendorName string) (err error) {
-	if err = o.VendorsAll.SetupVendor(vendorName, o.VendorManager.Vendors); err != nil {
+	if err = o.VendorsAll.SetupVendor(vendorName, o.VendorManager.VendorsByName); err != nil {
 		return
 	}
 	err = o.SaveEnvFile()
@@ -151,20 +149,18 @@ func (o *PluginRegistry) SetupVendor(vendorName string) (err error) {
 
 // Configure buildClient VendorsController based on the environment variables
 func (o *PluginRegistry) Configure() (err error) {
-	_ = o.Defaults.Configure()
-
 	for _, vendor := range o.VendorsAll.Vendors {
 		if vendorErr := vendor.Configure(); vendorErr == nil {
 			o.VendorManager.AddVendors(vendor)
 		}
 	}
+	_ = o.Defaults.Configure()
 	_ = o.PatternsLoader.Configure()
 
 	//YouTube and Jina are not mandatory, so ignore not configured error
 	_ = o.YouTube.Configure()
 	_ = o.Jina.Configure()
 	_ = o.Language.Configure()
-
 	return
 }
 
@@ -189,7 +185,11 @@ func (o *PluginRegistry) GetChatter(model string, stream bool, dryRun bool) (ret
 		ret.vendor = vendorManager.FindByName(defaultVendor)
 		ret.model = defaultModel
 	} else {
-		ret.vendor = vendorManager.FindByName(vendorManager.GetModels().FindGroupsByItemFirst(model))
+		var models *ai.VendorsModels
+		if models, err = vendorManager.GetModels(); err != nil {
+			return
+		}
+		ret.vendor = vendorManager.FindByName(models.FindGroupsByItemFirst(model))
 		ret.model = model
 	}
 

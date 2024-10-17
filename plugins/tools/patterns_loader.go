@@ -1,4 +1,4 @@
-package core
+package tools
 
 import (
 	"fmt"
@@ -24,7 +24,8 @@ const DefaultPatternsGitRepoFolder = "patterns"
 func NewPatternsLoader(patterns *fsdb.PatternsEntity) (ret *PatternsLoader) {
 	label := "Patterns Loader"
 	ret = &PatternsLoader{
-		Patterns: patterns,
+		Patterns:       patterns,
+		loadedFilePath: patterns.BuildFilePath("loaded"),
 	}
 
 	ret.PluginBase = &plugins.PluginBase{
@@ -51,6 +52,8 @@ type PatternsLoader struct {
 	DefaultGitRepoUrl *plugins.SetupQuestion
 	DefaultFolder     *plugins.SetupQuestion
 
+	loadedFilePath string
+
 	pathPatternsPrefix string
 	tempPatternsFolder string
 }
@@ -59,6 +62,27 @@ func (o *PatternsLoader) configure() (err error) {
 	o.pathPatternsPrefix = fmt.Sprintf("%v/", o.DefaultFolder.Value)
 	o.tempPatternsFolder = filepath.Join(os.TempDir(), o.DefaultFolder.Value)
 
+	return
+}
+
+func (o *PatternsLoader) IsConfigured() (ret bool) {
+	ret = o.PluginBase.IsConfigured()
+	if ret {
+		if _, err := os.Stat(o.loadedFilePath); os.IsNotExist(err) {
+			ret = false
+		}
+	}
+	return
+}
+
+func (o *PatternsLoader) Setup() (err error) {
+	if err = o.PluginBase.Setup(); err != nil {
+		return
+	}
+
+	if err = o.PopulateDB(); err != nil {
+		return
+	}
 	return
 }
 
@@ -114,21 +138,13 @@ func (o *PatternsLoader) movePatterns() (err error) {
 	if err = copy.Copy(patternsDir, o.Patterns.Dir); err != nil { // copies the patterns to the config directory
 		return
 	}
+
+	//create an empty file to indicate that the patterns have been updated if not exists
+	_, _ = os.Create(o.loadedFilePath)
+
 	err = os.RemoveAll(patternsDir)
 	return
 }
-
-// checks if a pattern already exists in the directory
-// func DoesPatternExistAlready(name string) (bool, error) {
-// 	entry := db.Entry{
-// 		Name: name,
-// 	}
-// 	_, err := entry.GetByName()
-// 	if err != nil {
-// 		return false, err
-// 	}
-// 	return true, nil
-// }
 
 func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 	// Clones the given repository, creating the remote, the local branches

@@ -5,11 +5,9 @@ import (
 )
 
 func NewVendorsModels() *VendorsModels {
-	return &VendorsModels{GroupsItemsSelector: common.NewGroupsItemsSelector("Available models", func(item string) string {
-		return item
-	})}
+	return &VendorsModels{GroupsItemsSelectorString: common.NewGroupsItemsSelectorString("Available models")}
 }
 
 type VendorsModels struct {
-	*common.GroupsItemsSelector[string]
+	*common.GroupsItemsSelectorString
 }

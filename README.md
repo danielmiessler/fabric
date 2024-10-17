@@ -217,8 +217,6 @@ Application Options:
   -C, --context=             Choose a context from the available contexts
       --session=             Choose a session from the available sessions
   -S, --setup                Run setup for all reconfigurable parts of fabric
-      --setup-skip-patterns  Run Setup for all reconfigurable parts of fabric except patterns update
-      --setup-vendor=        Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI
   -t, --temperature=         Set temperature (default: 0.7)
   -T, --topp=                Set top P (default: 0.9)
   -s, --stream               Stream
