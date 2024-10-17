@@ -3,6 +3,7 @@ package ollama
 import (
 	"context"
 	"fmt"
+	"github.com/danielmiessler/fabric/plugins"
 	"net/http"
 	"net/url"
 	"time"
@@ -17,21 +18,21 @@ func NewClient() (ret *Client) {
 	vendorName := "Ollama"
 	ret = &Client{}
 
-	ret.Configurable = &common.Configurable{
-		Label:           vendorName,
-		EnvNamePrefix:   common.BuildEnvVariablePrefix(vendorName),
+	ret.PluginBase = &plugins.PluginBase{
+		Name:            vendorName,
+		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(vendorName),
 		ConfigureCustom: ret.configure,
 	}
 
-	ret.ApiUrl = ret.Configurable.AddSetupQuestionCustom("API URL", true,
+	ret.ApiUrl = ret.PluginBase.AddSetupQuestionCustom("API URL", true,
 		"Enter your Ollama URL (as a reminder, it is usually http://localhost:11434)")
 
 	return
 }
 
 type Client struct {
-	*common.Configurable
-	ApiUrl *common.SetupQuestion
+	*plugins.PluginBase
+	ApiUrl *plugins.SetupQuestion
 
 	apiUrl *url.URL
 	client *ollamaapi.Client

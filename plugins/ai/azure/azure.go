@@ -1,10 +1,10 @@
 package azure
 
 import (
+	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
 	"strings"
 
-	"github.com/danielmiessler/fabric/common"
 	goopenai "github.com/sashabaranov/go-openai"
 )
 
@@ -19,7 +19,7 @@ func NewClient() (ret *Client) {
 
 type Client struct {
 	*openai.Client
-	ApiDeployments *common.SetupQuestion
+	ApiDeployments *plugins.SetupQuestion
 
 	apiDeployments []string
 }

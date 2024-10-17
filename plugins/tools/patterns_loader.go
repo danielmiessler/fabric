@@ -1,15 +1,16 @@
-package core
+package tools
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/db/fs"
 	"io"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 
-	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/plugins"
+	"github.com/danielmiessler/fabric/plugins/db/fsdb"
+
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -17,16 +18,21 @@ import (
 	"github.com/otiai10/copy"
 )
 
-func NewPatternsLoader(patterns *fs.PatternsEntity) (ret *PatternsLoader) {
+const DefaultPatternsGitRepoUrl = "https://github.com/danielmiessler/fabric.git"
+const DefaultPatternsGitRepoFolder = "patterns"
+
+func NewPatternsLoader(patterns *fsdb.PatternsEntity) (ret *PatternsLoader) {
 	label := "Patterns Loader"
 	ret = &PatternsLoader{
-		Patterns: patterns,
+		Patterns:       patterns,
+		loadedFilePath: patterns.BuildFilePath("loaded"),
 	}
 
-	ret.Configurable = &common.Configurable{
-		Label:           label,
-		EnvNamePrefix:   common.BuildEnvVariablePrefix(label),
-		ConfigureCustom: ret.configure,
+	ret.PluginBase = &plugins.PluginBase{
+		Name:             label,
+		SetupDescription: "Patterns - Downloads patterns [required]",
+		EnvNamePrefix:    plugins.BuildEnvVariablePrefix(label),
+		ConfigureCustom:  ret.configure,
 	}
 
 	ret.DefaultGitRepoUrl = ret.AddSetupQuestionCustom("Git Repo Url", true,
@@ -41,11 +47,13 @@ func NewPatternsLoader(patterns *fs.PatternsEntity) (ret *PatternsLoader) {
 }
 
 type PatternsLoader struct {
-	*common.Configurable
-	Patterns *fs.PatternsEntity
+	*plugins.PluginBase
+	Patterns *fsdb.PatternsEntity
 
-	DefaultGitRepoUrl *common.SetupQuestion
-	DefaultFolder     *common.SetupQuestion
+	DefaultGitRepoUrl *plugins.SetupQuestion
+	DefaultFolder     *plugins.SetupQuestion
+
+	loadedFilePath string
 
 	pathPatternsPrefix string
 	tempPatternsFolder string
@@ -55,6 +63,27 @@ func (o *PatternsLoader) configure() (err error) {
 	o.pathPatternsPrefix = fmt.Sprintf("%v/", o.DefaultFolder.Value)
 	o.tempPatternsFolder = filepath.Join(os.TempDir(), o.DefaultFolder.Value)
 
+	return
+}
+
+func (o *PatternsLoader) IsConfigured() (ret bool) {
+	ret = o.PluginBase.IsConfigured()
+	if ret {
+		if _, err := os.Stat(o.loadedFilePath); os.IsNotExist(err) {
+			ret = false
+		}
+	}
+	return
+}
+
+func (o *PatternsLoader) Setup() (err error) {
+	if err = o.PluginBase.Setup(); err != nil {
+		return
+	}
+
+	if err = o.PopulateDB(); err != nil {
+		return
+	}
 	return
 }
 
@@ -110,21 +139,13 @@ func (o *PatternsLoader) movePatterns() (err error) {
 	if err = copy.Copy(patternsDir, o.Patterns.Dir); err != nil { // copies the patterns to the config directory
 		return
 	}
+
+	//create an empty file to indicate that the patterns have been updated if not exists
+	_, _ = os.Create(o.loadedFilePath)
+
 	err = os.RemoveAll(patternsDir)
 	return
 }
-
-// checks if a pattern already exists in the directory
-// func DoesPatternExistAlready(name string) (bool, error) {
-// 	entry := db.Entry{
-// 		Label: name,
-// 	}
-// 	_, err := entry.GetByName()
-// 	if err != nil {
-// 		return false, err
-// 	}
-// 	return true, nil
-// }
 
 func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 	// Clones the given repository, creating the remote, the local branches
@@ -156,7 +177,7 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 		return err
 	}
 
-	var changes []fs.DirectoryChange
+	var changes []fsdb.DirectoryChange
 	// ... iterates over the commits
 	if err = cIter.ForEach(func(c *object.Commit) (err error) {
 		// GetApplyVariables the files changed in this commit by comparing with its parents
@@ -171,7 +192,7 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 			for _, fileStat := range patch.Stats() {
 				if strings.HasPrefix(fileStat.Name, o.pathPatternsPrefix) {
 					dir := filepath.Dir(fileStat.Name)
-					changes = append(changes, fs.DirectoryChange{Dir: dir, Timestamp: c.Committer.When})
+					changes = append(changes, fsdb.DirectoryChange{Dir: dir, Timestamp: c.Committer.When})
 				}
 			}
 			return
@@ -256,7 +277,7 @@ func (o *PatternsLoader) writeBlobToFile(blob *object.Blob, path string) (err er
 	return
 }
 
-func (o *PatternsLoader) makeUniqueList(changes []fs.DirectoryChange) (err error) {
+func (o *PatternsLoader) makeUniqueList(changes []fsdb.DirectoryChange) (err error) {
 	uniqueItems := make(map[string]bool)
 	for _, change := range changes {
 		if strings.TrimSpace(change.Dir) != "" && !strings.Contains(change.Dir, "=>") {

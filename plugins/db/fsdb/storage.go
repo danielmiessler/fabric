@@ -1,4 +1,4 @@
-package fs
+package fsdb
 
 import (
 	"encoding/json"

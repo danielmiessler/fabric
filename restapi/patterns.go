@@ -1,21 +1,21 @@
 package restapi
 
 import (
-	"github.com/danielmiessler/fabric/db/fs"
+	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 // PatternsHandler defines the handler for patterns-related operations
 type PatternsHandler struct {
-	*StorageHandler[fs.Pattern]
-	patterns *fs.PatternsEntity
+	*StorageHandler[fsdb.Pattern]
+	patterns *fsdb.PatternsEntity
 }
 
 // NewPatternsHandler creates a new PatternsHandler
-func NewPatternsHandler(r *gin.Engine, patterns *fs.PatternsEntity) (ret *PatternsHandler) {
+func NewPatternsHandler(r *gin.Engine, patterns *fsdb.PatternsEntity) (ret *PatternsHandler) {
 	ret = &PatternsHandler{
-		StorageHandler: NewStorageHandler[fs.Pattern](r, "patterns", patterns), patterns: patterns}
+		StorageHandler: NewStorageHandler[fsdb.Pattern](r, "patterns", patterns), patterns: patterns}
 
 	// TODO: Add custom, replacement routes here
 	//r.GET("/patterns/:name", ret.Get)

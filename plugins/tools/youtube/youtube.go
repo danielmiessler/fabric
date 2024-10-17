@@ -5,15 +5,16 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/anaskhan96/soup"
-	"github.com/danielmiessler/fabric/common"
-	"google.golang.org/api/option"
-	"google.golang.org/api/youtube/v3"
 	"log"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/anaskhan96/soup"
+	"github.com/danielmiessler/fabric/plugins"
+	"google.golang.org/api/option"
+	"google.golang.org/api/youtube/v3"
 )
 
 func NewYouTube() (ret *YouTube) {
@@ -21,9 +22,10 @@ func NewYouTube() (ret *YouTube) {
 	label := "YouTube"
 	ret = &YouTube{}
 
-	ret.Configurable = &common.Configurable{
-		Label:         label,
-		EnvNamePrefix: common.BuildEnvVariablePrefix(label),
+	ret.PluginBase = &plugins.PluginBase{
+		Name:             label,
+		SetupDescription: label + " - to grab video transcripts and comments",
+		EnvNamePrefix:    plugins.BuildEnvVariablePrefix(label),
 	}
 
 	ret.ApiKey = ret.AddSetupQuestion("API key", true)
@@ -32,8 +34,8 @@ func NewYouTube() (ret *YouTube) {
 }
 
 type YouTube struct {
-	*common.Configurable
-	ApiKey *common.SetupQuestion
+	*plugins.PluginBase
+	ApiKey *plugins.SetupQuestion
 
 	service *youtube.Service
 }

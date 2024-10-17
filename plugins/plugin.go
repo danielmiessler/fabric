@@ -1,4 +1,4 @@
-package common
+package plugins
 
 import (
 	"bytes"
@@ -9,41 +9,58 @@ import (
 
 const AnswerReset = "reset"
 
-type Configurable struct {
+type Plugin interface {
+	GetName() string
+	GetSetupDescription() string
+	IsConfigured() bool
+	Configure() error
+	Setup() error
+	SetupFillEnvFileContent(*bytes.Buffer)
+}
+
+type PluginBase struct {
 	Settings
 	SetupQuestions
 
-	Label         string
-	EnvNamePrefix string
+	Name             string
+	SetupDescription string
+	EnvNamePrefix    string
 
 	ConfigureCustom func() error
 }
 
-func (o *Configurable) GetName() string {
-	return o.Label
+func (o *PluginBase) GetName() string {
+	return o.Name
 }
 
-func (o *Configurable) AddSetting(name string, required bool) (ret *Setting) {
+func (o *PluginBase) GetSetupDescription() (ret string) {
+	if ret = o.SetupDescription; ret == "" {
+		ret = o.GetName()
+	}
+	return
+}
+
+func (o *PluginBase) AddSetting(name string, required bool) (ret *Setting) {
 	ret = NewSetting(fmt.Sprintf("%v%v", o.EnvNamePrefix, BuildEnvVariable(name)), required)
 	o.Settings = append(o.Settings, ret)
 	return
 }
 
-func (o *Configurable) AddSetupQuestion(name string, required bool) (ret *SetupQuestion) {
+func (o *PluginBase) AddSetupQuestion(name string, required bool) (ret *SetupQuestion) {
 	return o.AddSetupQuestionCustom(name, required, "")
 }
 
-func (o *Configurable) AddSetupQuestionCustom(name string, required bool, question string) (ret *SetupQuestion) {
+func (o *PluginBase) AddSetupQuestionCustom(name string, required bool, question string) (ret *SetupQuestion) {
 	setting := o.AddSetting(name, required)
 	ret = &SetupQuestion{Setting: setting, Question: question}
 	if ret.Question == "" {
-		ret.Question = fmt.Sprintf("Enter your %v %v", o.Label, strings.ToUpper(name))
+		ret.Question = fmt.Sprintf("Enter your %v %v", o.Name, strings.ToUpper(name))
 	}
 	o.SetupQuestions = append(o.SetupQuestions, ret)
 	return
 }
 
-func (o *Configurable) Configure() (err error) {
+func (o *PluginBase) Configure() (err error) {
 	if err = o.Settings.Configure(); err != nil {
 		return
 	}
@@ -54,8 +71,8 @@ func (o *Configurable) Configure() (err error) {
 	return
 }
 
-func (o *Configurable) Setup() (err error) {
-	if err = o.Ask(o.Label); err != nil {
+func (o *PluginBase) Setup() (err error) {
+	if err = o.Ask(o.Name); err != nil {
 		return
 	}
 
@@ -63,14 +80,14 @@ func (o *Configurable) Setup() (err error) {
 	return
 }
 
-func (o *Configurable) SetupOrSkip() (err error) {
+func (o *PluginBase) SetupOrSkip() (err error) {
 	if err = o.Setup(); err != nil {
 		fmt.Printf("[%v] skipped\n", o.GetName())
 	}
 	return
 }
 
-func (o *Configurable) SetupFillEnvFileContent(fileEnvFileContent *bytes.Buffer) {
+func (o *PluginBase) SetupFillEnvFileContent(fileEnvFileContent *bytes.Buffer) {
 	o.Settings.FillEnvFileContent(fileEnvFileContent)
 }
 
@@ -124,6 +141,10 @@ func (o *Setting) FillEnvFileContent(buffer *bytes.Buffer) {
 
 func (o *Setting) Print() {
 	fmt.Printf("%v: %v\n", o.EnvVariable, o.Value)
+}
+
+func NewSetupQuestion(question string) *SetupQuestion {
+	return &SetupQuestion{Setting: &Setting{}, Question: question}
 }
 
 type SetupQuestion struct {

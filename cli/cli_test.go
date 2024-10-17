@@ -2,7 +2,6 @@ package cli
 
 import (
 	"github.com/danielmiessler/fabric/core"
-	"github.com/danielmiessler/fabric/db/fs"
 	"os"
 	"testing"
 
@@ -18,12 +17,4 @@ func TestCli(t *testing.T) {
 	err := Cli("test")
 	assert.Error(t, err)
 	assert.Equal(t, core.NoSessionPatternUserMessages, err.Error())
-}
-
-func TestSetup(t *testing.T) {
-	mockDB := fs.NewDb(os.TempDir())
-
-	fabric, err := Setup(mockDB, false)
-	assert.Error(t, err)
-	assert.Nil(t, fabric)
 }

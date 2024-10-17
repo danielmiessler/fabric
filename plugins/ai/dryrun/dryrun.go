@@ -4,27 +4,18 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/danielmiessler/fabric/plugins"
 	goopenai "github.com/sashabaranov/go-openai"
 
 	"github.com/danielmiessler/fabric/common"
 )
 
-type Client struct{}
+type Client struct {
+	*plugins.PluginBase
+}
 
 func NewClient() *Client {
-	return &Client{}
-}
-
-func (c *Client) GetName() string {
-	return "DryRun"
-}
-
-func (c *Client) IsConfigured() bool {
-	return true
-}
-
-func (c *Client) Configure() error {
-	return nil
+	return &Client{PluginBase: &plugins.PluginBase{Name: "DryRun"}}
 }
 
 func (c *Client) ListModels() ([]string, error) {
