@@ -90,7 +90,7 @@ func (o *PluginRegistry) Setup() (err error) {
 			return fmt.Sprintf("%v%v", plugin.GetSetupDescription(), configuredLabel)
 		})
 
-	groupsPlugins.AddGroupItems("AI Vendors", lo.Map(o.VendorsAll.Vendors,
+	groupsPlugins.AddGroupItems("AI Vendors [at least one, required]", lo.Map(o.VendorsAll.Vendors,
 		func(vendor ai.Vendor, _ int) plugins.Plugin {
 			return vendor
 		})...)
