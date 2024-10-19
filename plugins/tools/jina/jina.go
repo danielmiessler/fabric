@@ -7,12 +7,12 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/plugins"
 )
 
 type Client struct {
-	*common.Configurable
-	ApiKey *common.SetupQuestion
+	*plugins.PluginBase
+	ApiKey *plugins.SetupQuestion
 }
 
 func NewClient() (ret *Client) {
@@ -20,9 +20,10 @@ func NewClient() (ret *Client) {
 	label := "Jina AI"
 
 	ret = &Client{
-		Configurable: &common.Configurable{
-			Label:         label,
-			EnvNamePrefix: common.BuildEnvVariablePrefix(label),
+		PluginBase: &plugins.PluginBase{
+			Name:             label,
+			SetupDescription: "Jina AI Service - to grab a webpage as clean, LLM-friendly text",
+			EnvNamePrefix:    plugins.BuildEnvVariablePrefix(label),
 		},
 	}
 

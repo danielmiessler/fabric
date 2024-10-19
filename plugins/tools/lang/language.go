@@ -1,7 +1,7 @@
 package lang
 
 import (
-	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/plugins"
 	"golang.org/x/text/language"
 )
 
@@ -10,21 +10,22 @@ func NewLanguage() (ret *Language) {
 	label := "Language"
 	ret = &Language{}
 
-	ret.Configurable = &common.Configurable{
-		Label:           label,
-		EnvNamePrefix:   common.BuildEnvVariablePrefix(label),
-		ConfigureCustom: ret.configure,
+	ret.PluginBase = &plugins.PluginBase{
+		Name:             label,
+		SetupDescription: "Language - Default AI Vendor Output Language",
+		EnvNamePrefix:    plugins.BuildEnvVariablePrefix(label),
+		ConfigureCustom:  ret.configure,
 	}
 
-	ret.DefaultLanguage = ret.Configurable.AddSetupQuestionCustom("Output", false,
-		"Enter your default want output lang (for example: zh_CN)")
+	ret.DefaultLanguage = ret.PluginBase.AddSetupQuestionCustom("Output", false,
+		"Enter your default output language (for example: zh_CN)")
 
 	return
 }
 
 type Language struct {
-	*common.Configurable
-	DefaultLanguage *common.SetupQuestion
+	*plugins.PluginBase
+	DefaultLanguage *plugins.SetupQuestion
 }
 
 func (o *Language) configure() error {

@@ -19,8 +19,6 @@ type Flags struct {
 	Context            string            `short:"C" long:"context" description:"Choose a context from the available contexts" default:""`
 	Session            string            `long:"session" description:"Choose a session from the available sessions"`
 	Setup              bool              `short:"S" long:"setup" description:"Run setup for all reconfigurable parts of fabric"`
-	SetupSkipPatterns  bool              `long:"setup-skip-patterns" description:"Run Setup for all reconfigurable parts of fabric except patterns update"`
-	SetupVendor        string            `long:"setup-vendor" description:"Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI"`
 	Temperature        float64           `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
 	TopP               float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
 	Stream             bool              `short:"s" long:"stream" description:"Stream"`
