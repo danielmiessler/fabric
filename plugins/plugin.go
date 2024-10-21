@@ -183,6 +183,11 @@ func (o *SetupQuestion) Ask(label string) (err error) {
 
 func (o *SetupQuestion) OnAnswer(answer string) (err error) {
 	o.Value = answer
+	if o.EnvVariable != "" {
+		if err = os.Setenv(o.EnvVariable, answer); err != nil {
+			return
+		}
+	}
 	err = o.IsValidErr()
 	return
 }

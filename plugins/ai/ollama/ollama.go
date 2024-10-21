@@ -24,7 +24,7 @@ func NewClient() (ret *Client) {
 		ConfigureCustom: ret.configure,
 	}
 
-	ret.ApiUrl = ret.PluginBase.AddSetupQuestionCustom("API URL", true,
+	ret.ApiUrl = ret.AddSetupQuestionCustom("API URL", true,
 		"Enter your Ollama URL (as a reminder, it is usually http://localhost:11434)")
 
 	return

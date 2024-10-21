@@ -17,7 +17,7 @@ func NewLanguage() (ret *Language) {
 		ConfigureCustom:  ret.configure,
 	}
 
-	ret.DefaultLanguage = ret.PluginBase.AddSetupQuestionCustom("Output", false,
+	ret.DefaultLanguage = ret.AddSetupQuestionCustom("Output", false,
 		"Enter your default output language (for example: zh_CN)")
 
 	return
