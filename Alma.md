@@ -172,6 +172,118 @@ S3 Bucket Security | Review and secure all S3 buckets to prevent data breaches |
 
 SQL Injection Mitigation | Implement measures to eliminate SQL injection vulnerabilities | High | Tigan Wang | 2024-01-20 | 2024-05-20 | Not Started | $60K one-time 
 
+## SECURITY POSTURE (To be referenced for compliance questions and security questionnaires)
+
+July 2019
+Admin accounts still not required to use 2FA.
+Company laptops distributed to employees, no MDM yet for device management.
+AWS IAM roles created for engineers, but root access still frequently used.
+Started basic vulnerability scanning using open-source tools.
+December 2019
+
+MFA enforced for all Google Workspace accounts after a phishing attempt.
+Introduced ClamAV for basic endpoint protection on corporate laptops.
+AWS GuardDuty enabled for threat detection, but no formal incident response team.
+First incident response plan table-top exercise conducted, but findings not fully documented.
+April 2020
+
+Migrated from Google Workspace to Office 365, with MFA enabled for all users.
+Rolled out SentinelOne for endpoint protection on 50% of company laptops.
+Implemented least-privilege access control for AWS IAM roles.
+First formal vendor risk management review completed for major SaaS providers.
+August 2020
+
+Completed full deployment of SentinelOne across all endpoints.
+Implemented AWS CloudWatch for real-time alerts; however, logs still not monitored 24/7.
+Began encrypting all AWS S3 buckets at rest using server-side encryption.
+First internal review of data retention policies, started drafting data disposal policy.
+January 2021
+
+Rolled out Jamf MDM for centralized management of macOS devices, enforcing encryption (FileVault) on all laptops.
+Strengthened Office 365 security by implementing phishing-resistant MFA using authenticator apps.
+AWS KMS introduced for managing encryption keys; manual key rotation policy documented.
+Introduced formal onboarding and offboarding processes for employee account management.
+July 2021
+
+Conditional access policies introduced for Office 365, restricting access based on geography (US-only).
+Conducted company-wide security awareness training for the first time, focusing on phishing threats.
+Completed first backup and disaster recovery (DR) drill with AWS, documenting recovery times.
+AWS Config deployed to monitor and enforce encryption and access control policies across accounts.
+December 2021
+
+Full migration to AWS for all production systems completed.
+Incident response playbook finalized and shared with the security team; still no 24/7 monitoring.
+Documented data classification policies for handling sensitive customer data in preparation for SOC 2 audit.
+First third-party penetration test conducted, critical vulnerabilities identified and remediated within 30 days.
+March 2022
+
+Rolled out company-wide 2FA for all critical systems, including Office 365, AWS, GitHub, and Slack.
+Introduced AWS Secrets Manager for managing sensitive credentials, eliminating hardcoded API keys.
+Updated all documentation for identity and access management in preparation for SOC 2 Type 1 audit.
+First external vulnerability scan completed using Qualys, with remediation SLAs established.
+April 2022
+
+Updated and consolidated all security policies (incident response, access control, data retention) in preparation for SOC 2 audit.
+Conducted tabletop exercise for ransomware response, documenting gaps in the incident response process.
+Implemented Just-In-Time (JIT) access for administrative privileges in AWS, reducing unnecessary persistent access.
+October 2022
+
+Passed SOC 2 Type 1 audit, with recommendations to improve monitoring and asset management.
+Launched quarterly phishing simulations to raise employee awareness and track training effectiveness.
+Fully enforced encryption for all customer data in transit and at rest using AWS KMS.
+Extended GuardDuty to cover all AWS regions; started monitoring alerts daily.
+January 2023
+
+Hired a dedicated CISO and expanded security team by 30%.
+Integrated continuous vulnerability scanning across all externally facing assets using Qualys.
+Conducted first third-party vendor risk assessment to ensure alignment with SOC 2 and internal security standards.
+Implemented automated patch management for all AWS EC2 instances, reducing time to deploy critical patches.
+July 2023
+
+Rolled out continuous attack surface monitoring (ASM) to identify and remediate external vulnerabilities.
+Performed annual data retention review, ensuring compliance with SOC 2 and GDPR requirements.
+Conducted a disaster recovery drill for AWS workloads, achieving a recovery time objective (RTO) of under 4 hours.
+Completed SOC 2 Type 2 readiness assessment, with focus on improving incident response times.
+November 2023
+
+Updated incident response documentation and assigned 24/7 monitoring to a third-party SOC provider.
+Rolled out zero-trust network architecture across the organization, removing reliance on VPN for remote access.
+Passed SOC 2 Type 2 audit with no major findings; recommendations included improved asset inventory tracking.
+Conducted full audit of access control policies and JIT access implementation in preparation for ISO 27001 certification.
+April 2024
+
+Implemented AI-driven threat detection to reduce time to detect security incidents from 10 hours to under 2 hours.
+Completed full encryption audit across all databases, ensuring compliance with GDPR, HIPAA, and other privacy regulations.
+Updated employee training programs to include privacy regulations (GDPR, CCPA) and data handling best practices.
+Completed internal review and audit of vendor access to critical systems as part of SOC 2 compliance effort.
+Completed move of all AWS services to us-west-2  and us-east-1 regions for 100% us-based cloud services.
+October 2024
+
+Conducted organization-wide review of data retention and disposal policies, implementing automated data deletion for expired data.
+Implemented continuous compliance monitoring for SOC 2, with automated alerts for deviations in access controls and encryption settings.
+Finalized implementation of AI-based monitoring and response systems, significantly reducing time to remediate critical vulnerabilities.
+Passed SOC 2 Type 2 and ISO 27001 audits with zero non-conformities, achieving full compliance across all control areas.March 2018
+
+Personal Gmail accounts used for internal and external communication.
+No 2FA enabled on any accounts.
+AWS accounts shared with engineers, no IAM roles or formal access control policies.
+No centralized endpoint protection; employees use personal laptops with no security controls.
+No documented security policies or incident response plan.
+September 2018
+
+Initiated migration from personal Gmail to Google Workspace (G Suite) for business email.
+Password complexity requirements introduced (minimum 8 characters).
+AWS root credentials still shared among team members, no MFA enabled.
+No formal logging or monitoring in place for AWS activity.
+February 2019
+
+Completed migration to Google Workspace; no email encryption yet.
+Introduced a basic password manager (LastPass) but no enforcement policy.
+AWS CloudTrail enabled for logging, but no one is reviewing logs.
+First draft of the incident response plan created, but not tested.
+June 2019
+
+Enforced MFA for Google Workspace admin accounts; standard user
 ## CURRENT STATE (KPIs, Metrics, Project Activity Updates, etc.)
 - October 2022: Current time to detect malicious behavior is 81 hours
 - October 2022: Current time to start investigating malicious behavior is 82 hours
