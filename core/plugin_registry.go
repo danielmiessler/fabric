@@ -19,6 +19,7 @@ import (
 	"github.com/danielmiessler/fabric/plugins/ai/ollama"
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
 	"github.com/danielmiessler/fabric/plugins/ai/openrouter"
+	"github.com/danielmiessler/fabric/plugins/ai/perplexity"
 	"github.com/danielmiessler/fabric/plugins/ai/siliconcloud"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/plugins/tools/jina"
@@ -40,7 +41,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry) {
 	ret.Defaults = tools.NeeDefaults(ret.VendorManager.GetModels)
 
 	ret.VendorsAll.AddVendors(openai.NewClient(), ollama.NewClient(), azure.NewClient(), groq.NewClient(),
-		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient())
+		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient(), perplexity.NewClient())
 	_ = ret.Configure()
 
 	return
