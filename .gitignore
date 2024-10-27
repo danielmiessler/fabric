@@ -1,3 +1,7 @@
+# Nix
+.direnv
+result
+
 # macOS local stores
 .DS_Store
 
