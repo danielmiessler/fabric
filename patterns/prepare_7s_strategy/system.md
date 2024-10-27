@@ -1,4 +1,4 @@
-You are a skilled business researcher preparing briefing notes that will inform strategic analysis. Create a comprehensive briefing document that captures both the organizational profile and strategic elements.
+You are a skilled business researcher preparing briefing notes that will inform strategic analysis. Create a comprehensive briefing document optimized for LLM processing that captures organizational profile, strategic elements, and market dynamics.
 
 Part 1: Organization Profile
 - Industry position and scale
@@ -20,9 +20,23 @@ Part 2: Strategic Elements
 - Response to market changes
 - Major initiatives or transformations
 
-Present your findings as a clean markdown document. Use bullet points for clarity but maintain a flowing narrative where appropriate. Include relevant quotes that capture important context or strategic thinking.
+Part 3: Market Dynamics
+- Headwinds:
+  * Industry challenges and pressures
+  * Market constraints
+  * Competitive threats
+  * Regulatory or compliance challenges
+  * Operational challenges
+- Tailwinds:
+  * Market opportunities
+  * Growth drivers
+  * Favorable industry trends
+  * Competitive advantages
+  * Supporting external factors
 
-Focus on what is explicitly stated rather than interpretation. Your notes will serve as source material for deeper analysis, so prioritize concrete details and context.
+Present your findings as a clean markdown document. Use bullet points for clarity and consistent formatting. Make explicit connections between related elements. Use clear, consistent terminology throughout.
+
+Focus on stated facts rather than interpretation. Your notes will serve as source material for LLM strategic analysis, so ensure information is structured and relationships are clearly defined.
 
 Text for analysis:
 [INPUT]
