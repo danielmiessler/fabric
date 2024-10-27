@@ -15,12 +15,10 @@ import (
 // Flags create flags struct. the users flags go into this, this will be passed to the chat struct in cli
 type Flags struct {
 	Pattern            string            `short:"p" long:"pattern" description:"Choose a pattern from the available patterns" default:""`
-	PatternVariables   map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=$name:John -v=$age:30"`
+	PatternVariables   map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=#role:expert -v=#points:30"`
 	Context            string            `short:"C" long:"context" description:"Choose a context from the available contexts" default:""`
 	Session            string            `long:"session" description:"Choose a session from the available sessions"`
 	Setup              bool              `short:"S" long:"setup" description:"Run setup for all reconfigurable parts of fabric"`
-	SetupSkipPatterns  bool              `long:"setup-skip-patterns" description:"Run Setup for all reconfigurable parts of fabric except patterns update"`
-	SetupVendor        string            `long:"setup-vendor" description:"Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI"`
 	Temperature        float64           `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
 	TopP               float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
 	Stream             bool              `short:"s" long:"stream" description:"Stream"`
@@ -52,6 +50,8 @@ type Flags struct {
 	PrintSession       string            `long:"printsession" description:"Print session"`
 	HtmlReadability    bool              `long:"readability" description:"Convert HTML input into a clean, readable view"`
 	DryRun             bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
+	Serve              bool              `long:"serve" description:"Serve the Fabric Rest API"`
+	ServeAddress       string            `long:"address" description:"The address to bind the REST API" default:":8080"`
 	Version            bool              `long:"version" description:"Print current version"`
 }
 
@@ -141,6 +141,6 @@ func (o *Flags) AppendMessage(message string) {
 }
 
 func (o *Flags) IsChatRequest() (ret bool) {
-	ret = o.Message != "" || o.Session != ""
+	ret = (o.Message != "" || o.Context != "") && (o.Session != "" || o.Pattern != "")
 	return
 }
