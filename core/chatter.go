@@ -4,23 +4,25 @@ import (
 	"context"
 	"fmt"
 	"github.com/danielmiessler/fabric/common"
-	"github.com/danielmiessler/fabric/db"
-	"github.com/danielmiessler/fabric/vendors"
+	"github.com/danielmiessler/fabric/plugins/ai"
+	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	goopenai "github.com/sashabaranov/go-openai"
 	"strings"
 )
 
+const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
+
 type Chatter struct {
-	db *db.Db
+	db *fsdb.Db
 
 	Stream bool
 	DryRun bool
 
 	model  string
-	vendor vendors.Vendor
+	vendor ai.Vendor
 }
 
-func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *db.Session, err error) {
+func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *fsdb.Session, err error) {
 	if session, err = o.BuildSession(request, opts.Raw); err != nil {
 		return
 	}
@@ -63,16 +65,16 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	return
 }
 
-func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *db.Session, err error) {
+func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *fsdb.Session, err error) {
 	if request.SessionName != "" {
-		var sess *db.Session
-		if sess, err = o.db.Sessions.GetOrCreateSession(request.SessionName); err != nil {
+		var sess *fsdb.Session
+		if sess, err = o.db.Sessions.Get(request.SessionName); err != nil {
 			err = fmt.Errorf("could not find session %s: %v", request.SessionName, err)
 			return
 		}
 		session = sess
 	} else {
-		session = &db.Session{}
+		session = &fsdb.Session{}
 	}
 
 	if request.Meta != "" {
@@ -81,8 +83,8 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 
 	var contextContent string
 	if request.ContextName != "" {
-		var ctx *db.Context
-		if ctx, err = o.db.Contexts.GetContext(request.ContextName); err != nil {
+		var ctx *fsdb.Context
+		if ctx, err = o.db.Contexts.Get(request.ContextName); err != nil {
 			err = fmt.Errorf("could not find context %s: %v", request.ContextName, err)
 			return
 		}
@@ -91,8 +93,8 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 
 	var patternContent string
 	if request.PatternName != "" {
-		var pattern *db.Pattern
-		if pattern, err = o.db.Patterns.GetPattern(request.PatternName, request.PatternVariables); err != nil {
+		var pattern *fsdb.Pattern
+		if pattern, err = o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables); err != nil {
 			err = fmt.Errorf("could not find pattern %s: %v", request.PatternName, err)
 			return
 		}

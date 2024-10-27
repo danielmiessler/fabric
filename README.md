@@ -43,6 +43,7 @@
   - [Just use the Patterns](#just-use-the-patterns)
 - [Custom Patterns](#custom-patterns)
 - [Helper Apps](#helper-apps)
+- [pbpaste](#pbpaste)
 - [Meta](#meta)
   - [Primary contributors](#primary-contributors)
 
@@ -50,7 +51,7 @@
 
 ## Updates
 
-> [!NOTE] 
+> [!NOTE]
 September 15, 2024 — Lots of new stuff!
 > * Fabric now supports calling the new `o1-preview` model using the `-r` switch (which stands for raw. Normal queries won't work with `o1-preview` because they disabled System access and don't allow us to set `Temperature`.
 > * We have early support for Raycast! Under the `/patterns` directory there's a `raycast` directory with scripts that can be called from Raycast. If you add a scripts directory within Raycast and point it to your `~/.config/fabric/patterns/raycast` directory, you'll then be able to 1) invoke Raycast, type the name of the script, and then 2) paste in the content to be passed, and the results will return in Raycast. There's currently only one script in there but I am (Daniel) adding more.
@@ -124,10 +125,10 @@ curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric
 # MacOS (arm64):
 curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 > fabric && chmod +x fabric && ./fabric --version
 
-# MacOS (amd64): 
+# MacOS (amd64):
 curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 > fabric && chmod +x fabric && ./fabric --version
 
-# Linux (amd64): 
+# Linux (amd64):
 curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 > fabric && chmod +x fabric && ./fabric --version
 
 # Linux (arm64):
@@ -213,12 +214,10 @@ Usage:
 
 Application Options:
   -p, --pattern=             Choose a pattern from the available patterns
-  -v, --variable=            Values for pattern variables, e.g. -v=$name:John -v=$age:30
+  -v, --variable=            Values for pattern variables, e.g. -v=#role:expert -v=#points:30"
   -C, --context=             Choose a context from the available contexts
       --session=             Choose a session from the available sessions
   -S, --setup                Run setup for all reconfigurable parts of fabric
-      --setup-skip-patterns  Run Setup for all reconfigurable parts of fabric except patterns update
-      --setup-vendor=        Run Setup for specific vendor, one of Ollama, OpenAI, Anthropic, Azure, Gemini, Groq, Mistral, OpenRouter, SiliconCloud. E.g. fabric --setup-vendor=OpenAI
   -t, --temperature=         Set temperature (default: 0.7)
   -T, --topp=                Set top P (default: 0.9)
   -s, --stream               Stream
@@ -276,6 +275,8 @@ https://github.com/danielmiessler/fabric/blob/main/patterns/extract_wisdom/syste
 
 ## Examples
 
+> The following examples use the macOS `pbpaste` to paste from the clipboard. See the [pbpaste](#pbpaste) section below for Windows and Linux alternatives.
+
 Now let's look at some things you can do with Fabric.
 
 1. Run the `summarize` Pattern based on input from `stdin`. In this case, the body of an article.
@@ -317,7 +318,7 @@ The wisdom of crowds for the win.
 
 You may want to use Fabric to create your own custom Patterns—but not share them with others. No problem!
 
-Just make a directory in `~/.config/custompatterns/` (or wherever) and put your `.md` files in there. 
+Just make a directory in `~/.config/custompatterns/` (or wherever) and put your `.md` files in there.
 
 When you're ready to use them, copy them into:
 
@@ -361,6 +362,29 @@ go install github.com/danielmiessler/fabric/to_pdf@latest
 ```
 
 Make sure you have a LaTeX distribution (like TeX Live or MiKTeX) installed on your system, as `to_pdf` requires `pdflatex` to be available in your system's PATH.
+
+## pbpaste
+
+The [examples](#examples) use the macOS program `pbpaste` to paste content from the clipboard to pipe into `fabric` as the input. `pbpaste` is not available on Windows or Linux, but there are alternatives.
+
+On Windows, you can use the PowerShell command `Get-Clipboard` from a PowerShell command prompt. If you like, you can also alias it to `pbpaste`. If you are using classic PowerShell, edit the file `~\Documents\WindowsPowerShell\.profile.ps1`, or if you are using PowerShell Core, edit `~\Documents\PowerShell\.profile.ps1` and add the alias,
+
+```powershell
+Set-Alias pbpaste Get-Clipboard
+```
+
+On Linux, you can use `xclip -selection clipboard -o` to paste from the clipboard. You will likely need to install `xclip` with your package manager. For Debian based systems including Ubuntu,
+
+```sh
+sudo apt update
+sudo apt install xclip -y
+```
+
+You can also create an alias by editing `~/.bashrc` or `~/.zshrc` and adding the alias,
+
+```sh
+alias pbpaste='xclip -selection clipboard -o'
+```
 
 ## Meta
 
