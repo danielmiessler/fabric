@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/pkg/errors"
+
 	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai"
-	"github.com/pkg/errors"
 )
 
 func NeeDefaults(getVendorsModels func() (*ai.VendorsModels, error)) (ret *Defaults) {
@@ -21,8 +22,12 @@ func NeeDefaults(getVendorsModels func() (*ai.VendorsModels, error)) (ret *Defau
 	}
 
 	ret.Vendor = ret.AddSetting("Vendor", true)
+
 	ret.Model = ret.AddSetupQuestionCustom("Model", true,
 		"Enter the index the name of your default model")
+
+	ret.ModelContextLength = ret.AddSetupQuestionCustom("Model Context Length", false,
+		"Enter model context length")
 
 	return
 }
@@ -30,9 +35,10 @@ func NeeDefaults(getVendorsModels func() (*ai.VendorsModels, error)) (ret *Defau
 type Defaults struct {
 	*plugins.PluginBase
 
-	Vendor           *plugins.Setting
-	Model            *plugins.SetupQuestion
-	GetVendorsModels func() (*ai.VendorsModels, error)
+	Vendor             *plugins.Setting
+	Model              *plugins.SetupQuestion
+	ModelContextLength *plugins.SetupQuestion
+	GetVendorsModels   func() (*ai.VendorsModels, error)
 }
 
 func (o *Defaults) Setup() (err error) {

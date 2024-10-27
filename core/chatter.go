@@ -3,11 +3,13 @@ package core
 import (
 	"context"
 	"fmt"
+	"strings"
+
+	goopenai "github.com/sashabaranov/go-openai"
+
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
-	goopenai "github.com/sashabaranov/go-openai"
-	"strings"
 )
 
 const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
@@ -18,8 +20,9 @@ type Chatter struct {
 	Stream bool
 	DryRun bool
 
-	model  string
-	vendor ai.Vendor
+	model              string
+	modelContextLength int
+	vendor             ai.Vendor
 }
 
 func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *fsdb.Session, err error) {
@@ -29,6 +32,10 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 
 	if opts.Model == "" {
 		opts.Model = o.model
+	}
+
+	if opts.ModelContextLength == 0 {
+		opts.ModelContextLength = o.modelContextLength
 	}
 
 	message := ""

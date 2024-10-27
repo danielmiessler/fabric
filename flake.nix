@@ -83,7 +83,7 @@
         {
           fabric = gomod2nix.legacyPackages.${system}.buildGoApplication {
             pname = "fabric-ai";
-            version = "1.4.72";
+            version = "1.4.85";
             src = self;
             pwd = self;
             modules = ./gomod2nix.toml;

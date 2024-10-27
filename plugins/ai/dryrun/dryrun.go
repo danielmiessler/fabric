@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins"
+
 	goopenai "github.com/sashabaranov/go-openai"
 
 	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/plugins"
 )
 
 type Client struct {
@@ -44,6 +45,9 @@ func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common
 	output += fmt.Sprintf("TopP: %f\n", opts.TopP)
 	output += fmt.Sprintf("PresencePenalty: %f\n", opts.PresencePenalty)
 	output += fmt.Sprintf("FrequencyPenalty: %f\n", opts.FrequencyPenalty)
+	if opts.ModelContextLength != 0 {
+		output += fmt.Sprintf("ModelContextLength: %d\n", opts.ModelContextLength)
+	}
 
 	channel <- output
 	close(channel)
@@ -72,6 +76,9 @@ func (c *Client) Send(_ context.Context, msgs []*goopenai.ChatCompletionMessage,
 	fmt.Printf("TopP: %f\n", opts.TopP)
 	fmt.Printf("PresencePenalty: %f\n", opts.PresencePenalty)
 	fmt.Printf("FrequencyPenalty: %f\n", opts.FrequencyPenalty)
+	if opts.ModelContextLength != 0 {
+		fmt.Printf("ModelContextLength: %d\n", opts.ModelContextLength)
+	}
 
 	return "", nil
 }
