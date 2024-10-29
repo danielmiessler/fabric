@@ -4,8 +4,10 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	goopenai "github.com/sashabaranov/go-openai"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/jessevdk/go-flags"
@@ -18,8 +20,7 @@ type Flags struct {
 	PatternVariables   map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=#role:expert -v=#points:30"`
 	Context            string            `short:"C" long:"context" description:"Choose a context from the available contexts" default:""`
 	Session            string            `long:"session" description:"Choose a session from the available sessions"`
-	Attachment         string            `short:"a" long:"attachment" description:"Attachment path or URL" default:""`
-	AttachmentType     string            `long:"--attachment-type" description:"Attachment with explicit mimetype" default:""`
+	Attachments        []string          `short:"i" long:"image" description:"Attachment path or URL" default:""`
 	Setup              bool              `short:"S" long:"setup" description:"Run setup for all reconfigurable parts of fabric"`
 	Temperature        float64           `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
 	TopP               float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
@@ -32,7 +33,7 @@ type Flags struct {
 	ListAllContexts    bool              `short:"x" long:"listcontexts" description:"List all contexts"`
 	ListAllSessions    bool              `short:"X" long:"listsessions" description:"List all sessions"`
 	UpdatePatterns     bool              `short:"U" long:"updatepatterns" description:"Update patterns"`
-	Message            string            `hidden:"true" description:"Message to send to chat"`
+	Message            string            `hidden:"true" description:"Messages to send to chat"`
 	Copy               bool              `short:"c" long:"copy" description:"Copy to clipboard"`
 	Model              string            `short:"m" long:"model" description:"Choose model"`
 	Output             string            `short:"o" long:"output" description:"Output to file" default:""`
@@ -115,18 +116,63 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 	return
 }
 
-func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest) {
+func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err error) {
 	ret = &common.ChatRequest{
 		ContextName:      o.Context,
 		SessionName:      o.Session,
 		PatternName:      o.Pattern,
 		PatternVariables: o.PatternVariables,
-		Message:          o.Message,
 		Meta:             Meta,
 	}
+
+	if o.Attachments == nil || len(o.Attachments) > 0 {
+		if o.Message != "" {
+			ret.Message = &goopenai.ChatCompletionMessage{
+				Role:    goopenai.ChatMessageRoleUser,
+				Content: strings.TrimSpace(o.Message),
+			}
+		}
+	} else {
+		ret.Message = &goopenai.ChatCompletionMessage{
+			Role: goopenai.ChatMessageRoleUser,
+		}
+
+		if o.Message != "" {
+			ret.Message.MultiContent = append(ret.Message.MultiContent, goopenai.ChatMessagePart{
+				Type: goopenai.ChatMessagePartTypeText,
+				Text: strings.TrimSpace(o.Message),
+			})
+		}
+
+		for _, attachmentValue := range o.Attachments {
+			var attachment *common.Attachment
+			if attachment, err = common.NewAttachment(attachmentValue); err != nil {
+				return
+			}
+			url := attachment.URL
+			if url == nil {
+				var base64Image string
+				if base64Image, err = attachment.Base64Content(); err != nil {
+					return
+				}
+				var mimeType string
+				if mimeType, err = attachment.ResolveType(); err != nil {
+					return
+				}
+				dataURL := fmt.Sprintf("data:%s;base64,%s", mimeType, base64Image)
+				url = &dataURL
+			}
+			ret.Message.MultiContent = append(ret.Message.MultiContent, goopenai.ChatMessagePart{
+				Type: goopenai.ChatMessagePartTypeImageURL,
+				ImageURL: &goopenai.ChatMessageImageURL{
+					URL: *url,
+				},
+			})
+		}
+	}
+
 	if o.Language != "" {
-		langTag, err := language.Parse(o.Language)
-		if err == nil {
+		if langTag, langErr := language.Parse(o.Language); langErr == nil {
 			ret.Language = langTag.String()
 		}
 	}
@@ -143,6 +189,6 @@ func (o *Flags) AppendMessage(message string) {
 }
 
 func (o *Flags) IsChatRequest() (ret bool) {
-	ret = o.Message != "" || o.Context != ""
+	ret = o.Message != "" || o.Context != "" || o.Session != "" || o.Pattern != "" || len(o.Attachments) > 0
 	return
 }

@@ -100,7 +100,7 @@ func TestBuildChatRequest(t *testing.T) {
 		ContextName: "test-context",
 		SessionName: "test-session",
 		PatternName: "test-pattern",
-		Message:     "test-message",
+		Messages:    "test-message",
 		Meta:        "test",
 	}
 	request := flags.BuildChatRequest("test")

@@ -9,7 +9,7 @@ type ChatRequest struct {
 	SessionName      string
 	PatternName      string
 	PatternVariables map[string]string
-	Message          string
+	Message          *goopenai.ChatCompletionMessage
 	Language         string
 	Meta             string
 }

@@ -108,21 +108,25 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	if request.Language != "" {
 		systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, request.Language)
 	}
-	userMessage := strings.TrimSpace(request.Message)
 
 	if raw {
-		// use the user role instead of the system role in raw mode
-		message := systemMessage + userMessage
-		if message != "" {
-			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleUser, Content: message})
+		if request.Message != nil {
+			if systemMessage != "" {
+				request.Message.Content = systemMessage + request.Message.Content
+			}
+		} else {
+			if systemMessage != "" {
+				request.Message = &goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage}
+			}
 		}
 	} else {
 		if systemMessage != "" {
 			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
 		}
-		if userMessage != "" {
-			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleUser, Content: userMessage})
-		}
+	}
+
+	if request.Message != nil {
+		session.Append(request.Message)
 	}
 
 	if session.IsEmpty() {

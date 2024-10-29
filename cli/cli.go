@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/core"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
@@ -213,7 +214,11 @@ func Cli(version string) (err error) {
 	}
 
 	var session *fsdb.Session
-	chatReq := currentFlags.BuildChatRequest(strings.Join(os.Args[1:], " "))
+	var chatReq *common.ChatRequest
+	if chatReq, err = currentFlags.BuildChatRequest(strings.Join(os.Args[1:], " ")); err != nil {
+		return
+	}
+
 	if chatReq.Language == "" {
 		chatReq.Language = registry.Language.DefaultLanguage.Value
 	}

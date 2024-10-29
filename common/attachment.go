@@ -1,6 +1,7 @@
 package common
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
@@ -8,6 +9,8 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"path/filepath"
 )
 
 type Attachment struct {
@@ -108,23 +111,68 @@ func (a *Attachment) Base64Content() (ret string, err error) {
 	return
 }
 
-func FromRow(row map[string]interface{}) (ret *Attachment, err error) {
-	attachment := &Attachment{}
-	if id, ok := row["id"].(string); ok {
-		attachment.ID = &id
+func NewAttachment(value string) (ret *Attachment, err error) {
+	if isURL(value) {
+		var mimeType string
+		if mimeType, err = detectMimeTypeFromURL(value); err != nil {
+			return
+		}
+		ret = &Attachment{
+			Type: &mimeType,
+			URL:  &value,
+		}
+		return
 	}
-	if typ, ok := row["type"].(string); ok {
-		attachment.Type = &typ
+
+	var absPath string
+	if absPath, err = filepath.Abs(value); err != nil {
+		return
 	}
-	if path, ok := row["path"].(string); ok {
-		attachment.Path = &path
+	if _, err = os.Stat(absPath); os.IsNotExist(err) {
+		err = fmt.Errorf("file %s does not exist", value)
+		return
 	}
-	if url, ok := row["url"].(string); ok {
-		attachment.URL = &url
+
+	var mimeType string
+	if mimeType, err = detectMimeTypeFromFile(absPath); err != nil {
+		return
 	}
-	if content, ok := row["content"].([]byte); ok {
-		attachment.Content = content
+	ret = &Attachment{
+		Type: &mimeType,
+		Path: &absPath,
 	}
-	ret = attachment
 	return
+}
+
+func detectMimeTypeFromBytes(content []byte) (string, error) {
+	mime := mimetype.Detect(content)
+	if mime == nil {
+		return "", fmt.Errorf("could not determine mimetype of stdin")
+	}
+	return mime.String(), nil
+}
+
+func detectMimeTypeFromURL(url string) (string, error) {
+	resp, err := http.Head(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	mimeType := resp.Header.Get("Content-Type")
+	if mimeType == "" {
+		return "", fmt.Errorf("could not determine mimetype of URL")
+	}
+	return mimeType, nil
+}
+
+func detectMimeTypeFromFile(path string) (string, error) {
+	mime, err := mimetype.DetectFile(path)
+	if err != nil {
+		return "", err
+	}
+	return mime.String(), nil
+}
+
+func isURL(value string) bool {
+	return bytes.Contains([]byte(value), []byte("://"))
 }
