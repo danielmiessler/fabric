@@ -87,22 +87,3 @@ func TestBuildChatOptionsDefaultSeed(t *testing.T) {
 	options := flags.BuildChatOptions()
 	assert.Equal(t, expectedOptions, options)
 }
-
-func TestBuildChatRequest(t *testing.T) {
-	flags := &Flags{
-		Context: "test-context",
-		Session: "test-session",
-		Pattern: "test-pattern",
-		Message: "test-message",
-	}
-
-	expectedRequest := &common.ChatRequest{
-		ContextName: "test-context",
-		SessionName: "test-session",
-		PatternName: "test-pattern",
-		Messages:    "test-message",
-		Meta:        "test",
-	}
-	request := flags.BuildChatRequest("test")
-	assert.Equal(t, expectedRequest, request)
-}

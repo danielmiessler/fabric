@@ -1,6 +1,7 @@
 package fsdb
 
 import (
+	goopenai "github.com/sashabaranov/go-openai"
 	"testing"
 )
 
