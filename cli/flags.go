@@ -182,15 +182,20 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 }
 
 func (o *Flags) AppendMessage(message string) {
-	if o.Message != "" {
-		o.Message = o.Message + "\n" + message
-	} else {
-		o.Message = message
-	}
+	o.Message = AppendMessage(o.Message, message)
 	return
 }
 
 func (o *Flags) IsChatRequest() (ret bool) {
-	ret = o.Message != "" || o.Context != "" || o.Session != "" || o.Pattern != "" || len(o.Attachments) > 0
+	ret = o.Message != "" || len(o.Attachments) > 0 || o.Context != "" || o.Session != "" || o.Pattern != ""
+	return
+}
+
+func AppendMessage(message string, newMessage string) (ret string) {
+	if message != "" {
+		ret = message + "\n" + newMessage
+	} else {
+		ret = newMessage
+	}
 	return
 }

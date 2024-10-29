@@ -134,6 +134,8 @@ func Cli(version string) (err error) {
 
 	// if none of the above currentFlags are set, run the initiate chat function
 
+	var messageTools string
+
 	if currentFlags.YouTube != "" {
 		if registry.YouTube.IsConfigured() == false {
 			err = fmt.Errorf("YouTube is not configured, please run the setup procedure")
@@ -158,8 +160,7 @@ func Cli(version string) (err error) {
 			if transcript, err = registry.YouTube.GrabTranscript(videoId, language); err != nil {
 				return
 			}
-
-			currentFlags.AppendMessage(transcript)
+			messageTools = AppendMessage(messageTools, transcript)
 		}
 
 		if currentFlags.YouTubeComments {
@@ -170,12 +171,12 @@ func Cli(version string) (err error) {
 
 			commentsString := strings.Join(comments, "\n")
 
-			currentFlags.AppendMessage(commentsString)
+			messageTools = AppendMessage(messageTools, commentsString)
 		}
 
 		if !currentFlags.IsChatRequest() {
 			// if the pattern flag is not set, we wanted only to grab the transcript or comments
-			fmt.Println(currentFlags.Message)
+			fmt.Println(messageTools)
 			return
 		}
 	}
@@ -187,8 +188,7 @@ func Cli(version string) (err error) {
 			if website, err = registry.Jina.ScrapeURL(currentFlags.ScrapeURL); err != nil {
 				return
 			}
-
-			currentFlags.AppendMessage(website)
+			messageTools = AppendMessage(messageTools, website)
 		}
 
 		// Check if the scrape_question flag is set and call ScrapeQuestion
@@ -198,14 +198,18 @@ func Cli(version string) (err error) {
 				return
 			}
 
-			currentFlags.AppendMessage(website)
+			messageTools = AppendMessage(messageTools, website)
 		}
 
 		if !currentFlags.IsChatRequest() {
 			// if the pattern flag is not set, we wanted only to grab the url or get the answer to the question
-			fmt.Println(currentFlags.Message)
+			fmt.Println(messageTools)
 			return
 		}
+	}
+
+	if messageTools != "" {
+		currentFlags.AppendMessage(messageTools)
 	}
 
 	var chatter *core.Chatter
