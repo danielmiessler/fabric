@@ -20,7 +20,7 @@ type Flags struct {
 	PatternVariables   map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=#role:expert -v=#points:30"`
 	Context            string            `short:"C" long:"context" description:"Choose a context from the available contexts" default:""`
 	Session            string            `long:"session" description:"Choose a session from the available sessions"`
-	Attachments        []string          `short:"i" long:"image" description:"Attachment path or URL" default:""`
+	Attachments        []string          `short:"a" long:"attachment" description:"Attachment path or URL" default:""`
 	Setup              bool              `short:"S" long:"setup" description:"Run setup for all reconfigurable parts of fabric"`
 	Temperature        float64           `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
 	TopP               float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
@@ -125,20 +125,21 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 		Meta:             Meta,
 	}
 
-	if o.Attachments == nil || len(o.Attachments) > 0 {
+	var message *goopenai.ChatCompletionMessage
+	if o.Attachments == nil || len(o.Attachments) == 0 {
 		if o.Message != "" {
-			ret.Message = &goopenai.ChatCompletionMessage{
+			message = &goopenai.ChatCompletionMessage{
 				Role:    goopenai.ChatMessageRoleUser,
 				Content: strings.TrimSpace(o.Message),
 			}
 		}
 	} else {
-		ret.Message = &goopenai.ChatCompletionMessage{
+		message = &goopenai.ChatCompletionMessage{
 			Role: goopenai.ChatMessageRoleUser,
 		}
 
 		if o.Message != "" {
-			ret.Message.MultiContent = append(ret.Message.MultiContent, goopenai.ChatMessagePart{
+			message.MultiContent = append(message.MultiContent, goopenai.ChatMessagePart{
 				Type: goopenai.ChatMessagePartTypeText,
 				Text: strings.TrimSpace(o.Message),
 			})
@@ -162,7 +163,7 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 				dataURL := fmt.Sprintf("data:%s;base64,%s", mimeType, base64Image)
 				url = &dataURL
 			}
-			ret.Message.MultiContent = append(ret.Message.MultiContent, goopenai.ChatMessagePart{
+			message.MultiContent = append(message.MultiContent, goopenai.ChatMessagePart{
 				Type: goopenai.ChatMessagePartTypeImageURL,
 				ImageURL: &goopenai.ChatMessageImageURL{
 					URL: *url,
@@ -170,6 +171,7 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 			})
 		}
 	}
+	ret.Message = message
 
 	if o.Language != "" {
 		if langTag, langErr := language.Parse(o.Language); langErr == nil {

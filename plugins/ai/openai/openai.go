@@ -122,7 +122,7 @@ func (o *Client) buildChatCompletionRequest(
 	msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions,
 ) (ret goopenai.ChatCompletionRequest) {
 	messages := lo.Map(msgs, func(message *goopenai.ChatCompletionMessage, _ int) goopenai.ChatCompletionMessage {
-		return goopenai.ChatCompletionMessage{Role: message.Role, Content: message.Content}
+		return *message
 	})
 
 	if opts.Raw {
