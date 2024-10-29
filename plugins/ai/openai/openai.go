@@ -68,7 +68,7 @@ func (o *Client) ListModels() (ret []string, err error) {
 }
 
 func (o *Client) SendStream(
-	msgs []*common.Message, opts *common.ChatOptions, channel chan string,
+	msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
 ) (err error) {
 	req := o.buildChatCompletionRequest(msgs, opts)
 	req.Stream = true
@@ -104,7 +104,7 @@ func (o *Client) SendStream(
 	return
 }
 
-func (o *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
 	req := o.buildChatCompletionRequest(msgs, opts)
 
 	var resp goopenai.ChatCompletionResponse
@@ -119,9 +119,9 @@ func (o *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.
 }
 
 func (o *Client) buildChatCompletionRequest(
-	msgs []*common.Message, opts *common.ChatOptions,
+	msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions,
 ) (ret goopenai.ChatCompletionRequest) {
-	messages := lo.Map(msgs, func(message *common.Message, _ int) goopenai.ChatCompletionMessage {
+	messages := lo.Map(msgs, func(message *goopenai.ChatCompletionMessage, _ int) goopenai.ChatCompletionMessage {
 		return goopenai.ChatCompletionMessage{Role: message.Role, Content: message.Content}
 	})
 

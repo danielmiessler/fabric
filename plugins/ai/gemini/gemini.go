@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/danielmiessler/fabric/plugins"
+	goopenai "github.com/sashabaranov/go-openai"
 	"strings"
 
 	"github.com/danielmiessler/fabric/common"
@@ -58,7 +59,7 @@ func (o *Client) ListModels() (ret []string, err error) {
 	return
 }
 
-func (o *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
 	systemInstruction, messages := toMessages(msgs)
 
 	var client *genai.Client
@@ -89,7 +90,7 @@ func (o *Client) buildModelNameFull(modelName string) string {
 	return fmt.Sprintf("%v%v", modelsNamePrefix, modelName)
 }
 
-func (o *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, channel chan string) (err error) {
+func (o *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
 	ctx := context.Background()
 	var client *genai.Client
 	if client, err = genai.NewClient(ctx, option.WithAPIKey(o.ApiKey.Value)); err != nil {
@@ -141,7 +142,7 @@ func (o *Client) extractText(response *genai.GenerateContentResponse) (ret strin
 	return
 }
 
-func toMessages(msgs []*common.Message) (systemInstruction *genai.Content, messages []genai.Part) {
+func toMessages(msgs []*goopenai.ChatCompletionMessage) (systemInstruction *genai.Content, messages []genai.Part) {
 	if len(msgs) >= 2 {
 		systemInstruction = &genai.Content{
 			Parts: []genai.Part{

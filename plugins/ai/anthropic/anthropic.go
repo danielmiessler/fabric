@@ -66,7 +66,7 @@ func (an *Client) ListModels() (ret []string, err error) {
 }
 
 func (an *Client) SendStream(
-	msgs []*common.Message, opts *common.ChatOptions, channel chan string,
+	msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
 ) (err error) {
 	ctx := context.Background()
 	req := an.buildMessagesRequest(msgs, opts)
@@ -91,7 +91,7 @@ func (an *Client) SendStream(
 	return
 }
 
-func (an *Client) Send(ctx context.Context, msgs []*common.Message, opts *common.ChatOptions) (ret string, err error) {
+func (an *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
 	req := an.buildMessagesRequest(msgs, opts)
 	req.Stream = false
 
@@ -109,7 +109,7 @@ func (an *Client) Send(ctx context.Context, msgs []*common.Message, opts *common
 	return
 }
 
-func (an *Client) buildMessagesRequest(msgs []*common.Message, opts *common.ChatOptions) (ret anthropic.MessagesRequest) {
+func (an *Client) buildMessagesRequest(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret anthropic.MessagesRequest) {
 	temperature := float32(opts.Temperature)
 	topP := float32(opts.TopP)
 
@@ -125,7 +125,7 @@ func (an *Client) buildMessagesRequest(msgs []*common.Message, opts *common.Chat
 	return
 }
 
-func (an *Client) toMessages(msgs []*common.Message) (ret []anthropic.Message) {
+func (an *Client) toMessages(msgs []*goopenai.ChatCompletionMessage) (ret []anthropic.Message) {
 	// we could call the method before calling the specific vendor
 	normalizedMessages := common.NormalizeMessages(msgs, an.defaultRequiredUserMessage)
 

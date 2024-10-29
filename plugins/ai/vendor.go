@@ -3,6 +3,7 @@ package ai
 import (
 	"context"
 	"github.com/danielmiessler/fabric/plugins"
+	goopenai "github.com/sashabaranov/go-openai"
 
 	"github.com/danielmiessler/fabric/common"
 )
@@ -10,6 +11,6 @@ import (
 type Vendor interface {
 	plugins.Plugin
 	ListModels() ([]string, error)
-	SendStream([]*common.Message, *common.ChatOptions, chan string) error
-	Send(context.Context, []*common.Message, *common.ChatOptions) (string, error)
+	SendStream([]*goopenai.ChatCompletionMessage, *common.ChatOptions, chan string) error
+	Send(context.Context, []*goopenai.ChatCompletionMessage, *common.ChatOptions) (string, error)
 }

@@ -2,8 +2,6 @@ package fsdb
 
 import (
 	"testing"
-
-	"github.com/danielmiessler/fabric/common"
 )
 
 func TestSessions_GetOrCreateSession(t *testing.T) {
@@ -27,7 +25,7 @@ func TestSessions_SaveSession(t *testing.T) {
 		StorageEntity: &StorageEntity{Dir: dir, FileExtension: ".json"},
 	}
 	sessionName := "testSession"
-	session := &Session{Name: sessionName, Messages: []*common.Message{{Content: "message1"}}}
+	session := &Session{Name: sessionName, Messages: []*goopenai.ChatCompletionMessage{{Content: "message1"}}}
 	err := sessions.SaveSession(session)
 	if err != nil {
 		t.Fatalf("failed to save session: %v", err)

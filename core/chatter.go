@@ -57,7 +57,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 		return
 	}
 
-	session.Append(&common.Message{Role: goopenai.ChatMessageRoleAssistant, Content: message})
+	session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleAssistant, Content: message})
 
 	if session.Name != "" {
 		err = o.db.Sessions.SaveSession(session)
@@ -78,7 +78,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	if request.Meta != "" {
-		session.Append(&common.Message{Role: common.ChatMessageRoleMeta, Content: request.Meta})
+		session.Append(&goopenai.ChatCompletionMessage{Role: common.ChatMessageRoleMeta, Content: request.Meta})
 	}
 
 	var contextContent string
@@ -114,14 +114,14 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		// use the user role instead of the system role in raw mode
 		message := systemMessage + userMessage
 		if message != "" {
-			session.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: message})
+			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleUser, Content: message})
 		}
 	} else {
 		if systemMessage != "" {
-			session.Append(&common.Message{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
+			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
 		}
 		if userMessage != "" {
-			session.Append(&common.Message{Role: goopenai.ChatMessageRoleUser, Content: userMessage})
+			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleUser, Content: userMessage})
 		}
 	}
 

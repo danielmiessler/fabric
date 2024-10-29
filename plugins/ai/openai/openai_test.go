@@ -11,10 +11,10 @@ import (
 
 func TestBuildChatCompletionRequestPinSeed(t *testing.T) {
 
-	var msgs []*common.Message
+	var msgs []*goopenai.ChatCompletionMessage
 
 	for i := 0; i < 2; i++ {
-		msgs = append(msgs, &common.Message{
+		msgs = append(msgs, &goopenai.ChatCompletionMessage{
 			Role:    "User",
 			Content: "My msg",
 		})
@@ -57,10 +57,10 @@ func TestBuildChatCompletionRequestPinSeed(t *testing.T) {
 
 func TestBuildChatCompletionRequestNilSeed(t *testing.T) {
 
-	var msgs []*common.Message
+	var msgs []*goopenai.ChatCompletionMessage
 
 	for i := 0; i < 2; i++ {
-		msgs = append(msgs, &common.Message{
+		msgs = append(msgs, &goopenai.ChatCompletionMessage{
 			Role:    "User",
 			Content: "My msg",
 		})

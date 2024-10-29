@@ -3,6 +3,7 @@ package fsdb
 import (
 	"fmt"
 	"github.com/danielmiessler/fabric/common"
+	goopenai "github.com/sashabaranov/go-openai"
 )
 
 type SessionsEntity struct {
@@ -36,16 +37,16 @@ func (o *SessionsEntity) SaveSession(session *Session) (err error) {
 
 type Session struct {
 	Name     string
-	Messages []*common.Message
+	Messages []*goopenai.ChatCompletionMessage
 
-	vendorMessages []*common.Message
+	vendorMessages []*goopenai.ChatCompletionMessage
 }
 
 func (o *Session) IsEmpty() bool {
 	return len(o.Messages) == 0
 }
 
-func (o *Session) Append(messages ...*common.Message) {
+func (o *Session) Append(messages ...*goopenai.ChatCompletionMessage) {
 	if o.vendorMessages != nil {
 		for _, message := range messages {
 			o.Messages = append(o.Messages, message)
@@ -56,9 +57,9 @@ func (o *Session) Append(messages ...*common.Message) {
 	}
 }
 
-func (o *Session) GetVendorMessages() (ret []*common.Message) {
+func (o *Session) GetVendorMessages() (ret []*goopenai.ChatCompletionMessage) {
 	if o.vendorMessages == nil {
-		o.vendorMessages = []*common.Message{}
+		o.vendorMessages = []*goopenai.ChatCompletionMessage{}
 		for _, message := range o.Messages {
 			o.appendVendorMessage(message)
 		}
@@ -67,13 +68,13 @@ func (o *Session) GetVendorMessages() (ret []*common.Message) {
 	return
 }
 
-func (o *Session) appendVendorMessage(message *common.Message) {
+func (o *Session) appendVendorMessage(message *goopenai.ChatCompletionMessage) {
 	if message.Role != common.ChatMessageRoleMeta {
 		o.vendorMessages = append(o.vendorMessages, message)
 	}
 }
 
-func (o *Session) GetLastMessage() (ret *common.Message) {
+func (o *Session) GetLastMessage() (ret *goopenai.ChatCompletionMessage) {
 	if len(o.Messages) > 0 {
 		ret = o.Messages[len(o.Messages)-1]
 	}

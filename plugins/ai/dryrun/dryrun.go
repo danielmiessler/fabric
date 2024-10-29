@@ -22,7 +22,7 @@ func (c *Client) ListModels() ([]string, error) {
 	return []string{"dry-run-model"}, nil
 }
 
-func (c *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, channel chan string) error {
+func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
 	output := "Dry run: Would send the following request:\n\n"
 
 	for _, msg := range msgs {
@@ -50,7 +50,7 @@ func (c *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, ch
 	return nil
 }
 
-func (c *Client) Send(_ context.Context, msgs []*common.Message, opts *common.ChatOptions) (string, error) {
+func (c *Client) Send(_ context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (string, error) {
 	fmt.Println("Dry run: Would send the following request:")
 
 	for _, msg := range msgs {
