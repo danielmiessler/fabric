@@ -217,6 +217,7 @@ Application Options:
   -v, --variable=            Values for pattern variables, e.g. -v=#role:expert -v=#points:30"
   -C, --context=             Choose a context from the available contexts
       --session=             Choose a session from the available sessions
+  -a, --attachment=         Attachment path or URL (e.g. for OpenAI image recognition messages)
   -S, --setup                Run setup for all reconfigurable parts of fabric
   -t, --temperature=         Set temperature (default: 0.7)
   -T, --topp=                Set top P (default: 0.9)

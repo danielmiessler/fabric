@@ -20,7 +20,7 @@ type Flags struct {
 	PatternVariables   map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=#role:expert -v=#points:30"`
 	Context            string            `short:"C" long:"context" description:"Choose a context from the available contexts" default:""`
 	Session            string            `long:"session" description:"Choose a session from the available sessions"`
-	Attachments        []string          `short:"a" long:"attachment" description:"Attachment path or URL"`
+	Attachments        []string          `short:"a" long:"attachment" description:"Attachment path or URL (e.g. for OpenAI image recognition messages)"`
 	Setup              bool              `short:"S" long:"setup" description:"Run setup for all reconfigurable parts of fabric"`
 	Temperature        float64           `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
 	TopP               float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
