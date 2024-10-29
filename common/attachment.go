@@ -144,14 +144,6 @@ func NewAttachment(value string) (ret *Attachment, err error) {
 	return
 }
 
-func detectMimeTypeFromBytes(content []byte) (string, error) {
-	mime := mimetype.Detect(content)
-	if mime == nil {
-		return "", fmt.Errorf("could not determine mimetype of stdin")
-	}
-	return mime.String(), nil
-}
-
 func detectMimeTypeFromURL(url string) (string, error) {
 	resp, err := http.Head(url)
 	if err != nil {
