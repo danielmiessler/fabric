@@ -83,7 +83,16 @@ func (o *Session) GetLastMessage() (ret *goopenai.ChatCompletionMessage) {
 
 func (o *Session) String() (ret string) {
 	for _, message := range o.Messages {
-		ret += fmt.Sprintf("\n--- \n[%v]\n\n%v", message.Role, message.Content)
+		ret += fmt.Sprintf("\n--- \n[%v]\n%v", message.Role, message.Content)
+		if message.MultiContent != nil {
+			for _, part := range message.MultiContent {
+				if part.Type == goopenai.ChatMessagePartTypeImageURL {
+					ret += fmt.Sprintf("\n%v: %v", part.Type, *part.ImageURL)
+				} else if part.Type == goopenai.ChatMessagePartTypeText {
+					ret += fmt.Sprintf("\n%v: %v", part.Type, part.Text)
+				}
+			}
+		}
 	}
 	return
 }
