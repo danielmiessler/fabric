@@ -191,6 +191,14 @@ func (o *Flags) IsChatRequest() (ret bool) {
 	return
 }
 
+func (o *Flags) WriteOutput(message string) (err error) {
+	fmt.Println(message)
+	if o.Output != "" {
+		err = CreateOutputFile(message, o.Output)
+	}
+	return
+}
+
 func AppendMessage(message string, newMessage string) (ret string) {
 	if message != "" {
 		ret = message + "\n" + newMessage

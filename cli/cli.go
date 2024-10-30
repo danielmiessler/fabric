@@ -175,8 +175,7 @@ func Cli(version string) (err error) {
 		}
 
 		if !currentFlags.IsChatRequest() {
-			// if the pattern flag is not set, we wanted only to grab the transcript or comments
-			fmt.Println(messageTools)
+			err = currentFlags.WriteOutput(messageTools)
 			return
 		}
 	}
@@ -202,8 +201,7 @@ func Cli(version string) (err error) {
 		}
 
 		if !currentFlags.IsChatRequest() {
-			// if the pattern flag is not set, we wanted only to grab the url or get the answer to the question
-			fmt.Println(messageTools)
+			err = currentFlags.WriteOutput(messageTools)
 			return
 		}
 	}

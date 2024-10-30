@@ -197,7 +197,7 @@ Then [set your environmental variables](#environmental-variables) as shown above
 
 The great thing about Go is that it's super easy to upgrade. Just run the same command you used to install it in the first place and you'll always get the latest version.
 ```bash
-go install -ldflags "-X main.version=$(git describe --tags --always)" github.com/danielmiessler/fabric@latest
+go install github.com/danielmiessler/fabric@latest
 ```
 
 ## Usage
@@ -217,7 +217,7 @@ Application Options:
   -v, --variable=            Values for pattern variables, e.g. -v=#role:expert -v=#points:30"
   -C, --context=             Choose a context from the available contexts
       --session=             Choose a session from the available sessions
-  -a, --attachment=         Attachment path or URL (e.g. for OpenAI image recognition messages)
+  -a, --attachment=          Attachment path or URL (e.g. for OpenAI image recognition messages)
   -S, --setup                Run setup for all reconfigurable parts of fabric
   -t, --temperature=         Set temperature (default: 0.7)
   -T, --topp=                Set top P (default: 0.9)

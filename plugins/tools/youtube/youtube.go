@@ -85,7 +85,7 @@ func (o *YouTube) GrabTranscript(videoId string, language string) (ret string, e
 	textTags := doc.FindAll("text")
 	var textBuilder strings.Builder
 	for _, textTag := range textTags {
-		textBuilder.WriteString(textTag.Text())
+		textBuilder.WriteString(strings.ReplaceAll(textTag.Text(), "&#39;", "'"))
 		textBuilder.WriteString(" ")
 		ret = textBuilder.String()
 	}
