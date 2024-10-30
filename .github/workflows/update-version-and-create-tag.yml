@@ -51,6 +51,10 @@ jobs:
           echo "" >> version.go
           echo "var version = \"${{ env.new_tag }}\"" >> version.go
 
+      - name: Update version.nix file
+        run: |
+          echo "\"${{ env.new_tag }}\"" > pkgs/fabric/version.nix
+
       - name: Commit changes
         run: |
           git add version.go

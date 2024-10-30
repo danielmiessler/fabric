@@ -49,29 +49,9 @@
           pkgs = nixpkgs.legacyPackages.${system};
           goEnv = gomod2nix.legacyPackages.${system}.mkGoEnv { pwd = ./.; };
         in
-        {
-          default = pkgs.mkShell {
-            nativeBuildInputs = [
-              pkgs.go
-              pkgs.gopls
-              pkgs.gotools
-              pkgs.go-tools
-              pkgs.goimports-reviser
-              gomod2nix.legacyPackages.${system}.gomod2nix
-              goEnv
-
-              (pkgs.writeShellScriptBin "update" ''
-                go get -u
-                go mod tidy
-                gomod2nix generate
-              '')
-            ];
-
-            shellHook = ''
-              echo -e "\033[0;32;4mHeper commands:\033[0m"
-              echo "'update' instead of 'go get -u && go mod tidy'"
-            '';
-          };
+        import ./shell.nix {
+          inherit pkgs goEnv;
+          inherit (gomod2nix.legacyPackages.${system}) gomod2nix;
         }
       );
 
@@ -81,27 +61,10 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
-          fabric = gomod2nix.legacyPackages.${system}.buildGoApplication {
-            pname = "fabric-ai";
-            version = "1.4.85";
-            src = self;
-            pwd = self;
-            modules = ./gomod2nix.toml;
-
-            ldflags = [
-              "-s"
-              "-w"
-            ];
-
-            meta = with pkgs.lib; {
-              description = "Fabric is an open-source framework for augmenting humans using AI. It provides a modular framework for solving specific problems using a crowdsourced set of AI prompts that can be used anywhere";
-              homepage = "https://github.com/danielmiessler/fabric";
-              license = licenses.mit;
-              platforms = platforms.all;
-              mainProgram = "fabric";
-            };
-          };
           default = self.packages.${system}.fabric;
+          fabric = pkgs.callPackage ./pkgs/fabric {
+            inherit (gomod2nix.legacyPackages.${system}) buildGoApplication;
+          };
         }
       );
     };
