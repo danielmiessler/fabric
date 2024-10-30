@@ -2,16 +2,17 @@ package cli
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/core"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/plugins/tools/converter"
 	"github.com/danielmiessler/fabric/restapi"
-	"os"
-	"path/filepath"
-	"strconv"
-	"strings"
 )
 
 // Cli Controls the cli. It takes in the flags and runs the appropriate functions
@@ -211,7 +212,7 @@ func Cli(version string) (err error) {
 	}
 
 	var chatter *core.Chatter
-	if chatter, err = registry.GetChatter(currentFlags.Model, currentFlags.Stream, currentFlags.DryRun); err != nil {
+	if chatter, err = registry.GetChatter(currentFlags.Model, currentFlags.ModelContextLength, currentFlags.Stream, currentFlags.DryRun); err != nil {
 		return
 	}
 

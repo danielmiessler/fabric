@@ -4,14 +4,15 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	goopenai "github.com/sashabaranov/go-openai"
 	"io"
 	"os"
 	"strings"
 
-	"github.com/danielmiessler/fabric/common"
 	"github.com/jessevdk/go-flags"
+	goopenai "github.com/sashabaranov/go-openai"
 	"golang.org/x/text/language"
+
+	"github.com/danielmiessler/fabric/common"
 )
 
 // Flags create flags struct. the users flags go into this, this will be passed to the chat struct in cli
@@ -36,6 +37,7 @@ type Flags struct {
 	Message            string            `hidden:"true" description:"Messages to send to chat"`
 	Copy               bool              `short:"c" long:"copy" description:"Copy to clipboard"`
 	Model              string            `short:"m" long:"model" description:"Choose model"`
+	ModelContextLength int               `long:"modelContextLength" description:"Model context length (only affects ollama)"`
 	Output             string            `short:"o" long:"output" description:"Output to file" default:""`
 	OutputSession      bool              `long:"output-session" description:"Output the entire session (also a temporary one) to the output file"`
 	LatestPatterns     string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
@@ -106,12 +108,13 @@ func readStdin() (string, error) {
 
 func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 	ret = &common.ChatOptions{
-		Temperature:      o.Temperature,
-		TopP:             o.TopP,
-		PresencePenalty:  o.PresencePenalty,
-		FrequencyPenalty: o.FrequencyPenalty,
-		Raw:              o.Raw,
-		Seed:             o.Seed,
+		Temperature:        o.Temperature,
+		TopP:               o.TopP,
+		PresencePenalty:    o.PresencePenalty,
+		FrequencyPenalty:   o.FrequencyPenalty,
+		Raw:                o.Raw,
+		Seed:               o.Seed,
+		ModelContextLength: o.ModelContextLength,
 	}
 	return
 }

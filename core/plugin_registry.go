@@ -3,15 +3,15 @@ package core
 import (
 	"bytes"
 	"fmt"
-	"github.com/danielmiessler/fabric/common"
-	"github.com/danielmiessler/fabric/plugins/ai/azure"
-	"github.com/danielmiessler/fabric/plugins/tools"
-	"github.com/samber/lo"
 	"strconv"
 
+	"github.com/samber/lo"
+
+	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
+	"github.com/danielmiessler/fabric/plugins/ai/azure"
 	"github.com/danielmiessler/fabric/plugins/ai/dryrun"
 	"github.com/danielmiessler/fabric/plugins/ai/gemini"
 	"github.com/danielmiessler/fabric/plugins/ai/groq"
@@ -21,6 +21,7 @@ import (
 	"github.com/danielmiessler/fabric/plugins/ai/openrouter"
 	"github.com/danielmiessler/fabric/plugins/ai/siliconcloud"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
+	"github.com/danielmiessler/fabric/plugins/tools"
 	"github.com/danielmiessler/fabric/plugins/tools/jina"
 	"github.com/danielmiessler/fabric/plugins/tools/lang"
 	"github.com/danielmiessler/fabric/plugins/tools/youtube"
@@ -164,7 +165,7 @@ func (o *PluginRegistry) Configure() (err error) {
 	return
 }
 
-func (o *PluginRegistry) GetChatter(model string, stream bool, dryRun bool) (ret *Chatter, err error) {
+func (o *PluginRegistry) GetChatter(model string, modelContextLength int, stream bool, dryRun bool) (ret *Chatter, err error) {
 	ret = &Chatter{
 		db:     o.Db,
 		Stream: stream,
@@ -172,8 +173,19 @@ func (o *PluginRegistry) GetChatter(model string, stream bool, dryRun bool) (ret
 	}
 
 	defaultModel := o.Defaults.Model.Value
+	defaultModelContextLength, err := strconv.Atoi(o.Defaults.ModelContextLength.Value)
 	defaultVendor := o.Defaults.Vendor.Value
 	vendorManager := o.VendorManager
+
+	if err != nil {
+		defaultModelContextLength = 0
+		err = nil
+	}
+
+	ret.modelContextLength = modelContextLength
+	if ret.modelContextLength == 0 {
+		ret.modelContextLength = defaultModelContextLength
+	}
 
 	if dryRun {
 		ret.vendor = dryrun.NewClient()

@@ -3,16 +3,16 @@ package ollama
 import (
 	"context"
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins"
-	goopenai "github.com/sashabaranov/go-openai"
 	"net/http"
 	"net/url"
 	"time"
 
-	"github.com/danielmiessler/fabric/common"
-	"github.com/samber/lo"
-
 	ollamaapi "github.com/ollama/ollama/api"
+	"github.com/samber/lo"
+	goopenai "github.com/sashabaranov/go-openai"
+
+	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/plugins"
 )
 
 func NewClient() (ret *Client) {
@@ -108,6 +108,10 @@ func (o *Client) createChatRequest(msgs []*goopenai.ChatCompletionMessage, opts 
 		"presence_penalty":  opts.PresencePenalty,
 		"frequency_penalty": opts.FrequencyPenalty,
 		"top_p":             opts.TopP,
+	}
+
+	if opts.ModelContextLength != 0 {
+		options["num_ctx"] = opts.ModelContextLength
 	}
 
 	ret = ollamaapi.ChatRequest{
