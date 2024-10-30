@@ -41,7 +41,10 @@ jobs:
           minor=$(echo "$latest_tag" | cut -d. -f2)
           patch=$(echo "$latest_tag" | cut -d. -f3)
           new_patch=$((patch + 1))
-          new_tag="v${major}.${minor}.${new_patch}"
+          new_version="${major}.${minor}.${new_patch}"
+          new_tag="v${new_version}"
+          echo "New version is: $new_version"
+          echo "new_version=$new_version" >> $GITHUB_ENV  # Save the new version to environment file
           echo "New tag is: $new_tag"
           echo "new_tag=$new_tag" >> $GITHUB_ENV  # Save the new tag to environment file
 
@@ -53,11 +56,12 @@ jobs:
 
       - name: Update version.nix file
         run: |
-          echo "\"${{ env.new_tag }}\"" > pkgs/fabric/version.nix
+          echo "\"${{ env.new_version }}\"" > pkgs/fabric/version.nix
 
       - name: Commit changes
         run: |
           git add version.go
+          git add pkgs/fabric/version.nix
           if ! git diff --staged --quiet; then
             git commit -m "Update version to ${{ env.new_tag }} and commit $commit_hash"
           else
