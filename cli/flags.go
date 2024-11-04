@@ -42,7 +42,8 @@ type Flags struct {
 	OutputSession      bool              `long:"output-session" description:"Output the entire session (also a temporary one) to the output file"`
 	LatestPatterns     string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
 	ChangeDefaultModel bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
-	YouTube            string            `short:"y" long:"youtube" description:"YouTube video \"URL\" to grab transcript, comments from it and send to chat"`
+	YouTube            string            `short:"y" long:"youtube" description:"YouTube video or play list \"URL\" to grab transcript, comments from it and send to chat or print it put to the console and store it in the output file"`
+	YouTubePlaylist    bool              `long:"playlist" description:"Prefer playlist over video if both ids are present in the URL"`
 	YouTubeTranscript  bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat (it used per default)."`
 	YouTubeComments    bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
 	Language           string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`

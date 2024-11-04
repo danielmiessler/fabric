@@ -150,7 +150,7 @@ func Cli(version string) (err error) {
 		var playlistId string
 		if videoId, playlistId, err = registry.YouTube.GetVideoOrPlaylistId(currentFlags.YouTube); err != nil {
 			return
-		} else if videoId == "" && playlistId != "" {
+		} else if (videoId == "" || currentFlags.YouTubePlaylist) && playlistId != "" {
 			if currentFlags.Output != "" {
 				err = registry.YouTube.FetchAndSavePlaylist(playlistId, currentFlags.Output)
 			} else {
