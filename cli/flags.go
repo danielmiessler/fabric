@@ -72,16 +72,19 @@ func Init() (ret *Flags, err error) {
 	}
 
 	info, _ := os.Stdin.Stat()
-	hasStdin := (info.Mode() & os.ModeCharDevice) == 0
+	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
 	// takes input from stdin if it exists, otherwise takes input from args (the last argument)
-	if hasStdin {
+	if pipedToStdin {
+		//fmt.Printf("piped: %v\n", args)
 		if message, err = readStdin(); err != nil {
 			return
 		}
 	} else if len(args) > 0 {
+		//fmt.Printf("no piped: %v\n", args)
 		message = args[len(args)-1]
 	} else {
+		//fmt.Printf("no data: %v\n", args)
 		message = ""
 	}
 	ret.Message = message
@@ -90,20 +93,19 @@ func Init() (ret *Flags, err error) {
 }
 
 // readStdin reads from stdin and returns the input as a string or an error
-func readStdin() (string, error) {
-	reader := bufio.NewReader(os.Stdin)
-	var input string
-	for {
-		line, err := reader.ReadString('\n')
-		if err != nil {
-			if errors.Is(err, io.EOF) {
-				break
-			}
-			return "", fmt.Errorf("error reading from stdin: %w", err)
-		}
-		input += line
+func readStdin() (ret string, err error) {
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		ret += scanner.Text() + "\n"
 	}
-	return input, nil
+	if err = scanner.Err(); err != nil {
+		if errors.Is(err, io.EOF) {
+			err = nil
+		} else {
+			err = fmt.Errorf("error reading piped message from stdin: %w", err)
+		}
+	}
+	return
 }
 
 func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {

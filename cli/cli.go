@@ -23,6 +23,8 @@ func Cli(version string) (err error) {
 		return
 	}
 
+	println("Message: " + currentFlags.Message)
+
 	if currentFlags.Version {
 		fmt.Println(version)
 		return
