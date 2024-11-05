@@ -95,18 +95,20 @@ func Init() (ret *Flags, err error) {
 
 // readStdin reads from stdin and returns the input as a string or an error
 func readStdin() (ret string, err error) {
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		ret += scanner.Text() + "\n"
-	}
-	if err = scanner.Err(); err != nil {
-		if errors.Is(err, io.EOF) {
-			err = nil
-		} else {
-			err = fmt.Errorf("error reading piped message from stdin: %w", err)
+	reader := bufio.NewReader(os.Stdin)
+	var sb strings.Builder
+	for {
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				sb.WriteString(line)
+				break
+			}
+			return "", fmt.Errorf("error reading piped message from stdin: %w", err)
 		}
+		sb.WriteString(line)
 	}
-	return
+	return sb.String(), nil
 }
 
 func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
