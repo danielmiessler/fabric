@@ -29,23 +29,33 @@
 
 ## Navigation
 
-- [Updates](#updates)
-- [What and Why](#what-and-why)
-- [Philosophy](#philosophy)
-  - [Breaking problems into components](#breaking-problems-into-components)
-  - [Too many prompts](#too-many-prompts)
-  - [The Fabric approach to prompting](#our-approach-to-prompting)
-- [Installation](#Installation)
-  - [Migration](#Migration)
-  - [Upgrading](#Upgrading)
-- [Usage](#Usage)
-- [Examples](#examples)
+- [`fabric`](#fabric)
+  - [Navigation](#navigation)
+  - [Updates](#updates)
+  - [Intro videos](#intro-videos)
+  - [What and why](#what-and-why)
+  - [Philosophy](#philosophy)
+    - [Breaking problems into components](#breaking-problems-into-components)
+    - [Too many prompts](#too-many-prompts)
+  - [Installation](#installation)
+    - [Get Latest Release Binaries](#get-latest-release-binaries)
+    - [From Source](#from-source)
+    - [Environment Variables](#environment-variables)
+    - [Setup](#setup)
+    - [Add aliases for all patterns](#add-aliases-for-all-patterns)
+    - [Migration](#migration)
+    - [Upgrading](#upgrading)
+  - [Usage](#usage)
+  - [Our approach to prompting](#our-approach-to-prompting)
+  - [Examples](#examples)
   - [Just use the Patterns](#just-use-the-patterns)
-- [Custom Patterns](#custom-patterns)
-- [Helper Apps](#helper-apps)
-- [pbpaste](#pbpaste)
-- [Meta](#meta)
-  - [Primary contributors](#primary-contributors)
+  - [Custom Patterns](#custom-patterns)
+  - [Helper Apps](#helper-apps)
+    - [`to_pdf`](#to_pdf)
+    - [`to_pdf` Installation](#to_pdf-installation)
+  - [pbpaste](#pbpaste)
+  - [Meta](#meta)
+    - [Primary contributors](#primary-contributors)
 
 <br />
 
@@ -174,6 +184,29 @@ fabric --setup
 ```
 If everything works you are good to go.
 
+### Add aliases for all patterns
+In order to add aliases for all your patterns and use them directly as commands ie. `summarize` instead of `fabric --pattern summarize`
+You can add the following to your `.zshrc` or `.bashrc` file.
+
+```bash
+# Loop through all files in the ~/.config/fabric/patterns directory
+for pattern_file in $HOME/.config/fabric/patterns/*; do
+    # Get the base name of the file (i.e., remove the directory path)
+    pattern_name=$(basename "$pattern_file")
+    
+    # Create an alias in the form: alias pattern_name="fabric --pattern pattern_name"
+    alias_command="alias $pattern_name='fabric --pattern $pattern_name'"
+    
+    # Evaluate the alias command to add it to the current shell
+    eval "$alias_command"
+done
+
+yt() {
+    local video_link="$1"
+    fabric -y "$video_link" --transcript
+}
+```
+This also creates a `yt` alias that allows you to use `yt https://www.youtube.com/watch?v=4b0iet22VIk` to get your transcripts.
 
 ### Migration
 
