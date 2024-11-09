@@ -34,7 +34,7 @@ func NewClient() (ret *Client) {
 	ret.models = []string{
 		string(anthropic.ModelClaude3Haiku20240307), string(anthropic.ModelClaude3Opus20240229),
 		string(anthropic.ModelClaude3Opus20240229), string(anthropic.ModelClaude2Dot0), string(anthropic.ModelClaude2Dot1),
-		string(anthropic.ModelClaudeInstant1Dot2), "claude-3-5-sonnet-20240620",
+		string(anthropic.ModelClaudeInstant1Dot2), "claude-3-5-sonnet-latest", "claude-3-5-haiku-latest",
 	}
 
 	return
