@@ -2,14 +2,17 @@ package youtube
 
 import (
 	"context"
+	"encoding/csv"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"net/url"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/anaskhan96/soup"
 	"github.com/danielmiessler/fabric/plugins"
@@ -37,38 +40,56 @@ type YouTube struct {
 	*plugins.PluginBase
 	ApiKey *plugins.SetupQuestion
 
-	service *youtube.Service
+	normalizeRegex *regexp.Regexp
+	service        *youtube.Service
 }
 
 func (o *YouTube) initService() (err error) {
 	if o.service == nil {
+		o.normalizeRegex = regexp.MustCompile(`[^a-zA-Z0-9]+`)
 		ctx := context.Background()
 		o.service, err = youtube.NewService(ctx, option.WithAPIKey(o.ApiKey.Value))
 	}
 	return
 }
 
-func (o *YouTube) GetVideoId(url string) (ret string, err error) {
+func (o *YouTube) GetVideoOrPlaylistId(url string) (videoId string, playlistId string, err error) {
 	if err = o.initService(); err != nil {
 		return
 	}
 
-	pattern := `(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})`
-	re := regexp.MustCompile(pattern)
-	match := re.FindStringSubmatch(url)
-	if len(match) > 1 {
-		ret = match[1]
-	} else {
-		err = fmt.Errorf("invalid YouTube URL, can't get video ID")
+	// Video ID pattern
+	videoPattern := `(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:s(?:horts)\/)|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]*)`
+	videoRe := regexp.MustCompile(videoPattern)
+	videoMatch := videoRe.FindStringSubmatch(url)
+	if len(videoMatch) > 1 {
+		videoId = videoMatch[1]
+	}
+
+	// Playlist ID pattern
+	playlistPattern := `[?&]list=([a-zA-Z0-9_-]+)`
+	playlistRe := regexp.MustCompile(playlistPattern)
+	playlistMatch := playlistRe.FindStringSubmatch(url)
+	if len(playlistMatch) > 1 {
+		playlistId = playlistMatch[1]
+	}
+
+	if videoId == "" && playlistId == "" {
+		err = fmt.Errorf("invalid YouTube URL, can't get video or playlist ID: '%s'", url)
 	}
 	return
 }
 
 func (o *YouTube) GrabTranscriptForUrl(url string, language string) (ret string, err error) {
 	var videoId string
-	if videoId, err = o.GetVideoId(url); err != nil {
+	var playlistId string
+	if videoId, playlistId, err = o.GetVideoOrPlaylistId(url); err != nil {
+		return
+	} else if videoId == "" && playlistId != "" {
+		err = fmt.Errorf("URL is a playlist, not a video")
 		return
 	}
+
 	return o.GrabTranscript(videoId, language)
 }
 
@@ -172,7 +193,11 @@ func (o *YouTube) GrabDurationForUrl(url string) (ret int, err error) {
 	}
 
 	var videoId string
-	if videoId, err = o.GetVideoId(url); err != nil {
+	var playlistId string
+	if videoId, playlistId, err = o.GetVideoOrPlaylistId(url); err != nil {
+		return
+	} else if videoId == "" && playlistId != "" {
+		err = fmt.Errorf("URL is a playlist, not a video")
 		return
 	}
 	return o.GrabDuration(videoId)
@@ -203,7 +228,11 @@ func (o *YouTube) GrabDuration(videoId string) (ret int, err error) {
 
 func (o *YouTube) Grab(url string, options *Options) (ret *VideoInfo, err error) {
 	var videoId string
-	if videoId, err = o.GetVideoId(url); err != nil {
+	var playlistId string
+	if videoId, playlistId, err = o.GetVideoOrPlaylistId(url); err != nil {
+		return
+	} else if videoId == "" && playlistId != "" {
+		err = fmt.Errorf("URL is a playlist, not a video")
 		return
 	}
 
@@ -230,6 +259,109 @@ func (o *YouTube) Grab(url string, options *Options) (ret *VideoInfo, err error)
 		}
 	}
 	return
+}
+
+// FetchPlaylistVideos fetches all videos from a YouTube playlist.
+func (o *YouTube) FetchPlaylistVideos(playlistID string) (ret []*VideoMeta, err error) {
+	if err = o.initService(); err != nil {
+		return
+	}
+
+	nextPageToken := ""
+	for {
+		call := o.service.PlaylistItems.List([]string{"snippet"}).PlaylistId(playlistID).MaxResults(50)
+		if nextPageToken != "" {
+			call = call.PageToken(nextPageToken)
+		}
+
+		var response *youtube.PlaylistItemListResponse
+		if response, err = call.Do(); err != nil {
+			return
+		}
+
+		for _, item := range response.Items {
+			videoID := item.Snippet.ResourceId.VideoId
+			title := item.Snippet.Title
+			ret = append(ret, &VideoMeta{videoID, title, o.normalizeFileName(title)})
+		}
+
+		nextPageToken = response.NextPageToken
+		if nextPageToken == "" {
+			break
+		}
+
+		time.Sleep(1 * time.Second) // Pause to respect API rate limit
+	}
+	return
+}
+
+// SaveVideosToCSV saves the list of videos to a CSV file.
+func (o *YouTube) SaveVideosToCSV(filename string, videos []*VideoMeta) (err error) {
+	var file *os.File
+	if file, err = os.Create(filename); err != nil {
+		return
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	// Write headers
+	if err = writer.Write([]string{"VideoID", "Title"}); err != nil {
+		return
+	}
+
+	// Write video data
+	for _, record := range videos {
+		if err = writer.Write([]string{record.Id, record.Title}); err != nil {
+			return
+		}
+	}
+
+	return
+}
+
+// FetchAndSavePlaylist fetches all videos in a playlist and saves them to a CSV file.
+func (o *YouTube) FetchAndSavePlaylist(playlistID, filename string) (err error) {
+	var videos []*VideoMeta
+	if videos, err = o.FetchPlaylistVideos(playlistID); err != nil {
+		err = fmt.Errorf("error fetching playlist videos: %v", err)
+		return
+	}
+
+	if err = o.SaveVideosToCSV(filename, videos); err != nil {
+		err = fmt.Errorf("error saving videos to CSV: %v", err)
+		return
+	}
+
+	fmt.Println("Playlist saved to", filename)
+	return
+}
+
+func (o *YouTube) FetchAndPrintPlaylist(playlistID string) (err error) {
+	var videos []*VideoMeta
+	if videos, err = o.FetchPlaylistVideos(playlistID); err != nil {
+		err = fmt.Errorf("error fetching playlist videos: %v", err)
+		return
+	}
+
+	fmt.Printf("Playlist: %s\n", playlistID)
+	fmt.Printf("VideoId: Title\n")
+	for _, video := range videos {
+		fmt.Printf("%s: %s\n", video.Id, video.Title)
+	}
+	return
+}
+
+func (o *YouTube) normalizeFileName(name string) string {
+	return o.normalizeRegex.ReplaceAllString(name, "_")
+
+}
+
+type VideoMeta struct {
+	Id              string
+	Title           string
+	TitleNormalized string
 }
 
 type Options struct {

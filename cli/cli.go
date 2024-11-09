@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"github.com/danielmiessler/fabric/plugins/tools/youtube"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -144,37 +145,38 @@ func Cli(version string) (err error) {
 		}
 
 		var videoId string
-		if videoId, err = registry.YouTube.GetVideoId(currentFlags.YouTube); err != nil {
+		var playlistId string
+		if videoId, playlistId, err = registry.YouTube.GetVideoOrPlaylistId(currentFlags.YouTube); err != nil {
+			return
+		} else if (videoId == "" || currentFlags.YouTubePlaylist) && playlistId != "" {
+			if currentFlags.Output != "" {
+				err = registry.YouTube.FetchAndSavePlaylist(playlistId, currentFlags.Output)
+			} else {
+				var videos []*youtube.VideoMeta
+				if videos, err = registry.YouTube.FetchPlaylistVideos(playlistId); err != nil {
+					err = fmt.Errorf("error fetching playlist videos: %v", err)
+					return
+				}
+
+				for _, video := range videos {
+					var message string
+					if message, err = processYoutubeVideo(currentFlags, registry, video.Id); err != nil {
+						return
+					}
+
+					if !currentFlags.IsChatRequest() {
+						if err = WriteOutput(message, fmt.Sprintf("%v.md", video.TitleNormalized)); err != nil {
+							return
+						}
+					} else {
+						messageTools = AppendMessage(messageTools, message)
+					}
+				}
+			}
 			return
 		}
 
-		if !currentFlags.YouTubeComments || currentFlags.YouTubeTranscript {
-			var transcript string
-			var language = "en"
-			if currentFlags.Language != "" || registry.Language.DefaultLanguage.Value != "" {
-				if currentFlags.Language != "" {
-					language = currentFlags.Language
-				} else {
-					language = registry.Language.DefaultLanguage.Value
-				}
-			}
-			if transcript, err = registry.YouTube.GrabTranscript(videoId, language); err != nil {
-				return
-			}
-			messageTools = AppendMessage(messageTools, transcript)
-		}
-
-		if currentFlags.YouTubeComments {
-			var comments []string
-			if comments, err = registry.YouTube.GrabComments(videoId); err != nil {
-				return
-			}
-
-			commentsString := strings.Join(comments, "\n")
-
-			messageTools = AppendMessage(messageTools, commentsString)
-		}
-
+		messageTools, err = processYoutubeVideo(currentFlags, registry, videoId)
 		if !currentFlags.IsChatRequest() {
 			err = currentFlags.WriteOutput(messageTools)
 			return
@@ -251,6 +253,46 @@ func Cli(version string) (err error) {
 		} else {
 			err = CreateOutputFile(result, currentFlags.Output)
 		}
+	}
+	return
+}
+
+func processYoutubeVideo(
+	flags *Flags, registry *core.PluginRegistry, videoId string) (message string, err error) {
+
+	if !flags.YouTubeComments || flags.YouTubeTranscript {
+		var transcript string
+		var language = "en"
+		if flags.Language != "" || registry.Language.DefaultLanguage.Value != "" {
+			if flags.Language != "" {
+				language = flags.Language
+			} else {
+				language = registry.Language.DefaultLanguage.Value
+			}
+		}
+		if transcript, err = registry.YouTube.GrabTranscript(videoId, language); err != nil {
+			return
+		}
+		message = AppendMessage(message, transcript)
+	}
+
+	if flags.YouTubeComments {
+		var comments []string
+		if comments, err = registry.YouTube.GrabComments(videoId); err != nil {
+			return
+		}
+
+		commentsString := strings.Join(comments, "\n")
+
+		message = AppendMessage(message, commentsString)
+	}
+	return
+}
+
+func WriteOutput(message string, outputFile string) (err error) {
+	fmt.Println(message)
+	if outputFile != "" {
+		err = CreateOutputFile(message, outputFile)
 	}
 	return
 }

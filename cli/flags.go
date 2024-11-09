@@ -42,7 +42,8 @@ type Flags struct {
 	OutputSession      bool              `long:"output-session" description:"Output the entire session (also a temporary one) to the output file"`
 	LatestPatterns     string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
 	ChangeDefaultModel bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
-	YouTube            string            `short:"y" long:"youtube" description:"YouTube video \"URL\" to grab transcript, comments from it and send to chat"`
+	YouTube            string            `short:"y" long:"youtube" description:"YouTube video or play list \"URL\" to grab transcript, comments from it and send to chat or print it put to the console and store it in the output file"`
+	YouTubePlaylist    bool              `long:"playlist" description:"Prefer playlist over video if both ids are present in the URL"`
 	YouTubeTranscript  bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat (it used per default)."`
 	YouTubeComments    bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
 	Language           string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
@@ -72,16 +73,19 @@ func Init() (ret *Flags, err error) {
 	}
 
 	info, _ := os.Stdin.Stat()
-	hasStdin := (info.Mode() & os.ModeCharDevice) == 0
+	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
 	// takes input from stdin if it exists, otherwise takes input from args (the last argument)
-	if hasStdin {
+	if pipedToStdin {
+		//fmt.Printf("piped: %v\n", args)
 		if message, err = readStdin(); err != nil {
 			return
 		}
 	} else if len(args) > 0 {
+		//fmt.Printf("no piped: %v\n", args)
 		message = args[len(args)-1]
 	} else {
+		//fmt.Printf("no data: %v\n", args)
 		message = ""
 	}
 	ret.Message = message
@@ -90,20 +94,21 @@ func Init() (ret *Flags, err error) {
 }
 
 // readStdin reads from stdin and returns the input as a string or an error
-func readStdin() (string, error) {
+func readStdin() (ret string, err error) {
 	reader := bufio.NewReader(os.Stdin)
-	var input string
+	var sb strings.Builder
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil {
 			if errors.Is(err, io.EOF) {
+				sb.WriteString(line)
 				break
 			}
-			return "", fmt.Errorf("error reading from stdin: %w", err)
+			return "", fmt.Errorf("error reading piped message from stdin: %w", err)
 		}
-		input += line
+		sb.WriteString(line)
 	}
-	return input, nil
+	return sb.String(), nil
 }
 
 func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
