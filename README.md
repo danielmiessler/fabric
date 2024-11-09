@@ -215,6 +215,9 @@ for pattern_file in ~/.config/fabric/patterns/*; do
     # Get the base name of the file (i.e., remove the directory path)
     pattern_name=$(basename "$pattern_file")
 
+    # Unalias any existing alias with the same name
+    unalias "$pattern_name" 2>/dev/null
+
     # Define a function dynamically for each pattern
     eval "
     $pattern_name() {
