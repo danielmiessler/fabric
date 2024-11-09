@@ -11,7 +11,6 @@ import (
 	"github.com/danielmiessler/fabric/common"
 	"github.com/samber/lo"
 	"github.com/sashabaranov/go-openai"
-	goopenai "github.com/sashabaranov/go-openai"
 )
 
 func NewClient() (ret *Client) {
@@ -68,7 +67,7 @@ func (o *Client) ListModels() (ret []string, err error) {
 }
 
 func (o *Client) SendStream(
-	msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
+	msgs []*openai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
 ) (err error) {
 	req := o.buildChatCompletionRequest(msgs, opts)
 	req.Stream = true
@@ -104,10 +103,10 @@ func (o *Client) SendStream(
 	return
 }
 
-func (o *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) Send(ctx context.Context, msgs []*openai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
 	req := o.buildChatCompletionRequest(msgs, opts)
 
-	var resp goopenai.ChatCompletionResponse
+	var resp openai.ChatCompletionResponse
 	if resp, err = o.ApiClient.CreateChatCompletion(ctx, req); err != nil {
 		return
 	}
@@ -119,20 +118,20 @@ func (o *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessag
 }
 
 func (o *Client) buildChatCompletionRequest(
-	msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions,
-) (ret goopenai.ChatCompletionRequest) {
-	messages := lo.Map(msgs, func(message *goopenai.ChatCompletionMessage, _ int) goopenai.ChatCompletionMessage {
+	msgs []*openai.ChatCompletionMessage, opts *common.ChatOptions,
+) (ret openai.ChatCompletionRequest) {
+	messages := lo.Map(msgs, func(message *openai.ChatCompletionMessage, _ int) openai.ChatCompletionMessage {
 		return *message
 	})
 
 	if opts.Raw {
-		ret = goopenai.ChatCompletionRequest{
+		ret = openai.ChatCompletionRequest{
 			Model:    opts.Model,
 			Messages: messages,
 		}
 	} else {
 		if opts.Seed == 0 {
-			ret = goopenai.ChatCompletionRequest{
+			ret = openai.ChatCompletionRequest{
 				Model:            opts.Model,
 				Temperature:      float32(opts.Temperature),
 				TopP:             float32(opts.TopP),
@@ -141,7 +140,7 @@ func (o *Client) buildChatCompletionRequest(
 				Messages:         messages,
 			}
 		} else {
-			ret = goopenai.ChatCompletionRequest{
+			ret = openai.ChatCompletionRequest{
 				Model:            opts.Model,
 				Temperature:      float32(opts.Temperature),
 				TopP:             float32(opts.TopP),

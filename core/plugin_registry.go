@@ -38,10 +38,13 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry) {
 		Jina:           jina.NewClient(),
 	}
 
-	ret.Defaults = tools.NeeDefaults(ret.VendorManager.GetModels)
+	ret.Defaults = tools.NeeDefaults(ret.GetModels)
 
 	ret.VendorsAll.AddVendors(openai.NewClient(), ollama.NewClient(), azure.NewClient(), groq.NewClient(),
-		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient())
+		gemini.NewClient(),
+		//gemini_openai.NewClient(),
+		anthropic.NewClient(), siliconcloud.NewClient(),
+		openrouter.NewClient(), mistral.NewClient())
 	_ = ret.Configure()
 
 	return
@@ -126,7 +129,8 @@ func (o *PluginRegistry) Setup() (err error) {
 			}
 
 			if _, ok := o.VendorManager.VendorsByName[plugin.GetName()]; !ok {
-				if vendor, ok := plugin.(ai.Vendor); ok {
+				var vendor ai.Vendor
+				if vendor, ok = plugin.(ai.Vendor); ok {
 					o.VendorManager.AddVendors(vendor)
 				}
 			}
@@ -148,13 +152,24 @@ func (o *PluginRegistry) SetupVendor(vendorName string) (err error) {
 	return
 }
 
-// Configure buildClient VendorsController based on the environment variables
-func (o *PluginRegistry) Configure() (err error) {
+func (o *PluginRegistry) ConfigureVendors() {
+	o.VendorManager.Clear()
 	for _, vendor := range o.VendorsAll.Vendors {
 		if vendorErr := vendor.Configure(); vendorErr == nil {
 			o.VendorManager.AddVendors(vendor)
 		}
 	}
+}
+
+func (o *PluginRegistry) GetModels() (ret *ai.VendorsModels, err error) {
+	o.ConfigureVendors()
+	ret, err = o.VendorManager.GetModels()
+	return
+}
+
+// Configure buildClient VendorsController based on the environment variables
+func (o *PluginRegistry) Configure() (err error) {
+	o.ConfigureVendors()
 	_ = o.Defaults.Configure()
 	_ = o.PatternsLoader.Configure()
 
