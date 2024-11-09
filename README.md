@@ -52,24 +52,9 @@
 ## Updates
 
 > [!NOTE]
-September 15, 2024 — Lots of new stuff!
-> * Fabric now supports calling the new `o1-preview` model using the `-r` switch (which stands for raw. Normal queries won't work with `o1-preview` because they disabled System access and don't allow us to set `Temperature`.
-> * We have early support for Raycast! Under the `/patterns` directory there's a `raycast` directory with scripts that can be called from Raycast. If you add a scripts directory within Raycast and point it to your `~/.config/fabric/patterns/raycast` directory, you'll then be able to 1) invoke Raycast, type the name of the script, and then 2) paste in the content to be passed, and the results will return in Raycast. There's currently only one script in there but I am (Daniel) adding more.
-> * **Go Migration: The following command line options were changed during the migration to Go:**
-> * You now need to use the -c option instead of -C to copy the result to the clipboard.
-> * You now need to use the -s option instead of -S to stream results in realtime.
-> * The following command line options have been removed `--agents` (-a), `--gui`, `--clearsession`, `--remoteOllamaServer`, and `--sessionlog`
-> * You can now use (-S) to configure an Ollama server.
-> * **We're working on a GUI rewrite in Go as well**
+November 8, 2024
+> * **Multimodal Support**: You can now us `-a` (attachment) for Multimodal submissions to OpenAI models that support it. Example: `fabric -a https://path/to/image "Give me a description of this image."`
 
-## Intro videos
-
-Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#Installation) below.
-
-* [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
-* [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
-* [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
-* [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
 
 ## What and why
 
@@ -80,6 +65,15 @@ Since the start of 2023 and GenAI we've seen a massive number of AI applications
 </div>
 
 Fabric was created to address this by enabling everyone to granularly apply AI to everyday challenges.
+
+## Intro videos
+
+Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#Installation) below.
+
+* [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
+* [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
+* [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
+* [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
 
 ## Philosophy
 
