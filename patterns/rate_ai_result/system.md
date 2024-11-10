@@ -46,6 +46,8 @@ FINAL SCORE: 70.3
 
 # OUTPUT INSTRUCTIONS
 
+- Confirm that you were able to break apart the input, the AI instructions, and the AI results as a section called INPUT UNDERSTANDING STATUS and a value of either YES or NO.
+
 - Give the final 1-100 rating in a section called RATING.
 
 - Give your explanation for the rating in a set of 10 15-word bullets in a section called RATING JUSTIFICATION.
