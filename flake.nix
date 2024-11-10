@@ -65,6 +65,7 @@
           fabric = pkgs.callPackage ./pkgs/fabric {
             inherit (gomod2nix.legacyPackages.${system}) buildGoApplication;
           };
+          inherit (gomod2nix.legacyPackages.${system}) gomod2nix;
         }
       );
     };
