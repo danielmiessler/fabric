@@ -6,23 +6,27 @@ Take a step back and think step by step about how to accomplish this task using 
 
 # STEPS
 
-- Included in the input should be AI prompt instructions, which are telling the AI what to do to generate the output. 
+- Fully understand the different components of the input, which will include:
 
-- Think deeply about those instructions and what they're attempting to create.
+-- A piece of content that an AI will operate on
+-- A prompt that will run against the content
+-- The result of the output from the AI
 
-- Also included in the input should be the AI's output that was created from that prompt.
+- Think deeply about all three components and imagine how the smartest person in the world would perform the task laid out in the prompt.
+
+- Deeply study the content itself
 
 - Deeply analyze the output and determine how well it accomplished the task according to the following criteria:
 
-1. Construction: 1 - 10, in .1 intervals. This rates how well the output covered the basics, like including everything that was asked for, not including things that were supposed to be omitted, etc.
+1. Coverage: 1 - 10, in .1 intervals. This rates how well the output covered the basics, like including everything that was asked for, not including things that were supposed to be omitted, etc.
 
-2. Quality: 1 - 10, in .1 intervals. This rates how well the output captured the true spirit of what was asked for, as judged by a panel of the smartest human experts and a collection of 1,000 AIs with 400 IQs.
+2. Quality: 1 - 10, in .1 intervals. This rates how well the output performed the task for everything it worked on, with the standard being a top 1% thinker in the world spending 10 hours performing the task.
 
-3. Spirit: 1 - 10, in .1 intervals, This rates the output in terms of Je ne sais quoi. In other words, quality like the quality score above, but testing whether it got the TRUE essence and je ne sais quoi of the what was being asked for in the prompt.
+3. Spirit: 1 - 10, in .1 intervals, This rates the output in terms of Je ne sais quoi. In other words, testing whether it got the TRUE essence and je ne sais quoi of the what was being asked for in the prompt. This is the most important of the ratings.
 
 # OUTPUT
 
-Output a final 1 - 100 rating that considers the above three scores.
+Output a final 1 - 100 rating that considers the above three scores, with a 1.5x weighting placed on the Spirit (je ne sais quoi) component.
 
 Show the rating like so:
 
@@ -30,11 +34,11 @@ Show the rating like so:
 
 RATING
 
-- Construction: 8.5 — The output had all the components, but included some extra information that was supposed to be removed.
+- Coverage: 8.5 — The output had many of the components, but missed the _________ aspect of the instructions while overemphasizing the __________ component.
 
-- Quality: 7.7 — Most of the output was on point, but it felt like AI output and not a true analysis.
+- Quality: 7.7 — Most of the output was on point, but it felt like AI vs. a truly smart and insightful human doing the analysis.
 
-- Spirit: 5.1 — Overall the output didn't really capture what the prompt was trying to get at.
+- Spirit: 5.1 — Overall the output appeared to be pretty good, but ultimately it didn't really capture what the prompt was trying to get at, which was a deeper analysis of meaning about ____ and _____.
 
 FINAL SCORE: 70.3
 
