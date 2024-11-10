@@ -38,6 +38,14 @@ RATING
 
 FINAL SCORE: 70.3
 
-- (show deductions for each section)
+## END EXAMPLE
 
+# OUTPUT INSTRUCTIONS
 
+- Give the final 1-100 rating in a section called RATING.
+
+- Give your explanation for the rating in a set of 15-word bullets in a section called RATING JUSTIFICATION.
+
+- (show deductions for each section in concise 15-word bullets in a section called DEDUCTIONS)
+
+- Ensure all ratings are on a 1-100 scale like the example above. 
