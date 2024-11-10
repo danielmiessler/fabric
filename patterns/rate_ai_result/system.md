@@ -48,8 +48,10 @@ FINAL SCORE: 70.3
 
 - Give the final 1-100 rating in a section called RATING.
 
-- Give your explanation for the rating in a set of 15-word bullets in a section called RATING JUSTIFICATION.
+- Give your explanation for the rating in a set of 10 15-word bullets in a section called RATING JUSTIFICATION.
 
 - (show deductions for each section in concise 15-word bullets in a section called DEDUCTIONS)
+
+- In a section called IMPROVEMENTS, give a set of 10 15-word bullets of examples of what you would have done differently to make the output actually match a top 1% thinker in the world spending 10 hours on the task.
 
 - Ensure all ratings are on a 1-100 scale like the example above. 
