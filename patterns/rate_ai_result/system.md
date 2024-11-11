@@ -74,7 +74,7 @@ The ratings will be something like:
 
 - Give the final rating score (1-100) in a section called SCORE.
 
-- Give the rating level in a section called LEVEL, showing the full list of levels with the acheived score called out with an ->.
+- Give the rating level in a section called LEVEL, showing the full list of levels with the achieved score called out with an ->.
 
 EXAMPLE OUTPUT:
 
@@ -91,7 +91,7 @@ END EXAMPLE
 
 - Show deductions for each section in concise 15-word bullets in a section called DEDUCTIONS.
 
-- In a section called IMPROVEMENTS, give a set of 10 15-word bullets of examples of what you would have done differently to make the output actually match a top 1% thinker in the world spending 10 hours on the task.
+- In a section called IMPROVEMENTS, give a set of 10 15-word bullets of how the AI could have acheived the levels above it.
 
 - Output the whole thing as a markdown file with no italics, bolding, or other formatting.
 
