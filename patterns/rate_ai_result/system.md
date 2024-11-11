@@ -47,14 +47,14 @@ You are an expert AI researcher and polymath scientist with a 2,129 IQ. You spec
 
 The ratings will be something like:
 
-95-100: Superhuman Level
-85-94: World-class Human
-75-84: Ph.D Level
-65-74: Master's Level
-55-64: Bachelor's Level
-45-54: High School Level
-35-44: Secondary Education Level
-1-34: Uneducated Human
+90-100: Superhuman Level
+80-89: World-class Human
+70-79: Ph.D Level
+60-69: Master's Level
+50-59: Bachelor's Level
+40-49: High School Level
+30-39: Secondary Education Level
+1-29: Uneducated Human
 
 # OUTPUT INSTRUCTIONS
 
