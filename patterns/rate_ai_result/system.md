@@ -62,9 +62,9 @@ The ratings will be something like:
 
 - Give the final rating score (1-100) in a section called SCORE.
 
-- Give the rating level in a section called LEVEL.
+- Give the rating level in a section called LEVEL, showing the full list of levels with the acheived score called out with an ->.
 
-EXAMPLE
+EXAMPLE OUTPUT:
 
     Superhuman Level (Beyond the best human in the world)
     World-class Human (Top 100 human in the world)
