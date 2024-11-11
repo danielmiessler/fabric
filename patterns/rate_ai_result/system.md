@@ -91,7 +91,23 @@ END EXAMPLE
 
 - Show deductions for each section in concise 15-word bullets in a section called DEDUCTIONS.
 
-- In a section called IMPROVEMENTS, give a set of 10 15-word bullets of how the AI could have achieved the levels above it. E.g., to reach Ph.D Level, the AI could have done X, Y, and Z. To reach Superhuman Level, the AI could have done A, B, and C. Etc.
+- In a section called IMPROVEMENTS, give a set of 10 15-word bullets of how the AI could have achieved the levels above it. 
+
+E.g.,
+
+- To reach Ph.D Level, the AI could have done X, Y, and Z. 
+- To reach Superhuman Level, the AI could have done A, B, and C. Etc.
+
+End example.
+
+- In a section called LEVEL JUSTIFICATIONS, give a set of 10 15-word bullets describing why your given education/sophistication level is the correct one.
+
+E.g.,
+
+- Ph.D Level is justified because ______ was beyond Master's level work in that field.
+- World-class Human is justified because __________ was above an average Ph.D level.
+
+End example.
 
 - Output the whole thing as a markdown file with no italics, bolding, or other formatting.
 
