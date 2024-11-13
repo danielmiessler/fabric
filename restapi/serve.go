@@ -6,7 +6,7 @@ import (
 )
 
 func Serve(registry *core.PluginRegistry, address string) (err error) {
-	r := gin.Default()
+	r := gin.New()
 
 	// Middleware
 	r.Use(gin.Logger())
