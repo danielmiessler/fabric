@@ -221,9 +221,15 @@ func (o *PluginRegistry) GetChatter(model string, modelContextLength int, stream
 	}
 
 	if ret.vendor == nil {
+		var errMsg string
+		if defaultModel == "" || defaultVendor == "" {
+			errMsg = "Please run, fabric --setup, and select default model and vendor."
+		} else {
+			errMsg = "could not find vendor."
+		}
 		err = fmt.Errorf(
-			"could not find vendor.\n Model = %s\n Model = %s\n Vendor = %s",
-			model, defaultModel, defaultVendor)
+			" Requested Model = %s\n Default Model = %s\n Default Vendor = %s.\n\n%s",
+			model, defaultModel, defaultVendor, errMsg)
 		return
 	}
 	return
