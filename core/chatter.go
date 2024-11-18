@@ -98,19 +98,36 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		contextContent = ctx.Content
 	}
 
-	var patternContent string
-	if request.PatternName != "" {
-		var pattern *fsdb.Pattern
-		if pattern, err = o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables); err != nil {
-			err = fmt.Errorf("could not find pattern %s: %v", request.PatternName, err)
-			return
-		}
 
-		if pattern.Pattern != "" {
-			patternContent = pattern.Pattern
-		}
+
+	var patternContent string
+	var pattern *fsdb.Pattern
+	if request.PatternName != "" {
+			pathStr := request.PatternName
+			// First determine if this looks like a file path at all
+			isFilePath := strings.HasPrefix(pathStr, "\\") || 
+										strings.HasPrefix(pathStr, "/") ||
+										strings.HasPrefix(pathStr, "~") ||
+										strings.HasPrefix(pathStr, ".")
+			if isFilePath {
+				// Use the new file-based pattern method
+				if pattern, err = o.db.Patterns.GetFromFile(pathStr, request.PatternVariables); err != nil {
+						err = fmt.Errorf("could not read pattern file %s: %v", pathStr, err)
+						return
+				}
+			} else {
+					// Existing database lookup
+					if pattern, err = o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables); err != nil {
+							err = fmt.Errorf("could not find pattern %s: %v", request.PatternName, err)
+							return
+					}
+			}
+			if pattern.Pattern != "" {
+					patternContent = pattern.Pattern
+			}
 	}
 
+	
 	systemMessage := strings.TrimSpace(contextContent) + strings.TrimSpace(patternContent)
 	if request.Language != "" {
 		systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, request.Language)

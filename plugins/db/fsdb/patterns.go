@@ -66,3 +66,34 @@ type Pattern struct {
 	Description string
 	Pattern     string
 }
+
+// GetFromFile reads a pattern from a file path and applies variables if provided
+// this provides an ad-hoc way to use a pattern
+func (o *PatternsEntity) GetFromFile(pathStr string, variables map[string]string) (ret *Pattern, err error) {
+  // Handle home directory expansion
+  if strings.HasPrefix(pathStr, "~/") {
+			var homedir string
+			if homedir, err = os.UserHomeDir(); err != nil {
+					return nil, fmt.Errorf("could not get home directory: %v", err)
+			}
+			pathStr = filepath.Join(homedir, pathStr[2:])
+	}
+
+
+	var content []byte
+	if content, err = os.ReadFile(pathStr); err != nil {
+			return nil, fmt.Errorf("could not read pattern file %s: %v", pathStr, err)
+	}
+
+	ret = &Pattern{
+			Name:    pathStr,
+			Pattern: string(content),
+	}
+
+	if variables != nil && len(variables) > 0 {
+			for variableName, value := range variables {
+					ret.Pattern = strings.ReplaceAll(ret.Pattern, variableName, value)
+			}
+	}
+	return
+}
