@@ -72,6 +72,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	return
 }
 
+
 func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *fsdb.Session, err error) {
 	if request.SessionName != "" {
 		var sess *fsdb.Session
@@ -99,32 +100,13 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 
-
 	var patternContent string
-	var pattern *fsdb.Pattern
 	if request.PatternName != "" {
-			pathStr := request.PatternName
-			// First determine if this looks like a file path at all
-			isFilePath := strings.HasPrefix(pathStr, "\\") || 
-										strings.HasPrefix(pathStr, "/") ||
-										strings.HasPrefix(pathStr, "~") ||
-										strings.HasPrefix(pathStr, ".")
-			if isFilePath {
-				// Use the new file-based pattern method
-				if pattern, err = o.db.Patterns.GetFromFile(pathStr, request.PatternVariables); err != nil {
-						err = fmt.Errorf("could not read pattern file %s: %v", pathStr, err)
-						return
-				}
-			} else {
-					// Existing database lookup
-					if pattern, err = o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables); err != nil {
-							err = fmt.Errorf("could not find pattern %s: %v", request.PatternName, err)
-							return
-					}
+			pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables)
+			if err != nil {
+					return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
 			}
-			if pattern.Pattern != "" {
-					patternContent = pattern.Pattern
-			}
+			patternContent = pattern.Pattern
 	}
 
 	
