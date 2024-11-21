@@ -100,9 +100,16 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 
+	//if there is no input from stdin
+	var messageContent string
+	if request.Message != nil {
+    messageContent = request.Message.Content
+	}
+
 	var patternContent string
 	if request.PatternName != "" {
-			pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables)
+			pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, messageContent)	
+			
 			if err != nil {
 					return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
 			}

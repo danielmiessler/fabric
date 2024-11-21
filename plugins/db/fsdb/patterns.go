@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/danielmiessler/fabric/plugins/template"
 )
 
 type PatternsEntity struct {
@@ -21,7 +23,7 @@ type Pattern struct {
 }
 
 // main entry point for getting patterns from any source
-func (o *PatternsEntity) GetApplyVariables(source string, variables map[string]string) (*Pattern, error) {
+func (o *PatternsEntity) GetApplyVariables(source string, variables map[string]string, input string) (*Pattern, error) {
     var pattern *Pattern
     var err error
 
@@ -41,17 +43,29 @@ func (o *PatternsEntity) GetApplyVariables(source string, variables map[string]s
         return nil, err
     }
 
-    return o.applyVariables(pattern, variables), nil
+    pattern, err = o.applyVariables(pattern, variables, input)
+		if err != nil {
+    	return nil, err  // Return the error if applyVariables failed
+		}
+	return pattern, nil
 }
 
-// handles all variable substitution
-func (o *PatternsEntity) applyVariables(pattern *Pattern, variables map[string]string) *Pattern {
-	if variables != nil && len(variables) > 0 {
-			for variableName, value := range variables {
-					pattern.Pattern = strings.ReplaceAll(pattern.Pattern, variableName, value)
+
+func (o *PatternsEntity) applyVariables(pattern *Pattern, variables map[string]string, input string) (*Pattern, error) {
+	// If {{input}} isn't in pattern, append it on new line
+	if !strings.Contains(pattern.Pattern, "{{input}}") {
+			if !strings.HasSuffix(pattern.Pattern, "\n") {
+					pattern.Pattern += "\n"
 			}
+			pattern.Pattern += "{{input}}"
 	}
-	return pattern
+
+	result, err := template.ApplyTemplate(pattern.Pattern, variables, input)
+	if err != nil {
+			return nil, err
+	}
+	pattern.Pattern = result
+	return pattern, nil
 }
 
 // retrieves a pattern from the database by name
@@ -113,5 +127,5 @@ func (o *PatternsEntity) getFromFile(pathStr string) (*Pattern, error) {
 // Get required for Storage interface
 func (o *PatternsEntity) Get(name string) (*Pattern, error) {
 	// Use GetPattern with no variables
-	return o.GetApplyVariables(name, nil)
+	return o.GetApplyVariables(name, nil, "")
 }
