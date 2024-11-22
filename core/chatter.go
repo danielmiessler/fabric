@@ -10,6 +10,7 @@ import (
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
+	"github.com/danielmiessler/fabric/plugins/template"
 )
 
 const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
@@ -103,8 +104,13 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	//if there is no input from stdin
 	var messageContent string
 	if request.Message != nil {
-    messageContent = request.Message.Content
-	}
+		messageContent = request.Message.Content
+		messageContent, err = template.ApplyTemplate(messageContent, request.PatternVariables, "")
+		if err != nil {
+				// Ignore template errors for non-pattern messages
+				messageContent = request.Message.Content 
+		}
+ }
 
 	var patternContent string
 	if request.PatternName != "" {
