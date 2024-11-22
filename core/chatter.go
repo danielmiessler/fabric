@@ -101,16 +101,17 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 
-	//if there is no input from stdin
-	var messageContent string
+	// Process any template variables in the message content
+	// Double curly braces {{variable}} indicate template substitution 
+	// should occur, whether in patterns or direct input
+	messageContent := ""
 	if request.Message != nil {
 		messageContent = request.Message.Content
 		messageContent, err = template.ApplyTemplate(messageContent, request.PatternVariables, "")
 		if err != nil {
-				// Ignore template errors for non-pattern messages
-				messageContent = request.Message.Content 
+				return nil, err
 		}
- }
+	}
 
 	var patternContent string
 	if request.PatternName != "" {
