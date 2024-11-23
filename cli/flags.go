@@ -71,7 +71,7 @@ func Init() (ret *Flags, err error) {
 	if args, err = parser.Parse(); err != nil {
 		return
 	}
-
+	//fmt.Printf("ret.Message: %v\n", ret.Message)
 	info, _ := os.Stdin.Stat()
 	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
@@ -88,7 +88,7 @@ func Init() (ret *Flags, err error) {
 		//fmt.Printf("no data: %v\n", args)
 		message = ""
 	}
-	ret.Message = message
+	ret.Message = AppendMessage(ret.Message, message)
 
 	return
 }
