@@ -27,7 +27,7 @@ func NewPatternsHandler(r *gin.Engine, patterns *fsdb.PatternsEntity) (ret *Patt
 func (h *PatternsHandler) Get(c *gin.Context) {
 	name := c.Param("name")
 	variables := make(map[string]string) // Assuming variables are passed somehow
-	input := "" // Assuming input is passed somehow
+	input := ""                          // Assuming input is passed somehow
 	pattern, err := h.patterns.GetApplyVariables(name, variables, input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
