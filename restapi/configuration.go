@@ -12,13 +12,13 @@ import (
 
 // ConfigHandler defines the handler for configuration-related operations
 type ConfigHandler struct {
-	db             *fsdb.Db
+	db *fsdb.Db
 	// configurations *fsdb.EnvFilePath("$HOME/.config/fabric/.env")
 }
 
 func NewConfigHandler(r *gin.Engine, db *fsdb.Db) *ConfigHandler {
 	handler := &ConfigHandler{
-		db:             db,
+		db: db,
 		// configurations: db.Configurations,
 	}
 

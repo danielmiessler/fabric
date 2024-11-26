@@ -29,8 +29,8 @@ type PromptRequest struct {
 }
 
 type ChatRequest struct {
-	Prompts []PromptRequest `json:"prompts"`
-	common.ChatOptions     // Embed the ChatOptions from common package
+	Prompts            []PromptRequest `json:"prompts"`
+	common.ChatOptions                 // Embed the ChatOptions from common package
 }
 
 type StreamResponse struct {

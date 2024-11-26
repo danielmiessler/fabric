@@ -1,8 +1,8 @@
 package restapi
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/danielmiessler/fabric/plugins/ai"
+	"github.com/gin-gonic/gin"
 )
 
 type ModelsHandler struct {
