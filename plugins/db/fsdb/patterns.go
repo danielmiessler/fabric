@@ -24,45 +24,44 @@ type Pattern struct {
 
 // main entry point for getting patterns from any source
 func (o *PatternsEntity) GetApplyVariables(source string, variables map[string]string, input string) (*Pattern, error) {
-    var pattern *Pattern
-    var err error
+	var pattern *Pattern
+	var err error
 
-    // Determine if this is a file path
-    isFilePath := strings.HasPrefix(source, "\\") ||
-                  strings.HasPrefix(source, "/") ||
-                  strings.HasPrefix(source, "~") ||
-                  strings.HasPrefix(source, ".")
-    
-    if isFilePath {
-        pattern, err = o.getFromFile(source)
-    } else {
-        pattern, err = o.getFromDB(source)
-    }
+	// Determine if this is a file path
+	isFilePath := strings.HasPrefix(source, "\\") ||
+		strings.HasPrefix(source, "/") ||
+		strings.HasPrefix(source, "~") ||
+		strings.HasPrefix(source, ".")
 
-    if err != nil {
-        return nil, err
-    }
+	if isFilePath {
+		pattern, err = o.getFromFile(source)
+	} else {
+		pattern, err = o.getFromDB(source)
+	}
 
-    pattern, err = o.applyVariables(pattern, variables, input)
-		if err != nil {
-    	return nil, err  // Return the error if applyVariables failed
-		}
+	if err != nil {
+		return nil, err
+	}
+
+	pattern, err = o.applyVariables(pattern, variables, input)
+	if err != nil {
+		return nil, err // Return the error if applyVariables failed
+	}
 	return pattern, nil
 }
-
 
 func (o *PatternsEntity) applyVariables(pattern *Pattern, variables map[string]string, input string) (*Pattern, error) {
 	// If {{input}} isn't in pattern, append it on new line
 	if !strings.Contains(pattern.Pattern, "{{input}}") {
-			if !strings.HasSuffix(pattern.Pattern, "\n") {
-					pattern.Pattern += "\n"
-			}
-			pattern.Pattern += "{{input}}"
+		if !strings.HasSuffix(pattern.Pattern, "\n") {
+			pattern.Pattern += "\n"
+		}
+		pattern.Pattern += "{{input}}"
 	}
 
 	result, err := template.ApplyTemplate(pattern.Pattern, variables, input)
 	if err != nil {
-			return nil, err
+		return nil, err
 	}
 	pattern.Pattern = result
 	return pattern, nil
@@ -106,21 +105,21 @@ func (o *PatternsEntity) PrintLatestPatterns(latestNumber int) (err error) {
 func (o *PatternsEntity) getFromFile(pathStr string) (*Pattern, error) {
 	// Handle home directory expansion
 	if strings.HasPrefix(pathStr, "~/") {
-			homedir, err := os.UserHomeDir()
-			if err != nil {
-					return nil, fmt.Errorf("could not get home directory: %v", err)
-			}
-			pathStr = filepath.Join(homedir, pathStr[2:])
+		homedir, err := os.UserHomeDir()
+		if err != nil {
+			return nil, fmt.Errorf("could not get home directory: %v", err)
+		}
+		pathStr = filepath.Join(homedir, pathStr[2:])
 	}
 
 	content, err := os.ReadFile(pathStr)
 	if err != nil {
-			return nil, fmt.Errorf("could not read pattern file %s: %v", pathStr, err)
+		return nil, fmt.Errorf("could not read pattern file %s: %v", pathStr, err)
 	}
 
 	return &Pattern{
-			Name:    pathStr,
-			Pattern: string(content),
+		Name:    pathStr,
+		Pattern: string(content),
 	}, nil
 }
 

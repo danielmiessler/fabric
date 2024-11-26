@@ -73,7 +73,6 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	return
 }
 
-
 func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *fsdb.Session, err error) {
 	// If a session name is provided, retrieve it from the database
 	if request.SessionName != "" {
@@ -102,29 +101,27 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		contextContent = ctx.Content
 	}
 
-
 	// Process any template variables in the message content (user input)
-	// Double curly braces {{variable}} indicate template substitution 
+	// Double curly braces {{variable}} indicate template substitution
 	// should occur, whether in patterns or direct input
 	if request.Message != nil {
-    request.Message.Content, err = template.ApplyTemplate(request.Message.Content, request.PatternVariables, "")
-    if err != nil {
-        return nil, err
-    }
+		request.Message.Content, err = template.ApplyTemplate(request.Message.Content, request.PatternVariables, "")
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	var patternContent string
 	if request.PatternName != "" {
-			pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, request.Message.Content)	
-			// pattrn will now contain user input, and all variables will be resolved, or errored
-			
-			if err != nil {
-					return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
-			}
-			patternContent = pattern.Pattern
+		pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, request.Message.Content)
+		// pattrn will now contain user input, and all variables will be resolved, or errored
+
+		if err != nil {
+			return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
+		}
+		patternContent = pattern.Pattern
 	}
 
-	
 	systemMessage := strings.TrimSpace(contextContent) + strings.TrimSpace(patternContent)
 	if request.Language != "" {
 		systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, request.Language)
@@ -133,7 +130,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	if raw {
 		if request.Message != nil {
 			if systemMessage != "" {
-				request.Message.Content = systemMessage 
+				request.Message.Content = systemMessage
 				// system contains pattern which contains user input
 			}
 		} else {
