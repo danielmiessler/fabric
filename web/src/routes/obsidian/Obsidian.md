@@ -6,7 +6,7 @@ tags: [type/note,obsidian]
 ---
 <div align="center">
 <a href="https://obsidian.md" target="_blank" rel="noopener noreferrer">
-  <img src="/lib/images/obsidian-logo.png" alt="Obsidian Logo" style="max-width: 20%; height: auto;" />
+  <img src="/obsidian-logo.png" alt="Obsidian Logo" style="max-width: 20%; height: auto;" />
 </a>
 </div>
 While you don't need to use Obsidian to write your blog posts, it's a great tool for managing your notes.
