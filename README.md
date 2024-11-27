@@ -57,6 +57,7 @@
     - [`to_pdf`](#to_pdf)
     - [`to_pdf` Installation](#to_pdf-installation)
   - [pbpaste](#pbpaste)
+  - [Web Interface](#Web_Interface)
   - [Meta](#meta)
     - [Primary contributors](#primary-contributors)
 
@@ -331,6 +332,7 @@ Application Options:
       --printcontext=        Print context
       --printsession=        Print session
       --readability          Convert HTML input into a clean, readable view
+      --serve                Initiate the API server
       --dry-run              Show what would be sent to the model without actually sending it
       --version              Print current version
 
@@ -467,6 +469,29 @@ You can also create an alias by editing `~/.bashrc` or `~/.zshrc` and adding the
 
 ```sh
 alias pbpaste='xclip -selection clipboard -o'
+```
+
+## Web Interface
+
+Fabric now includes a built-in web interface that provides a GUI alternative to the command-line interface and an out-of-the-box website for those who want to get started with web development or blogging.  
+You can use this app as a GUI interface for Fabric, a ready to go blog-site, or a website template for your own projects.  
+
+The `web/src/lib/content` directory includes starter `.obsidian/` and `templates/` directories,  allowing you to open up the `web/src/lib/content/` directory as an [Obsidian.md](https://obsidian.md) vault. You can place your posts in the posts directory when you're ready to publish. 
+### Installing
+
+The GUI can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run the development server to start the app. 
+
+_You will need to run fabric in a separate terminal with the `fabric --serve` command._ 
+
+**From the fabric project `web/` directory:**
+```shell
+npm run dev
+
+## or ##
+
+pnpm run dev
+
+## or your equivalent 
 ```
 
 ## Meta
