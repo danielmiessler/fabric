@@ -79,7 +79,7 @@ func TestApplyVariables(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := entity.applyVariables(tt.pattern, tt.variables, tt.input)
+			err := entity.applyVariables(tt.pattern, tt.variables, tt.input)
 
 			if tt.wantErr {
 				assert.Error(t, err)
@@ -87,7 +87,7 @@ func TestApplyVariables(t *testing.T) {
 			}
 
 			assert.NoError(t, err)
-			assert.Equal(t, tt.want, result.Pattern)
+			assert.Equal(t, tt.want, tt.pattern.Pattern)
 		})
 	}
 }
