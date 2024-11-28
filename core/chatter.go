@@ -106,18 +106,19 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	// Double curly braces {{variable}} indicate template substitution
 	// should occur, whether in patterns or direct input
 	if request.Message != nil {
-		request.Message.Content, err = template.ApplyTemplate(request.Message.Content, request.PatternVariables, "")
-		if err != nil {
-			return nil, err
+		if request.Message.Content, err =
+			template.ApplyTemplate(request.Message.Content, request.PatternVariables, ""); err != nil {
+			return
 		}
 		messageContent = request.Message.Content
 	}
 
 	var patternContent string
 	if request.PatternName != "" {
-		pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, messageContent)
-		// pattrn will now contain user input, and all variables will be resolved, or errored
-		if err != nil {
+		var pattern *fsdb.Pattern
+		if pattern, err = o.db.Patterns.GetApplyVariables(
+			request.PatternName, request.PatternVariables, messageContent); err != nil {
+
 			return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
 		}
 		patternContent = pattern.Pattern
