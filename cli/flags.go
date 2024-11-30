@@ -59,6 +59,10 @@ type Flags struct {
 	Serve              bool              `long:"serve" description:"Serve the Fabric Rest API"`
 	ServeAddress       string            `long:"address" description:"The address to bind the REST API" default:":8080"`
 	Version            bool              `long:"version" description:"Print current version"`
+	ListExtensions     bool              `long:"listextensions" description:"List all registered extensions"`
+	AddExtension      string            `long:"addextension" description:"Register a new extension from config file path"`
+	RemoveExtension   string            `long:"rmextension" description:"Remove a registered extension by name"`
+
 }
 
 // Init Initialize flags. returns a Flags struct and an error

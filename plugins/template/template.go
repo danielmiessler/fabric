@@ -2,6 +2,8 @@ package template
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -11,11 +13,24 @@ var (
     datetimePlugin = &DateTimePlugin{}
     filePlugin = &FilePlugin{}
     fetchPlugin = &FetchPlugin{}
-		sysPlugin = &SysPlugin{} 
-    Debug = false  // Debug flag
+	sysPlugin = &SysPlugin{} 
+    extensionManager *ExtensionManager
+    Debug = true  // Debug flag
 )
 
+
+func init() {
+    homedir, err := os.UserHomeDir()
+    if err != nil {
+        // We should probably handle this error appropriately
+        return
+    }
+    configDir := filepath.Join(homedir, ".config/fabric")
+    extensionManager = NewExtensionManager(configDir)
+}
+
 var pluginPattern = regexp.MustCompile(`\{\{plugin:([^:]+):([^:]+)(?::([^}]+))?\}\}`)
+var extensionPattern = regexp.MustCompile(`\{\{ext:([^:]+):([^:]+)(?::([^}]+))?\}\}`)
 
 func debugf(format string, a ...interface{}) {
     if Debug {
@@ -91,6 +106,31 @@ func ApplyTemplate(content string, variables map[string]string, input string) (s
                 }
             }
             
+            if pluginMatches := extensionPattern.FindStringSubmatch(fullMatch); len(pluginMatches) >= 3 {
+                name := pluginMatches[1]
+                operation := pluginMatches[2]
+                value := ""
+                if len(pluginMatches) == 4 {
+                    value = pluginMatches[3]
+                }
+                
+                debugf("\nExtension call:\n")
+                debugf("  Name: %s\n", name)
+                debugf("  Operation: %s\n", operation)
+                debugf("  Value: %s\n", value)
+                
+                result, err := extensionManager.ProcessExtension(name, operation, value)
+                if err != nil {
+                    return "", fmt.Errorf("extension %s error: %v", name, err)
+                }
+                
+                content = strings.ReplaceAll(content, fullMatch, result)
+                replaced = true
+                continue
+            }
+
+
+
             // Handle regular variables and input
             debugf("Processing variable: %s\n", varName)
             if varName == "input" {
