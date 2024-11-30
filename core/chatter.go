@@ -31,6 +31,15 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 		return
 	}
 
+	vendorMessages := session.GetVendorMessages()
+	if len(vendorMessages) == 0 {
+		if session.Name != "" {
+			err = o.db.Sessions.SaveSession(session)
+		}
+		err = fmt.Errorf("no messages provided")
+		return
+	}
+
 	if opts.Model == "" {
 		opts.Model = o.model
 	}
