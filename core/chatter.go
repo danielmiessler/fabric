@@ -112,12 +112,18 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 
 	// Process any template variables in the message content (user input)
 	// Double curly braces {{variable}} indicate template substitution 
-	// should occur, whether in patterns or direct input
-	if request.Message != nil {
-    request.Message.Content, err = template.ApplyTemplate(request.Message.Content, request.PatternVariables, "")
-    if err != nil {
-        return nil, err
-    }
+	// Ensure we have a message before processing, other wise we'll get an error when we pass to pattern.go
+	if request.Message == nil {
+		request.Message = &goopenai.ChatCompletionMessage{
+				Role: goopenai.ChatMessageRoleUser,
+				Content: " ",
+		}
+	}
+
+	// Now we know request.Message is not nil, process template variables
+	request.Message.Content, err = template.ApplyTemplate(request.Message.Content, request.PatternVariables, "")
+	if err != nil {
+		return nil, err
 	}
 
 	var patternContent string
