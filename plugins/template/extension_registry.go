@@ -34,14 +34,22 @@ type OperationConfig struct {
     CmdTemplate string `yaml:"cmd_template"`
 }
 
+
+
+// RegistryEntry represents a registered extension
+type RegistryEntry struct {
+    ConfigPath      string `yaml:"config_path"`
+    ConfigHash      string `yaml:"config_hash"`
+    ExecutableHash  string `yaml:"executable_hash"`
+}
+
 type ExtensionRegistry struct {
     configDir string
     registry  struct {
-        Extensions   map[string]*ExtensionDefinition
-        ConfigHashes map[string]string
-        ExecutableHashes map[string]string
+        Extensions map[string]*RegistryEntry `yaml:"extensions"`
     }
 }
+
 
 
 // Helper methods for Config access
@@ -74,26 +82,20 @@ func (e *ExtensionDefinition) IsCleanupEnabled() bool {
 
 
 func NewExtensionRegistry(configDir string) *ExtensionRegistry {
-	r := &ExtensionRegistry{
-			configDir: configDir,
-	}
-	r.registry.Extensions = make(map[string]*ExtensionDefinition)
-	r.registry.ConfigHashes = make(map[string]string)
-	r.registry.ExecutableHashes = make(map[string]string)
-	
-	// Ensure extensions directory exists
-	r.ensureConfigDir()
-	
-	// Load existing registry if it exists
-	if err := r.loadRegistry(); err != nil {
-			// Since we're in a constructor, we can't return error
-			// Log it if we have logging, but continue with empty registry
-			if Debug {
-					fmt.Printf("Warning: could not load extension registry: %v\n", err)
-			}
-	}
-	
-	return r
+    r := &ExtensionRegistry{
+        configDir: configDir,
+    }
+    r.registry.Extensions = make(map[string]*RegistryEntry)
+    
+    r.ensureConfigDir()
+    
+    if err := r.loadRegistry(); err != nil {
+        if Debug {
+            fmt.Printf("Warning: could not load extension registry: %v\n", err)
+        }
+    }
+    
+    return r
 }
 
 func (r *ExtensionRegistry) ensureConfigDir() error {
@@ -102,7 +104,7 @@ func (r *ExtensionRegistry) ensureConfigDir() error {
 }
 
 func (r *ExtensionRegistry) Register(configPath string) error {
-    // Read and parse the extension definition
+    // Read and parse the extension definition to verify it
     data, err := os.ReadFile(configPath)
     if err != nil {
         return fmt.Errorf("failed to read config file: %w", err)
@@ -113,22 +115,30 @@ func (r *ExtensionRegistry) Register(configPath string) error {
         return fmt.Errorf("failed to parse config file: %w", err)
     }
 
-    // Verify Executable exists
+    // Verify executable exists
     if _, err := os.Stat(ext.Executable); err != nil {
-        return fmt.Errorf("Executable not found: %w", err)
+        return fmt.Errorf("executable not found: %w", err)
     }
 
-    // Calculate hashes using template package functions
-    configHash := ComputeStringHash(string(data))
-    ExecutableHash, err := ComputeHash(ext.Executable)
+    // Get absolute path to config
+    absPath, err := filepath.Abs(configPath)
     if err != nil {
-        return fmt.Errorf("failed to hash Executable: %w", err)
+        return fmt.Errorf("failed to get absolute path: %w", err)
     }
 
-    // Store extension and hashes
-    r.registry.Extensions[ext.Name] = &ext
-    r.registry.ConfigHashes[ext.Name] = configHash
-    r.registry.ExecutableHashes[ext.Name] = ExecutableHash
+    // Calculate hashes
+    configHash := ComputeStringHash(string(data))
+    executableHash, err := ComputeHash(ext.Executable)
+    if err != nil {
+        return fmt.Errorf("failed to hash executable: %w", err)
+    }
+
+    // Store entry
+    r.registry.Extensions[ext.Name] = &RegistryEntry{
+        ConfigPath:      absPath,
+        ConfigHash:      configHash,
+        ExecutableHash:  executableHash,
+    }
 
     return r.saveRegistry()
 }
@@ -139,49 +149,97 @@ func (r *ExtensionRegistry) Remove(name string) error {
     }
 
     delete(r.registry.Extensions, name)
-    delete(r.registry.ConfigHashes, name)
-    delete(r.registry.ExecutableHashes, name)
 
     return r.saveRegistry()
 }
 
 func (r *ExtensionRegistry) Verify(name string) error {
-    ext, exists := r.registry.Extensions[name]
+    // Get the registry entry
+    entry, exists := r.registry.Extensions[name]
     if !exists {
         return fmt.Errorf("extension %s not found", name)
     }
 
-    // Verify Executable hash using template package function
-    currentExecutableHash, err := ComputeHash(ext.Executable)
+    // Load and parse the config file
+    data, err := os.ReadFile(entry.ConfigPath)
     if err != nil {
-        return fmt.Errorf("failed to verify Executable: %w", err)
+        return fmt.Errorf("failed to read config file: %w", err)
     }
 
-    if currentExecutableHash != r.registry.ExecutableHashes[name] {
-        return fmt.Errorf("Executable hash mismatch for %s", name)
+    // Verify config hash
+    currentConfigHash := ComputeStringHash(string(data))
+    if currentConfigHash != entry.ConfigHash {
+        return fmt.Errorf("config file hash mismatch for %s", name)
+    }
+
+    // Parse to get executable path
+    var ext ExtensionDefinition
+    if err := yaml.Unmarshal(data, &ext); err != nil {
+        return fmt.Errorf("failed to parse config file: %w", err)
+    }
+
+    // Verify executable hash
+    currentExecutableHash, err := ComputeHash(ext.Executable)
+    if err != nil {
+        return fmt.Errorf("failed to verify executable: %w", err)
+    }
+
+    if currentExecutableHash != entry.ExecutableHash {
+        return fmt.Errorf("executable hash mismatch for %s", name)
     }
 
     return nil
 }
 
 func (r *ExtensionRegistry) GetExtension(name string) (*ExtensionDefinition, error) {
-    ext, exists := r.registry.Extensions[name]
+    entry, exists := r.registry.Extensions[name]
     if !exists {
         return nil, fmt.Errorf("extension %s not found", name)
     }
-    
-    if err := r.Verify(name); err != nil {
-        return nil, err
+
+    // Read current config file
+    data, err := os.ReadFile(entry.ConfigPath)
+    if err != nil {
+        return nil, fmt.Errorf("failed to read config file: %w", err)
     }
-    
-    return ext, nil
+
+    // Verify config hash
+    currentHash := ComputeStringHash(string(data))
+    if currentHash != entry.ConfigHash {
+        return nil, fmt.Errorf("config file hash mismatch for %s", name)
+    }
+
+    // Parse config
+    var ext ExtensionDefinition
+    if err := yaml.Unmarshal(data, &ext); err != nil {
+        return nil, fmt.Errorf("failed to parse config file: %w", err)
+    }
+
+    // Verify executable hash
+    currentExecHash, err := ComputeHash(ext.Executable)
+    if err != nil {
+        return nil, fmt.Errorf("failed to verify executable: %w", err)
+    }
+
+    if currentExecHash != entry.ExecutableHash {
+        return nil, fmt.Errorf("executable hash mismatch for %s", name)
+    }
+
+    return &ext, nil
 }
 
+
 func (r *ExtensionRegistry) ListExtensions() ([]*ExtensionDefinition, error) {
-    exts := make([]*ExtensionDefinition, 0, len(r.registry.Extensions))
-    for _, ext := range r.registry.Extensions {
+    var exts []*ExtensionDefinition
+    
+    for name := range r.registry.Extensions {
+        ext, err := r.GetExtension(name)
+        if err != nil {
+            return nil, fmt.Errorf("failed to load extension %s: %w", name, err)
+        }
         exts = append(exts, ext)
     }
+    
     return exts, nil
 }
 
