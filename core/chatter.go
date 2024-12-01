@@ -10,6 +10,7 @@ import (
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
+	"github.com/danielmiessler/fabric/plugins/template"
 )
 
 const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
@@ -104,26 +105,29 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 
 	// Process any template variables in the message content (user input)
 	// Double curly braces {{variable}} indicate template substitution 
-    // Ensure we have a message, even if empty
-    if request.Message == nil {
-			request.Message = &goopenai.ChatCompletionMessage{
-					Role: goopenai.ChatMessageRoleUser,
-					Content: " ",
-			}
+	// should occur, whether in patterns or direct input
+	if request.Message != nil {
+    request.Message.Content, err = template.ApplyTemplate(request.Message.Content, request.PatternVariables, "")
+    if err != nil {
+        return nil, err
+    }
 	}
 
 	var patternContent string
 	if request.PatternName != "" {
-			pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, request.Message.Content)    
+			pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, request.Message.Content)	
+			// pattrn will now contain user input, and all variables will be resolved, or errored
+			
 			if err != nil {
 					return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
 			}
 			patternContent = pattern.Pattern
 	}
 
+	
 	systemMessage := strings.TrimSpace(contextContent) + strings.TrimSpace(patternContent)
 	if request.Language != "" {
-			systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, request.Language)
+		systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, request.Language)
 	}
 
 	if raw {
