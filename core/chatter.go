@@ -10,7 +10,6 @@ import (
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
-	"github.com/danielmiessler/fabric/plugins/template"
 )
 
 const NoSessionPatternUserMessages = "no session, pattern or user messages provided"
@@ -110,32 +109,28 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		contextContent = ctx.Content
 	}
 
-	var messageContent string
 	// Process any template variables in the message content (user input)
-	// Double curly braces {{variable}} indicate template substitution
-	// should occur, whether in patterns or direct input
-	if request.Message != nil {
-		if request.Message.Content, err =
-			template.ApplyTemplate(request.Message.Content, request.PatternVariables, ""); err != nil {
-			return
-		}
-		messageContent = request.Message.Content
+	// Double curly braces {{variable}} indicate template substitution 
+    // Ensure we have a message, even if empty
+    if request.Message == nil {
+			request.Message = &goopenai.ChatCompletionMessage{
+					Role: goopenai.ChatMessageRoleUser,
+					Content: " ",
+			}
 	}
 
 	var patternContent string
 	if request.PatternName != "" {
-		var pattern *fsdb.Pattern
-		if pattern, err = o.db.Patterns.GetApplyVariables(
-			request.PatternName, request.PatternVariables, messageContent); err != nil {
-
-			return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
-		}
-		patternContent = pattern.Pattern
+			pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, request.Message.Content)    
+			if err != nil {
+					return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
+			}
+			patternContent = pattern.Pattern
 	}
 
 	systemMessage := strings.TrimSpace(contextContent) + strings.TrimSpace(patternContent)
 	if request.Language != "" {
-		systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, request.Language)
+			systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, request.Language)
 	}
 
 	if raw {
