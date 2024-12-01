@@ -2,7 +2,10 @@ package template
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
+
+	"gopkg.in/yaml.v3"
 )
 
 // ExtensionManager handles the high-level operations of the extension system
@@ -24,13 +27,23 @@ func NewExtensionManager(configDir string) *ExtensionManager {
 
 // ListExtensions handles the listextensions flag action
 func (em *ExtensionManager) ListExtensions() error {
-	extensions, err := em.registry.ListExtensions()
-	if err != nil {
-			return fmt.Errorf("failed to list extensions: %w", err)
+	if em.registry == nil || em.registry.registry.Extensions == nil {
+			return fmt.Errorf("extension registry not initialized")
 	}
 
-	for _, ext := range extensions {
-			fmt.Printf("Name: %s\n", ext.Name)
+	for name, entry := range em.registry.registry.Extensions {
+			fmt.Printf("Extension: %s\n", name)
+			
+			// Try to load extension details
+			ext, err := em.registry.GetExtension(name)
+			if err != nil {
+					fmt.Printf("  Status: DISABLED - Hash verification failed: %v\n", err)
+					fmt.Printf("  Config Path: %s\n\n", entry.ConfigPath)
+					continue
+			}
+
+			// Print extension details if verification succeeded
+			fmt.Printf("  Status: ENABLED\n")
 			fmt.Printf("  Executable: %s\n", ext.Executable)
 			fmt.Printf("  Type: %s\n", ext.Type)
 			fmt.Printf("  Timeout: %s\n", ext.Timeout)
@@ -57,16 +70,49 @@ func (em *ExtensionManager) ListExtensions() error {
 
 // RegisterExtension handles the addextension flag action
 func (em *ExtensionManager) RegisterExtension(configPath string) error {
-    absPath, err := filepath.Abs(configPath)
-    if err != nil {
-        return fmt.Errorf("invalid config path: %w", err)
-    }
+	absPath, err := filepath.Abs(configPath)
+	if err != nil {
+			return fmt.Errorf("invalid config path: %w", err)
+	}
 
-    if err := em.registry.Register(absPath); err != nil {
-        return fmt.Errorf("failed to register extension: %w", err)
-    }
+	// Get extension name before registration for status message
+	data, err := os.ReadFile(absPath)
+	if err != nil {
+			return fmt.Errorf("failed to read config file: %w", err)
+	}
 
-    return nil
+	var ext ExtensionDefinition
+	if err := yaml.Unmarshal(data, &ext); err != nil {
+			return fmt.Errorf("failed to parse config file: %w", err)
+	}
+
+	if err := em.registry.Register(absPath); err != nil {
+			return fmt.Errorf("failed to register extension: %w", err)
+	}
+
+	// Print success message with extension details
+	fmt.Printf("Successfully registered extension:\n")
+	fmt.Printf("Name: %s\n", ext.Name)
+	fmt.Printf("  Executable: %s\n", ext.Executable)
+	fmt.Printf("  Type: %s\n", ext.Type)
+	fmt.Printf("  Timeout: %s\n", ext.Timeout)
+	fmt.Printf("  Description: %s\n", ext.Description)
+	fmt.Printf("  Version: %s\n", ext.Version)
+	
+	fmt.Printf("  Operations:\n")
+	for opName, opConfig := range ext.Operations {
+			fmt.Printf("    %s:\n", opName)
+			fmt.Printf("      Command Template: %s\n", opConfig.CmdTemplate)
+	}
+
+	if fileConfig := ext.GetFileConfig(); fileConfig != nil {
+			fmt.Printf("  File Configuration:\n")
+			for k, v := range fileConfig {
+					fmt.Printf("    %s: %v\n", k, v)
+			}
+	}
+
+	return nil
 }
 
 // RemoveExtension handles the rmextension flag action

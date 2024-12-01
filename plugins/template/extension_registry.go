@@ -235,7 +235,10 @@ func (r *ExtensionRegistry) ListExtensions() ([]*ExtensionDefinition, error) {
     for name := range r.registry.Extensions {
         ext, err := r.GetExtension(name)
         if err != nil {
-            return nil, fmt.Errorf("failed to load extension %s: %w", name, err)
+            // Instead of failing, we'll return nil for this extension
+            // The manager will handle displaying the error
+            exts = append(exts, nil)
+            continue
         }
         exts = append(exts, ext)
     }
