@@ -3,11 +3,12 @@
   import Fabric from './Fabric.svelte';
 </script>
 
-<div class="">
+<div>
   <Terminal />
   <div class="absolute inset-0 -z-10 overflow-hidden h-96">
 		<Fabric  />
 	</div>
 </div>
+
 
 

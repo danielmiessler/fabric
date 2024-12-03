@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cn } from "$lib/types/utils";
 	let className: string | undefined = undefined;
-	export let value = undefined;
+	export let value: string | undefined = undefined;
 	export { className as class };
 	export let readonly = undefined;
 </script>

@@ -6,11 +6,11 @@
 <footer class="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
   <div class="container flex h-14 items-center justify-between px-4">
     <p class="text-sm text-muted-foreground">
-      Built in {year} by @johnconnor-sec
+      Built in {year} by @Fabric <!-- Feel free to put your name here -->
     </p>
     
     <nav class="flex items-center gap-4 ">
-      <BuyMeCoffee url="https://www.buymeacoffee.com/johnconnor.sec" />
+      <BuyMeCoffee url="https://www.buymeacoffee.com/johnconnor.sec" /> <!-- And here -->
     </nav>
   </div>
 </footer>

@@ -1,5 +1,5 @@
-<script>
-	import { cn } from "$lib/types/utils.ts";
+<script lang="ts">
+	import { cn } from "$lib/types/utils";
 	let className = undefined;
 	export { className as class };
 </script>

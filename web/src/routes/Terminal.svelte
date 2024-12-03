@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { fade } from 'svelte/transition';
+  // import { fade } from 'svelte/transition';
   import { goto } from '$app/navigation';
 
   let mounted = false;
@@ -98,7 +98,7 @@
   });
 </script>
 
-<div class="min-h-[calc(100vh-4rem)] pt-20 pb-8 px-4">
+<div class="pt-20 pb-8 px-4">
   <div class="container mx-auto max-w-4xl">
     <div class="terminal-window backdrop-blur-sm">
       <!-- Terminal header -->
@@ -111,14 +111,12 @@
         <span class="text-sm text-gray-400 ml-2">me@localhost</span>
       </div>
 
-      <!-- Terminal content -->
       <div class="p-6">
-        <!-- Terminal output -->
         <div class="mb-4 whitespace-pre-wrap terminal-text leading-relaxed">{terminalContent}</div>
 
         <!-- Command input -->
         {#if mounted}
-          <div class="flex items-center command-input" in:fade={{ duration: 200 }}>
+          <div class="flex items-center command-input">
             <span class="mr-2 terminal-prompt font-bold">$</span>
             <!-- {#if showCursor}
               <span class="animate-blink terminal-text">▋</span>
@@ -132,16 +130,6 @@
             />
           </div>
         {/if}
-
-        <!-- Command history -->
-        <!-- <div class="mt-6 space-y-1 text-sm text-gray-500">
-          {#each commandHistory as cmd}
-            <div class="terminal-text opacity-60">
-              <span class="terminal-prompt font-bold mr-2">$</span>
-              {cmd}
-            </div>
-          {/each}
-        </div> -->
       </div>
     </div>
   </div>

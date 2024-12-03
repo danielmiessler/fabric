@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
 	import type { PageData } from './$types';
-	import { Paginator } from '@skeletonlabs/skeleton'
+	// import { Paginator } from '@skeletonlabs/skeleton'
 	// import Spinner from '$lib/components/ui/spinner/spinner.svelte';
 
 	export let data: PageData;
 
 	$: posts = data.posts;
 	let visible: boolean = true;
-	let message: string = "No posts found";
 </script>
 
 <div class="container py-12">

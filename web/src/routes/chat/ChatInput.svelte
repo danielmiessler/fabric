@@ -2,6 +2,7 @@
     import { Button } from "$lib/components/ui/button";
     import { Textarea } from "$lib/components/ui/textarea";
     import { Label } from "$lib/components/ui/label";
+    // import { FileButton } from '@skeletonlabs/skeleton';
     import { currentSession, setSession, sendMessage } from '$lib/store/chat';
     import { systemPrompt } from '$lib/types/chat/patterns';
     import { onMount } from 'svelte';
@@ -49,10 +50,11 @@
 
     <div class="flex flex-col h-full">
         <div class="space-y-2 flex-none">
-                <Label class="p-1 font-bold">System Prompt</Label>
+                <Label 
+                    class="p-1 font-bold">System Prompt</Label>
                 <Textarea
                     value={$systemPrompt}
-                    on:input={(e) => systemPrompt}
+                    on:input={(e) => $systemPrompt}
                     placeholder="Enter system instructions..."
                     class="min-h-[200px] resize-none bg-background"
                 />
@@ -60,13 +62,14 @@
 
         <div class="space-y-2 flex-1 py-1">
             <Label class="p-1 font-bold">User Input</Label>
-            <Textarea
-                bind:value={userInput}
-                placeholder="Enter your message..."
-                class="h-[calc(80vh-24rem)] resize-none bg-background"
-            />
+                <Textarea
+                    bind:value={userInput}
+                    on:input={(e) => userInput}
+                    placeholder="Enter your message..."
+                    class="h-[calc(80vh-24rem)] resize-none bg-background"
+                />
         </div>
-        <Button on:click={handleSubmit} variant="outline" size="sm" class="mt-2">Submit</Button>
+        <Button on:click={handleSubmit} variant="outline" size="sm">Submit</Button>
     </div>
 </div>
 

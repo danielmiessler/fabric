@@ -2,8 +2,8 @@
     import { getToastStore } from '@skeletonlabs/skeleton';
     import { Button } from "$lib/components/ui/button";
     import Input from '$components/ui/input/input.svelte';
-    import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
-    
+    import { Toast } from '@skeletonlabs/skeleton';
+
     let url = '';
     let transcript = '';
     let loading = false;
@@ -11,13 +11,13 @@
     let title = ''; 
     
     const toastStore = getToastStore();
-    const modalStore = getModalStore();
-    
-    // Event dispatcher to send transcript to parent
-    import { createEventDispatcher } from 'svelte';
-    const dispatch = createEventDispatcher();
-    
+        
     async function fetchTranscript() {
+      function isValidYouTubeUrl(url: string) {
+        const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+        return pattern.test(url);
+      }
+      
       if (!isValidYouTubeUrl(url)) {
         error = 'Please enter a valid YouTube URL';
         toastStore.trigger({
@@ -50,42 +50,12 @@
         
         transcript = data.transcript;
         title = data.title;
-        
-        // Show modal with transcript
-        const modal: ModalSettings = {
-          type: 'component',
-          title: 'YouTube Transcript',
-          body: transcript,
-          buttonTextCancel: 'Close',
-          buttonTextSubmit: 'Use in Chat',
-          response: (r: boolean) => {
-            if (r) {
-              dispatch('transcript', transcript);
-            }
-          }
-        };
-        modalStore.trigger(modal);
-        
-        toastStore.trigger({
-          message: 'Transcript fetched successfully!',
-          background: 'variant-filled-success'
-        });
-      } catch (err) {
-        error = err.message;
-        toastStore.trigger({
-          message: error,
-          background: 'variant-filled-error'
-        });
+
       } finally {
         loading = false;
       }
     }
-  
-    function isValidYouTubeUrl(url) {
-      const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
-      return pattern.test(url);
-    }
-  
+
     async function copyToClipboard() {
       try {
         await navigator.clipboard.writeText(transcript);
@@ -129,6 +99,7 @@
 {/if}
 
 {#if transcript}
+<Toast position="b" />  
     <div class="space-y-4 border rounded-lg p-4 bg-muted/50 h-96">
         <div class="flex justify-between items-center">
             <h3 class="text-xs font-semibold">{title || 'Transcript'}</h3>

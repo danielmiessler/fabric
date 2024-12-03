@@ -4,6 +4,8 @@
   import Footer from './Footer.svelte';
   import Header from './Header.svelte';
   import { initializeStores } from '@skeletonlabs/skeleton';
+  import { page } from '$app/stores';
+  import { fly } from 'svelte/transition';
   import { getToastStore } from '@skeletonlabs/skeleton';
   import { onMount } from 'svelte';
 
@@ -14,9 +16,9 @@
 
 	onMount(() => {
 		toastStore.trigger({
-      message: "👋 Welcome to the site! I'm still working on it...  ",
+      message: "👋 Welcome to the site! Tell people about yourself and what you do.",
 			background: 'variant-filled-primary',
-			timeout: 15000,
+			timeout: 3333,
 			hoverable: true
 		});
 	});
@@ -24,6 +26,7 @@
 
 <Toast position="t" />
 
+{#key $page.url.pathname}
 <AppShell class="relative">
   <div class="fixed inset-0 bg-gradient-to-br from-primary-500/20 via-tertiary-500/20 to-secondary-500/20 -z-10"></div>
   <svelte:fragment slot="header">
@@ -31,13 +34,18 @@
     <div class="bg-gradient-to-b variant-gradient-primary-tertiary opacity-20 h-2 py-4">
     </div>
   </svelte:fragment>
+    <div 
+    in:fly={{ duration: 1000, delay: 300, y: 100 }}
+    >
   <main class="mx-auto p-4">
     <slot />
   </main>
+</div>
   <svelte:fragment slot="footer">
     <Footer />
   </svelte:fragment>
 </AppShell>
+{/key}
 
 <style>
 	main {

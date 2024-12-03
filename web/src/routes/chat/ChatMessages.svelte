@@ -1,9 +1,12 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
-    import { RotateCcw, Trash2, Save } from 'lucide-svelte';
+    import { RotateCcw, Trash2, Save, Copy } from 'lucide-svelte';
     import { chatState, clearMessages, revertLastMessage, currentSession } from '$lib/store/chat';
     import { afterUpdate } from 'svelte';
-    
+    import { marked } from 'marked';
+    import { getToastStore } from '@skeletonlabs/skeleton';
+    import { Toast } from '@skeletonlabs/skeleton';
+
     let sessionName: string | null = null;
     let messagesContainer: HTMLDivElement;
 
@@ -29,19 +32,55 @@
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
+
+    marked.setOptions({
+        gfm: true,
+        breaks: true,
+    });
+
+    function renderMarkdown(content: string, isAssistant: boolean) {
+        if (!isAssistant) return content;
+        try {
+            return marked.parse(content);
+        } catch (error) {
+            console.error('Error rendering markdown:', error);
+            return content;
+        }
+      }
+
+    const toastStore = getToastStore();
+
+    async function copyToClipboard() {
+      try {
+        await navigator.clipboard.writeText($chatState.messages.map(m => m.content).join('\n'));
+        toastStore.trigger({
+            message: 'Chat copied to clipboard!',
+            background: 'variant-filled-success'
+        });
+      } catch (err) {
+        toastStore.trigger({
+            message: 'Failed to copy transcript',
+            background: 'variant-filled-error'
+        });
+      }
+    }
 </script>
 
 <div class="chat-messages-wrapper flex flex-col h-full">
     <div class="flex justify-between items-center mb-4 flex-none">
         <span class="text-sm font-medium">Chat History</span>
         <div class="flex gap-2">
-            <Button variant="outline" size="icon" on:click={revertLastMessage}>
+            <Button variant="outline" size="icon" aria-label="Revert Last Message" on:click={revertLastMessage}>
                 <RotateCcw class="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon" on:click={clearMessages}>
+            <Button variant="outline" size="icon" aria-label="Clear Chat" on:click={clearMessages}>
                 <Trash2 class="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon" on:click={saveChat}>
+            <Button variant="outline" size="icon" aria-label="Copy Chat" on:click={copyToClipboard}>
+                <Copy class="h-4 w-4" />
+            </Button>
+            <Toast position="b" />
+            <Button variant="outline" size="icon" aria-label="Save Chat" on:click={saveChat}>
                 <Save class="h-4 w-4" />
             </Button>
         </div>
@@ -50,9 +89,15 @@
     <div class="messages-container flex-1" bind:this={messagesContainer}>
         <div class="messages-content space-y-4">
             {#each $chatState.messages as message}
-                <div class="message-item whitespace-pre-wrap text-sm {message.role === 'assistant' ? 'pl-4' : 'font-medium'} transition-all">
+                <div class="message-item {message.role === 'assistant' ? 'pl-4' : 'font-medium'} transition-all">
                     <span class="text-xs tertiary uppercase">{message.role}:</span>
-                    {message.content}
+                    {#if message.role === 'assistant'}
+                        {@html renderMarkdown(message.content, true)}
+                    {:else}
+                        <div class="whitespace-pre-wrap text-sm">
+                            {message.content}
+                        </div>
+                    {/if}
                 </div>
             {/each}
             {#if $chatState.isStreaming}
@@ -96,5 +141,51 @@
     .messages-container::-webkit-scrollbar-thumb {
         background-color: var(--color-primary-500);
         border-radius: 2px;
+    }
+
+    /* Markdown content styles */
+    :global(.message-item.pl-4) {
+        font-size: 0.875rem;
+    }
+
+    :global(.message-item pre) {
+        background-color: rgb(var(--color-secondary-50));
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin: 0.5rem 0;
+        overflow-x: auto;
+    }
+
+    :global(.message-item code) {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.875rem;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+        background-color: rgb(var(--color-secondary-50));
+    }
+
+    :global(.message-item p) {
+        margin: 0.5rem 0;
+    }
+
+    :global(.message-item ul, .message-item ol) {
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+    }
+
+    :global(.message-item li) {
+        margin: 0.25rem 0;
+    }
+
+    :global(.message-item a) {
+        color: rgb(var(--color-primary-600));
+        text-decoration: underline;
+    }
+
+    :global(.message-item blockquote) {
+        border-left: 4px solid rgb(var(--color-secondary-200));
+        margin: 0.5rem 0;
+        padding-left: 1rem;
+        font-style: italic;
     }
 </style>
