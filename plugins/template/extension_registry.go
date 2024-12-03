@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"time"
 
 	"gopkg.in/yaml.v3"
 	// Add this import
@@ -103,6 +104,8 @@ func (r *ExtensionRegistry) ensureConfigDir() error {
     return os.MkdirAll(extDir, 0755)
 }
 
+// Update the Register method in extension_registry.go
+
 func (r *ExtensionRegistry) Register(configPath string) error {
     // Read and parse the extension definition to verify it
     data, err := os.ReadFile(configPath)
@@ -113,6 +116,11 @@ func (r *ExtensionRegistry) Register(configPath string) error {
     var ext ExtensionDefinition
     if err := yaml.Unmarshal(data, &ext); err != nil {
         return fmt.Errorf("failed to parse config file: %w", err)
+    }
+
+    // Add validation
+    if err := r.validateExtensionDefinition(&ext); err != nil {
+        return fmt.Errorf("invalid extension configuration: %w", err)
     }
 
     // Verify executable exists
@@ -142,6 +150,39 @@ func (r *ExtensionRegistry) Register(configPath string) error {
 
     return r.saveRegistry()
 }
+
+func (r *ExtensionRegistry) validateExtensionDefinition(ext *ExtensionDefinition) error {
+    // Validate required fields
+    if ext.Name == "" {
+        return fmt.Errorf("extension name is required")
+    }
+    if ext.Executable == "" {
+        return fmt.Errorf("executable path is required")
+    }
+    if ext.Type == "" {
+        return fmt.Errorf("extension type is required")
+    }
+
+    // Validate timeout format
+    if ext.Timeout != "" {
+        if _, err := time.ParseDuration(ext.Timeout); err != nil {
+            return fmt.Errorf("invalid timeout format: %w", err)
+        }
+    }
+
+    // Validate operations
+    if len(ext.Operations) == 0 {
+        return fmt.Errorf("at least one operation must be defined")
+    }
+    for name, op := range ext.Operations {
+        if op.CmdTemplate == "" {
+            return fmt.Errorf("command template is required for operation %s", name)
+        }
+    }
+
+    return nil
+}
+
 
 func (r *ExtensionRegistry) Remove(name string) error {
     if _, exists := r.registry.Extensions[name]; !exists {
