@@ -4,9 +4,8 @@
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import { fade } from 'svelte/transition';
 	import { theme, toggleTheme } from '$lib/store/theme';
-  	import { goto } from '$app/navigation';
+  	// import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import Fabric from './Fabric.svelte'
 
 	let isMenuOpen = false;
 
@@ -68,18 +67,18 @@
 		</nav>
 		
 		<div class="flex items-center gap-2">
-			<button
+			<button name="github"
 				on:click={goToGithub}
-				class="inline-flex h-9 w-9 items-center justify-center rounded-md border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+				class="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
 				aria-label="GitHub"
 			>
 				<Github class="h-4 w-4" />
 				<span class="sr-only">GitHub</span>
 			</button>
 
-			<button
+			<button name="toggle-theme"
 				on:click={toggleTheme}
-				class="inline-flex h-9 w-9 items-center justify-center rounded-md border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+				class="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
 				aria-label="Toggle theme"
 			>
 				{#if isDarkMode}
@@ -91,8 +90,8 @@
 			</button>
 
 			<!-- Mobile Menu Button -->
-			<button
-				class="inline-flex h-9 w-9 items-center justify-center rounded-md border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
+			<button name="toggle-menu"
+				class="inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
 				on:click={toggleMenu}
 				aria-expanded={isMenuOpen}
 				aria-label="Toggle menu"
