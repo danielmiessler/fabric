@@ -10,14 +10,4 @@ The goal of this app is to not only provide a user interface for Fabric, but als
 ### Installing
 It can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run `npm run dev` or your equivalent command to start the app. *You will need to run fabric in a seperate terminal with the `fabric --serve` command.*
 
-### Todos
-- [ ] Remove dead code
-- [ ] Add feat: Add copy button / load button to load blog posts to the Chat and Chat to Blog posts (system message or user?)
-- [ ] Add feat: Jina button
-- [ ] Fix save button to save markdown, not json
-- [ ] Implement session handling
-- [?] What will I do with the context?
-- [ ] Add support for image uploads / file uploads
 
-### Collaborators
-There are many experienced developers in the Fabric community. If you'd like to collaborate on this project, please reach out to me on.
