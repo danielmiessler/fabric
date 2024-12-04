@@ -4,21 +4,16 @@
 	import ModelConfig from "./ModelConfig.svelte";
 </script>
 
-<div class="flex flex-align-vertical mx-auto p-4">
-	<div class="grid grid-cols-1 lg:grid-cols-[minmax(400px,_600px),minmax(400px,_600px),300px] gap-4">
-		<div class="space-y-4 order-2 lg:order-1 h-full overflow-y flex-1"> 
+<div class="flex-1 mx-auto p-4">
+	<div class="grid grid-cols-1 lg:grid-cols-[250px_minmax(250px,_1.5fr)_minmax(250px,_1.5fr)] gap-4">
+		<div class="flex flex-col space-y-1 order-3 lg:order-1">
+			<ModelConfig />
+		</div>
+		<div class="flex flex-col space-y-4 order-2 lg:order-2"> 
 			<ChatInput />
 		</div>
-		<div class="border container max-h-[680px] rounded-lg bg-muted/50 p-4 order-1 lg:order-2 h-full">
+		<div class="flex flex-col border rounded-lg bg-muted/50 p-4 order-1 lg:order-3 max-h-[695px] overflow-y-auto">
 			<ChatMessages />
-		</div>
-		<div class="space-y-2 order-3">
-			<ModelConfig />
 		</div>
 	</div>
 </div>
-
-<!-- NOTE : This is for the mobile view 
- <div class="border container max-h-[660px] rounded-lg bg-muted/50 p-4 order-1 lg:order-2 h-full overflow-auto overflow-y-hidden overflow-x-hidden">
-	<ChatMessages />
-</div> -->
