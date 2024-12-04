@@ -31,6 +31,15 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 		return
 	}
 
+	vendorMessages := session.GetVendorMessages()
+	if len(vendorMessages) == 0 {
+		if session.Name != "" {
+			err = o.db.Sessions.SaveSession(session)
+		}
+		err = fmt.Errorf("no messages provided")
+		return
+	}
+
 	if opts.Model == "" {
 		opts.Model = o.model
 	}
@@ -101,22 +110,24 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		contextContent = ctx.Content
 	}
 
+	var messageContent string
 	// Process any template variables in the message content (user input)
 	// Double curly braces {{variable}} indicate template substitution
 	// should occur, whether in patterns or direct input
 	if request.Message != nil {
-		request.Message.Content, err = template.ApplyTemplate(request.Message.Content, request.PatternVariables, "")
-		if err != nil {
-			return nil, err
+		if request.Message.Content, err =
+			template.ApplyTemplate(request.Message.Content, request.PatternVariables, ""); err != nil {
+			return
 		}
+		messageContent = request.Message.Content
 	}
 
 	var patternContent string
 	if request.PatternName != "" {
-		pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, request.Message.Content)
-		// pattrn will now contain user input, and all variables will be resolved, or errored
+		var pattern *fsdb.Pattern
+		if pattern, err = o.db.Patterns.GetApplyVariables(
+			request.PatternName, request.PatternVariables, messageContent); err != nil {
 
-		if err != nil {
 			return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
 		}
 		patternContent = pattern.Pattern

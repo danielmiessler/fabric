@@ -63,8 +63,6 @@ type Flags struct {
 
 // Init Initialize flags. returns a Flags struct and an error
 func Init() (ret *Flags, err error) {
-	var message string
-
 	ret = &Flags{}
 	parser := flags.NewParser(ret, flags.Default)
 	var args []string
@@ -75,21 +73,19 @@ func Init() (ret *Flags, err error) {
 	info, _ := os.Stdin.Stat()
 	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
+	//custom message
+	if len(args) > 0 {
+		ret.Message = AppendMessage(ret.Message, args[len(args)-1])
+	}
+
 	// takes input from stdin if it exists, otherwise takes input from args (the last argument)
 	if pipedToStdin {
-		//fmt.Printf("piped: %v\n", args)
-		if message, err = readStdin(); err != nil {
+		var pipedMessage string
+		if pipedMessage, err = readStdin(); err != nil {
 			return
 		}
-	} else if len(args) > 0 {
-		//fmt.Printf("no piped: %v\n", args)
-		message = args[len(args)-1]
-	} else {
-		//fmt.Printf("no data: %v\n", args)
-		message = ""
+		ret.Message = AppendMessage(ret.Message, pipedMessage)
 	}
-	ret.Message = message
-
 	return
 }
 
