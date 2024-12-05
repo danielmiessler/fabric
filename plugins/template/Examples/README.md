@@ -93,11 +93,14 @@ config:
 fabric --addextension ~/.config/fabric/extensions/configs/word-generator.yaml
 
 # Run (generate 3 random words)
-fabric -p "{{ext:word-generator:generate:3}}"
+echo "{{ext:word-generator:generate:3}}" | fabric
 ```
 
 ## Example 2: Direct Executable (SQLite3)
 Using a system executable directly.
+
+copy the memories to your home directory
+ ~/memories.db
 
 ### 1. Configure
 Create `~/.config/fabric/extensions/configs/memory-query.yaml`:
@@ -130,49 +133,21 @@ config:
 fabric --addextension ~/.config/fabric/extensions/configs/memory-query.yaml
 
 # Run queries
-fabric -p "{{ext:memory-query:all}}"
-fabric -p "{{ext:memory-query:byid:123}}"
+echo  "{{ext:memory-query:all}}" | fabric
+echo  "{{ext:memory-query:byid:3}}" | fabric
 ```
 
-## Example 3: Local Shell Script (Package Tracker)
-Running a local system administration script.
-
-### 1. Position Files
-```bash
-# Install script
-sudo cp track_packages.sh ~/.config/fabric/extensions/bin/
-sudo chmod +x ~/.config/fabric/extensions/bin/track_packages.sh
-```
-
-### 2. Configure
-Create `~/.config/fabric/extensions/configs/package-tracker.yaml`:
-```yaml
-name: package-tracker
-executable: "~/.config/fabric/extensions/bin/track_packages.sh"
-type: executable
-timeout: "30s"
-description: "Track system package changes"
-version: "1.0.0"
-
-operations:
-  track:
-    cmd_template: "{{executable}}"
-
-config:
-  output:
-    method: stdout
-```
-
-### 3. Register & Run
-```bash
-# Register
-fabric --addextension ~/.config/fabric/extensions/configs/package-tracker.yaml
-
-# Run
-fabric -p "{{ext:package-tracker:track}}"
-```
 
 ## Extension Management Commands
+
+### Add Extension
+```bash
+fabric --addextension ~/.config/fabric/extensions/configs/memory-query.yaml
+```
+
+Note : if the executable or config file changes, you must re-add the extension.
+This will recompute the hash for the extension.
+
 
 ### List Extensions
 ```bash
@@ -185,6 +160,25 @@ Shows all registered extensions with their status and configuration details.
 fabric --rmextension <extension-name>
 ```
 Removes an extension from the registry.
+
+
+## Extensions in patterns
+
+```
+Create a pattern that use multiple extensions.
+
+These are my favorite
+{{ext:word-generator:generate:3}}
+
+These are my least favorite
+{{ext:word-generator:generate:2}}
+
+what does this say about me?
+```
+
+```bash
+./fabric -p ./plugins/template/Examples/test_pattern.md
+```
 
 ## Security Considerations
 
