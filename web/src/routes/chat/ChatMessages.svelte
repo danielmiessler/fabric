@@ -70,24 +70,24 @@
     <div class="flex justify-between items-center mb-4 flex-none">
         <span class="text-sm font-medium">Chat History</span>
         <div class="flex gap-2">
-            <Button variant="outline" size="icon" aria-label="Revert Last Message" on:click={revertLastMessage}>
+            <Button class="variant-glass-tertiary" variant="outline" size="icon" aria-label="Revert Last Message" on:click={revertLastMessage}>
                 <RotateCcw class="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon" aria-label="Clear Chat" on:click={clearMessages}>
+            <Button class="variant-glass-tertiary" variant="outline" size="icon" aria-label="Clear Chat" on:click={clearMessages}>
                 <Trash2 class="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon" aria-label="Copy Chat" on:click={copyToClipboard}>
+            <Button class="variant-glass-tertiary" variant="outline" size="icon" aria-label="Copy Chat" on:click={copyToClipboard}>
                 <Copy class="h-4 w-4" />
             </Button>
             <Toast position="b" />
-            <Button variant="outline" size="icon" aria-label="Save Chat" on:click={saveChat}>
+            <Button class="variant-glass-tertiary" variant="outline" size="icon" aria-label="Save Chat" on:click={saveChat}>
                 <Save class="h-4 w-4" />
             </Button>
         </div>
     </div>
 
-    <div class="messages-container flex-1" bind:this={messagesContainer}>
-        <div class="messages-content space-y-4">
+    <div class="messages-container" bind:this={messagesContainer}>
+        <div class="messages-content">
             {#each $chatState.messages as message}
                 <div class="message-item {message.role === 'assistant' ? 'pl-4' : 'font-medium'} transition-all">
                     <span class="text-xs tertiary uppercase">{message.role}:</span>
@@ -149,7 +149,7 @@
     }
 
     :global(.message-item pre) {
-        background-color: rgb(var(--color-secondary-50));
+        background-color: rgb(50, 50, 50);
         padding: 1rem;
         border-radius: 0.5rem;
         margin: 0.5rem 0;
@@ -161,9 +161,39 @@
         font-size: 0.875rem;
         padding: 0.2rem 0.4rem;
         border-radius: 0.25rem;
-        background-color: rgb(var(--color-secondary-50));
+        background-color: rgb(50, 50, 60);
     }
 
+    :global(.message-item h1) {
+        margin: 0.5rem 0;
+        font: bold 1.5rem/1.5 system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
+    :global(.message-item h2) {
+        margin: 0.5rem 0;
+        font: bold 1.25rem/1.5 system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
+    :global(.message-item h3) {
+        margin: 0.5rem 0;
+        font: bold 1rem/1.5 system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
+    :global(.message-item h4) {
+        margin: 0.5rem 0;
+        font: bold 0.875rem/1.5 system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
+    :global(.message-item h5) {
+        margin: 0.5rem 0;
+        font: bold 0.75rem/1.5 system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
+    :global(.message-item h6) {
+        margin: 0.5rem 0;
+        font: bold 0.625rem/1.5 system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+    
     :global(.message-item p) {
         margin: 0.5rem 0;
     }

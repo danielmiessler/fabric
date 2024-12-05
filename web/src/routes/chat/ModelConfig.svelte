@@ -6,7 +6,7 @@
   import { modelConfig, availableModels, loadAvailableModels } from "$lib/store/model-config";
   import Transcripts from "./Transcripts.svelte";
   import { patterns } from "$lib/types/chat/patterns";
-	import { patternAPI } from "$lib/types/chat/patterns";
+  import { patternAPI } from "$lib/types/chat/patterns";
 
 	let selectedPreset = "";
 	
@@ -15,15 +15,15 @@
 		patternAPI.selectPattern(selectedPreset);
 	}
 
-  onMount(async () => {
-    await loadAvailableModels();
-    await patternAPI.loadPatterns();
-  });
+    onMount(async () => {
+      await loadAvailableModels();
+      await patternAPI.loadPatterns();
+    });
 </script>
 
-<div class="space-y-4">
-    <div class="flex gap-4">
-        <div class="flex-1">
+<div class="space-y-2 max-w-full">
+    <div class="flex flex-col gap-2">
+        <div class="min-w-0">
   	    	<Select 
   	    		bind:value={selectedPreset}
   	    	> 
@@ -33,7 +33,7 @@
   	    		{/each}
   	    	</Select>
         </div>
-        <div class="flex-1">
+        <div class="min-w-0">
             <Select 
                 bind:value={$modelConfig.model}
             >
@@ -45,7 +45,7 @@
         </div>
     </div>
   
-    <div class="space-y-2">
+    <div class="space-y-1">
         <Label class="p-1 font-bold">Temperature ({$modelConfig.temperature.toFixed(1)})</Label>
         <Slider
             bind:value={$modelConfig.temperature}
@@ -55,7 +55,7 @@
         />
     </div>
 
-    <div class="space-y-2">
+    <div class="space-y-1">
         <Label class="p-1 font-bold">Maximum Length ({$modelConfig.maxLength})</Label>
         <Slider
             bind:value={$modelConfig.maxLength}
@@ -65,7 +65,7 @@
         />
     </div>
 
-    <div class="space-y-2">
+    <div class="space-y-1">
         <Label class="p-1 font-bold">Top P ({$modelConfig.top_p.toFixed(2)})</Label>
         <Slider
             bind:value={$modelConfig.top_p}
@@ -75,7 +75,7 @@
         />
     </div>
 
-    <div class="space-y-2">
+    <div class="space-y-1">
         <Label class="p-1 font-bold">Frequency Penalty ({$modelConfig.frequency.toFixed(2)})</Label>
         <Slider
             bind:value={$modelConfig.frequency}
@@ -85,7 +85,7 @@
         />
     </div>
 
-    <div class="space-y-2">
+    <div class="space-y-1">
         <Transcripts />
     </div>
 </div>

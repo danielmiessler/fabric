@@ -31,16 +31,17 @@
   <div class="fixed inset-0 bg-gradient-to-br from-primary-500/20 via-tertiary-500/20 to-secondary-500/20 -z-10"></div>
   <svelte:fragment slot="header">
     <Header />
-    <div class="bg-gradient-to-b variant-gradient-primary-tertiary opacity-20 h-2 py-4">
+    
+    <div class="h-2 py-4">
+      </svelte:fragment>
+        <div 
+        in:fly={{ duration: 1000, delay: 300, y: 100 }}
+        >
+      <main class="mx-auto p-4">
+        <slot />
+      </main>
     </div>
-  </svelte:fragment>
-    <div 
-    in:fly={{ duration: 1000, delay: 300, y: 100 }}
-    >
-  <main class="mx-auto p-4">
-    <slot />
-  </main>
-</div>
+  
   <svelte:fragment slot="footer">
     <Footer />
   </svelte:fragment>
@@ -49,7 +50,6 @@
 
 <style>
 	main {
-    /*height: calc( 100vh - 2rem ); /* Adjust based on header/footer height */
 		padding: 2rem;
 		box-sizing: border-box;
 		overflow-y: auto;

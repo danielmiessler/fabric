@@ -8,16 +8,16 @@
     let transcript = '';
     let loading = false;
     let error = '';
-    let title = ''; 
-    
+    let title = '';
+
     const toastStore = getToastStore();
-        
+
     async function fetchTranscript() {
       function isValidYouTubeUrl(url: string) {
         const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
         return pattern.test(url);
       }
-      
+
       if (!isValidYouTubeUrl(url)) {
         error = 'Please enter a valid YouTube URL';
         toastStore.trigger({
@@ -26,20 +26,20 @@
         });
         return;
       }
-  
+
       loading = true;
       error = '';
-      
+
       try {
         const response = await fetch('/chat', {
           method: 'POST',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
           body: JSON.stringify({ url })
         });
-        
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error || 'Failed to fetch transcript');
@@ -47,7 +47,7 @@
 
         const data = await response.json();
         console.log('Parsed response data:', data);
-        
+
         transcript = data.transcript;
         title = data.title;
 
@@ -71,17 +71,18 @@
       }
     }
 </script>
-  
-      
+
+
 <div class="flex gap-2">
     <Input
         type="text"
         bind:value={url}
         placeholder="Enter YouTube URL"
-        class="flex-1 rounded-md border bg-background px-4"
+        class="flex-1 rounded-full border bg-background px-4"
         disabled={loading}
     />
     <Button
+        class="btn btn-sm variant-outline-tertiary variant-glass-success"
         variant="outline"
         on:click={fetchTranscript}
         disabled={loading || !url}
@@ -99,7 +100,7 @@
 {/if}
 
 {#if transcript}
-<Toast position="b" />  
+<Toast position="b" />
     <div class="space-y-4 border rounded-lg p-4 bg-muted/50 h-96">
         <div class="flex justify-between items-center">
             <h3 class="text-xs font-semibold">{title || 'Transcript'}</h3>
@@ -118,7 +119,7 @@
         ></textarea>
     </div>
 {/if}
-  
+
   <style>
     .spinner-border {
       width: 1rem;
@@ -128,7 +129,7 @@
       border-radius: 50%;
       animation: spin 0.75s linear infinite;
     }
-  
+
     @keyframes spin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }

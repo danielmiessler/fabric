@@ -2,7 +2,6 @@
     import { onMount, onDestroy } from 'svelte';
     import { ParticleSystem } from './ParticleSystem';
     import { createParticleGradient } from '$lib/utils/canvas';
-    import { fade } from 'svelte/transition';
     
     export let particleCount = 100;
     export let particleSize = 3;

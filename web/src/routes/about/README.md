@@ -5,16 +5,16 @@ date: 2024-1-12
 updated: 2024-11-22
 ---
 The UI for Fabric can be found [here](/chat).
-<div align="center" style="">
-<img src="./src/lib/images/fabric-logo.gif" alt="fabriclogo" width="400" height="400"/>
+<div align="center">
+<img src="./src/lib/images/fabric-logo.gif" alt="fabriclogo" width="200" height="200"/>
 
 # `fabric`
-
 
 ![Static Badge](https://img.shields.io/badge/mission-human_flourishing_via_AI_augmentation-purple)![Github top language](https://img.shields.io/github/languages/top/danielmiessler/fabric)![GitHub last commit](https://img.shields.io/github/last-commit/danielmiessler/fabric)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 [MIT Open Source License](https://opensource.org/licenses/MIT)
+
 </div>
 <div align="center">
 <p class="align center">

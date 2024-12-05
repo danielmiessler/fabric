@@ -46,7 +46,7 @@
 				class="border-2 border-primary/20"
 			/>
 			<a href="/" class="flex items-center">
-				<span class="text-lg font-semibold">Fabric</span>
+				<span class="text-lg font-semibold">fabric</span>
 			</a>
 		</div>
 
