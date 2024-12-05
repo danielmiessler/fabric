@@ -15,18 +15,18 @@ var (
     fetchPlugin = &FetchPlugin{}
 	sysPlugin = &SysPlugin{} 
     extensionManager *ExtensionManager
-    Debug = true  // Debug flag
+    Debug = false  // Debug flag
 )
 
 
 func init() {
     homedir, err := os.UserHomeDir()
     if err != nil {
-        // We should probably handle this error appropriately
-        return
+        debugf("Warning: could not initialize extension manager: %v\n", err)
     }
     configDir := filepath.Join(homedir, ".config/fabric")
     extensionManager = NewExtensionManager(configDir)
+    // Extensions will work if registry exists, otherwise they'll just fail gracefully
 }
 
 var pluginPattern = regexp.MustCompile(`\{\{plugin:([^:]+):([^:]+)(?::([^}]+))?\}\}`)

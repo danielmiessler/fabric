@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"gopkg.in/yaml.v3"
@@ -118,9 +119,13 @@ func (r *ExtensionRegistry) Register(configPath string) error {
         return fmt.Errorf("failed to parse config file: %w", err)
     }
 
-    // Add validation
-    if err := r.validateExtensionDefinition(&ext); err != nil {
-        return fmt.Errorf("invalid extension configuration: %w", err)
+    // Validate extension name
+    if ext.Name == "" {
+        return fmt.Errorf("extension name cannot be empty")
+    }
+    
+    if strings.Contains(ext.Name, " ") {
+        return fmt.Errorf("extension name '%s' contains spaces - names must not contain spaces", ext.Name)
     }
 
     // Verify executable exists
