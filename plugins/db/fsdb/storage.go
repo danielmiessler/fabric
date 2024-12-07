@@ -29,44 +29,42 @@ func (o *StorageEntity) GetNames() (ret []string, err error) {
 	// Resolve the directory path to an absolute path
 	absDir, err := common.GetAbsolutePath(o.Dir)
 	if err != nil {
-			return nil, fmt.Errorf("could not resolve directory path: %v", err)
+		return nil, fmt.Errorf("could not resolve directory path: %v", err)
 	}
 
 	// Read the directory entries
 	var entries []os.DirEntry
 	if entries, err = os.ReadDir(absDir); err != nil {
-			return nil, fmt.Errorf("could not read items from directory: %v", err)
+		return nil, fmt.Errorf("could not read items from directory: %v", err)
 	}
 
 	for _, entry := range entries {
-			entryPath := filepath.Join(absDir, entry.Name())
+		entryPath := filepath.Join(absDir, entry.Name())
 
-			// Get metadata for the entry, including symlink info
-			fileInfo, err := os.Lstat(entryPath)
-			if err != nil {
-					return nil, fmt.Errorf("could not stat entry %s: %v", entryPath, err)
-			}
+		// Get metadata for the entry, including symlink info
+		fileInfo, err := os.Lstat(entryPath)
+		if err != nil {
+			return nil, fmt.Errorf("could not stat entry %s: %v", entryPath, err)
+		}
 
-			// Determine if the entry should be included
-			if o.ItemIsDir {
-					// Include directories or symlinks to directories
-					if fileInfo.IsDir() || (fileInfo.Mode()&os.ModeSymlink != 0 && common.IsSymlinkToDir(entryPath)) {
-							ret = append(ret, entry.Name())
-					}
-			} else {
-					// Include files, optionally filtering by extension
-					if !fileInfo.IsDir() {
-							if o.FileExtension == "" || filepath.Ext(entry.Name()) == o.FileExtension {
-									ret = append(ret, strings.TrimSuffix(entry.Name(), o.FileExtension))
-							}
-					}
+		// Determine if the entry should be included
+		if o.ItemIsDir {
+			// Include directories or symlinks to directories
+			if fileInfo.IsDir() || (fileInfo.Mode()&os.ModeSymlink != 0 && common.IsSymlinkToDir(entryPath)) {
+				ret = append(ret, entry.Name())
 			}
+		} else {
+			// Include files, optionally filtering by extension
+			if !fileInfo.IsDir() {
+				if o.FileExtension == "" || filepath.Ext(entry.Name()) == o.FileExtension {
+					ret = append(ret, strings.TrimSuffix(entry.Name(), o.FileExtension))
+				}
+			}
+		}
 	}
 
 	return ret, nil
 }
-
-
 
 func (o *StorageEntity) Delete(name string) (err error) {
 	if err = os.Remove(o.BuildFilePathByName(name)); err != nil {

@@ -56,7 +56,6 @@ func (o *PatternsEntity) GetApplyVariables(
 	return
 }
 
-
 func (o *PatternsEntity) applyVariables(
 	pattern *Pattern, variables map[string]string, input string) (err error) {
 
