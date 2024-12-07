@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins/template"
 )
 
@@ -33,8 +34,16 @@ func (o *PatternsEntity) GetApplyVariables(
 		strings.HasPrefix(source, ".")
 
 	if isFilePath {
-		pattern, err = o.getFromFile(source)
+		// Resolve the file path using GetAbsolutePath
+		absPath, err := common.GetAbsolutePath(source)
+		if err != nil {
+			return nil, fmt.Errorf("could not resolve file path: %v", err)
+		}
+
+		// Use the resolved absolute path to get the pattern
+		pattern, err = o.getFromFile(absPath)
 	} else {
+		// Otherwise, get the pattern from the database
 		pattern, err = o.getFromDB(source)
 	}
 
@@ -42,9 +51,11 @@ func (o *PatternsEntity) GetApplyVariables(
 		return
 	}
 
+	// Apply variables to the pattern
 	err = o.applyVariables(pattern, variables, input)
 	return
 }
+
 
 func (o *PatternsEntity) applyVariables(
 	pattern *Pattern, variables map[string]string, input string) (err error) {
