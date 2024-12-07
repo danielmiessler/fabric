@@ -110,24 +110,28 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		contextContent = ctx.Content
 	}
 
-	var messageContent string
 	// Process any template variables in the message content (user input)
 	// Double curly braces {{variable}} indicate template substitution
-	// should occur, whether in patterns or direct input
-	if request.Message != nil {
-		if request.Message.Content, err =
-			template.ApplyTemplate(request.Message.Content, request.PatternVariables, ""); err != nil {
-			return
+	// Ensure we have a message before processing, other wise we'll get an error when we pass to pattern.go
+	if request.Message == nil {
+		request.Message = &goopenai.ChatCompletionMessage{
+			Role:    goopenai.ChatMessageRoleUser,
+			Content: " ",
 		}
-		messageContent = request.Message.Content
+	}
+
+	// Now we know request.Message is not nil, process template variables
+	request.Message.Content, err = template.ApplyTemplate(request.Message.Content, request.PatternVariables, "")
+	if err != nil {
+		return nil, err
 	}
 
 	var patternContent string
 	if request.PatternName != "" {
-		var pattern *fsdb.Pattern
-		if pattern, err = o.db.Patterns.GetApplyVariables(
-			request.PatternName, request.PatternVariables, messageContent); err != nil {
+		pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, request.Message.Content)
+		// pattrn will now contain user input, and all variables will be resolved, or errored
 
+		if err != nil {
 			return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
 		}
 		patternContent = pattern.Pattern
