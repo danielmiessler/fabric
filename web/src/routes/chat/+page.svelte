@@ -4,7 +4,7 @@
 	import ModelConfig from "./ModelConfig.svelte";
 </script>
 
-<div class="flex-1 mx-auto p-4">
+<div class="flex-1 mx-auto p-4 min-h-screen">
 	<div class="grid grid-cols-1 lg:grid-cols-[250px_minmax(250px,_1.5fr)_minmax(250px,_1.5fr)] gap-4 h-[calc(100vh-2rem)]">
 		<div class="flex flex-col space-y-1 order-3 lg:order-1">
 			<ModelConfig />
