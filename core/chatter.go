@@ -121,9 +121,11 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	// Now we know request.Message is not nil, process template variables
-	request.Message.Content, err = template.ApplyTemplate(request.Message.Content, request.PatternVariables, "")
-	if err != nil {
-		return nil, err
+	if request.InputHasVars {
+		request.Message.Content, err = template.ApplyTemplate(request.Message.Content, request.PatternVariables, "")
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	var patternContent string

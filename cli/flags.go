@@ -55,6 +55,7 @@ type Flags struct {
 	PrintContext       string            `long:"printcontext" description:"Print context"`
 	PrintSession       string            `long:"printsession" description:"Print session"`
 	HtmlReadability    bool              `long:"readability" description:"Convert HTML input into a clean, readable view"`
+	InputHasVars 	 		 bool 			 		   `long:"input-has-vars" description:"Apply variables to user input"`
 	DryRun             bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
 	Serve              bool              `long:"serve" description:"Serve the Fabric Rest API"`
 	ServeAddress       string            `long:"address" description:"The address to bind the REST API" default:":8080"`
@@ -126,6 +127,7 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 		SessionName:      o.Session,
 		PatternName:      o.Pattern,
 		PatternVariables: o.PatternVariables,
+		InputHasVars:     o.InputHasVars,
 		Meta:             Meta,
 	}
 
