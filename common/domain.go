@@ -12,6 +12,7 @@ type ChatRequest struct {
 	Message          *goopenai.ChatCompletionMessage
 	Language         string
 	Meta             string
+	InputHasVars     bool
 }
 
 type ChatOptions struct {
