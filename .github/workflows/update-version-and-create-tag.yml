@@ -41,6 +41,9 @@ jobs:
         id: get_latest_tag
         run: |
           latest_tag=$(git tag --sort=-creatordate | head -n 1)
+          if [ -z "$latest_tag" ]; then
+            latest_tag="v0.0.0"
+          fi
           echo "Latest tag is: $latest_tag"
           echo "tag=$latest_tag" >> $GITHUB_ENV  # Save the latest tag to environment file
 
