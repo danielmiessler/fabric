@@ -23,9 +23,9 @@ const mdsvexOptions = {
       light: 'github-light'
     }
   },
-  rehypePlugins: [
-    rehypeSlug,
-    rehypeUnwrapImages,
+rehypePlugins: [
+	rehypeSlug,
+	rehypeUnwrapImages,
     [rehypeAutolinkHeadings, {
       behavior: 'wrap'
     }],
@@ -38,37 +38,21 @@ const mdsvexOptions = {
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  kit: {
-    adapter: adapter(),
-    alias: {
-      $components: join(__dirname, 'src/lib/components'),
-      $lib: join(__dirname, 'src/lib'),
-      $styles: join(__dirname, 'src/styles'),
-      $utils: join(__dirname, 'src/lib/utils')
-    },
-    prerender: {
-      handleHttpError: ({ path, referrer, message }) => {
-        // Ignore 405 errors for the /chat route
-        if (path === '/chat' && message.includes('405')) {
-          return;
-        }
-
-        // Log other errors
-        console.error(`Error prerendering ${path} (referrer: ${referrer}): ${message}`);
-      },
-      entries: [
-        // List of routes to prerender
-        '*',
-        // Exclude /chat from prerendering
-        '!/chat'
-      ]
-    }
-  },
-  extensions: ['.svelte', '.md', '.svx'],
-  preprocess: [
-    vitePreprocess(),
-    mdsvex(mdsvexOptions)
-  ]
-};
-
-export default config;
+	kit: {
+	  adapter: adapter(),
+	  alias: {
+		$components: join(__dirname, 'src/lib/components'),
+		$lib: join(__dirname, 'src/lib'),
+		$styles: join(__dirname, 'src/styles'),
+    
+		$utils: join(__dirname, 'src/lib/utils')
+	  }
+	},
+	extensions: ['.svelte', '.md', '.svx'],
+	preprocess: [
+	  vitePreprocess(),
+	  mdsvex(mdsvexOptions)
+	]
+  };
+  
+  export default config;
