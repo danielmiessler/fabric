@@ -13,6 +13,7 @@ type PatternsHandler struct {
 	patterns *fsdb.PatternsEntity
 }
 
+
 // NewPatternsHandler creates a new PatternsHandler
 func NewPatternsHandler(r *gin.Engine, patterns *fsdb.PatternsEntity) (ret *PatternsHandler) {
 	ret = &PatternsHandler{
