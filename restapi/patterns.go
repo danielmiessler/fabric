@@ -18,7 +18,6 @@ func NewPatternsHandler(r *gin.Engine, patterns *fsdb.PatternsEntity) (ret *Patt
 	ret = &PatternsHandler{
 		StorageHandler: NewStorageHandler[fsdb.Pattern](r, "patterns", patterns), patterns: patterns}
 
-		
 	// TODO: Add custom, replacement routes here
 	//r.GET("/patterns/:name", ret.Get)
 	return
