@@ -35,12 +35,15 @@ jobs:
         run: |
           gcloud auth configure-docker
 
-      # Step 6: Deploy to GCP VM via SSH
-      - name: Deploy to GCP VM
+      # Step 6: Ensure SSH keys are generated and added
+      - name: Ensure SSH
         run: |
           # Ensure SSH keys are generated and added
           gcloud compute config-ssh
 
+      # Step 7: Deploy to GCP VM via SSH
+      - name: Deploy to GCP VM
+        run: |
           # Connect to the VM and deploy the application
           gcloud compute ssh fabric-api-server --zone "me-west1-b" --command="
             # Navigate to the deployment directory
