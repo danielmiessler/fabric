@@ -47,7 +47,7 @@ jobs:
           # Connect to the VM and deploy the application
           # gcloud compute ssh fabric-api-server --zone "me-west1-b" --command="
             # Ensure the deployment directory exists
-            mkdir -p /home/ilan_melki/fabric-api
+            sudo mkdir -p /home/ilan_melki/fabric-api
 
             # Navigate to the deployment directory
             cd /home/ilan_melki/fabric-api
