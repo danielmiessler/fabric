@@ -20,7 +20,7 @@ jobs:
 
       # Step 2: Authenticate to Google Cloud
       - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
@@ -29,11 +29,16 @@ jobs:
       - name: Set up gcloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      # Step 4: Deploy to GCP VM via SSH and Execute Deployment Commands
+      # Step 4: Configure Docker
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker 
+        
+        # Step 5: Deploy to GCP VM via SSH and Execute Deployment Commands
       - name: Deploy to GCP VM
         run: |
           # SSH into the VM and run deployment commands
-          gcloud compute --command="
+          gcloud compute ssh fabric-api-server --command="
             # Navigate to the deployment directory
             cd /home/fabric-api || exit
 
