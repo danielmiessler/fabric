@@ -30,6 +30,7 @@ RUN rm -rf /root/.config/fabric && \
     mkdir -p /root/.config/fabric
 COPY ENV /root/.config/fabric/.env
 
+
 # Add debug commands
 RUN ls -la /root/.config/fabric/
 
