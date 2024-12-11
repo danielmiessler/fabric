@@ -3,13 +3,13 @@ name: Update Version File and Create Tag
 on:
   push:
     branches:
-      - main  # Monitor the main branch
+      - main # Monitor the main branch
     paths-ignore:
-      - 'patterns/**'
-      - '**/*.md'
+      - "patterns/**"
+      - "**/*.md"
 
 permissions:
-  contents: write  # Ensure the workflow has write permissions
+  contents: write # Ensure the workflow has write permissions
 
 jobs:
   update-version:
@@ -31,6 +31,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Pull and rebase before pushing
+      - name: Pull and rebase main branch
+        run: |
+          git pull origin main --rebase
 
       - name: Get the latest tag
         id: get_latest_tag
@@ -63,7 +68,7 @@ jobs:
       - name: Update version.nix file
         run: |
           echo "\"${{ env.new_version }}\"" > pkgs/fabric/version.nix
-      
+
       - name: Format source codes
         run: |
           go fmt ./...
@@ -86,7 +91,7 @@ jobs:
 
       - name: Push changes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN to authenticate the push
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use GITHUB_TOKEN to authenticate the push
         run: |
           git push origin main  # Push changes to the main branch
 
@@ -99,7 +104,7 @@ jobs:
 
       - name: Dispatch event to trigger release workflow
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN to authenticate the dispatch
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use GITHUB_TOKEN to authenticate the dispatch
         run: |
           curl -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \

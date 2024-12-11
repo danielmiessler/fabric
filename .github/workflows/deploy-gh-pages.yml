@@ -10,24 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
+      # Install dependencies and build the web app
       - name: Install dependencies
         run: |
           cd web
           npm install
 
-      - name: Build the web interface
+      - name: Build web app
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          JINA_AI_API_KEY: ${{ secrets.JINA_AI_API_KEY }}
         run: |
           cd web
+          echo "window.ENV = {" > dist/config.js
+          echo "\"OPENROUTER_API_KEY\": \"$OPENROUTER_API_KEY\"," >> dist/config.js
+          echo "\"YOUTUBE_API_KEY\": \"$YOUTUBE_API_KEY\"," >> dist/config.js
+          echo "\"JINA_AI_API_KEY\": \"$JINA_AI_API_KEY\"" >> dist/config.js
+          echo "};" >> dist/config.js
           npm run build
 
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
