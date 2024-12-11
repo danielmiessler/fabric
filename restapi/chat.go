@@ -46,7 +46,7 @@ func NewChatHandler(r *gin.Engine, registry *core.PluginRegistry, db *fsdb.Db) *
 	}
 
 	r.POST("/chat", handler.HandleChat)
-
+	// return handler
 	return handler
 }
 
