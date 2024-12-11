@@ -28,9 +28,9 @@ jobs:
 
       - name: Build web app
         env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-          JINA_AI_API_KEY: ${{ secrets.JINA_AI_API_KEY }}
+          DEFAULT_VENDOR: ${{ secrets.DEFAULT_VENDOR }}
         run: |
           cd web
           echo "window.ENV = {" > dist/config.js
