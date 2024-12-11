@@ -33,11 +33,11 @@ jobs:
           DEFAULT_VENDOR: ${{ secrets.DEFAULT_VENDOR }}
         run: |
           cd web
-          echo "window.ENV = {" > dist/config.js
-          echo "\"OPENROUTER_API_KEY\": \"$OPENROUTER_API_KEY\"," >> dist/config.js
-          echo "\"YOUTUBE_API_KEY\": \"$YOUTUBE_API_KEY\"," >> dist/config.js
-          echo "\"JINA_AI_API_KEY\": \"$JINA_AI_API_KEY\"" >> dist/config.js
-          echo "};" >> dist/config.js
+          # echo "window.ENV = {" > dist/config.js
+          # echo "\"OPENAI_API_KEY\": \"$OPENAI_API_KEY\"," >> dist/config.js
+          # echo "\"YOUTUBE_API_KEY\": \"$YOUTUBE_API_KEY\"," >> dist/config.js
+          # echo "\"DEFAULT_VENDOR\": \"$DEFAULT_VENDOR\"" >> dist/config.js
+          # echo "};" >> dist/config.js
           npm run build
 
       # Deploy to GitHub Pages
