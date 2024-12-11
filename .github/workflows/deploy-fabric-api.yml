@@ -1,61 +1,54 @@
 # .github/workflows/deploy-fabric-api.yml
 
-name: Build, Test, and Push Fabric API
+name: Deploy Fabric API on GCP VM and Start Docker Containers
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "**/*.go"
-      - "Dockerfile"
-      - "docker-compose.yml"
-      - "ENV/**"
-      - ".github/workflows/deploy-fabric-api.yml"
+  workflow_run:
+    workflows: ["Build and Push Docker Image"] # Ensure this matches the exact name of your build & push workflow
+    types:
+      - completed
 
 jobs:
-  build:
-    name: Build and Test
+  deploy:
+    name: Deploy Docker Container to GCP VM
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the Repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
+      # Step 2: Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
         with:
-          go-version: "1.23.3"
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Install Dependencies
+      # Step 3: Install and Set Up gcloud SDK
+      - name: Set up gcloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # Step 4: Deploy to GCP VM via SSH and Execute Deployment Commands
+      - name: Deploy to GCP VM
         run: |
-          go mod download
+          # SSH into the VM and run deployment commands
+          gcloud compute --command="
+            # Navigate to the deployment directory
+            cd /home/fabric-api || exit
 
-      - name: Run Tests
-        run: |
-          go test -v ./...
+            # Pull the latest Docker image
+            docker pull ${{ secrets.DOCKER_USERNAME }}/fabric-api:latest
 
-  docker-build-push:
-    name: Build and Push Docker Image
-    needs: build
-    runs-on: ubuntu-latest
+            # Stop and remove existing containers
+            docker-compose down
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+            # Export environment variables
+            export OPENAI_API_KEY='${{ secrets.OPENAI_API_KEY }}'
+            export DEFAULT_VENDOR='${{ secrets.DEFAULT_VENDOR }}'
+            export YOUTUBE_API_KEY='${{ secrets.YOUTUBE_API_KEY }}'
+            export DOCKER_USERNAME='${{ secrets.DOCKER_USERNAME }}'
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/fabric-api:latest
+            # Start containers using Docker Compose with the environment variables
+            docker-compose up -d
+          "

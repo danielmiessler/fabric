@@ -1,11 +1,14 @@
-version: '3.8'
-
 services:
   fabric-api:
+    image: ${DOCKER_USERNAME}/fabric-api:latest
+    container_name: fabric-api-server
     build: .
     ports:
       - "8080:8080"
     volumes:
       - ./ENV:/root/.config/fabric/.env:ro
     environment:
-      - GIN_MODE=release 
+      - GIN_MODE=release
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEFAULT_VENDOR=${DEFAULT_VENDOR}
+      - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
