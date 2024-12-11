@@ -29,11 +29,6 @@ jobs:
       - name: Set up gcloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      # Step 4: Enable Compute Engine API (if not already enabled)
-      - name: Enable Compute Engine API
-        run: |
-          gcloud services enable compute.googleapis.com
-
       # Step 5: Configure Docker for GCP
       - name: Configure Docker
         run: |
@@ -54,7 +49,9 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/fabric-api:latest
 
             # Stop and remove existing containers
-            docker-compose down
+            if [ -f docker-compose.yml ]; then
+              docker-compose down || echo 'No existing containers running.'
+            fi
 
             # Export environment variables
             export OPENAI_API_KEY='${{ secrets.OPENAI_API_KEY }}'
