@@ -46,7 +46,7 @@ jobs:
           docker pull ${{ secrets.DOCKER_USERNAME }}/fabric-api:latest
 
           # Stop and remove existing container if it exists
-          if [ \$(docker ps -q -f name=${{ secrets.GCP_PROJECT_ID }}) ]; then
+          if docker ps -q -f name="${{ secrets.GCP_PROJECT_ID }}" > /dev/null; then
             docker stop ${{ secrets.GCP_PROJECT_ID }}
             docker rm ${{ secrets.GCP_PROJECT_ID }}
           fi
