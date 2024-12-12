@@ -42,18 +42,20 @@ jobs:
           # Navigate to the deployment directory
           cd /home/ilan_melki/fabric-api || exit
 
+          # Define container name
+          CONTAINER_NAME="fabric-api-server"
+
           # Pull the latest Docker image
           docker pull ${{ secrets.DOCKER_USERNAME }}/fabric-api:latest
 
           # Stop and remove existing container if it exists
-          if docker ps -q -f name="${{ secrets.GCP_PROJECT_ID }}" > /dev/null; then
-            docker stop ${{ secrets.GCP_PROJECT_ID }} || true
-            docker rm ${{ secrets.GCP_PROJECT_ID }} || true
-          fi
+          docker stop ${CONTAINER_NAME} 2>/dev/null || true
+          docker rm ${CONTAINER_NAME} 2>/dev/null || true
 
           # Run the new container with environment variables
           docker run -d \
-            --name ${{ secrets.GCP_PROJECT_ID }} \
+            --name ${CONTAINER_NAME} \
+            --restart unless-stopped \
             -p 8080:8080 \
             -e GIN_MODE=release \
             -e OPENAI_API_KEY='${{ secrets.OPENAI_API_KEY }}' \
