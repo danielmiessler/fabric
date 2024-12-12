@@ -47,8 +47,8 @@ jobs:
 
           # Stop and remove existing container if it exists
           if docker ps -q -f name="${{ secrets.GCP_PROJECT_ID }}" > /dev/null; then
-            docker stop ${{ secrets.GCP_PROJECT_ID }}
-            docker rm ${{ secrets.GCP_PROJECT_ID }}
+            docker stop ${{ secrets.GCP_PROJECT_ID }} || true
+            docker rm ${{ secrets.GCP_PROJECT_ID }} || true
           fi
 
           # Run the new container with environment variables
