@@ -68,7 +68,7 @@ func (o *PatternsEntity) applyVariables(
 	}
 
 	var result string
-	if result, err = template.ApplyTemplate(pattern.Pattern, variables, input); err != nil {
+	if result, err = template.ApplyTemplate(pattern.Pattern, variables, ""); err != nil {
 		return
 	}
 	pattern.Pattern = result
