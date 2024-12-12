@@ -1,0 +1,78 @@
+# .github/workflows/deploy-fabric-compose.yml
+
+name: Deploy Fabric Composition on GCP VM and Start Docker Containers
+
+on:
+  workflow_run:
+    # workflows: ["Build and Push Docker Image"] # Ensure this matches the exact name of your build & push workflow
+    # types:
+    #   - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Docker Container to GCP VM
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      # Step 3: Install and Set Up gcloud SDK
+      - name: Set up gcloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # Step 5: Configure Docker for GCP
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker
+
+      # # Step 6: Ensure SSH keys are generated and added
+      # - name: Ensure SSH
+      #   run: |
+      #     # Ensure SSH keys are generated and added
+      #     gcloud compute config-ssh
+
+      # Step 7: Deploy to GCP VM via SSH
+      - name: Deploy to GCP VM
+        run: |
+          # Connect to the VM and deploy the application
+          # gcloud compute ssh fabric-api-server --zone "me-west1-b" --command="
+            
+            # Update the package list
+            sudo apt-get update
+
+            # Install Docker Compose from the apt package manager
+            sudo apt-get install -y docker-compose-plugin
+
+            # Ensure the deployment directory exists
+            sudo mkdir -p /home/ilan_melki/fabric-api
+
+            # Navigate to the deployment directory
+            cd /home/ilan_melki/fabric-api
+
+            # Pull the latest Docker image
+            docker pull ${{ secrets.DOCKER_USERNAME }}/fabric-api:latest
+
+            # Stop and remove existing containers
+            if [ -f docker-compose.yml ]; then
+              docker-compose down || echo 'No existing containers running.'
+            fi
+
+            # Export environment variables
+            export OPENAI_API_KEY='${{ secrets.OPENAI_API_KEY }}'
+            export DEFAULT_VENDOR='${{ secrets.DEFAULT_VENDOR }}'
+            export YOUTUBE_API_KEY='${{ secrets.YOUTUBE_API_KEY }}'
+            export DOCKER_USERNAME='${{ secrets.DOCKER_USERNAME }}'
+
+            # Start containers using Docker Compose with the environment variables
+            docker-compose up -d
+          # "
