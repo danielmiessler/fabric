@@ -36,31 +36,43 @@ jobs:
       # Step 4: Deploy to GCP VM via SSH and Execute Docker Commands
       - name: Deploy to GCP VM
         run: |
+          # Define variables
+          CONTAINER_NAME="fabric-api-server"
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/fabric-api:latest"
+
           # Create the deployment directory if not existing
           sudo mkdir -p /home/ilan_melki/fabric-api
 
           # Navigate to the deployment directory
           cd /home/ilan_melki/fabric-api || exit
 
-          # Define container name
-          CONTAINER_NAME="fabric-api-server"
-
           # Pull the latest Docker image
-          docker pull ${{ secrets.DOCKER_USERNAME }}/fabric-api:latest
+          echo "Pulling latest image..."
+          docker pull $IMAGE_NAME
 
           # Stop and remove existing container if it exists
-          docker stop ${CONTAINER_NAME} 2>/dev/null || true
-          docker rm ${CONTAINER_NAME} 2>/dev/null || true
+          echo "Stopping existing container..."
+          docker stop $CONTAINER_NAME 2>/dev/null || true
+          docker rm $CONTAINER_NAME 2>/dev/null || true
 
           # Run the new container with environment variables
+          echo "Starting new container..."
           docker run -d \
-            --name ${CONTAINER_NAME} \
+            --name $CONTAINER_NAME \
             --restart unless-stopped \
             -p 8080:8080 \
             -e GIN_MODE=release \
             -e OPENAI_API_KEY='${{ secrets.OPENAI_API_KEY }}' \
             -e DEFAULT_VENDOR='${{ secrets.DEFAULT_VENDOR }}' \
             -e YOUTUBE_API_KEY='${{ secrets.YOUTUBE_API_KEY }}' \
-            ${{ secrets.DOCKER_USERNAME }}/fabric-api:latest
+            $IMAGE_NAME
+
+          # Verify container is running
+          echo "Verifying deployment..."
+          docker ps | grep $CONTAINER_NAME
+
+          # Wait for container to be healthy
+          sleep 10
+          curl -s -o /dev/null -w "%{http_code}" localhost:8080/health || echo "Health check failed"
     # Optional: Define any environment variables needed for the GitHub Actions runner here
     # env:
