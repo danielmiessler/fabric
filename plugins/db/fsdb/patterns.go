@@ -64,10 +64,10 @@ func (o *PatternsEntity) applyVariables(
 	// Ensure pattern has an {{input}} placeholder
 	// If not present, append it on a new line
 	if !strings.Contains(pattern.Pattern, "{{input}}") {
-			if !strings.HasSuffix(pattern.Pattern, "\n") {
-					pattern.Pattern += "\n"
-			}
-			pattern.Pattern += "{{input}}"
+		if !strings.HasSuffix(pattern.Pattern, "\n") {
+			pattern.Pattern += "\n"
+		}
+		pattern.Pattern += "{{input}}"
 	}
 
 	// Temporarily replace {{input}} with a sentinel token to protect it
@@ -78,7 +78,7 @@ func (o *PatternsEntity) applyVariables(
 	// At this point, our sentinel ensures {{input}} won't be affected
 	var processed string
 	if processed, err = template.ApplyTemplate(withSentinel, variables, ""); err != nil {
-			return
+		return
 	}
 
 	// Finally, replace our sentinel with the actual user input
