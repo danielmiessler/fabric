@@ -3,7 +3,7 @@
 name: Deploy Fabric Composition on GCP VM and Start Docker Containers
 
 on:
-  workflow_run:
+  # workflow_run:
     # workflows: ["Build and Push Docker Image"] # Ensure this matches the exact name of your build & push workflow
     # types:
     #   - completed
