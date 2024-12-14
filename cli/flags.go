@@ -68,11 +68,10 @@ type Flags struct {
 var debug = false
 
 func Debugf(format string, a ...interface{}) {
-    if debug {
-        fmt.Printf("DEBUG: "+format, a...)
-    }
+	if debug {
+		fmt.Printf("DEBUG: "+format, a...)
+	}
 }
-
 
 // Init Initialize flags. returns a Flags struct and an error
 func Init() (ret *Flags, err error) {
@@ -84,65 +83,65 @@ func Init() (ret *Flags, err error) {
 	yamlFields := make(map[string]bool)
 	t := reflect.TypeOf(Flags{})
 	for i := 0; i < t.NumField(); i++ {
-			if yamlTag := t.Field(i).Tag.Get("yaml"); yamlTag != "" {
-					yamlFields[yamlTag] = true
-					//Debugf("Found yaml-configured field: %s\n", yamlTag)
-			}
+		if yamlTag := t.Field(i).Tag.Get("yaml"); yamlTag != "" {
+			yamlFields[yamlTag] = true
+			//Debugf("Found yaml-configured field: %s\n", yamlTag)
+		}
 	}
 
 	// Scan args for that are provided by cli and might be in yaml
 	for _, arg := range args {
-			if strings.HasPrefix(arg, "--") {
-					flag := strings.TrimPrefix(arg, "--")
-					if i := strings.Index(flag, "="); i > 0 {
-							flag = flag[:i]
-					}
-					if yamlFields[flag] {
-							usedFlags[flag] = true
-							Debugf("CLI flag used: %s\n", flag)
-					}
+		if strings.HasPrefix(arg, "--") {
+			flag := strings.TrimPrefix(arg, "--")
+			if i := strings.Index(flag, "="); i > 0 {
+				flag = flag[:i]
 			}
+			if yamlFields[flag] {
+				usedFlags[flag] = true
+				Debugf("CLI flag used: %s\n", flag)
+			}
+		}
 	}
 
 	// Parse CLI flags first
 	ret = &Flags{}
 	parser := flags.NewParser(ret, flags.Default)
 	if _, err = parser.Parse(); err != nil {
-			return nil, err
+		return nil, err
 	}
 
 	// If config specified, load and apply YAML for unused flags
 	if ret.Config != "" {
-			yamlFlags, err := loadYAMLConfig(ret.Config)
-			if err != nil {
-					return nil, err
-			}
+		yamlFlags, err := loadYAMLConfig(ret.Config)
+		if err != nil {
+			return nil, err
+		}
 
-			// Apply YAML values where CLI flags weren't used
-			flagsVal := reflect.ValueOf(ret).Elem()
-			yamlVal := reflect.ValueOf(yamlFlags).Elem()
-			flagsType := flagsVal.Type()
+		// Apply YAML values where CLI flags weren't used
+		flagsVal := reflect.ValueOf(ret).Elem()
+		yamlVal := reflect.ValueOf(yamlFlags).Elem()
+		flagsType := flagsVal.Type()
 
-			for i := 0; i < flagsType.NumField(); i++ {
-					field := flagsType.Field(i)
-					if yamlTag := field.Tag.Get("yaml"); yamlTag != "" {
-							if !usedFlags[yamlTag] {
-									flagField := flagsVal.Field(i)
-									yamlField := yamlVal.Field(i)
-									if flagField.CanSet() {
-											if yamlField.Type() != flagField.Type() {
-													if err := assignWithConversion(flagField, yamlField); err != nil {
-															Debugf("Type conversion failed for %s: %v\n", yamlTag, err)
-															continue
-													}
-											} else {
-													flagField.Set(yamlField)
-											}
-											Debugf("Applied YAML value for %s: %v\n", yamlTag, yamlField.Interface())
-									}
+		for i := 0; i < flagsType.NumField(); i++ {
+			field := flagsType.Field(i)
+			if yamlTag := field.Tag.Get("yaml"); yamlTag != "" {
+				if !usedFlags[yamlTag] {
+					flagField := flagsVal.Field(i)
+					yamlField := yamlVal.Field(i)
+					if flagField.CanSet() {
+						if yamlField.Type() != flagField.Type() {
+							if err := assignWithConversion(flagField, yamlField); err != nil {
+								Debugf("Type conversion failed for %s: %v\n", yamlTag, err)
+								continue
 							}
+						} else {
+							flagField.Set(yamlField)
+						}
+						Debugf("Applied YAML value for %s: %v\n", yamlTag, yamlField.Interface())
 					}
+				}
 			}
+		}
 	}
 
 	// Handle stdin and messages
@@ -150,85 +149,79 @@ func Init() (ret *Flags, err error) {
 	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
 	if len(args) > 0 {
-			ret.Message = AppendMessage(ret.Message, args[len(args)-1])
+		ret.Message = AppendMessage(ret.Message, args[len(args)-1])
 	}
 
 	if pipedToStdin {
-			var pipedMessage string
-			if pipedMessage, err = readStdin(); err != nil {
-					return
-			}
-			ret.Message = AppendMessage(ret.Message, pipedMessage)
+		var pipedMessage string
+		if pipedMessage, err = readStdin(); err != nil {
+			return
+		}
+		ret.Message = AppendMessage(ret.Message, pipedMessage)
 	}
 
 	return ret, nil
 }
 
-
-
 func assignWithConversion(targetField, sourceField reflect.Value) error {
 	switch targetField.Kind() {
 	case reflect.Float64:
-			if sourceField.Kind() == reflect.Int || sourceField.Kind() == reflect.Float32 {
-					targetField.SetFloat(float64(sourceField.Convert(reflect.TypeOf(float64(0))).Float()))
-					Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
-					return nil
-			}
+		if sourceField.Kind() == reflect.Int || sourceField.Kind() == reflect.Float32 {
+			targetField.SetFloat(float64(sourceField.Convert(reflect.TypeOf(float64(0))).Float()))
+			Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
+			return nil
+		}
 	case reflect.Int:
-			if sourceField.Kind() == reflect.Float64 || sourceField.Kind() == reflect.Float32 {
-					targetField.SetInt(int64(sourceField.Convert(reflect.TypeOf(int64(0))).Int()))
-					Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
-					return nil
-			}
+		if sourceField.Kind() == reflect.Float64 || sourceField.Kind() == reflect.Float32 {
+			targetField.SetInt(int64(sourceField.Convert(reflect.TypeOf(int64(0))).Int()))
+			Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
+			return nil
+		}
 	case reflect.String:
-			if sourceField.Kind() == reflect.Interface {
-					if str, ok := sourceField.Interface().(string); ok {
-							targetField.SetString(str)
-							Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
-							return nil
-					}
+		if sourceField.Kind() == reflect.Interface {
+			if str, ok := sourceField.Interface().(string); ok {
+				targetField.SetString(str)
+				Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
+				return nil
 			}
+		}
 	case reflect.Bool:
-			if sourceField.Kind() == reflect.Interface {
-					if b, ok := sourceField.Interface().(bool); ok {
-							targetField.SetBool(b)
-							Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
-							return nil
-					}
+		if sourceField.Kind() == reflect.Interface {
+			if b, ok := sourceField.Interface().(bool); ok {
+				targetField.SetBool(b)
+				Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
+				return nil
 			}
+		}
 	}
 
 	return fmt.Errorf("unsupported conversion: %s to %s", sourceField.Type(), targetField.Type())
 }
 
-
-
-
 func loadYAMLConfig(configPath string) (*Flags, error) {
 	absPath, err := common.GetAbsolutePath(configPath)
 	if err != nil {
-			return nil, fmt.Errorf("invalid config path: %w", err)
+		return nil, fmt.Errorf("invalid config path: %w", err)
 	}
 
 	data, err := os.ReadFile(absPath)
 	if err != nil {
-			if os.IsNotExist(err) {
-					return nil, fmt.Errorf("config file not found: %s", absPath)
-			}
-			return nil, fmt.Errorf("error reading config file: %w", err)
+		if os.IsNotExist(err) {
+			return nil, fmt.Errorf("config file not found: %s", absPath)
+		}
+		return nil, fmt.Errorf("error reading config file: %w", err)
 	}
 
 	// Use the existing Flags struct for YAML unmarshal
 	config := &Flags{}
 	if err := yaml.Unmarshal(data, config); err != nil {
-			return nil, fmt.Errorf("error parsing config file: %w", err)
+		return nil, fmt.Errorf("error parsing config file: %w", err)
 	}
-	
+
 	Debugf("Config: %v\n", config)
 
 	return config, nil
 }
-
 
 // readStdin reads from stdin and returns the input as a string or an error
 func readStdin() (ret string, err error) {
