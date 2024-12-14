@@ -6,29 +6,31 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 	"strings"
 
 	"github.com/jessevdk/go-flags"
 	goopenai "github.com/sashabaranov/go-openai"
 	"golang.org/x/text/language"
+	"gopkg.in/yaml.v2"
 
 	"github.com/danielmiessler/fabric/common"
 )
 
 // Flags create flags struct. the users flags go into this, this will be passed to the chat struct in cli
 type Flags struct {
-	Pattern            string            `short:"p" long:"pattern" description:"Choose a pattern from the available patterns" default:""`
+	Pattern            string            `short:"p" long:"pattern" yaml:"pattern" description:"Choose a pattern from the available patterns" default:""`
 	PatternVariables   map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=#role:expert -v=#points:30"`
 	Context            string            `short:"C" long:"context" description:"Choose a context from the available contexts" default:""`
 	Session            string            `long:"session" description:"Choose a session from the available sessions"`
 	Attachments        []string          `short:"a" long:"attachment" description:"Attachment path or URL (e.g. for OpenAI image recognition messages)"`
 	Setup              bool              `short:"S" long:"setup" description:"Run setup for all reconfigurable parts of fabric"`
-	Temperature        float64           `short:"t" long:"temperature" description:"Set temperature" default:"0.7"`
-	TopP               float64           `short:"T" long:"topp" description:"Set top P" default:"0.9"`
-	Stream             bool              `short:"s" long:"stream" description:"Stream"`
-	PresencePenalty    float64           `short:"P" long:"presencepenalty" description:"Set presence penalty" default:"0.0"`
-	Raw                bool              `short:"r" long:"raw" description:"Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns."`
-	FrequencyPenalty   float64           `short:"F" long:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
+	Temperature        float64           `short:"t" long:"temperature" yaml:"temperature" description:"Set temperature" default:"0.7"`
+	TopP               float64           `short:"T" long:"topp" yaml:"topp" description:"Set top P" default:"0.9"`
+	Stream             bool              `short:"s" long:"stream" yaml:"stream" description:"Stream"`
+	PresencePenalty    float64           `short:"P" long:"presencepenalty" yaml:"presencepenalty" description:"Set presence penalty" default:"0.0"`
+	Raw                bool              `short:"r" long:"raw" yaml:"raw" description:"Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns."`
+	FrequencyPenalty   float64           `short:"F" long:"frequencypenalty" yaml:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
 	ListPatterns       bool              `short:"l" long:"listpatterns" description:"List all patterns"`
 	ListAllModels      bool              `short:"L" long:"listmodels" description:"List all available models"`
 	ListAllContexts    bool              `short:"x" long:"listcontexts" description:"List all contexts"`
@@ -36,8 +38,8 @@ type Flags struct {
 	UpdatePatterns     bool              `short:"U" long:"updatepatterns" description:"Update patterns"`
 	Message            string            `hidden:"true" description:"Messages to send to chat"`
 	Copy               bool              `short:"c" long:"copy" description:"Copy to clipboard"`
-	Model              string            `short:"m" long:"model" description:"Choose model"`
-	ModelContextLength int               `long:"modelContextLength" description:"Model context length (only affects ollama)"`
+	Model              string            `short:"m" long:"model" yaml:"model" description:"Choose model"`
+	ModelContextLength int               `long:"modelContextLength" yaml:"modelContextLength" description:"Model context length (only affects ollama)"`
 	Output             string            `short:"o" long:"output" description:"Output to file" default:""`
 	OutputSession      bool              `long:"output-session" description:"Output the entire session (also a temporary one) to the output file"`
 	LatestPatterns     string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
@@ -49,7 +51,7 @@ type Flags struct {
 	Language           string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
 	ScrapeURL          string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
 	ScrapeQuestion     string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
-	Seed               int               `short:"e" long:"seed" description:"Seed to be used for LMM generation"`
+	Seed               int               `short:"e" long:"seed" yaml:"seed" description:"Seed to be used for LMM generation"`
 	WipeContext        string            `short:"w" long:"wipecontext" description:"Wipe context"`
 	WipeSession        string            `short:"W" long:"wipesession" description:"Wipe session"`
 	PrintContext       string            `long:"printcontext" description:"Print context"`
@@ -59,36 +61,174 @@ type Flags struct {
 	DryRun             bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
 	Serve              bool              `long:"serve" description:"Serve the Fabric Rest API"`
 	ServeAddress       string            `long:"address" description:"The address to bind the REST API" default:":8080"`
+	Config             string            `long:"config" description:"Path to YAML config file"`
 	Version            bool              `long:"version" description:"Print current version"`
 }
 
+var debug = false
+
+func Debugf(format string, a ...interface{}) {
+    if debug {
+        fmt.Printf("DEBUG: "+format, a...)
+    }
+}
+
+
 // Init Initialize flags. returns a Flags struct and an error
 func Init() (ret *Flags, err error) {
-	ret = &Flags{}
-	parser := flags.NewParser(ret, flags.Default)
-	var args []string
-	if args, err = parser.Parse(); err != nil {
-		return
+	// Track which yaml-configured flags were set on CLI
+	usedFlags := make(map[string]bool)
+	args := os.Args[1:]
+
+	// Get list of fields that have yaml tags, could be in yaml config
+	yamlFields := make(map[string]bool)
+	t := reflect.TypeOf(Flags{})
+	for i := 0; i < t.NumField(); i++ {
+			if yamlTag := t.Field(i).Tag.Get("yaml"); yamlTag != "" {
+					yamlFields[yamlTag] = true
+					//Debugf("Found yaml-configured field: %s\n", yamlTag)
+			}
 	}
 
+	// Scan args for that are provided by cli and might be in yaml
+	for _, arg := range args {
+			if strings.HasPrefix(arg, "--") {
+					flag := strings.TrimPrefix(arg, "--")
+					if i := strings.Index(flag, "="); i > 0 {
+							flag = flag[:i]
+					}
+					if yamlFields[flag] {
+							usedFlags[flag] = true
+							Debugf("CLI flag used: %s\n", flag)
+					}
+			}
+	}
+
+	// Parse CLI flags first
+	ret = &Flags{}
+	parser := flags.NewParser(ret, flags.Default)
+	if _, err = parser.Parse(); err != nil {
+			return nil, err
+	}
+
+	// If config specified, load and apply YAML for unused flags
+	if ret.Config != "" {
+			yamlFlags, err := loadYAMLConfig(ret.Config)
+			if err != nil {
+					return nil, err
+			}
+
+			// Apply YAML values where CLI flags weren't used
+			flagsVal := reflect.ValueOf(ret).Elem()
+			yamlVal := reflect.ValueOf(yamlFlags).Elem()
+			flagsType := flagsVal.Type()
+
+			for i := 0; i < flagsType.NumField(); i++ {
+					field := flagsType.Field(i)
+					if yamlTag := field.Tag.Get("yaml"); yamlTag != "" {
+							if !usedFlags[yamlTag] {
+									flagField := flagsVal.Field(i)
+									yamlField := yamlVal.Field(i)
+									if flagField.CanSet() {
+											if yamlField.Type() != flagField.Type() {
+													if err := assignWithConversion(flagField, yamlField); err != nil {
+															Debugf("Type conversion failed for %s: %v\n", yamlTag, err)
+															continue
+													}
+											} else {
+													flagField.Set(yamlField)
+											}
+											Debugf("Applied YAML value for %s: %v\n", yamlTag, yamlField.Interface())
+									}
+							}
+					}
+			}
+	}
+
+	// Handle stdin and messages
 	info, _ := os.Stdin.Stat()
 	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
-	//custom message
 	if len(args) > 0 {
-		ret.Message = AppendMessage(ret.Message, args[len(args)-1])
+			ret.Message = AppendMessage(ret.Message, args[len(args)-1])
 	}
 
-	// takes input from stdin if it exists, otherwise takes input from args (the last argument)
 	if pipedToStdin {
-		var pipedMessage string
-		if pipedMessage, err = readStdin(); err != nil {
-			return
-		}
-		ret.Message = AppendMessage(ret.Message, pipedMessage)
+			var pipedMessage string
+			if pipedMessage, err = readStdin(); err != nil {
+					return
+			}
+			ret.Message = AppendMessage(ret.Message, pipedMessage)
 	}
-	return
+
+	return ret, nil
 }
+
+
+
+func assignWithConversion(targetField, sourceField reflect.Value) error {
+	switch targetField.Kind() {
+	case reflect.Float64:
+			if sourceField.Kind() == reflect.Int || sourceField.Kind() == reflect.Float32 {
+					targetField.SetFloat(float64(sourceField.Convert(reflect.TypeOf(float64(0))).Float()))
+					Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
+					return nil
+			}
+	case reflect.Int:
+			if sourceField.Kind() == reflect.Float64 || sourceField.Kind() == reflect.Float32 {
+					targetField.SetInt(int64(sourceField.Convert(reflect.TypeOf(int64(0))).Int()))
+					Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
+					return nil
+			}
+	case reflect.String:
+			if sourceField.Kind() == reflect.Interface {
+					if str, ok := sourceField.Interface().(string); ok {
+							targetField.SetString(str)
+							Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
+							return nil
+					}
+			}
+	case reflect.Bool:
+			if sourceField.Kind() == reflect.Interface {
+					if b, ok := sourceField.Interface().(bool); ok {
+							targetField.SetBool(b)
+							Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
+							return nil
+					}
+			}
+	}
+
+	return fmt.Errorf("unsupported conversion: %s to %s", sourceField.Type(), targetField.Type())
+}
+
+
+
+
+func loadYAMLConfig(configPath string) (*Flags, error) {
+	absPath, err := common.GetAbsolutePath(configPath)
+	if err != nil {
+			return nil, fmt.Errorf("invalid config path: %w", err)
+	}
+
+	data, err := os.ReadFile(absPath)
+	if err != nil {
+			if os.IsNotExist(err) {
+					return nil, fmt.Errorf("config file not found: %s", absPath)
+			}
+			return nil, fmt.Errorf("error reading config file: %w", err)
+	}
+
+	// Use the existing Flags struct for YAML unmarshal
+	config := &Flags{}
+	if err := yaml.Unmarshal(data, config); err != nil {
+			return nil, fmt.Errorf("error parsing config file: %w", err)
+	}
+	
+	Debugf("Config: %v\n", config)
+
+	return config, nil
+}
+
 
 // readStdin reads from stdin and returns the input as a string or an error
 func readStdin() (ret string, err error) {
