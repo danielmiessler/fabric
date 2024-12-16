@@ -1,9 +1,8 @@
 ---
 title: Getting Started with SvelteKit
+aliases: [SvelteKit for Beginners]
 date: 2024-11-01
 ---
-
-# Getting Started with SvelteKit
 
 SvelteKit is a framework for building web applications of all sizes, with a beautiful development experience and flexible filesystem-based routing.
 

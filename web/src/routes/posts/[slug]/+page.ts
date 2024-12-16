@@ -9,6 +9,7 @@ export const load: PageLoad = async ({ params }) => {
 			content: post.default,
 			meta: {
 				title: post.metadata.title,
+				aliases: post.metadata.aliases || [],
 				date: post.metadata.date,
 				description: post.metadata.description,
 				tags: post.metadata.tags || [],

@@ -10,15 +10,10 @@ export interface ModelsResponse {
 
 
 export interface ModelConfig {
-    model: string[];
+    model: string;
     temperature: number;
     top_p: number;
     maxLength: number;
     frequency: number;
     presence: number;
 }
-
-/* export type ModelSelect = {
-    vendor: string;
-    name: string;
-}*/

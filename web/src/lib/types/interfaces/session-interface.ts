@@ -1,6 +1,7 @@
-import type { Message } from "$lib/types/interfaces/chat-interface";
+import type { Message } from "./chat-interface";
 
 export interface Session {
-    name: string;
-    content: Message[];
+    Name: string;
+    Message: string | Message[];
+    Session: string | object;
 }

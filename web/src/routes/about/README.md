@@ -6,7 +6,7 @@ updated: 2024-11-22
 ---
 The UI for Fabric can be found [here](/chat).
 <div align="center">
-<img src="./src/lib/images/fabric-logo.gif" alt="fabriclogo" width="200" height="200"/>
+<img src="/fabric-logo.gif" alt="fabriclogo" width="200" height="200"/>
 
 # `fabric`
 

@@ -1,14 +1,52 @@
-import { writable, get } from 'svelte/store';
-import type { ChatRequest, StreamResponse, ChatState, Message } from '$lib/types/interfaces/chat-interface';
-import { chatApi } from '$lib/types/chat/chat';
-import { modelConfig } from './model-config';
-import { systemPrompt } from '$lib/types/chat/patterns';
+import { writable, derived, get } from 'svelte/store';
+import type { ChatState, Message } from '$lib/types/interfaces/chat-interface';
+import { ChatService, ChatError } from '$lib/services/ChatService';
 
+// Initialize chat service
+const chatService = new ChatService();
+
+// Local storage key for persisting messages
+const MESSAGES_STORAGE_KEY = 'chat_messages';
+
+// Load initial messages from local storage
+const initialMessages = typeof localStorage !== 'undefined' 
+    ? JSON.parse(localStorage.getItem(MESSAGES_STORAGE_KEY) || '[]') 
+    : [];
+
+// Separate stores for different concerns
+export const messageStore = writable<Message[]>(initialMessages);
+export const streamingStore = writable<boolean>(false);
+export const errorStore = writable<string | null>(null);
 export const currentSession = writable<string | null>(null);
-export const chatState = writable<ChatState>({
-    messages: [],
-    isStreaming: false
-});
+
+// Subscribe to messageStore changes to persist messages
+if (typeof localStorage !== 'undefined') {
+    messageStore.subscribe($messages => {
+        localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify($messages));
+    });
+}
+
+// Derived store for chat state
+export const chatState = derived(
+    [messageStore, streamingStore],
+    ([$messages, $streaming]) => ({
+        messages: $messages,
+        isStreaming: $streaming
+    })
+);
+
+// Error handling utility
+function handleError(error: Error | string) {
+    const errorMessage = error instanceof ChatError 
+        ? `${error.code}: ${error.message}`
+        : error instanceof Error 
+            ? error.message 
+            : error;
+    
+    errorStore.set(errorMessage);
+    streamingStore.set(false);
+    return errorMessage;
+}
 
 export const setSession = (sessionName: string | null) => {
     currentSession.set(sessionName);
@@ -18,112 +56,66 @@ export const setSession = (sessionName: string | null) => {
 };
 
 export const clearMessages = () => {
-    chatState.update(state => ({ ...state, messages: [] }));
+    messageStore.set([]);
+    errorStore.set(null);
+    if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(MESSAGES_STORAGE_KEY);
+    }
 };
 
 export const revertLastMessage = () => {
-    chatState.update(state => ({
-        ...state,
-        messages: state.messages.slice(0, -1)
-    }));
+    messageStore.update(messages => messages.slice(0, -1));
 };
 
 export async function sendMessage(userInput: string, systemPromptText?: string) {
-    // Guard against streaming state
-    const currentState = get(chatState);
-    if (currentState.isStreaming) {
-        console.log('Message submission blocked - already streaming');
-        return;
-    }
-
-    // Update chat state
-    chatState.update((state) => ({
-        ...state,
-        messages: [...state.messages, { role: 'user', content: userInput }],
-        isStreaming: true
-    }));
-    
     try {
-        const config = get(modelConfig);
-        const sessionName = get(currentSession);
-        
-        const request: ChatRequest = {
-            prompts: [{
-                userInput: userInput,
-                systemPrompt: systemPromptText || get(systemPrompt),
-                model: Array.isArray(config.model) ? config.model.join(',') : config.model,
-                vendor: '',
-                patternName: '',
-            }],
-            temperature: config.temperature,
-            top_p: config.top_p,
-            frequency_penalty: 0,
-            presence_penalty: 0
-        };
-
-        const stream = await chatApi.streamChat(request);
-        const reader = stream.getReader();
-
-        let assistantMessage: Message = {
-            role: 'assistant',
-            content: ''
-        };
-
-        let isCancelled = false;
-
-        while (!isCancelled) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            // Check if we're still streaming before processing
-            const currentState = get(chatState);
-            if (!currentState.isStreaming) {
-                isCancelled = true;
-                break;
-            }
-
-            const response = value as StreamResponse;
-            switch (response.type) {
-                case 'content':
-                    assistantMessage.content += response.content += `\n`;
-                    chatState.update(state => ({
-                        ...state,
-                        messages: [
-                            ...state.messages.slice(0, -1),
-                            {...assistantMessage} 
-                        ]
-                    }));
-                    break;
-                case 'error':
-                    throw new Error(response.content);
-                case 'complete':
-                    break;
-            }
+        const $streaming = get(streamingStore);
+        if ($streaming) {
+            throw new ChatError('Message submission blocked - already streaming', 'STREAMING_BLOCKED');
         }
 
-        if (isCancelled) {
-            throw new Error('Stream cancelled');
-        }
+        streamingStore.set(true);
+        errorStore.set(null);
 
+        // Add user message
+        messageStore.update(messages => [...messages, { role: 'user', content: userInput }]);
+
+        const stream = await chatService.streamChat(userInput, systemPromptText);
+
+        await chatService.processStream(
+            stream,
+            (content) => {
+                messageStore.update(messages => {
+                    const newMessages = [...messages];
+                    const lastMessage = newMessages[newMessages.length - 1];
+                    
+                    if (lastMessage?.role === 'assistant') {
+                        lastMessage.content = content;
+                    } else {
+                        newMessages.push({
+                            role: 'assistant',
+                            content
+                        });
+                    }
+                    
+                    return newMessages;
+                });
+            },
+            (error) => {
+                handleError(error);
+            }
+        );
+
+        streamingStore.set(false);
     } catch (error) {
-        console.error('Chat error:', error);
-        // Only add error message if still streaming
-        const currentState = get(chatState);
-        if (currentState.isStreaming) {
-            chatState.update(state => ({
-                ...state,
-                messages: [...state.messages, {
-                    role: 'assistant',
-                    content: `Error: ${error instanceof Error ? error.message : 'Unknown error occurred'}`
-                }]
-            }));
+        if (error instanceof Error) {
+            handleError(error);
+        } else {
+            handleError(String(error));
         }
-    } finally {
-        chatState.update(state => ({
-            ...state,
-            isStreaming: false
-        }));
+        throw error;
     }
 }
 
-export type { StreamResponse };
+// Re-export types for convenience
+export type { ChatState, Message };

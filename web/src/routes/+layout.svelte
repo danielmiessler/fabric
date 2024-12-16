@@ -1,6 +1,7 @@
 <script>
   import '../app.postcss';
-  import { AppShell, Toast } from '@skeletonlabs/skeleton';
+  import { AppShell } from '@skeletonlabs/skeleton';
+  import ToastContainer from '$lib/components/ui/toast/ToastContainer.svelte';
   import Footer from './Footer.svelte';
   import Header from './Header.svelte';
   import { initializeStores } from '@skeletonlabs/skeleton';
@@ -24,7 +25,7 @@
 	});
 </script>
 
-<Toast position="t" />
+<ToastContainer />
 
 {#key $page.url.pathname}
 <AppShell class="relative">
@@ -35,7 +36,7 @@
     <div class="h-2 py-4">
       </svelte:fragment>
         <div 
-        in:fly={{ duration: 1000, delay: 300, y: 100 }}
+        in:fly={{ duration: 500, delay: 100, y: 100 }}
         >
       <main class="mx-auto p-4">
         <slot />

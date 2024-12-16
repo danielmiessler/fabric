@@ -17,6 +17,7 @@ overrides:
   qs@<6.2.4: '>=6.2.4'
   cookie@<0.7.0: '>=0.7.0'
   tough-cookie@<4.1.3: '>=4.1.3'
+  nanoid@<3.3.8: '>=3.3.8'
 
 importers:
 
@@ -96,7 +97,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.2(svelte@4.2.19)
       postcss:
-        specifier: ^8.4.32
+        specifier: ^8.4.49
         version: 8.4.49
       postcss-load-config:
         specifier: ^5.0.2
@@ -107,6 +108,12 @@ importers:
       svelte-check:
         specifier: ^3.6.0
         version: 3.8.6(postcss-load-config@5.1.0(jiti@1.21.6)(postcss@8.4.49))(postcss@8.4.49)(svelte@4.2.19)
+      svelte-inview:
+        specifier: ^4.0.4
+        version: 4.0.4(svelte@4.2.19)
+      svelte-reveal:
+        specifier: ^1.1.0
+        version: 1.1.0
       svelte-youtube-embed:
         specifier: ^0.3.3
         version: 0.3.3(svelte@4.2.19)
@@ -1092,9 +1099,9 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  nanoid@3.3.7:
-    resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+  nanoid@5.0.9:
+    resolution: {integrity: sha512-Aooyr6MXU6HpvvWXKoVoXwKMs/KyVakWwg7xQfv5/S/RIgJMy0Ifa45H9qqYy7pTCszrHzP21Uk4PZq2HpEM8Q==}
+    engines: {node: ^18 || >=20}
     hasBin: true
 
   node-releases@2.0.18:
@@ -1398,6 +1405,11 @@ packages:
     peerDependencies:
       svelte: ^3.19.0 || ^4.0.0
 
+  svelte-inview@4.0.4:
+    resolution: {integrity: sha512-PlXNSHHijvQ6MhmSYUj6cMyS+39NttoTffk7W5WYF8T2tsyLgJnKhyuAF+/hSujbY0vpsmqXaMd2nolEKvR8Kw==}
+    peerDependencies:
+      svelte: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^5.0.0-next
+
   svelte-preprocess@5.1.4:
     resolution: {integrity: sha512-IvnbQ6D6Ao3Gg6ftiM5tdbR6aAETwjhHV+UKGf5bHGYR69RQvF1ho0JKPcbUON4vy4R7zom13jPjgdOWCQ5hDA==}
     engines: {node: '>= 16.0.0'}
@@ -1434,6 +1446,9 @@ packages:
         optional: true
       typescript:
         optional: true
+
+  svelte-reveal@1.1.0:
+    resolution: {integrity: sha512-TnLZy7UOj14ZGsbKjZUK/c+aCnPl1sieZ1VrmKPCtG1Cw9XDUslpV/KJGqJeo7sVNVeG7QnH1asrsugogR3YYg==}
 
   svelte-youtube-embed@0.3.3:
     resolution: {integrity: sha512-g4+53JauVB+Jwz486lVqW8PUTnoP1SinECWhmQSCaKuh6zrYiAOFRpzMG6vW1TaQfSigiLWyUactFWipo4lsfQ==}
@@ -2513,7 +2528,7 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nanoid@3.3.7: {}
+  nanoid@5.0.9: {}
 
   node-releases@2.0.18: {}
 
@@ -2610,7 +2625,7 @@ snapshots:
 
   postcss@8.4.49:
     dependencies:
-      nanoid: 3.3.7
+      nanoid: 5.0.9
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -2877,6 +2892,10 @@ snapshots:
     dependencies:
       svelte: 4.2.19
 
+  svelte-inview@4.0.4(svelte@4.2.19):
+    dependencies:
+      svelte: 4.2.19
+
   svelte-preprocess@5.1.4(postcss-load-config@5.1.0(jiti@1.21.6)(postcss@8.4.49))(postcss@8.4.49)(svelte@4.2.19)(typescript@5.6.3):
     dependencies:
       '@types/pug': 2.0.10
@@ -2889,6 +2908,8 @@ snapshots:
       postcss: 8.4.49
       postcss-load-config: 5.1.0(jiti@1.21.6)(postcss@8.4.49)
       typescript: 5.6.3
+
+  svelte-reveal@1.1.0: {}
 
   svelte-youtube-embed@0.3.3(svelte@4.2.19):
     dependencies:

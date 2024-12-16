@@ -1,6 +1,5 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-// import type { PostMetadata } from '$lib/types';
 
 export const load: PageLoad = async () => {
 	try {
@@ -25,7 +24,7 @@ export const load: PageLoad = async () => {
 					aliases: post.metadata?.aliases || [],
 					lead: post.metadata?.lead || '',
 					updated: post.metadata?.updated || new Date().toISOString(),
-					author: post.metadata?.author || 'John Connor',
+					author: post.metadata?.author || 'Your Name Here',
 				}
 			};
 		});

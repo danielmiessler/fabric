@@ -68,8 +68,8 @@ export default {
           '50%': { 'background-size': '200% 200%, background-position: right center' },
         },
         blink: {
-          '0%, 100%': { opacity: 1 },
-          '50%': { opacity: 0 },
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0' },
         },
       },
       typography: {
@@ -88,7 +88,6 @@ export default {
   },
 	plugins: [
 		forms,
-    
 		typography,
 		skeleton({
 			themes: {
