@@ -1,9 +1,10 @@
 package restapi
 
 import (
+	"net/http"
+
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // PatternsHandler defines the handler for patterns-related operations
@@ -26,7 +27,8 @@ func NewPatternsHandler(r *gin.Engine, patterns *fsdb.PatternsEntity) (ret *Patt
 func (h *PatternsHandler) Get(c *gin.Context) {
 	name := c.Param("name")
 	variables := make(map[string]string) // Assuming variables are passed somehow
-	pattern, err := h.patterns.GetApplyVariables(name, variables)
+	input := ""                          // Assuming input is passed somehow
+	pattern, err := h.patterns.GetApplyVariables(name, variables, input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return

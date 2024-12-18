@@ -25,51 +25,50 @@
 [Helper Apps](#helper-apps) •
 [Meta](#meta)
 
+![Screenshot of fabric](images/fabric-summarize.png)
+
 </div>
 
 ## Navigation
 
-- [Updates](#updates)
-- [What and Why](#what-and-why)
-- [Philosophy](#philosophy)
-  - [Breaking problems into components](#breaking-problems-into-components)
-  - [Too many prompts](#too-many-prompts)
-  - [The Fabric approach to prompting](#our-approach-to-prompting)
-- [Installation](#Installation)
-  - [Migration](#Migration)
-  - [Upgrading](#Upgrading)
-- [Usage](#Usage)
-- [Examples](#examples)
+- [`fabric`](#fabric)
+  - [Navigation](#navigation)
+  - [Updates](#updates)
+  - [Intro videos](#intro-videos)
+  - [What and why](#what-and-why)
+  - [Philosophy](#philosophy)
+    - [Breaking problems into components](#breaking-problems-into-components)
+    - [Too many prompts](#too-many-prompts)
+  - [Installation](#installation)
+    - [Get Latest Release Binaries](#get-latest-release-binaries)
+    - [From Source](#from-source)
+    - [Environment Variables](#environment-variables)
+    - [Setup](#setup)
+    - [Add aliases for all patterns](#add-aliases-for-all-patterns)
+      - [Save your files in markdown using aliases](#save-your-files-in-markdown-using-aliases)
+    - [Migration](#migration)
+    - [Upgrading](#upgrading)
+  - [Usage](#usage)
+  - [Our approach to prompting](#our-approach-to-prompting)
+  - [Examples](#examples)
   - [Just use the Patterns](#just-use-the-patterns)
-- [Custom Patterns](#custom-patterns)
-- [Helper Apps](#helper-apps)
-- [pbpaste](#pbpaste)
-- [Meta](#meta)
-  - [Primary contributors](#primary-contributors)
+  - [Custom Patterns](#custom-patterns)
+  - [Helper Apps](#helper-apps)
+    - [`to_pdf`](#to_pdf)
+    - [`to_pdf` Installation](#to_pdf-installation)
+  - [pbpaste](#pbpaste)
+  - [Web Interface](#Web_Interface)
+  - [Meta](#meta)
+    - [Primary contributors](#primary-contributors)
 
 <br />
 
 ## Updates
 
 > [!NOTE]
-September 15, 2024 — Lots of new stuff!
-> * Fabric now supports calling the new `o1-preview` model using the `-r` switch (which stands for raw. Normal queries won't work with `o1-preview` because they disabled System access and don't allow us to set `Temperature`.
-> * We have early support for Raycast! Under the `/patterns` directory there's a `raycast` directory with scripts that can be called from Raycast. If you add a scripts directory within Raycast and point it to your `~/.config/fabric/patterns/raycast` directory, you'll then be able to 1) invoke Raycast, type the name of the script, and then 2) paste in the content to be passed, and the results will return in Raycast. There's currently only one script in there but I am (Daniel) adding more.
-> * **Go Migration: The following command line options were changed during the migration to Go:**
-> * You now need to use the -c option instead of -C to copy the result to the clipboard.
-> * You now need to use the -s option instead of -S to stream results in realtime.
-> * The following command line options have been removed `--agents` (-a), `--gui`, `--clearsession`, `--remoteOllamaServer`, and `--sessionlog`
-> * You can now use (-S) to configure an Ollama server.
-> * **We're working on a GUI rewrite in Go as well**
-
-## Intro videos
-
-Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#Installation) below.
-
-* [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
-* [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
-* [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
-* [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
+> November 8, 2024
+>
+> - **Multimodal Support**: You can now us `-a` (attachment) for Multimodal submissions to OpenAI models that support it. Example: `fabric -a https://path/to/image "Give me a description of this image."`
 
 ## What and why
 
@@ -80,6 +79,15 @@ Since the start of 2023 and GenAI we've seen a massive number of AI applications
 </div>
 
 Fabric was created to address this by enabling everyone to granularly apply AI to everyday challenges.
+
+## Intro videos
+
+Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#Installation) below.
+
+- [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
+- [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
+- [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
+- [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
 
 ## Philosophy
 
@@ -149,6 +157,7 @@ go install github.com/danielmiessler/fabric@latest
 You may need to set some environment variables in your `~/.bashrc` on linux or `~/.zshrc` file on mac to be able to run the `fabric` command. Here is an example of what you can add:
 
 For Intel based macs or linux
+
 ```bash
 # Golang environment variables
 export GOROOT=/usr/local/go
@@ -159,6 +168,7 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH
 ```
 
 for Apple Silicon based macs
+
 ```bash
 # Golang environment variables
 export GOROOT=$(brew --prefix go)/libexec
@@ -167,13 +177,85 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH
 ```
 
 ### Setup
+
 Now run the following command
+
 ```bash
 # Run the setup to set up your directories and keys
 fabric --setup
 ```
+
 If everything works you are good to go.
 
+### Add aliases for all patterns
+
+In order to add aliases for all your patterns and use them directly as commands ie. `summarize` instead of `fabric --pattern summarize`
+You can add the following to your `.zshrc` or `.bashrc` file.
+
+```bash
+# Loop through all files in the ~/.config/fabric/patterns directory
+for pattern_file in $HOME/.config/fabric/patterns/*; do
+    # Get the base name of the file (i.e., remove the directory path)
+    pattern_name=$(basename "$pattern_file")
+
+    # Create an alias in the form: alias pattern_name="fabric --pattern pattern_name"
+    alias_command="alias $pattern_name='fabric --pattern $pattern_name'"
+
+    # Evaluate the alias command to add it to the current shell
+    eval "$alias_command"
+done
+
+yt() {
+    local video_link="$1"
+    fabric -y "$video_link" --transcript
+}
+```
+
+This also creates a `yt` alias that allows you to use `yt https://www.youtube.com/watch?v=4b0iet22VIk` to get your transcripts.
+
+#### Save your files in markdown using aliases
+
+If in addition to the above aliases you would like to have the option to save the output to your favourite markdown note vault like Obsidian then instead of the above add the following to your `.zshrc` or `.bashrc` file:
+
+```bash
+# Define the base directory for Obsidian notes
+obsidian_base="/path/to/obsidian"
+
+# Loop through all files in the ~/.config/fabric/patterns directory
+for pattern_file in ~/.config/fabric/patterns/*; do
+    # Get the base name of the file (i.e., remove the directory path)
+    pattern_name=$(basename "$pattern_file")
+
+    # Unalias any existing alias with the same name
+    unalias "$pattern_name" 2>/dev/null
+
+    # Define a function dynamically for each pattern
+    eval "
+    $pattern_name() {
+        local title=\$1
+        local date_stamp=\$(date +'%Y-%m-%d')
+        local output_path=\"\$obsidian_base/\${date_stamp}-\${title}.md\"
+
+        # Check if a title was provided
+        if [ -n \"\$title\" ]; then
+            # If a title is provided, use the output path
+            fabric --pattern \"$pattern_name\" -o \"\$output_path\"
+        else
+            # If no title is provided, use --stream
+            fabric --pattern \"$pattern_name\" --stream
+        fi
+    }
+    "
+done
+
+yt() {
+    local video_link="$1"
+    fabric -y "$video_link" --transcript
+}
+```
+
+This will allow you to use the patterns as aliases like in the above for example `summarize` instead of `fabric --pattern summarize --stream`, however if you pass in an extra argument like this `summarize "my_article_title"` your output will be saved in the destination that you set in `obsidian_base="/path/to/obsidian"` in the following format `YYYY-MM-DD-my_article_title.md` where the date gets autogenerated for you.
+You can tweak the date format by tweaking the `date_stamp` format.
 
 ### Migration
 
@@ -196,11 +278,13 @@ Then [set your environmental variables](#environmental-variables) as shown above
 ### Upgrading
 
 The great thing about Go is that it's super easy to upgrade. Just run the same command you used to install it in the first place and you'll always get the latest version.
+
 ```bash
-go install -ldflags "-X main.version=$(git describe --tags --always)" github.com/danielmiessler/fabric@latest
+go install github.com/danielmiessler/fabric@latest
 ```
 
 ## Usage
+
 Once you have it all set up, here's how to use it.
 
 ```bash
@@ -217,6 +301,7 @@ Application Options:
   -v, --variable=            Values for pattern variables, e.g. -v=#role:expert -v=#points:30"
   -C, --context=             Choose a context from the available contexts
       --session=             Choose a session from the available sessions
+  -a, --attachment=          Attachment path or URL (e.g. for OpenAI image recognition messages)
   -S, --setup                Run setup for all reconfigurable parts of fabric
   -t, --temperature=         Set temperature (default: 0.7)
   -T, --topp=                Set top P (default: 0.9)
@@ -247,6 +332,7 @@ Application Options:
       --printcontext=        Print context
       --printsession=        Print session
       --readability          Convert HTML input into a clean, readable view
+      --serve                Initiate the API server
       --dry-run              Show what would be sent to the model without actually sending it
       --version              Print current version
 
@@ -328,7 +414,6 @@ When you're ready to use them, copy them into:
 
 You can then use them like any other Patterns, but they won't be public unless you explicitly submit them as Pull Requests to the Fabric project. So don't worry—they're private to you.
 
-
 This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
 
 ## Helper Apps
@@ -358,7 +443,7 @@ This will create a PDF file named `output.pdf` in the current directory.
 To install `to_pdf`, install it the same way as you install Fabric, just with a different repo name.
 
 ```bash
-go install github.com/danielmiessler/fabric/to_pdf@latest
+go install github.com/danielmiessler/fabric/plugins/tools/to_pdf@latest
 ```
 
 Make sure you have a LaTeX distribution (like TeX Live or MiKTeX) installed on your system, as `to_pdf` requires `pdflatex` to be available in your system's PATH.
@@ -386,6 +471,29 @@ You can also create an alias by editing `~/.bashrc` or `~/.zshrc` and adding the
 alias pbpaste='xclip -selection clipboard -o'
 ```
 
+## Web Interface
+
+Fabric now includes a built-in web interface that provides a GUI alternative to the command-line interface and an out-of-the-box website for those who want to get started with web development or blogging.  
+You can use this app as a GUI interface for Fabric, a ready to go blog-site, or a website template for your own projects.  
+
+The `web/src/lib/content` directory includes starter `.obsidian/` and `templates/` directories,  allowing you to open up the `web/src/lib/content/` directory as an [Obsidian.md](https://obsidian.md) vault. You can place your posts in the posts directory when you're ready to publish. 
+### Installing
+
+The GUI can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run the development server to start the app. 
+
+_You will need to run fabric in a separate terminal with the `fabric --serve` command._ 
+
+**From the fabric project `web/` directory:**
+```shell
+npm run dev
+
+## or ##
+
+pnpm run dev
+
+## or your equivalent 
+```
+
 ## Meta
 
 > [!NOTE]
@@ -394,6 +502,7 @@ alias pbpaste='xclip -selection clipboard -o'
 - _Jonathan Dunn_ for being the absolute MVP dev on the project, including spearheading the new Go version, as well as the GUI! All this while also being a full-time medical doctor!
 - _Caleb Sima_ for pushing me over the edge of whether to make this a public project or not.
 - _Eugen Eisler_ and _Frederick Ros_ for their invaluable contributions to the Go version
+- _David Peters_ for his work on the web interface.
 - _Joel Parish_ for super useful input on the project's Github directory structure..
 - _Joseph Thacker_ for the idea of a `-c` context flag that adds pre-created context in the `./config/fabric/` directory to all Pattern queries.
 - _Jason Haddix_ for the idea of a stitch (chained Pattern) to filter content using a local model before sending on to a cloud model, i.e., cleaning customer data using `llama2` before sending on to `gpt-4` for analysis.

@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main  # Monitor the main branch
+    paths-ignore:
+      - 'patterns/**'
+      - '**/*.md'
 
 permissions:
   contents: write  # Ensure the workflow has write permissions
@@ -17,6 +20,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Set up Git
         run: |
@@ -38,7 +47,10 @@ jobs:
           minor=$(echo "$latest_tag" | cut -d. -f2)
           patch=$(echo "$latest_tag" | cut -d. -f3)
           new_patch=$((patch + 1))
-          new_tag="v${major}.${minor}.${new_patch}"
+          new_version="${major}.${minor}.${new_patch}"
+          new_tag="v${new_version}"
+          echo "New version is: $new_version"
+          echo "new_version=$new_version" >> $GITHUB_ENV  # Save the new version to environment file
           echo "New tag is: $new_tag"
           echo "new_tag=$new_tag" >> $GITHUB_ENV  # Save the new tag to environment file
 
@@ -48,9 +60,24 @@ jobs:
           echo "" >> version.go
           echo "var version = \"${{ env.new_tag }}\"" >> version.go
 
+      - name: Update version.nix file
+        run: |
+          echo "\"${{ env.new_version }}\"" > pkgs/fabric/version.nix
+      
+      - name: Format source codes
+        run: |
+          go fmt ./...
+
+      - name: Update gomod2nix.toml file
+        run: |
+          nix run .#gomod2nix
+
       - name: Commit changes
         run: |
           git add version.go
+          git add pkgs/fabric/version.nix
+          git add gomod2nix.toml
+          git add .
           if ! git diff --staged --quiet; then
             git commit -m "Update version to ${{ env.new_tag }} and commit $commit_hash"
           else

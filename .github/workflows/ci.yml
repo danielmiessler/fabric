@@ -3,8 +3,14 @@ name: Go Build
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+      - 'patterns/**'
+      - '**/*.md'
   pull_request:
     branches: ["main"]
+    paths-ignore:
+      - 'patterns/**'
+      - '**/*.md'
 
 jobs:
   test:

@@ -29,6 +29,12 @@ func (o *VendorsManager) AddVendors(vendors ...Vendor) {
 	}
 }
 
+func (o *VendorsManager) Clear(vendors ...Vendor) {
+	o.VendorsByName = map[string]Vendor{}
+	o.Vendors = []Vendor{}
+	o.Models = nil
+}
+
 func (o *VendorsManager) SetupFillEnvFileContent(envFileContent *bytes.Buffer) {
 	for _, vendor := range o.Vendors {
 		vendor.SetupFillEnvFileContent(envFileContent)

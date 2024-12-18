@@ -3,15 +3,15 @@ package core
 import (
 	"bytes"
 	"fmt"
-	"github.com/danielmiessler/fabric/common"
-	"github.com/danielmiessler/fabric/plugins/ai/azure"
-	"github.com/danielmiessler/fabric/plugins/tools"
-	"github.com/samber/lo"
 	"strconv"
 
+	"github.com/samber/lo"
+
+	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
+	"github.com/danielmiessler/fabric/plugins/ai/azure"
 	"github.com/danielmiessler/fabric/plugins/ai/dryrun"
 	"github.com/danielmiessler/fabric/plugins/ai/gemini"
 	"github.com/danielmiessler/fabric/plugins/ai/groq"
@@ -21,6 +21,7 @@ import (
 	"github.com/danielmiessler/fabric/plugins/ai/openrouter"
 	"github.com/danielmiessler/fabric/plugins/ai/siliconcloud"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
+	"github.com/danielmiessler/fabric/plugins/tools"
 	"github.com/danielmiessler/fabric/plugins/tools/jina"
 	"github.com/danielmiessler/fabric/plugins/tools/lang"
 	"github.com/danielmiessler/fabric/plugins/tools/youtube"
@@ -37,10 +38,13 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry) {
 		Jina:           jina.NewClient(),
 	}
 
-	ret.Defaults = tools.NeeDefaults(ret.VendorManager.GetModels)
+	ret.Defaults = tools.NeeDefaults(ret.GetModels)
 
 	ret.VendorsAll.AddVendors(openai.NewClient(), ollama.NewClient(), azure.NewClient(), groq.NewClient(),
-		gemini.NewClient(), anthropic.NewClient(), siliconcloud.NewClient(), openrouter.NewClient(), mistral.NewClient())
+		gemini.NewClient(),
+		//gemini_openai.NewClient(),
+		anthropic.NewClient(), siliconcloud.NewClient(),
+		openrouter.NewClient(), mistral.NewClient())
 	_ = ret.Configure()
 
 	return
@@ -79,7 +83,7 @@ func (o *PluginRegistry) SaveEnvFile() (err error) {
 
 func (o *PluginRegistry) Setup() (err error) {
 	setupQuestion := plugins.NewSetupQuestion("Enter the number of the plugin to setup")
-	groupsPlugins := common.NewGroupsItemsSelector[plugins.Plugin]("Available plugins",
+	groupsPlugins := common.NewGroupsItemsSelector[plugins.Plugin]("Available plugins (please configure all required plugins):",
 		func(plugin plugins.Plugin) string {
 			var configuredLabel string
 			if plugin.IsConfigured() {
@@ -125,7 +129,8 @@ func (o *PluginRegistry) Setup() (err error) {
 			}
 
 			if _, ok := o.VendorManager.VendorsByName[plugin.GetName()]; !ok {
-				if vendor, ok := plugin.(ai.Vendor); ok {
+				var vendor ai.Vendor
+				if vendor, ok = plugin.(ai.Vendor); ok {
 					o.VendorManager.AddVendors(vendor)
 				}
 			}
@@ -147,13 +152,24 @@ func (o *PluginRegistry) SetupVendor(vendorName string) (err error) {
 	return
 }
 
-// Configure buildClient VendorsController based on the environment variables
-func (o *PluginRegistry) Configure() (err error) {
+func (o *PluginRegistry) ConfigureVendors() {
+	o.VendorManager.Clear()
 	for _, vendor := range o.VendorsAll.Vendors {
 		if vendorErr := vendor.Configure(); vendorErr == nil {
 			o.VendorManager.AddVendors(vendor)
 		}
 	}
+}
+
+func (o *PluginRegistry) GetModels() (ret *ai.VendorsModels, err error) {
+	o.ConfigureVendors()
+	ret, err = o.VendorManager.GetModels()
+	return
+}
+
+// Configure buildClient VendorsController based on the environment variables
+func (o *PluginRegistry) Configure() (err error) {
+	o.ConfigureVendors()
 	_ = o.Defaults.Configure()
 	_ = o.PatternsLoader.Configure()
 
@@ -164,7 +180,7 @@ func (o *PluginRegistry) Configure() (err error) {
 	return
 }
 
-func (o *PluginRegistry) GetChatter(model string, stream bool, dryRun bool) (ret *Chatter, err error) {
+func (o *PluginRegistry) GetChatter(model string, modelContextLength int, stream bool, dryRun bool) (ret *Chatter, err error) {
 	ret = &Chatter{
 		db:     o.Db,
 		Stream: stream,
@@ -172,8 +188,19 @@ func (o *PluginRegistry) GetChatter(model string, stream bool, dryRun bool) (ret
 	}
 
 	defaultModel := o.Defaults.Model.Value
+	defaultModelContextLength, err := strconv.Atoi(o.Defaults.ModelContextLength.Value)
 	defaultVendor := o.Defaults.Vendor.Value
 	vendorManager := o.VendorManager
+
+	if err != nil {
+		defaultModelContextLength = 0
+		err = nil
+	}
+
+	ret.modelContextLength = modelContextLength
+	if ret.modelContextLength == 0 {
+		ret.modelContextLength = defaultModelContextLength
+	}
 
 	if dryRun {
 		ret.vendor = dryrun.NewClient()
@@ -194,9 +221,15 @@ func (o *PluginRegistry) GetChatter(model string, stream bool, dryRun bool) (ret
 	}
 
 	if ret.vendor == nil {
+		var errMsg string
+		if defaultModel == "" || defaultVendor == "" {
+			errMsg = "Please run, fabric --setup, and select default model and vendor."
+		} else {
+			errMsg = "could not find vendor."
+		}
 		err = fmt.Errorf(
-			"could not find vendor.\n Model = %s\n Model = %s\n Vendor = %s",
-			model, defaultModel, defaultVendor)
+			" Requested Model = %s\n Default Model = %s\n Default Vendor = %s.\n\n%s",
+			model, defaultModel, defaultVendor, errMsg)
 		return
 	}
 	return

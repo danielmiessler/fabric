@@ -7,7 +7,7 @@ import (
 )
 
 func TestNormalizeMessages(t *testing.T) {
-	msgs := []*Message{
+	msgs := []*goopenai.ChatCompletionMessage{
 		{Role: goopenai.ChatMessageRoleUser, Content: "Hello"},
 		{Role: goopenai.ChatMessageRoleAssistant, Content: "Hi there!"},
 		{Role: goopenai.ChatMessageRoleUser, Content: ""},
@@ -15,7 +15,7 @@ func TestNormalizeMessages(t *testing.T) {
 		{Role: goopenai.ChatMessageRoleUser, Content: "How are you?"},
 	}
 
-	expected := []*Message{
+	expected := []*goopenai.ChatCompletionMessage{
 		{Role: goopenai.ChatMessageRoleUser, Content: "Hello"},
 		{Role: goopenai.ChatMessageRoleAssistant, Content: "Hi there!"},
 		{Role: goopenai.ChatMessageRoleUser, Content: "How are you?"},

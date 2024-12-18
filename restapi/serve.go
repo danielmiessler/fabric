@@ -6,7 +6,7 @@ import (
 )
 
 func Serve(registry *core.PluginRegistry, address string) (err error) {
-	r := gin.Default()
+	r := gin.New()
 
 	// Middleware
 	r.Use(gin.Logger())
@@ -17,6 +17,9 @@ func Serve(registry *core.PluginRegistry, address string) (err error) {
 	NewPatternsHandler(r, fabricDb.Patterns)
 	NewContextsHandler(r, fabricDb.Contexts)
 	NewSessionsHandler(r, fabricDb.Sessions)
+	NewChatHandler(r, registry, fabricDb)
+	NewConfigHandler(r, fabricDb)
+	NewModelsHandler(r, registry.VendorManager)
 
 	// Start server
 	err = r.Run(address)

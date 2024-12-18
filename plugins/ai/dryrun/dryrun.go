@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins"
+
 	goopenai "github.com/sashabaranov/go-openai"
 
 	"github.com/danielmiessler/fabric/common"
+	"github.com/danielmiessler/fabric/plugins"
 )
 
 type Client struct {
@@ -22,7 +23,7 @@ func (c *Client) ListModels() ([]string, error) {
 	return []string{"dry-run-model"}, nil
 }
 
-func (c *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, channel chan string) error {
+func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
 	output := "Dry run: Would send the following request:\n\n"
 
 	for _, msg := range msgs {
@@ -44,13 +45,16 @@ func (c *Client) SendStream(msgs []*common.Message, opts *common.ChatOptions, ch
 	output += fmt.Sprintf("TopP: %f\n", opts.TopP)
 	output += fmt.Sprintf("PresencePenalty: %f\n", opts.PresencePenalty)
 	output += fmt.Sprintf("FrequencyPenalty: %f\n", opts.FrequencyPenalty)
+	if opts.ModelContextLength != 0 {
+		output += fmt.Sprintf("ModelContextLength: %d\n", opts.ModelContextLength)
+	}
 
 	channel <- output
 	close(channel)
 	return nil
 }
 
-func (c *Client) Send(_ context.Context, msgs []*common.Message, opts *common.ChatOptions) (string, error) {
+func (c *Client) Send(_ context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (string, error) {
 	fmt.Println("Dry run: Would send the following request:")
 
 	for _, msg := range msgs {
@@ -72,6 +76,9 @@ func (c *Client) Send(_ context.Context, msgs []*common.Message, opts *common.Ch
 	fmt.Printf("TopP: %f\n", opts.TopP)
 	fmt.Printf("PresencePenalty: %f\n", opts.PresencePenalty)
 	fmt.Printf("FrequencyPenalty: %f\n", opts.FrequencyPenalty)
+	if opts.ModelContextLength != 0 {
+		fmt.Printf("ModelContextLength: %d\n", opts.ModelContextLength)
+	}
 
 	return "", nil
 }

@@ -22,6 +22,8 @@ func CreateOutputFile(message string, fileName string) (err error) {
 	defer file.Close()
 	if _, err = file.WriteString(message); err != nil {
 		err = fmt.Errorf("error writing to file: %v", err)
+	} else {
+		fmt.Printf("\n\n... written to %s\n", fileName)
 	}
 	return
 }
