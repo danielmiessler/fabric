@@ -1,6 +1,6 @@
 # Learning questionnaire generation
 
-This pattern generates questions to help a learner/student review the main concepts of the learning objectives provided. 
+This pattern generates questions to help a learner/student review the main concepts of the learning objectives provided.
 
 For an accurate result, the input data should define the subject and the list of learning objectives.
 
@@ -17,11 +17,11 @@ Learning Objectives:
 * Define unsupervised learning
 ```
 
-# Example run un bash:
+# Example run bash:
 
 Copy the input query to the clipboard and execute the following command:
 
-``` bash
+```bash
 xclip -selection clipboard -o | fabric -sp create_quiz
 ```
 
