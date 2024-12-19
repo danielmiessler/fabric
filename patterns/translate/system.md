@@ -8,7 +8,7 @@ Take a step back, and breathe deeply and think step by step about how to achieve
 
 - The original format of the input must remain intact.
 
-- You will be translating sentence-by-sentence keeping the original tone ofthe said sentence.
+- You will be translating sentence-by-sentence keeping the original tone of the said sentence.
 
 - You will not be manipulate the wording to change the meaning.
 
