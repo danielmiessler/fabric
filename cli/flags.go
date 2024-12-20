@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/jessevdk/go-flags"
@@ -77,7 +78,7 @@ func Debugf(format string, a ...interface{}) {
 func Init() (ret *Flags, err error) {
 	// Track which yaml-configured flags were set on CLI
 	usedFlags := make(map[string]bool)
-	args := os.Args[1:]
+	yamlArgsScan := os.Args[1:]
 
 	// Get list of fields that have yaml tags, could be in yaml config
 	yamlFields := make(map[string]bool)
@@ -90,7 +91,7 @@ func Init() (ret *Flags, err error) {
 	}
 
 	// Scan args for that are provided by cli and might be in yaml
-	for _, arg := range args {
+	for _, arg := range yamlArgsScan {
 		if strings.HasPrefix(arg, "--") {
 			flag := strings.TrimPrefix(arg, "--")
 			if i := strings.Index(flag, "="); i > 0 {
@@ -106,7 +107,8 @@ func Init() (ret *Flags, err error) {
 	// Parse CLI flags first
 	ret = &Flags{}
 	parser := flags.NewParser(ret, flags.Default)
-	if _, err = parser.Parse(); err != nil {
+	var args []string
+	if args, err = parser.Parse(); err != nil {
 		return nil, err
 	}
 
@@ -148,6 +150,7 @@ func Init() (ret *Flags, err error) {
 	info, _ := os.Stdin.Stat()
 	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
+	// Append positional arguments to the message (custom message)
 	if len(args) > 0 {
 		ret.Message = AppendMessage(ret.Message, args[len(args)-1])
 	}
@@ -164,38 +167,36 @@ func Init() (ret *Flags, err error) {
 }
 
 func assignWithConversion(targetField, sourceField reflect.Value) error {
-	switch targetField.Kind() {
-	case reflect.Float64:
-		if sourceField.Kind() == reflect.Int || sourceField.Kind() == reflect.Float32 {
-			targetField.SetFloat(float64(sourceField.Convert(reflect.TypeOf(float64(0))).Float()))
-			Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
-			return nil
-		}
-	case reflect.Int:
-		if sourceField.Kind() == reflect.Float64 || sourceField.Kind() == reflect.Float32 {
-			targetField.SetInt(int64(sourceField.Convert(reflect.TypeOf(int64(0))).Int()))
-			Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
-			return nil
-		}
-	case reflect.String:
-		if sourceField.Kind() == reflect.Interface {
-			if str, ok := sourceField.Interface().(string); ok {
-				targetField.SetString(str)
-				Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
+	// Handle string source values
+	if sourceField.Kind() == reflect.String {
+		str := sourceField.String()
+		switch targetField.Kind() {
+		case reflect.Int:
+			// Try parsing as float first to handle "42.9" -> 42
+			if val, err := strconv.ParseFloat(str, 64); err == nil {
+				targetField.SetInt(int64(val))
+				return nil
+			}
+			// Try direct int parse
+			if val, err := strconv.ParseInt(str, 10, 64); err == nil {
+				targetField.SetInt(val)
+				return nil
+			}
+		case reflect.Float64:
+			if val, err := strconv.ParseFloat(str, 64); err == nil {
+				targetField.SetFloat(val)
+				return nil
+			}
+		case reflect.Bool:
+			if val, err := strconv.ParseBool(str); err == nil {
+				targetField.SetBool(val)
 				return nil
 			}
 		}
-	case reflect.Bool:
-		if sourceField.Kind() == reflect.Interface {
-			if b, ok := sourceField.Interface().(bool); ok {
-				targetField.SetBool(b)
-				Debugf("Converted field %s : %v\n", targetField.Type(), targetField.Interface())
-				return nil
-			}
-		}
+		return fmt.Errorf("cannot convert string %q to %v", str, targetField.Kind())
 	}
 
-	return fmt.Errorf("unsupported conversion: %s to %s", sourceField.Type(), targetField.Type())
+	return fmt.Errorf("unsupported conversion from %v to %v", sourceField.Kind(), targetField.Kind())
 }
 
 func loadYAMLConfig(configPath string) (*Flags, error) {
