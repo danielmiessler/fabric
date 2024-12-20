@@ -473,15 +473,20 @@ alias pbpaste='xclip -selection clipboard -o'
 
 ## Web Interface
 
-Fabric now includes a built-in web interface that provides a GUI alternative to the command-line interface and an out-of-the-box website for those who want to get started with web development or blogging.  
+Fabric provides two different web interfaces for interacting with patterns:
+
+### GUI Interface
+
+Fabric includes a built-in web interface that provides a GUI alternative to the command-line interface and an out-of-the-box website for those who want to get started with web development or blogging.  
 You can use this app as a GUI interface for Fabric, a ready to go blog-site, or a website template for your own projects.  
 
 The `web/src/lib/content` directory includes starter `.obsidian/` and `templates/` directories,  allowing you to open up the `web/src/lib/content/` directory as an [Obsidian.md](https://obsidian.md) vault. You can place your posts in the posts directory when you're ready to publish. 
-### Installing
 
-The GUI can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run the development server to start the app. 
+#### Installing
 
-_You will need to run fabric in a separate terminal with the `fabric --serve` command._ 
+The GUI can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run the development server to start the app. 
+
+_You will need to run fabric in a separate terminal with the `fabric --serve` command._ 
 
 **From the fabric project `web/` directory:**
 ```shell
@@ -493,6 +498,43 @@ pnpm run dev
 
 ## or your equivalent 
 ```
+
+### Streamlit UI
+
+For a more focused pattern management interface, you can use the Streamlit UI:
+
+```bash
+# Install required dependencies
+pip install streamlit pandas matplotlib seaborn numpy python-dotenv
+
+# Run the Streamlit app
+streamlit run streamlit.py
+```
+
+The Streamlit UI provides additional features for:
+- Running and chaining patterns
+- Managing pattern outputs
+- Creating and editing patterns
+- Analyzing pattern results
+- Starring and organizing favorite outputs
+
+### Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests if available
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to your branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+For major changes:
+1. First open an issue to discuss what you would like to change
+2. Ensure your code follows the project's style and conventions
+3. Update documentation as needed
+4. Add tests if applicable
 
 ## Meta
 
