@@ -128,21 +128,21 @@ func Init() (ret *Flags, err error) {
 			field := flagsType.Field(i)
 			if yamlTag := field.Tag.Get("yaml"); yamlTag != "" {
 				if !usedFlags[yamlTag] {
-						flagField := flagsVal.Field(i)
-						yamlField := yamlVal.Field(i)
-						if flagField.CanSet() {
-								if yamlField.Type() != flagField.Type() {
-										if err := assignWithConversion(flagField, yamlField); err != nil {
-												Debugf("Type conversion failed for %s: %v\n", yamlTag, err)
-												continue
-										}
-								} else {
-										flagField.Set(yamlField)
-								}
-								Debugf("Applied YAML value for %s: %v\n", yamlTag, yamlField.Interface())
+					flagField := flagsVal.Field(i)
+					yamlField := yamlVal.Field(i)
+					if flagField.CanSet() {
+						if yamlField.Type() != flagField.Type() {
+							if err := assignWithConversion(flagField, yamlField); err != nil {
+								Debugf("Type conversion failed for %s: %v\n", yamlTag, err)
+								continue
+							}
+						} else {
+							flagField.Set(yamlField)
 						}
+						Debugf("Applied YAML value for %s: %v\n", yamlTag, yamlField.Interface())
+					}
 				}
-		}
+			}
 		}
 	}
 
@@ -150,11 +150,10 @@ func Init() (ret *Flags, err error) {
 	info, _ := os.Stdin.Stat()
 	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
-
 	// Append positional arguments to the message (custom message)
 	if len(args) > 0 {
-    ret.Message = AppendMessage(ret.Message, args[len(args)-1])
-  }
+		ret.Message = AppendMessage(ret.Message, args[len(args)-1])
+	}
 
 	if pipedToStdin {
 		var pipedMessage string
@@ -170,31 +169,31 @@ func Init() (ret *Flags, err error) {
 func assignWithConversion(targetField, sourceField reflect.Value) error {
 	// Handle string source values
 	if sourceField.Kind() == reflect.String {
-			str := sourceField.String()
-			switch targetField.Kind() {
-			case reflect.Int:
-					// Try parsing as float first to handle "42.9" -> 42
-					if val, err := strconv.ParseFloat(str, 64); err == nil {
-							targetField.SetInt(int64(val))
-							return nil
-					}
-					// Try direct int parse
-					if val, err := strconv.ParseInt(str, 10, 64); err == nil {
-							targetField.SetInt(val)
-							return nil
-					}
-			case reflect.Float64:
-					if val, err := strconv.ParseFloat(str, 64); err == nil {
-							targetField.SetFloat(val)
-							return nil
-					}
-			case reflect.Bool:
-					if val, err := strconv.ParseBool(str); err == nil {
-							targetField.SetBool(val)
-							return nil
-					}
+		str := sourceField.String()
+		switch targetField.Kind() {
+		case reflect.Int:
+			// Try parsing as float first to handle "42.9" -> 42
+			if val, err := strconv.ParseFloat(str, 64); err == nil {
+				targetField.SetInt(int64(val))
+				return nil
 			}
-			return fmt.Errorf("cannot convert string %q to %v", str, targetField.Kind())
+			// Try direct int parse
+			if val, err := strconv.ParseInt(str, 10, 64); err == nil {
+				targetField.SetInt(val)
+				return nil
+			}
+		case reflect.Float64:
+			if val, err := strconv.ParseFloat(str, 64); err == nil {
+				targetField.SetFloat(val)
+				return nil
+			}
+		case reflect.Bool:
+			if val, err := strconv.ParseBool(str); err == nil {
+				targetField.SetBool(val)
+				return nil
+			}
+		}
+		return fmt.Errorf("cannot convert string %q to %v", str, targetField.Kind())
 	}
 
 	return fmt.Errorf("unsupported conversion from %v to %v", sourceField.Kind(), targetField.Kind())
