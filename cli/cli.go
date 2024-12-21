@@ -56,6 +56,12 @@ func Cli(version string) (err error) {
 		return
 	}
 
+	if currentFlags.ServeOllama {
+		registry.ConfigureVendors()
+		err = restapi.ServeOllama(registry, currentFlags.ServeAddress, version)
+		return
+	}
+
 	if currentFlags.UpdatePatterns {
 		err = registry.PatternsLoader.PopulateDB()
 		return
