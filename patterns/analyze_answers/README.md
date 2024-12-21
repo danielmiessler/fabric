@@ -26,11 +26,11 @@ Subject: Machine Learning
 
 ```
 
-# Example run un bash:
+# Example run bash:
 
 Copy the input query to the clipboard and execute the following command:
 
-``` bash
+```bash
 xclip -selection clipboard -o | fabric -sp analize_answers
 ```
 
