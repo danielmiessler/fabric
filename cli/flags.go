@@ -61,6 +61,7 @@ type Flags struct {
 	InputHasVars       bool              `long:"input-has-vars" description:"Apply variables to user input"`
 	DryRun             bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
 	Serve              bool              `long:"serve" description:"Serve the Fabric Rest API"`
+	ServeOllama        bool              `long:"serveOllama" description:"Serve the Fabric Rest API with ollama endpoints"`
 	ServeAddress       string            `long:"address" description:"The address to bind the REST API" default:":8080"`
 	Config             string            `long:"config" description:"Path to YAML config file"`
 	Version            bool              `long:"version" description:"Print current version"`
