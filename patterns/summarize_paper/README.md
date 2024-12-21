@@ -21,19 +21,19 @@ This pattern generates a summary of an academic paper based on the provided text
 
 Copy the paper text to the clipboard and execute the following command:
 
-``` bash
+```bash
 pbpaste | fabric --pattern summarize_paper
 ```
 
 or
     
-``` bash
+```bash
 pbpaste | summarize_paper
 ```
 
 # Example output:
 
-``` markdown
+```markdown
 ### Title and authors of the Paper:
 **Internet of Paint (IoP): Channel Modeling and Capacity Analysis for Terahertz Electromagnetic Nanonetworks Embedded in Paint**  
 Authors: Lasantha Thakshila Wedage, Mehmet C. Vuran, Bernard Butler, Yevgeni Koucheryavy, Sasitharan Balasubramaniam
