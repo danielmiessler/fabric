@@ -76,9 +76,16 @@ func main() {
 	}
 
 	// Move the output PDF to the current directory
-	err = os.Rename(pdfPath, outputFile)
+	err = copyFile(pdfPath, outputFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error moving output file: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Remove the original file after copying
+	err = os.Remove(pdfPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error cleaning up temporary file: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -102,4 +109,26 @@ func cleanupTempFiles(dir string) {
 			}
 		}
 	}
+}
+
+// Copy a file from source src to destination dst
+func copyFile(src, dst string) error {
+	sourceFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer sourceFile.Close()
+
+	destFile, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer destFile.Close()
+
+	_, err = io.Copy(destFile, sourceFile)
+	if err != nil {
+		return err
+	}
+
+	return destFile.Sync()
 }
