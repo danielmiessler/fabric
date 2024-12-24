@@ -1,4 +1,6 @@
-<script lang="ts">
+<!-- This can be deleted if you don't want to use it! -->
+
+<!-- <script lang="ts">
 	import { formatDistance } from 'date-fns';
 	import TagList from '$components/ui/tag-list/TagList.svelte';
 
@@ -27,7 +29,7 @@
 		{#if date}
 		<div class="flex items-center space-x-4 text-sm text-muted-foreground">
 			<time datetime={date}>{formatDistance(new Date(date), new Date(), { addSuffix: true })}</time>
-			
+
 			{#if tags?.length}
 			<span class="text-xs">•</span>
 			<TagList {tags} className="flex-1" />
@@ -47,4 +49,4 @@
 	<div class="mt-8">
 		<slot />
 	</div>
-</article>
+</article> -->

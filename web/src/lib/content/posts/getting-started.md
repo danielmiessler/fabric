@@ -1,7 +1,12 @@
 ---
 title: Getting Started with SvelteKit
-aliases: [SvelteKit for Beginners]
-date: 2024-11-01
+description: How to get started with SvelteKit
+aliases: SvelteKit for Beginners
+date: '2024-11-01'
+updated:
+tags: 
+  - getting-started
+  - sveltekit
 ---
 
 SvelteKit is a framework for building web applications of all sizes, with a beautiful development experience and flexible filesystem-based routing.
@@ -13,7 +18,7 @@ SvelteKit is a framework for building web applications of all sizes, with a beau
 - Server-side rendering
 - Hot module replacement
 
-```bash
+```shell
 npx sv create my-app
 cd my-app
 npm install
@@ -21,13 +26,13 @@ npm install
 
 **Install SkeletonUI**
 
-```bash
+```
 npm i -D @skeletonlabs/skeleton@next @skeletonlabs/skeleton-svelte@next
 ```
 
 **Configure Tailwind CSS**
 
-```tailwind.config
+``` ts
 import type { Config } from 'tailwindcss';
 
 import { skeleton, contentPath } from '@skeletonlabs/skeleton/plugin';

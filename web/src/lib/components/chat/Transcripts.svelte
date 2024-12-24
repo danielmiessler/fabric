@@ -1,7 +1,7 @@
 <script lang='ts'>
     import { getToastStore } from '@skeletonlabs/skeleton';
     import { Button } from "$lib/components/ui/button";
-    import Input from '$components/ui/input/input.svelte';
+    import Input from '$lib/components/ui/input/input.svelte';
     import { Toast } from '@skeletonlabs/skeleton';
 
     let url = '';

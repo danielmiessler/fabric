@@ -3,7 +3,7 @@
 	import { Sun, Moon, Menu, X, Github } from 'lucide-svelte';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import { fade } from 'svelte/transition';
-	import { theme, toggleTheme } from '$lib/store/theme';
+	import { theme, cycleTheme, initTheme } from '$lib/store/theme';
   	// import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
@@ -18,7 +18,7 @@
 	}
 
 	$: currentPath = $page.url.pathname;
-	$: isDarkMode = $theme === 'dark';
+	$: isDarkMode = $theme === 'my-custom-theme';
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
@@ -30,10 +30,9 @@
 		{ href: '/about', label: 'About' },
 	];
 
-	onMount(() => {
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		theme.setTheme(prefersDark ? 'dark' : 'light');
-	});
+  onMount(() => {
+    initTheme();
+  });  
 </script>
 
 <header class="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -75,9 +74,9 @@
 				<Github class="h-4 w-4" />
 				<span class="sr-only">GitHub</span>
 			</button>
-
+      
 			<button name="toggle-theme"
-				on:click={toggleTheme}
+				on:click={cycleTheme}
 				class="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
 				aria-label="Toggle theme"
 			>

@@ -1,6 +1,4 @@
-<!-- This file can be deleted. It is now in ui/components/terminal/Terminal.svelte -->
-
-<!-- <script lang="ts">
+<script lang="ts">
   import { onMount } from 'svelte';
   // import { fade } from 'svelte/transition';
   import { goto } from '$app/navigation';
@@ -103,9 +101,8 @@
 <div class="pt-2 pb-8 px-4">
   <div class="container mx-auto max-w-4xl">
     <div class="terminal-window backdrop-blur-sm">
-      <!-- Terminal header
-            Comment Continued -->
-<!--      <div class="terminal-header flex items-center gap-2 px-4 py-2 border-b border-gray-700/50">
+      <!-- Terminal header -->
+      <div class="terminal-header flex items-center gap-2 px-4 py-2 border-b border-gray-700/50">
         <div class="flex gap-2">
           <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
           <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
@@ -117,15 +114,14 @@
       <div class="p-6">
         <div class="mb-4 whitespace-pre-wrap terminal-text leading-relaxed">{terminalContent}</div>
 
-        <!-- Command input 
-              Comment Continued -->
-<!--        {#if mounted}
+        <!-- Command input -->
+        {#if mounted}
           <div class="flex items-center command-input">
             <span class="mr-2 terminal-prompt font-bold">$</span>
             <!-- {#if showCursor}
               <span class="animate-blink terminal-text">▋</span>
             {/if} -->
-<!--             <input
+            <input
               type="text"
               bind:value={currentCommand}
               on:keydown={handleKeydown}
@@ -181,4 +177,4 @@
   ::-webkit-scrollbar-thumb {
     @apply bg-gray-600/50 rounded-full hover:bg-gray-500/50 transition-colors;
   }
-</style> -->
+</style>

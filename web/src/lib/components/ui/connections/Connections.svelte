@@ -1,9 +1,7 @@
-<!-- Note: This can be deleted. It is now in components/ui/connections/Connections.svelte -->
-
-<!-- <script lang="ts">
+<script lang="ts">
     import { onMount, onDestroy } from 'svelte';
     import { ParticleSystem } from './ParticleSystem';
-    import { createParticleGradient } from '$lib/utils/canvas';
+    import { createParticleGradient } from '$lib/components/ui/connections/canvas';
     
     export let particleCount = 100;
     export let particleSize = 3;
@@ -138,4 +136,4 @@
       height: 100%;
       background: transparent;
     }
-  </style> --> 
+  </style>

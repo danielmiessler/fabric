@@ -1,7 +1,9 @@
 ---
 title: Obsidian
 description: Create and manage your notes with Obsidian!
+aliases: Obsidian
 date: 2024-11-16
+updated: 2024-12-08
 tags: [type/note,obsidian]
 ---
 <div align="center">
@@ -24,7 +26,7 @@ Obsidian is a powerful knowledge base that works on top of a local folder of pla
 
 ### Example Note Structure
 
-```markdown
+```md
 # Project Planning
 
 ## Goals

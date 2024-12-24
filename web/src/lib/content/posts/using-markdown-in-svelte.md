@@ -2,16 +2,17 @@
 title: Using Markdown in Svelte
 description: Learn how to use your markdown documents in Svelte Applications!
 date: 2023-12-22
+updated:
+aliases: Using Markdonw in Svelte, Svelte in Markdown
 tags: [markdown, svelte, web-dev, docs, learn]
 ---
 [Mdsvex](https://mdsvex.pngwn.io/docs#install-it)
 
 Here are some examples illustrating how to use Mdsvex in a Svelte application:
- 
+
 **Example 1**: Basic Markdown with Svelte Component
 Create a file named example.svx:
 
-markdown
 ```markdown
 ---
 title: "Interactive Markdown Example"
@@ -29,14 +30,14 @@ This is an example of combining Markdown with a Svelte component:
 ```
 
 In this example:
+
 - The frontmatter (--- sections) defines variables like title.
 - A Svelte component Counter is imported and used inside the Markdown.
-      
+
 **Example 2**: Custom Layouts with Mdsvex
 Assuming you have a layout component at src/lib/layouts/BlogLayout.svelte:
   
-svelte
-```text
+```svelte
 <!-- BlogLayout.svelte -->
 <script>
   export let title;
@@ -49,7 +50,7 @@ svelte
 ```
 
 Now, to use this layout in your Markdown:
-**markdown**
+
 ```markdown
 ---
 title: "My Favorite Layout"
@@ -62,7 +63,7 @@ This Markdown file will be wrapped by the `BlogLayout`.
 ```
 
 **Example 3:** Using Frontmatter Variables in Markdown
-**markdown**
+
 ```markdown
 ---
 author: "John Doe"
@@ -77,7 +78,7 @@ Here's some markdown content. You can reference frontmatter values directly in t
 ```
 
 **Example 4**: Interactive Elements in Markdown
-markdown
+
 ```markdown
 ---
 title: "Interactive Chart"
@@ -97,39 +98,44 @@ Below is an interactive chart:
 ## Setting Up Mdsvex
 
 To make these work, you need to configure your SvelteKit project:
+
 1. Install Mdsvex:
+
 ```bash
 npm install -D mdsvex
 ```
-    
+
 2. Configure SvelteKit:
-        In your svelte.config.js:    
-    ```javascript
-    import adapter from '@sveltejs/adapter-auto';
-    import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-    import { mdsvex } from 'mdsvex';
-    
-    /** @type {import('mdsvex').MdsvexOptions} */
-    const mdsvexOptions = {
-      extensions: ['.svx'],
-    };
-    
-    /** @type {import('@sveltejs/kit').Config} */
-    const config = {
-      extensions: ['.svelte', '.svx'],
-      preprocess: [
-        vitePreprocess(),
-        mdsvex(mdsvexOptions),
-      ],
-      kit: {
-        adapter: adapter()
-      }
-    };
-    
-    export default config;
-    ```
-    
+
+In your svelte.config.js:
+
+```javascript
+import adapter from '@sveltejs/adapter-auto';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import { mdsvex } from 'mdsvex';
+
+/** @type {import('mdsvex').MdsvexOptions} */
+const mdsvexOptions = {
+  extensions: ['.svx'],
+};
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  extensions: ['.svelte', '.svx'],
+  preprocess: [
+    vitePreprocess(),
+    mdsvex(mdsvexOptions),
+  ],
+  kit: {
+    adapter: adapter()
+  }
+};
+
+export default config;
+```
+
 3. Create a Route for Markdown Files:
-    Place your .svx files in the src/routes directory or subdirectories, and SvelteKit will automatically handle them as routes.
-    
+
+Place your .svx files in the src/routes directory or subdirectories, and SvelteKit will automatically handle them as routes.
+
 These examples show how you can integrate Mdsvex into your Svelte application, combining the simplicity of Markdown with the interactivity of Svelte components. Remember, any Svelte component you want to use within Markdown must be exported from a .svelte file and imported in your .svx file.

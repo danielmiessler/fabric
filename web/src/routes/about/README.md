@@ -1,19 +1,15 @@
 ---
 title: README
 description: fabric is an open-source framework for augmenting humans using AI. It provides a modular framework for solving specific problems using a crowdsourced set of AI prompts that can be used anywhere.
+aliases: Fabric/Docs
 date: 2024-1-12
 updated: 2024-11-22
 ---
-The UI for Fabric can be found [here](/chat).
+
 <div align="center">
 <img src="/fabric-logo.gif" alt="fabriclogo" width="200" height="200"/>
 
 # `fabric`
-
-![Static Badge](https://img.shields.io/badge/mission-human_flourishing_via_AI_augmentation-purple)![Github top language](https://img.shields.io/github/languages/top/danielmiessler/fabric)![GitHub last commit](https://img.shields.io/github/last-commit/danielmiessler/fabric)
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-
-[MIT Open Source License](https://opensource.org/licenses/MIT)
 
 </div>
 <div align="center">
@@ -32,6 +28,12 @@ The UI for Fabric can be found [here](/chat).
 [Helper Apps](#helper-apps) •
 [Meta](#meta)
 
+</div>
+
+<div class="justify-left flex gap-2">
+    <img src="https://img.shields.io/github/languages/top/danielmiessler/fabric" alt="Github top language">
+    <img src="https://img.shields.io/github/last-commit/danielmiessler/fabric" alt="GitHub last commit">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
 </div>
 
 ## Navigation
@@ -448,7 +450,8 @@ The [examples](#examples) use the macOS program `pbpaste` to paste content from 
 
 On Windows, you can use the PowerShell command `Get-Clipboard` from a PowerShell command prompt. If you like, you can also alias it to `pbpaste`. If you are using classic PowerShell, edit the file `~\Documents\WindowsPowerShell\.profile.ps1`, or if you are using PowerShell Core, edit `~\Documents\PowerShell\.profile.ps1` and add the alias,
 
-```powershell
+*powershell*
+```
 Set-Alias pbpaste Get-Clipboard
 ```
 

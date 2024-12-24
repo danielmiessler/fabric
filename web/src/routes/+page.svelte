@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Terminal from '../lib/components/home/Terminal.svelte';
-  import Fabric from '../lib/components/home/Fabric.svelte';
+  import Terminal from '$lib/components/ui/terminal/Terminal.svelte';
+  import Connections from '$lib/components/ui/connections/Connections.svelte';
   import { slide } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
   
@@ -15,7 +15,7 @@
 </script>
 
 <div class="absolute inset-0 -z-10 overflow-hidden h-96">
-  <Fabric  particleCount={100} particleSize={3} particleSpeed={0.1} connectionDistance={100}/>
+  <Connections  particleCount={100} particleSize={3} particleSpeed={0.1} connectionDistance={100}/>
 </div>
 
 <div class="flex flex-col justify-between items-center">

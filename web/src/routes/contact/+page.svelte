@@ -1,13 +1,14 @@
 <script>
-    import Content from './Contact.md'
+    import Content from '$lib/components/contact/Contact.svelte'
+
 </script>
 
 {#if Content}
-    <article class="container max-w-3xl">
-        <div class="space-y-4">
+    <div class="container max-w-3xl">
+        <div class="space-y-4 mx-auto py-8">
                 <svelte:component this={Content} />
         </div>
-    </article>
+    </div>
 {:else}
 
 <div class="container py-12">
@@ -19,4 +20,3 @@
 </div>
 
 {/if}
-		

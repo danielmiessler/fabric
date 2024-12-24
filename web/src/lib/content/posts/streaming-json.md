@@ -17,7 +17,7 @@ Here’s how you can handle streaming JSON and convert it into Markdown:
 Fetch the Streaming JSON: Use SvelteKit's load function to fetch the API data. If the API streams JSON, ensure you parse it incrementally using the ReadableStream interface in JavaScript.
 Parse and Extract Markdown: Once you receive the JSON chunks, extract the Markdown strings from the relevant fields. For example:
 
-```javascript
+```
 const response = await fetch('https://api.example.com/stream');
 const reader = response.body.getReader();
 let markdownContent = '';
@@ -31,9 +31,9 @@ while (true) {
 
 Render Markdown with mdsvex or svelte-markdown:
 
-Using mdsvex: Compile the Markdown string into HTML at runtime. Mdsvex provides a compile function for this purpose12.
+Using mdsvex: Compile the Markdown string into HTML at runtime. Mdsvex provides a compile function for this purpose.
 
-```javascript
+```
 import { compile } from 'mdsvex';
 
 const { code } = await compile(markdownContent);
@@ -42,12 +42,12 @@ const { code } = await compile(markdownContent);
 You can then inject this compiled HTML into your Svelte component.
 Using svelte-markdown: This library directly renders Markdown strings as Svelte components, making it ideal for runtime rendering3. Install it with:
 
-```text
+```
 npm install svelte-markdown
 ```
 
 Then use it in your component:
-```text
+```
 
   import Markdown from 'svelte-markdown';
   let markdownContent = '# Example Heading\nThis is some text.';
@@ -73,7 +73,7 @@ Install mdsvex and its dependencies:
 text
 npm install mdsvex
 Configure mdsvex in your svelte.config.js file:
-```javascript
+```
 import { mdsvex } from 'mdsvex';
 
 const config = {
@@ -92,7 +92,7 @@ It supports frontmatter, allowing you to include metadata at the top of your Mar
 You can use Svelte components directly within your Markdown content, enabling interactive elements2.
 Code highlighting is built-in, making it easy to display formatted code snippets2.
 For dynamic content, such as Markdown stored in a database or fetched from an API, you can use mdsvex to render Markdown strings at runtime:
-```javascript
+```
 import { compile } from 'mdsvex';
 
 const markdownString = '# Hello, World!';
@@ -106,7 +106,7 @@ By leveraging mdsvex, SvelteKit developers can create rich, interactive content 
 ## More Markdown Integration Examples
 Dynamic Markdown Rendering: For scenarios where Markdown content is dynamically fetched from an external API, you can use the marked library to parse the Markdown into HTML directly within a Svelte component. This approach is simple and effective for runtime rendering:
 
-```text
+```
 
   import { marked } from 'marked';
   let markdownContent = '';
@@ -130,7 +130,7 @@ This method ensures that even dynamically loaded Markdown content is rendered ef
 
 Markdown with Frontmatter: Mdsvex supports frontmatter, which allows you to embed metadata in your Markdown files. This is particularly useful for blogs or documentation sites. For example:
 
-```text
+```
 ---
 title: "My Blog Post"
 date: "2024-01-01"
@@ -144,14 +144,14 @@ This is a post about integrating Markdown with SvelteKit.
 You can access this metadata in your Svelte components, enabling features like dynamic page titles or tag-based filtering34.
 
 Interactive Charts in Markdown: Combine the power of Markdown with Svelte's interactivity by embedding components like charts. For instance, using Mdsvex, you can include a chart directly in your Markdown file:
-```text
+```
 # Sales Data
 ```
 
 Here, Chart is a Svelte component that renders a chart using libraries like Chart.js or D3.js. This approach makes it easy to create visually rich content while keeping the simplicity of Markdown56.
 Custom Styling for Markdown Content: To apply consistent styles to your rendered Markdown, wrap it in a container with scoped CSS. For example:
 
-```text
+```
 
 
   .markdown-content h1 {
@@ -165,8 +165,7 @@ Custom Styling for Markdown Content: To apply consistent styles to your rendered
 This ensures your Markdown content adheres to your application's design system without affecting other parts of the UI12.
 Pagination for Large Markdown Files: If you're dealing with extensive Markdown content, split it into smaller sections and implement pagination. For example, store each section in an array and render only the current page:
 
-```text
-
+```
   let currentPage = 0;
   const markdownPages = [
     '# Page 1\nThis is the first page.',
@@ -192,7 +191,7 @@ Building on the previous examples, let's explore some more advanced techniques f
 
 Syntax Highlighting: Enhance code blocks in your Markdown content with syntax highlighting using libraries like Prism.js. Here's how you can set it up with mdsvex:
 
-```javascript
+```
 import { mdsvex } from 'mdsvex';
 import prism from 'prismjs';
 
@@ -213,9 +212,7 @@ const config = {
 This configuration will automatically apply syntax highlighting to code blocks in your Markdown files1.
 Custom Components for Markdown Elements: Create custom Svelte components to replace standard Markdown elements. For instance, you can create a custom Image component for enhanced image handling:
 
-```text
-
-
+```
   export let src;
   export let alt;
 ```
@@ -223,7 +220,7 @@ Custom Components for Markdown Elements: Create custom Svelte components to repl
 
 Then, configure mdsvex to use this component:
 
-```javascript
+```
 import Image from './Image.svelte';
 
 const config = {
@@ -246,7 +243,7 @@ const config = {
 This setup allows you to add lazy loading, responsive images, or other custom behaviors to all images in your Markdown content2.
 Table of Contents Generation: Automatically generate a table of contents for your Markdown files using remark plugins:
 
-```javascript
+```
 import { mdsvex } from 'mdsvex';
 import remarkToc from 'remark-toc';
 
@@ -265,7 +262,7 @@ const config = {
 This configuration will automatically generate a table of contents based on the headings in your Markdown files3.
 Live Markdown Editor: Create an interactive Markdown editor with real-time preview:
 
-```text
+```
 
   import { marked } from 'marked';
   let markdownInput = '# Live Markdown Editor\n\nStart typing...';

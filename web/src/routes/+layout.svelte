@@ -1,7 +1,9 @@
 <script>
   import '../app.postcss';
   import { AppShell } from '@skeletonlabs/skeleton';
-  import ToastContainer from '$lib/components/ui/toast/ToastContainer.svelte';
+  import { Toast } from '@skeletonlabs/skeleton';
+  //import { getToastStore } from '@skeletonlabs/skeleton';
+  import  ToastContainer  from '$lib/components/ui/toast/ToastContainer.svelte';
   import Footer from '$lib/components/home/Footer.svelte';
   import Header from '$lib/components/home/Header.svelte';
   import { initializeStores } from '@skeletonlabs/skeleton';
@@ -17,6 +19,7 @@
 
 	onMount(() => {
 		toastStore.trigger({
+      type: 'info',
       message: "👋 Welcome to the site! Tell people about yourself and what you do.",
 			background: 'variant-filled-primary',
 			timeout: 3333,
@@ -25,6 +28,7 @@
 	});
 </script>
 
+<Toast />
 <ToastContainer />
 
 {#key $page.url.pathname}
@@ -38,7 +42,7 @@
         <div 
         in:fly={{ duration: 500, delay: 100, y: 100 }}
         >
-      <main class="mx-auto p-4">
+      <main class="m-auto p-4">
         <slot />
       </main>
     </div>

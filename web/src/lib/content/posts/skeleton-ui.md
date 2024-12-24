@@ -8,12 +8,13 @@ tags:
 - skeletonui
 - CSS
 date: 2023-01-17
+updated: 2024-12-08
 ---
 SkeletonUI is a comprehensive UI toolkit that integrates seamlessly with SvelteKit and Tailwind CSS, enabling developers to build adaptive and accessible web interfaces efficiently. 
 
 SkeletonUI offers a comprehensive suite of components to enhance your Svelte applications. Below is a categorized list of these components, presented in Svelte syntax:
 
-```svelte
+```
 <!-- Layout Components -->
 <AppShell />
 <AppBar />
@@ -78,21 +79,21 @@ To set up SkeletonUI in a new SvelteKit project, follow these steps:
 
 - **Create a new SvelteKit project**:
 
-```bash
+```
 npx sv create my-skeleton-app
 cd my-skeleton-app
 npm install
 ```
 - **Install SkeletonUI packages**:
 
-```bash
+```
 npm install -D @skeletonlabs/skeleton@next @skeletonlabs/skeleton-svelte@next
 ```
 - **Configure Tailwind CSS**:
 
 In your `tailwind.config.js` file, add the following:
 
-```javascript
+```
 import { skeleton, contentPath } from '@skeletonlabs/skeleton/plugin';
 import * as themes from '@skeletonlabs/skeleton/themes';
 
@@ -115,7 +116,7 @@ export default {
 
 In your `src/app.html`, set the `data-theme` attribute on the `<body>` tag:
 
-```html
+```
 <body data-theme="cerberus">
   <!-- Your content -->
 </body>
@@ -129,7 +130,7 @@ SkeletonUI offers a variety of pre-designed components to accelerate your develo
 
 - **Button**:
 
-```svelte
+```
 <script>
   import { Button } from '@skeletonlabs/skeleton-svelte';
 </script>
@@ -138,7 +139,7 @@ SkeletonUI offers a variety of pre-designed components to accelerate your develo
 ```
 - **Card**:
 
-```svelte
+```
 <script>
   import { Card } from '@skeletonlabs/skeleton-svelte';
 </script>
@@ -150,7 +151,7 @@ SkeletonUI offers a variety of pre-designed components to accelerate your develo
 ```
 - **Form Input**:
 
-```svelte
+```
 <script>
   import { Input } from '@skeletonlabs/skeleton-svelte';
   let inputValue = '';
@@ -161,18 +162,19 @@ SkeletonUI offers a variety of pre-designed components to accelerate your develo
 
 For a comprehensive list of components and their usage, consult the SkeletonUI components documentation.
 
-**3\. Theming**
+**3. Theming**
 
 SkeletonUI's theming system allows for extensive customization:
 
 - **Applying a Theme**:
 
 Set the desired theme in your `tailwind.config.js` and `app.html` as shown in the installation steps above.
+
 - **Switching Themes Dynamically**:
 
 To enable dynamic theme switching, you can modify the `data-theme` attribute programmatically:
 
-```svelte
+```
 <script>
   function switchTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
@@ -181,13 +183,14 @@ To enable dynamic theme switching, you can modify the `data-theme` attribute pro
 
 <button on:click={() => switchTheme('rose')}>Switch to Rose Theme</button>
 ```
+
 - **Customizing Themes**:
 
 You can create custom themes by defining your own color palettes and settings in the `tailwind.config.js` file.
 
 For more information on theming, refer to the SkeletonUI theming guide.
 
-**4\. Utilities**
+**4. Utilities**
 
 SkeletonUI provides several utility functions and actions to enhance your SvelteKit application:
 
@@ -195,7 +198,7 @@ SkeletonUI provides several utility functions and actions to enhance your Svelte
 
 Automatically generate a table of contents based on page headings:
 
-```svelte
+```
 <script>
   import { TableOfContents, tocCrawler } from '@skeletonlabs/skeleton-svelte';
 </script>
@@ -209,7 +212,7 @@ Automatically generate a table of contents based on page headings:
 
 Utilize built-in transitions for smooth animations:
 
-```svelte
+```
 <script>
   import { fade } from '@skeletonlabs/skeleton-svelte';
   let visible = true;
