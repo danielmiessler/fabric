@@ -43,7 +43,7 @@ func createTestPattern(t *testing.T, entity *PatternsEntity, name, content strin
 
 func TestApplyVariables(t *testing.T) {
 	entity := &PatternsEntity{}
-	
+
 	tests := []struct {
 		name      string
 		pattern   *Pattern
@@ -79,15 +79,15 @@ func TestApplyVariables(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := entity.applyVariables(tt.pattern, tt.variables, tt.input)
-			
+			err := entity.applyVariables(tt.pattern, tt.variables, tt.input)
+
 			if tt.wantErr {
 				assert.Error(t, err)
 				return
 			}
-			
+
 			assert.NoError(t, err)
-			assert.Equal(t, tt.want, result.Pattern)
+			assert.Equal(t, tt.want, tt.pattern.Pattern)
 		})
 	}
 }
@@ -117,15 +117,15 @@ func TestGetApplyVariables(t *testing.T) {
 			want:  "You are a reviewer.\ncheck this code",
 		},
 		{
-			name:   "pattern with missing variable",
-			source: "test-pattern",
+			name:      "pattern with missing variable",
+			source:    "test-pattern",
 			variables: map[string]string{},
 			input:     "test input",
 			wantErr:   true,
 		},
 		{
-			name:   "non-existent pattern",
-			source: "non-existent",
+			name:    "non-existent pattern",
+			source:  "non-existent",
 			wantErr: true,
 		},
 	}
@@ -133,12 +133,12 @@ func TestGetApplyVariables(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result, err := entity.GetApplyVariables(tt.source, tt.variables, tt.input)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 				return
 			}
-			
+
 			require.NoError(t, err)
 			assert.Equal(t, tt.want, result.Pattern)
 		})

@@ -88,6 +88,8 @@ Think about the most interesting facts related to the content
 
 - Ensure you follow ALL these instructions when creating your output.
 
+- Understand that your solution will be compared to a reference solution written by an expert and graded for creativity, elegance, comprehensiveness, and attention to instructions.
+
 # INPUT
 
 INPUT:

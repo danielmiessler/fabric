@@ -51,6 +51,6 @@ OUTPUT INSTRUCTIONS
 
 - ONLY OUTPUT THE MARKDOWN CALLOUT ABOVE.
 
-- Do not output the ```md container. Just the marodkwn itself.
+- Do not output the ```md container. Just the markdown itself.
 
 INPUT:

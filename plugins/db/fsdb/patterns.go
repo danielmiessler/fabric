@@ -6,8 +6,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins/template"
 )
+
+const inputSentinel = "__FABRIC_INPUT_SENTINEL_TOKEN__"
 
 type PatternsEntity struct {
 	*StorageEntity
@@ -22,50 +25,66 @@ type Pattern struct {
 	Pattern     string
 }
 
-// main entry point for getting patterns from any source
-func (o *PatternsEntity) GetApplyVariables(source string, variables map[string]string, input string) (*Pattern, error) {
-    var pattern *Pattern
-    var err error
+// GetApplyVariables main entry point for getting patterns from any source
+func (o *PatternsEntity) GetApplyVariables(
+	source string, variables map[string]string, input string) (pattern *Pattern, err error) {
 
-    // Determine if this is a file path
-    isFilePath := strings.HasPrefix(source, "\\") ||
-                  strings.HasPrefix(source, "/") ||
-                  strings.HasPrefix(source, "~") ||
-                  strings.HasPrefix(source, ".")
-    
-    if isFilePath {
-        pattern, err = o.getFromFile(source)
-    } else {
-        pattern, err = o.getFromDB(source)
-    }
+	// Determine if this is a file path
+	isFilePath := strings.HasPrefix(source, "\\") ||
+		strings.HasPrefix(source, "/") ||
+		strings.HasPrefix(source, "~") ||
+		strings.HasPrefix(source, ".")
 
-    if err != nil {
-        return nil, err
-    }
-
-    pattern, err = o.applyVariables(pattern, variables, input)
+	if isFilePath {
+		// Resolve the file path using GetAbsolutePath
+		absPath, err := common.GetAbsolutePath(source)
 		if err != nil {
-    	return nil, err  // Return the error if applyVariables failed
+			return nil, fmt.Errorf("could not resolve file path: %v", err)
 		}
-	return pattern, nil
+
+		// Use the resolved absolute path to get the pattern
+		pattern, err = o.getFromFile(absPath)
+	} else {
+		// Otherwise, get the pattern from the database
+		pattern, err = o.getFromDB(source)
+	}
+
+	if err != nil {
+		return
+	}
+
+	// Apply variables to the pattern
+	err = o.applyVariables(pattern, variables, input)
+	return
 }
 
+func (o *PatternsEntity) applyVariables(
+	pattern *Pattern, variables map[string]string, input string) (err error) {
 
-func (o *PatternsEntity) applyVariables(pattern *Pattern, variables map[string]string, input string) (*Pattern, error) {
-	// If {{input}} isn't in pattern, append it on new line
+	// Ensure pattern has an {{input}} placeholder
+	// If not present, append it on a new line
 	if !strings.Contains(pattern.Pattern, "{{input}}") {
-			if !strings.HasSuffix(pattern.Pattern, "\n") {
-					pattern.Pattern += "\n"
-			}
-			pattern.Pattern += "{{input}}"
+		if !strings.HasSuffix(pattern.Pattern, "\n") {
+			pattern.Pattern += "\n"
+		}
+		pattern.Pattern += "{{input}}"
 	}
 
-	result, err := template.ApplyTemplate(pattern.Pattern, variables, input)
-	if err != nil {
-			return nil, err
+	// Temporarily replace {{input}} with a sentinel token to protect it
+	// from recursive variable resolution
+	withSentinel := strings.ReplaceAll(pattern.Pattern, "{{input}}", inputSentinel)
+
+	// Process all other template variables in the pattern
+	// At this point, our sentinel ensures {{input}} won't be affected
+	var processed string
+	if processed, err = template.ApplyTemplate(withSentinel, variables, ""); err != nil {
+		return
 	}
-	pattern.Pattern = result
-	return pattern, nil
+
+	// Finally, replace our sentinel with the actual user input
+	// The input has already been processed for variables if InputHasVars was true
+	pattern.Pattern = strings.ReplaceAll(processed, inputSentinel, input)
+	return
 }
 
 // retrieves a pattern from the database by name
@@ -103,25 +122,27 @@ func (o *PatternsEntity) PrintLatestPatterns(latestNumber int) (err error) {
 }
 
 // reads a pattern from a file path and returns it
-func (o *PatternsEntity) getFromFile(pathStr string) (*Pattern, error) {
+func (o *PatternsEntity) getFromFile(pathStr string) (pattern *Pattern, err error) {
 	// Handle home directory expansion
 	if strings.HasPrefix(pathStr, "~/") {
-			homedir, err := os.UserHomeDir()
-			if err != nil {
-					return nil, fmt.Errorf("could not get home directory: %v", err)
-			}
-			pathStr = filepath.Join(homedir, pathStr[2:])
+		var homedir string
+		if homedir, err = os.UserHomeDir(); err != nil {
+			err = fmt.Errorf("could not get home directory: %v", err)
+			return
+		}
+		pathStr = filepath.Join(homedir, pathStr[2:])
 	}
 
-	content, err := os.ReadFile(pathStr)
-	if err != nil {
-			return nil, fmt.Errorf("could not read pattern file %s: %v", pathStr, err)
+	var content []byte
+	if content, err = os.ReadFile(pathStr); err != nil {
+		err = fmt.Errorf("could not read pattern file %s: %v", pathStr, err)
+		return
 	}
-
-	return &Pattern{
-			Name:    pathStr,
-			Pattern: string(content),
-	}, nil
+	pattern = &Pattern{
+		Name:    pathStr,
+		Pattern: string(content),
+	}
+	return
 }
 
 // Get required for Storage interface

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/samber/lo"
+	"github.com/danielmiessler/fabric/common"
 )
 
 type StorageEntity struct {
@@ -26,37 +26,44 @@ func (o *StorageEntity) Configure() (err error) {
 
 // GetNames finds all patterns in the patterns directory and enters the id, name, and pattern into a slice of Entry structs. it returns these entries or an error
 func (o *StorageEntity) GetNames() (ret []string, err error) {
-	var entries []os.DirEntry
-	if entries, err = os.ReadDir(o.Dir); err != nil {
-		err = fmt.Errorf("could not read items from directory: %v", err)
-		return
+	// Resolve the directory path to an absolute path
+	absDir, err := common.GetAbsolutePath(o.Dir)
+	if err != nil {
+		return nil, fmt.Errorf("could not resolve directory path: %v", err)
 	}
 
-	if o.ItemIsDir {
-		ret = lo.FilterMap(entries, func(item os.DirEntry, index int) (ret string, ok bool) {
-			if ok = item.IsDir(); ok {
-				ret = item.Name()
+	// Read the directory entries
+	var entries []os.DirEntry
+	if entries, err = os.ReadDir(absDir); err != nil {
+		return nil, fmt.Errorf("could not read items from directory: %v", err)
+	}
+
+	for _, entry := range entries {
+		entryPath := filepath.Join(absDir, entry.Name())
+
+		// Get metadata for the entry, including symlink info
+		fileInfo, err := os.Lstat(entryPath)
+		if err != nil {
+			return nil, fmt.Errorf("could not stat entry %s: %v", entryPath, err)
+		}
+
+		// Determine if the entry should be included
+		if o.ItemIsDir {
+			// Include directories or symlinks to directories
+			if fileInfo.IsDir() || (fileInfo.Mode()&os.ModeSymlink != 0 && common.IsSymlinkToDir(entryPath)) {
+				ret = append(ret, entry.Name())
 			}
-			return
-		})
-	} else {
-		if o.FileExtension == "" {
-			ret = lo.FilterMap(entries, func(item os.DirEntry, index int) (ret string, ok bool) {
-				if ok = !item.IsDir(); ok {
-					ret = item.Name()
-				}
-				return
-			})
 		} else {
-			ret = lo.FilterMap(entries, func(item os.DirEntry, index int) (ret string, ok bool) {
-				if ok = !item.IsDir() && filepath.Ext(item.Name()) == o.FileExtension; ok {
-					ret = strings.TrimSuffix(item.Name(), o.FileExtension)
+			// Include files, optionally filtering by extension
+			if !fileInfo.IsDir() {
+				if o.FileExtension == "" || filepath.Ext(entry.Name()) == o.FileExtension {
+					ret = append(ret, strings.TrimSuffix(entry.Name(), o.FileExtension))
 				}
-				return
-			})
+			}
 		}
 	}
-	return
+
+	return ret, nil
 }
 
 func (o *StorageEntity) Delete(name string) (err error) {

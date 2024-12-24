@@ -1,0 +1,33 @@
+name: Patterns Artifact
+
+on:
+  push:
+    paths:
+      - "patterns/**" # Trigger only on changes to files in the patterns folder
+
+jobs:
+  zip-and-upload:
+    name: Zip and Upload Patterns Folder
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify Changes in Patterns Folder
+        run: |
+          git fetch origin
+          if git diff --quiet HEAD~1 -- patterns; then
+            echo "No changes detected in patterns folder."
+            exit 1
+          fi
+
+      - name: Zip the Patterns Folder
+        run: zip -r patterns.zip patterns/
+
+      - name: Upload Patterns Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: patterns
+          path: patterns.zip

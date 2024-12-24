@@ -6,14 +6,15 @@ toolchain go1.23.1
 
 require (
 	github.com/anaskhan96/soup v1.2.5
+	github.com/anthropics/anthropic-sdk-go v0.2.0-alpha.4
 	github.com/atotto/clipboard v0.1.4
 	github.com/gabriel-vasile/mimetype v1.4.6
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-git/go-git/v5 v5.12.0
 	github.com/go-shiori/go-readability v0.0.0-20241012063810-92284fa8a71f
+	github.com/google/generative-ai-go v0.18.0
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/joho/godotenv v1.5.1
-	github.com/liushuangls/go-anthropic/v2 v2.11.0
 	github.com/ollama/ollama v0.4.1
 	github.com/otiai10/copy v1.14.0
 	github.com/pkg/errors v0.9.1
@@ -22,6 +23,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/text v0.20.0
 	google.golang.org/api v0.205.0
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
@@ -57,7 +59,6 @@ require (
 	github.com/goccy/go-json v0.10.3 // indirect
 	github.com/gogs/chardet v0.0.0-20211120154057-b7413eaefb8f // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/google/generative-ai-go v0.18.0 // indirect
 	github.com/google/s2a-go v0.1.8 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.4 // indirect
@@ -75,6 +76,10 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3 // indirect
 	github.com/skeema/knownhosts v1.3.0 // indirect
+	github.com/tidwall/gjson v1.14.4 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.1 // indirect
+	github.com/tidwall/sjson v1.2.5 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
