@@ -90,7 +90,7 @@
         bind:value={$noteStore.content}
         on:input={adjustTextareaHeight}
         on:keydown={handleKeydown}
-        class="w-full min-h-screen p-2 rounded-container-token text-black resize-none"
+        class="w-full min-h-screen p-2 rounded-container-token text-primary-800 resize-none"
         placeholder="Enter your text here..."
       />
       </div>

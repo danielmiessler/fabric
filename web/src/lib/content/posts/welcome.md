@@ -18,7 +18,7 @@ aliases:
 
 **Improve the styling. Butt first, the functionality**
 
-<textarea class="text-primary-800" placeholder="Get started creating notes now!" />
+<textarea class="text-primary-800 min-h-[20%] resize-none" placeholder="Get started creating notes now!" />
 
 This is the first post of your new blog, powered by [SvelteKit](/posts/getting-started), [Obsidian](/obsidian), and [Fabric](/about). I'm excited to share this project with you, and I hope you find it useful for your own writing and experiences.
 
