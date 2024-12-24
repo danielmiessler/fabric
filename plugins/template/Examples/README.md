@@ -1,8 +1,3 @@
-Let me create a restructured tutorial that builds from simple to complex examples.
-
-
-
-
 
 # Fabric Extensions: Complete Guide
 
