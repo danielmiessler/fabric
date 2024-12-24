@@ -15,7 +15,7 @@ const __dirname = dirname(__filename);
 const mdsvexOptions = {
   extensions: ['.md', '.svx'],
   layout: {
-    _: join(__dirname, './src/lib/posts-layout/post.svelte')
+    _: join(__dirname, './src/lib/layouts/post.svelte')
   },
   highlight: {
     theme: {

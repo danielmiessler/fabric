@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
 	import { slide } from 'svelte/transition';
-	import { cn } from '$lib/types/utils';
+	import { cn } from '$lib/utils/utils';
 
 	export let tags: string[] = [];
 	export let tagsPerPage = 5;

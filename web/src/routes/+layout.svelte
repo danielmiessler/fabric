@@ -2,8 +2,8 @@
   import '../app.postcss';
   import { AppShell } from '@skeletonlabs/skeleton';
   import ToastContainer from '$lib/components/ui/toast/ToastContainer.svelte';
-  import Footer from './Footer.svelte';
-  import Header from './Header.svelte';
+  import Footer from '$lib/components/home/Footer.svelte';
+  import Header from '$lib/components/home/Header.svelte';
   import { initializeStores } from '@skeletonlabs/skeleton';
   import { page } from '$app/stores';
   import { fly } from 'svelte/transition';

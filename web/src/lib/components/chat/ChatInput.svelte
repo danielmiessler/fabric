@@ -2,7 +2,7 @@
     import { Button } from "$lib/components/ui/button";
     import { Textarea } from "$lib/components/ui/textarea";
     import { sendMessage, messageStore } from '$lib/store/chat';
-    import { systemPrompt } from '$lib/types/chat/patterns';
+    import { systemPrompt } from '$lib/store/pattern-store';
     import { getToastStore } from '@skeletonlabs/skeleton';
     import { FileButton } from '@skeletonlabs/skeleton';
     import { Paperclip, Send } from 'lucide-svelte';

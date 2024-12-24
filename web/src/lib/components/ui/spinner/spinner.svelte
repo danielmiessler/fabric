@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from '$lib/types/utils';
+	import { cn } from '$lib/utils/utils';
 	import { Loader2 } from 'lucide-svelte';
 
 	let className: string | undefined = undefined;

@@ -1,6 +1,6 @@
 <script>
 	import { Select as SelectPrimitive } from "bits-ui";
-	import { cn } from "$lib/types/utils.ts";
+	import { cn } from "$lib/utils/utils.ts";
 	let className = undefined;
 	export { className as class };
 </script>
