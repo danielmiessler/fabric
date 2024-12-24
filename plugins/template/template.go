@@ -17,6 +17,7 @@ var (
 	Debug          = false // Debug flag
 )
 
+var extensionManager *ExtensionManager
 
 func init() {
     homedir, err := os.UserHomeDir()

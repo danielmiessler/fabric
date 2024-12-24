@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -89,6 +90,10 @@ func (em *ExtensionManager) RegisterExtension(configPath string) error {
 	if err := em.registry.Register(absPath); err != nil {
 			return fmt.Errorf("failed to register extension: %w", err)
 	}
+
+	if _, err := time.ParseDuration(ext.Timeout); err != nil {
+    return fmt.Errorf("invalid timeout value '%s': must be a duration like '30s' or '1m': %w", ext.Timeout, err)
+}
 
 	// Print success message with extension details
 	fmt.Printf("Successfully registered extension:\n")
