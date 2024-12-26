@@ -45,7 +45,7 @@ func Cli(version string) (err error) {
 
 	var registry *core.PluginRegistry
 	if registry, err = core.NewPluginRegistry(fabricDb); err != nil {
-			return
+		return
 	}
 
 	// if the setup flag is set, run the setup function
@@ -140,22 +140,20 @@ func Cli(version string) (err error) {
 		}
 	}
 
-if currentFlags.ListExtensions {
-    err = registry.TemplateExtensions.ListExtensions()
-    return
-}
+	if currentFlags.ListExtensions {
+		err = registry.TemplateExtensions.ListExtensions()
+		return
+	}
 
-if currentFlags.AddExtension != "" {
-    err = registry.TemplateExtensions.RegisterExtension(currentFlags.AddExtension)
-    return
-}
+	if currentFlags.AddExtension != "" {
+		err = registry.TemplateExtensions.RegisterExtension(currentFlags.AddExtension)
+		return
+	}
 
-if currentFlags.RemoveExtension != "" {
-    err = registry.TemplateExtensions.RemoveExtension(currentFlags.RemoveExtension)
-    return
-}
-
-
+	if currentFlags.RemoveExtension != "" {
+		err = registry.TemplateExtensions.RemoveExtension(currentFlags.RemoveExtension)
+		return
+	}
 
 	// if the interactive flag is set, run the interactive function
 	// if currentFlags.Interactive {

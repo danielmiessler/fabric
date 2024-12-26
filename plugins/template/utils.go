@@ -16,26 +16,26 @@ import (
 // - cannot convert to absolute path
 // - path doesn't exist
 func ExpandPath(path string) (string, error) {
-    // If path starts with ~
-    if strings.HasPrefix(path, "~/") {
-        usr, err := user.Current()
-        if err != nil {
-            return "", fmt.Errorf("failed to get user home directory: %w", err)
-        }
-        // Replace ~/ with actual home directory
-        path = filepath.Join(usr.HomeDir, path[2:])
-    }
+	// If path starts with ~
+	if strings.HasPrefix(path, "~/") {
+		usr, err := user.Current()
+		if err != nil {
+			return "", fmt.Errorf("failed to get user home directory: %w", err)
+		}
+		// Replace ~/ with actual home directory
+		path = filepath.Join(usr.HomeDir, path[2:])
+	}
 
-    // Convert to absolute path
-    absPath, err := filepath.Abs(path)
-    if err != nil {
-        return "", fmt.Errorf("failed to get absolute path: %w", err)
-    }
+	// Convert to absolute path
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		return "", fmt.Errorf("failed to get absolute path: %w", err)
+	}
 
-    // Check if path exists
-    if _, err := os.Stat(absPath); err != nil {
-        return "", fmt.Errorf("path does not exist: %w", err)
-    }
+	// Check if path exists
+	if _, err := os.Stat(absPath); err != nil {
+		return "", fmt.Errorf("path does not exist: %w", err)
+	}
 
-    return absPath, nil
+	return absPath, nil
 }

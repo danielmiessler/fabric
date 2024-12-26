@@ -40,7 +40,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		Language:       lang.NewLanguage(),
 		Jina:           jina.NewClient(),
 	}
-	
+
 	var homedir string
 	if homedir, err = os.UserHomeDir(); err != nil {
 		return
@@ -62,14 +62,14 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 type PluginRegistry struct {
 	Db *fsdb.Db
 
-	VendorManager  *ai.VendorsManager
-	VendorsAll     *ai.VendorsManager
-	Defaults       *tools.Defaults
-	PatternsLoader *tools.PatternsLoader
-	YouTube        *youtube.YouTube
-	Language       *lang.Language
-	Jina           *jina.Client
-	TemplateExtensions     *template.ExtensionManager
+	VendorManager      *ai.VendorsManager
+	VendorsAll         *ai.VendorsManager
+	Defaults           *tools.Defaults
+	PatternsLoader     *tools.PatternsLoader
+	YouTube            *youtube.YouTube
+	Language           *lang.Language
+	Jina               *jina.Client
+	TemplateExtensions *template.ExtensionManager
 }
 
 func (o *PluginRegistry) SaveEnvFile() (err error) {

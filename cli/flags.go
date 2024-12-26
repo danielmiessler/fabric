@@ -66,9 +66,8 @@ type Flags struct {
 	Config             string            `long:"config" description:"Path to YAML config file"`
 	Version            bool              `long:"version" description:"Print current version"`
 	ListExtensions     bool              `long:"listextensions" description:"List all registered extensions"`
-	AddExtension      string            `long:"addextension" description:"Register a new extension from config file path"`
-	RemoveExtension   string            `long:"rmextension" description:"Remove a registered extension by name"`
-
+	AddExtension       string            `long:"addextension" description:"Register a new extension from config file path"`
+	RemoveExtension    string            `long:"rmextension" description:"Remove a registered extension by name"`
 }
 
 var debug = false

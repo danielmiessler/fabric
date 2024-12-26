@@ -59,7 +59,7 @@ operations:
 	// Test hash verification
 	t.Run("HashVerification", func(t *testing.T) {
 		registry := NewExtensionRegistry(tmpDir)
-		
+
 		// Modify executable after registration
 		modifiedExecContent := []byte("#!/bin/bash\necho \"modified\"")
 		err := os.WriteFile(execPath, modifiedExecContent, 0755)

@@ -222,7 +222,7 @@ config:
 			"cleanup":     "true",
 		}
 
-		err := createExtension("basic-test", "write", 
+		err := createExtension("basic-test", "write",
 			"{{executable}} write {{1}} "+outputFile, config)
 		if err != nil {
 			t.Fatalf("Failed to create extension: %v", err)
@@ -261,7 +261,7 @@ config:
 	// Test cleanup behavior
 	t.Run("CleanupBehavior", func(t *testing.T) {
 		outputFile := filepath.Join(tmpDir, "cleanup-test.txt")
-		
+
 		// Test with cleanup enabled
 		config := map[string]interface{}{
 			"output_file": `"cleanup-test.txt"`,

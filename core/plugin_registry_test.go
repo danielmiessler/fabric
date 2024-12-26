@@ -11,7 +11,7 @@ func TestSaveEnvFile(t *testing.T) {
 	db := fsdb.NewDb(os.TempDir())
 	registry, err := NewPluginRegistry(db)
 	if err != nil {
-			t.Fatalf("NewPluginRegistry() error = %v", err)
+		t.Fatalf("NewPluginRegistry() error = %v", err)
 	}
 
 	err = registry.SaveEnvFile()
