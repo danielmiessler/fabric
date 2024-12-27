@@ -94,14 +94,14 @@
         placeholder="Enter your text here..."
       />
       </div>
-      <footer class="flex justify-between items-center">
+      <footer class="flex justify-between m-4 pb-2 items-center">
         <span class="text-sm opacity-70">
           {#if $noteStore.isDirty}
             Unsaved changes
           {/if}
         </span>
         <button
-          class="btn variant-filled-primary"
+          class="btn px-4 variant-filled-primary"
           on:click={saveContent}
           disabled={saving || !$noteStore.isDirty}
         >

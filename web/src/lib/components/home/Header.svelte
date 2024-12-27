@@ -32,7 +32,24 @@
 
   onMount(() => {
     initTheme();
-  });  
+  }); 
+
+
+  //import NoteDrawer from '$lib/components/ui/noteDrawer/NoteDrawer.svelte';
+  //import { getDrawerStore } from '@skeletonlabs/skeleton';
+  //import { Button } from '$lib/components/ui/button';
+  //import { beforeNavigate } from '$app/navigation';
+  //
+  //const drawerStore = getDrawerStore();
+  //function openDrawer() {
+  //  drawerStore.open({});
+  //}
+  //
+  //beforeNavigate(() => {
+  //  drawerStore.close();
+  //});
+  //
+  //$: isVisible = $page;
 </script>
 
 <header class="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -64,8 +81,23 @@
 				{/each}
 			</ul>
 		</nav>
-		
+	  	
 		<div class="flex items-center gap-2">
+
+      <!-- <div class="flex flex-col gap-2">
+        {#if isVisible}
+          <div class="flex text-inherit justify-start mt-2">
+            <Button
+              variant="primary"
+              class="btn border variant-filled-primary text-align-center"
+              on:click={openDrawer}
+            >Open Drawer
+            </Button>
+          </div>
+          <NoteDrawer />
+        {/if}
+      </div> --> 
+
 			<button name="github"
 				on:click={goToGithub}
 				class="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
