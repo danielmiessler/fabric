@@ -1,14 +1,15 @@
 <script>
-	import { initializeStores } from "@skeletonlabs/skeleton";
-	initializeStores();
+	//import { initializeStores } from "@skeletonlabs/skeleton";
+	//initializeStores();
 </script>
 
-<div class="chat-layout">
+<!-- <div class=""> -->
 	<slot />
-</div>
+<!-- </div>
 
 <style>
-	.chat-layout {
-		flex-direction: column;
-	}
+	/*.chat-layout {*/
+	/*	flex-direction: column;*/
+	/*}*/
 </style>
+ -->
