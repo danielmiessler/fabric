@@ -77,7 +77,7 @@
     <Input
         type="text"
         bind:value={url}
-        placeholder="Enter YouTube URL"
+        placeholder="YouTube URL"
         class="flex-1 rounded-full border bg-background px-4"
         disabled={loading}
     />
@@ -89,7 +89,7 @@
     {#if loading}
         <div class="spinner-border" />
     {:else}
-        Fetch Transcript
+        Get 
     {/if}
     </Button>
 </div>
