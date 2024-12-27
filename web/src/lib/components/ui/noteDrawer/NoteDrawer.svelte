@@ -22,19 +22,26 @@
   }
   
   async function saveContent() {
+    if (!$noteStore.content.trim()) {
+      toastStore.trigger({
+        message: 'Cannot save empty note',
+        background: 'variant-filled-warning'
+      });
+      return;
+    }
+
     try {
       saving = true;
-      await new Promise(resolve => setTimeout(resolve, 500)); // Create an endpoint here
-      localStorage.setItem('savedText', $noteStore.content);
-      noteStore.save();
+      await noteStore.save();
       
       toastStore.trigger({
-        message: 'Notes saved successfully!',
+        message: `Note saved successfully!`,
         background: 'variant-filled-success'
       });
     } catch (error) {
+      console.error('Failed to save note:', error);
       toastStore.trigger({
-        message: 'Failed to save notes',
+        message: error instanceof Error ? error.message : 'Failed to save notes',
         background: 'variant-filled-error'
       });
     } finally {
@@ -78,6 +85,8 @@
     <div class="space-y-4">
       <header class="flex justify-between items-center">
         <h2 class="m-2 p-1 h2">Notes</h2>
+        <p class="p-2 opacity-70">Notes are saved to <code>`src/lib/content/inbox`</code></p>
+        <p class="p-2 opacity-70">Ctrl + S to save</p>
         {#if $noteStore.lastSaved}
           <span class="text-sm opacity-70">
             Last saved: {$noteStore.lastSaved.toLocaleTimeString()}
@@ -94,7 +103,7 @@
         placeholder="Enter your text here..."
       />
       </div>
-      <footer class="flex justify-between m-4 pb-2 items-center">
+      <footer class="flex justify-between pb-4 items-center">
         <span class="text-sm opacity-70">
           {#if $noteStore.isDirty}
             Unsaved changes
@@ -103,7 +112,6 @@
         <button
           class="btn px-4 variant-filled-primary"
           on:click={saveContent}
-          disabled={saving || !$noteStore.isDirty}
         >
           {#if saving}
             Saving...
