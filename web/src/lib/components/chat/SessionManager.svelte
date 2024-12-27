@@ -47,7 +47,7 @@
   }
 </script>
 
-<div class="space-y-4">
+<div class="p-1 m-1 mr-2">
   <div class="flex gap-2">
     <Button variant="outline" size="icon" aria-label="Revert Last Message" on:click={revertLastMessage}>
         <RotateCcw class="h-4 w-4" />

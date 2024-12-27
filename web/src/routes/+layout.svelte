@@ -42,7 +42,7 @@
     <div 
       in:fly={{ duration: 500, delay: 100, y: 100 }}
     >
-      <main class="m-auto p-4">
+      <main class="main m-auto">
         <slot />
       </main>
     </div>

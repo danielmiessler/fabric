@@ -22,7 +22,7 @@
             // Clear input before sending to improve perceived performance
             userInput = "";
             
-            await sendMessage(trimmedSystemPrompt + trimmedInput);
+            await sendMessage(trimmedSystemPrompt + '\n' + trimmedInput);
         } catch (error) {
             console.error('Chat submission error:', error);
             toastStore.trigger({
@@ -45,42 +45,45 @@
     });
 </script>
 
-<div class="flex flex-col gap-2">
-    <div class="flex-none">
-        <Textarea 
-            bind:value={$systemPrompt}
-            on:input={(e) => $systemPrompt || ''}
-            placeholder="Enter system instructions..."
-            class="min-h-[330px] resize-none bg-background"
-        />
+<div class="h-full">
+  <div class="flex flex-col gap-2 h-screen">
+    <div class="flex-1 rounded-lg border-current">
+      <Textarea 
+        bind:value={$systemPrompt}
+        on:input={(e) => $systemPrompt || ''}
+        placeholder="Enter system instructions..."
+        class="w-full h-full resize-none bg-primary-800/30 rounded-lg border-none"
+      />
     </div>
 
     <div class="flex-1 py-2 relative">
-        <Textarea
-            bind:value={userInput}
-            on:input={(e) => userInput}
-            on:keydown={handleKeydown}
-            placeholder="Enter your message..."
-            class="min-h-[350px] resize-none bg-background"
-        />
-        <div class="absolute bottom-5 right-2 gap-2 flex justify-end end-7">
-   
-            <FileButton
-                name="file-upload"
-                button="btn btn-sm variant-soft-surface"
-                bind:files={files}
-                on:change={(e) => {
-                    // Workin on the file selection
-                    // Check out `https://www.skeleton.dev/components/file-buttons` for more info
-                }}
-            >
-                <Paperclip class="w-4" />
-            </FileButton>
-            <Button type="button" name="submit" variant="secondary" on:click={handleSubmit}>
-                <Send class="w-4 h-4" />
-            </Button>
-        </div>
+      <Textarea
+        bind:value={userInput}
+        on:input={(e) => userInput}
+        on:keydown={handleKeydown}
+        placeholder="Enter your message..."
+        class="w-full h-full resize-none bg-primary-800/30 rounded-lg border-none"
+      />
+      <div class="absolute bottom-5 right-2 gap-2 flex justify-end end-7">
+
+        <FileButton
+          name="file-upload"
+          button="btn btn-sm variant-soft-surface"
+          bind:files={files}
+          on:change={(e) => {
+            // Workin on the file selection
+            // Check out `https://www.skeleton.dev/components/file-buttons` for more info
+            // Check 24-12-08 for half-baked implementation
+          }}
+        >
+          <Paperclip class="w-4" />
+        </FileButton>
+        <Button type="button" name="submit" variant="secondary" on:click={handleSubmit}>
+          <Send class="w-4 h-4" />
+        </Button>
+      </div>
     </div>
+  </div>
 </div>
 
 <style>
