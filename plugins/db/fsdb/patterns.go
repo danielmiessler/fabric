@@ -10,6 +10,8 @@ import (
 	"github.com/danielmiessler/fabric/plugins/template"
 )
 
+const inputSentinel = "__FABRIC_INPUT_SENTINEL_TOKEN__"
+
 type PatternsEntity struct {
 	*StorageEntity
 	SystemPatternFile      string
@@ -59,7 +61,8 @@ func (o *PatternsEntity) GetApplyVariables(
 func (o *PatternsEntity) applyVariables(
 	pattern *Pattern, variables map[string]string, input string) (err error) {
 
-	// If {{input}} isn't in pattern, append it on new line
+	// Ensure pattern has an {{input}} placeholder
+	// If not present, append it on a new line
 	if !strings.Contains(pattern.Pattern, "{{input}}") {
 		if !strings.HasSuffix(pattern.Pattern, "\n") {
 			pattern.Pattern += "\n"
@@ -67,11 +70,20 @@ func (o *PatternsEntity) applyVariables(
 		pattern.Pattern += "{{input}}"
 	}
 
-	var result string
-	if result, err = template.ApplyTemplate(pattern.Pattern, variables, input); err != nil {
+	// Temporarily replace {{input}} with a sentinel token to protect it
+	// from recursive variable resolution
+	withSentinel := strings.ReplaceAll(pattern.Pattern, "{{input}}", inputSentinel)
+
+	// Process all other template variables in the pattern
+	// At this point, our sentinel ensures {{input}} won't be affected
+	var processed string
+	if processed, err = template.ApplyTemplate(withSentinel, variables, ""); err != nil {
 		return
 	}
-	pattern.Pattern = result
+
+	// Finally, replace our sentinel with the actual user input
+	// The input has already been processed for variables if InputHasVars was true
+	pattern.Pattern = strings.ReplaceAll(processed, inputSentinel, input)
 	return
 }
 
