@@ -54,133 +54,139 @@
 </div>
 
 <div class="py-12">
-	<h1 class="mb-4 text-3xl font-bold">Blog Posts</h1>
-	<p class="text-sm mb-4 font-small">This blog is maintained in an Obsidian Vault</p>
+  <h1 class="mb-4 text-3xl font-bold">Blog Posts</h1>
+  <p class="text-sm mb-4 font-small">This blog is maintained in an Obsidian Vault</p>
 
-	<div class="mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 justify-end">
-		<div class="container mx-auto justify-left">
-			<img src="https://img.shields.io/github/languages/top/danielmiessler/fabric" alt="Github top language">
-			<img src="https://img.shields.io/github/last-commit/danielmiessler/fabric" alt="GitHub last commit">
-			<img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-			<br>
-			<hr class="!border-t-4" />
-			<br>
-			<h4 class="h4"><b>Leverage Proven Patterns</b></h4>
-			<br>
-			<Youtube id="UbDyjIIGaxQ" title="Network Chuck Explains fabric" />
-			<p>Post your favorite videos.</p>
-			<br>
+  <div class="mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 justify-end">
+    <div class="container mx-auto justify-left">
+      <img src="https://img.shields.io/github/languages/top/danielmiessler/fabric" alt="Github top language">
+      <img src="https://img.shields.io/github/last-commit/danielmiessler/fabric" alt="GitHub last commit">
+      <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
+      <br>
+      <hr class="!border-t-4" />
+      <br>
+      <h4 class="h4"><b>Leverage Proven Patterns</b></h4>
+      <br>
+      <Youtube id="UbDyjIIGaxQ" title="Network Chuck Explains fabric" />
+      <p>Post your favorite videos.</p>
+      <br>
 
-	  </div>
-		<div class="container mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 m-4">
-      
+    </div>
+    <div class="container mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 m-4">
+
       <div>
-		    <h4 class=""><b>Find your interests, build your knowledge</b></h4>
+        <h4 class=""><b>Find your interests, build your knowledge</b></h4>
       </div>
       <div class="m-auto md:col-start-1">
-		    <h4><b>share it with people</b></h4>
+        <p>Share it with people. Your experience is valuable. Write often and gain a better understanding of yourself.</p>
+        <br>
+        <p>Use the patterns to help you create posts and templates for future posts. AI can be a powerful tool. There is no right or wrong way to use it.</p>
+        <div class="container mx-auto justify-right">
+          <button type="button"><a href="/posts/tutorial" class="btn btn-primary">Get Started</a></button>
+        </div>
       </div>
       <div class="md:col-start-2">
-		  <br>
-		  <Card
-	        header="Let Your Voice Be Heard"
-	        imageUrl="/brain.png"
-	        imageAlt="Blog post header image"
-	        title="Blogging, Podcasting, Videos, and More."
-	        content="What will you create?"
-	        authorName="Your Name Here"
-	        authorAvatarUrl=""
-	        link="/"
-	    />
+        <br>
+        <Card
+          header="Let Your Voice Be Heard"
+          imageUrl="/brain.png"
+          imageAlt="Blog post header image"
+          title="Blogging, Podcasting, Videos, and More."
+          content="What will you create?"
+          authorName="Your Name Here"
+          authorAvatarUrl=""
+          link="/"
+        />
       </div>
     </div>
     <div class="container mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-	    <Card
-	        header="Curate Your Content"
-	        imageUrl="/electric.png"
-	        imageAlt="Blog post header image"
-	        title="Enter a new title here"
-	        content="What will you share"
-	        authorName="Your Name Here"
-	        authorAvatarUrl=""
-	        link="/"
-	    />
-	    <div class="container mx-auto justify-right">
-	      <blockquote class="blockquote">There are countless use cases for AI. What will you use if for?</blockquote>
-	    </div>
-	  </div>
-	  <div class="container mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 justify-end mt-8 pb-8">
-	    <div class="container mx-auto md:col-start-2 justify-left">
-	      <hr class="!border-t-4" />
-	      <br>
-	      <h4 class="h4">Showcase your interests. Tell people what you've been working on. Create your community.</h4>
-	    </div>
-      <div class="md:col-start-1">
-	    <Card
-	        header="Explore the Possibilities"
-	        imageUrl=""
-	        imageAlt="Blog post header image"
-	        title="Enter a new title here"
-	        content="What will you share?"
-	        authorName="Your Name Here"
-	        authorAvatarUrl=""
-	        link="/"
-	    />
+      <Card
+        header="Curate Your Content"
+        imageUrl="/electric.png"
+        imageAlt="Blog post header image"
+        title="Enter a new title here"
+        content="What will you share"
+        authorName="Your Name Here"
+        authorAvatarUrl=""
+        link="/"
+      />
+      <div class="container mx-auto justify-right">
+        <blockquote class="blockquote">There are countless use cases for AI. What will you use if for?</blockquote>
       </div>
-	  </div>
+    </div>
+    <div class="container mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 justify-end max-h-36 mt-8 pb-8">
+      <div class="container mx-auto md:col-start-2 justify-left">
+        <hr class="!border-t-4" />
+        <br>
+        <h4 class="h4">Showcase your interests. Tell people what you've been working on. Create your community.</h4>
+      </div>
+      <div class="md:col-start-1">
+        <!-- This card should be replaced with explainer graphic or text -->
+         <Card
+header="Explore the Possibilities"
+imageUrl="/obsidian-logo.png"
+imageAlt="Blog post header image"
+title="Enter a new title here"
+content="What will you share?"
+authorName="Your Name Here"
+authorAvatarUrl=""
+link="/"
+/> 
+      </div>
+    </div>
 
   </div>
   <div class="container mx-auto p-12 m-24 justify-right">
-     <blockquote class="blockquote">There are countless use cases for AI. What will you use if for?</blockquote>
+    <blockquote class="blockquote">Turn this into a graphic that spans the page</blockquote>
   </div>
 
-	  <div class="rounded-tl-container-token m-auto grid grid-cols-1 gap-4 mt-8">
+  <div class="rounded-tl-container-token m-auto grid grid-cols-1 gap-4 mt-8">
     <div class="mx-auto">something here</div>
-	    <!-- <Card
-	        header="Curate Your Content"
-	        imageUrl="/electric.png"
-	        imageAlt="Blog post header image"
-	        title="Enter a new title here"
-	        content="What will you share"
-	        authorName="Your Name Here"
-	        authorAvatarUrl=""
-	        link="/"
-	    /> -->
-	    <div class="container mx-auto justify-right">
-	      <blockquote class="blockquote">There are countless use cases for AI. What will you use if for?</blockquote>
-	    </div>
-	  </div>
-	  <div class="container mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 justify-end mt-8 pb-8">
-	    <div class="container mx-auto justify-left">
-	      <hr class="!border-t-4" />
-	      <br>
-	      <h4 class="h4">Showcase your interests. Tell people what you've been working on. Create your community.</h4>
-	    </div>
+    <!-- <Card
+header="Curate Your Content"
+imageUrl="/electric.png"
+imageAlt="Blog post header image"
+title="Enter a new title here"
+content="What will you share"
+authorName="Your Name Here"
+authorAvatarUrl=""
+link="/"
+/> -->
+    <!-- <div class="container mx-auto justify-right">
+<blockquote class="blockquote">There are countless use cases for AI. What will you use if for?</blockquote>
+</div> -->
+  </div>
+  <div class="container mx-auto justify-center grid mt-8">
+    <div class="container mx-auto justify-center">
+      <hr class="!border-t-4" />
+      <br>
+      <h4 class="h4">Showcase your interests. Tell people what you've been working on. Create your community.</h4>
+    </div>
 
-	    <Card
-	        header="Explore the Possibilities"
-	        imageUrl=""
-	        imageAlt="Blog post header image"
-	        title="Enter a new title here"
-	        content="What will you share?"
-	        authorName="Your Name Here"
-	        authorAvatarUrl=""
-	        link="/"
-	    />
-	  </div>
-	</div>
-	<div class="container py-12">
-		<div class="my-4">
-			<InputChip
-				name="tags"
-				placeholder="Filter by tags..."
-				validation={validateTag}
-				bind:value={selectedTags}
-			/>
-	</div>
-	<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-		{#each searchResults as post}
-			<PostCard {post} /> <!-- TODO: Add images to post metadata --> 
-		{/each}
-	</div>
+    <!--    <Card
+header="Explore the Possibilities"
+imageUrl=""
+imageAlt="Blog post header image"
+title="Enter a new title here"
+content="What will you share?"
+authorName="Your Name Here"
+authorAvatarUrl=""
+link="/"
+/> -->
+  </div>
+</div>
+<div class="container py-12">
+  <div class="my-4">
+    <InputChip
+      name="tags"
+      placeholder="Filter by tags..."
+      validation={validateTag}
+      bind:value={selectedTags}
+    />
+  </div>
+  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {#each searchResults as post}
+      <PostCard {post} /> <!-- TODO: Add images to post metadata --> 
+    {/each}
+  </div>
 </div>
