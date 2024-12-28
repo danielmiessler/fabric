@@ -56,7 +56,7 @@
       />
     </div>
 
-    <div class="flex-1 py-2 relative">
+    <div class="flex-1 py-2 relative shadow-lg">
       <Textarea
         bind:value={userInput}
         on:input={(e) => userInput}

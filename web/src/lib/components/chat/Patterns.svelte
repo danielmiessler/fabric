@@ -15,7 +15,7 @@
     });
 </script>
 
-<div class="min-w-0 p-2">
+<div class="min-w-0">
     <Select 
         bind:value={selectedPreset}
     > 
