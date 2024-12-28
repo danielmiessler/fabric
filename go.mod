@@ -23,6 +23,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/text v0.20.0
 	google.golang.org/api v0.205.0
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (

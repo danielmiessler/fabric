@@ -68,7 +68,7 @@
 > [!NOTE]
 > November 8, 2024
 >
-> - **Multimodal Support**: You can now us `-a` (attachment) for Multimodal submissions to OpenAI models that support it. Example: `fabric -a https://path/to/image "Give me a description of this image."`
+> - **Multimodal Support**: You can now use `-a` (attachment) for Multimodal submissions to OpenAI models that support it. Example: `fabric -a https://path/to/image "Give me a description of this image."`
 
 ## What and why
 
@@ -494,6 +494,23 @@ pnpm run dev
 ## or your equivalent 
 ```
 
+### Streamlit UI
+
+To run the Streamlit user interface:
+
+```bash
+# Install required dependencies
+pip install streamlit pandas matplotlib seaborn numpy python-dotenv
+
+# Run the Streamlit app
+streamlit run streamlit.py
+```
+
+The Streamlit UI provides a user-friendly interface for:
+- Running and chaining patterns
+- Managing pattern outputs
+- Creating and editing patterns
+- Analyzing pattern results
 ## Meta
 
 > [!NOTE]

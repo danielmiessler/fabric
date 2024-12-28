@@ -2,11 +2,12 @@ package cli
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins/tools/youtube"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/danielmiessler/fabric/plugins/tools/youtube"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/core"
@@ -42,7 +43,10 @@ func Cli(version string) (err error) {
 		}
 	}
 
-	registry := core.NewPluginRegistry(fabricDb)
+	var registry *core.PluginRegistry
+	if registry, err = core.NewPluginRegistry(fabricDb); err != nil {
+		return
+	}
 
 	// if the setup flag is set, run the setup function
 	if currentFlags.Setup {
@@ -53,6 +57,12 @@ func Cli(version string) (err error) {
 	if currentFlags.Serve {
 		registry.ConfigureVendors()
 		err = restapi.Serve(registry, currentFlags.ServeAddress)
+		return
+	}
+
+	if currentFlags.ServeOllama {
+		registry.ConfigureVendors()
+		err = restapi.ServeOllama(registry, currentFlags.ServeAddress, version)
 		return
 	}
 
@@ -128,6 +138,21 @@ func Cli(version string) (err error) {
 		} else {
 			currentFlags.Message = msg
 		}
+	}
+
+	if currentFlags.ListExtensions {
+		err = registry.TemplateExtensions.ListExtensions()
+		return
+	}
+
+	if currentFlags.AddExtension != "" {
+		err = registry.TemplateExtensions.RegisterExtension(currentFlags.AddExtension)
+		return
+	}
+
+	if currentFlags.RemoveExtension != "" {
+		err = registry.TemplateExtensions.RemoveExtension(currentFlags.RemoveExtension)
+		return
 	}
 
 	// if the interactive flag is set, run the interactive function
