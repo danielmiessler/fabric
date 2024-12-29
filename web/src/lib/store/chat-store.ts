@@ -67,7 +67,7 @@ export const revertLastMessage = () => {
     messageStore.update(messages => messages.slice(0, -1));
 };
 
-export async function sendMessage(userInput: string, systemPromptText?: string) {
+export async function sendMessage(userInput: string, systemPromptText?: string, messageHistory?: string) {
     try {
         const $streaming = get(streamingStore);
         if ($streaming) {
@@ -80,7 +80,7 @@ export async function sendMessage(userInput: string, systemPromptText?: string) 
         // Add user message
         messageStore.update(messages => [...messages, { role: 'user', content: userInput }]);
 
-        const stream = await chatService.streamChat(userInput, systemPromptText);
+        const stream = await chatService.streamChat(userInput, systemPromptText, messageHistory);
 
         await chatService.processStream(
             stream,
