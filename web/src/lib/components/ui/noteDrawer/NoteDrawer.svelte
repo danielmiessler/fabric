@@ -2,7 +2,7 @@
   import { Drawer, getDrawerStore, getToastStore } from '@skeletonlabs/skeleton';
   import type { DrawerSettings, DrawerStore } from '@skeletonlabs/skeleton';
   import { onMount } from 'svelte';
-  import { noteStore } from '$lib/store/noteStore';
+  import { noteStore } from '$lib/store/note-store';
   import { afterNavigate, beforeNavigate } from '$app/navigation'; 
   
   const drawerStore = getDrawerStore();
@@ -94,14 +94,14 @@
         {/if}
       </header>
       <div class="m-4">
-      <textarea
-        bind:this={textareaEl}
-        bind:value={$noteStore.content}
-        on:input={adjustTextareaHeight}
-        on:keydown={handleKeydown}
-        class="w-full min-h-screen p-2 rounded-container-token text-primary-800 resize-none"
-        placeholder="Enter your text here..."
-      />
+        <textarea
+          bind:this={textareaEl}
+          bind:value={$noteStore.content}
+          on:input={adjustTextareaHeight}
+          on:keydown={handleKeydown}
+          class="w-full min-h-screen p-2 rounded-container-token text-primary-800 resize-none"
+          placeholder="Enter your text here..."
+        />
       </div>
       <footer class="flex justify-between pb-4 items-center">
         <span class="text-sm opacity-70">
