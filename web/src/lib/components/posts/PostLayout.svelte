@@ -27,6 +27,10 @@
         @apply h2; 
     }
 
+    :global(p) {
+        @layer p; 
+    }
+
     :global(ul) {
         @layer ul; 
     }
@@ -50,5 +54,5 @@
     :global(code) {
         @layer code; 
     }
-    
-</style>
+
+</style> 

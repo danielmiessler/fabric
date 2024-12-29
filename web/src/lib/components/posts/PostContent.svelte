@@ -20,7 +20,7 @@
             <h1 class="inline-block text-4xl font-bold inherit-colors lg:text-5xl">{post.metadata.title}</h1>
             <PostMeta data={post.metadata} />
         </div> 
-        <div class="items-center py-8 mx-auto grid-cols-[80%_20%] grid gap-8 max-w-7xl relative prose prose-slate dark:prose-invert">
+        <div class="items-center py-8 mx-auto gap-8 max-w-7xl relative prose prose-slate dark:prose-invert">
             {#if typeof post.content === 'function'}
                 <SideNav />
                 <svelte:component this={post.content} />
