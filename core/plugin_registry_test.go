@@ -1,15 +1,20 @@
 package core
 
 import (
-	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"os"
 	"testing"
+
+	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 )
 
 func TestSaveEnvFile(t *testing.T) {
-	registry := NewPluginRegistry(fsdb.NewDb(os.TempDir()))
+	db := fsdb.NewDb(os.TempDir())
+	registry, err := NewPluginRegistry(db)
+	if err != nil {
+		t.Fatalf("NewPluginRegistry() error = %v", err)
+	}
 
-	err := registry.SaveEnvFile()
+	err = registry.SaveEnvFile()
 	if err != nil {
 		t.Fatalf("SaveEnvFile() error = %v", err)
 	}
