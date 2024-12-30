@@ -115,23 +115,23 @@
       </div>
     </div>
     <div class="container mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 justify-end max-h-36 mt-8 pb-8">
+      <div class="md:col-start-1">
+        <!-- This card should be replaced with explainer graphic or text -->
+        <Card
+          header="Explore the Possibilities"
+          imageUrl="/obsidian-logo.png"
+          imageAlt="Blog post header image"
+          title="Enter a new title here"
+          content="What will you share?"
+          authorName="Your Name Here"
+          authorAvatarUrl=""
+          link="/"
+        /> 
+      </div>
       <div class="container mx-auto md:col-start-2 justify-left">
         <hr class="!border-t-4" />
         <br>
         <h4 class="h4">Showcase your interests. Tell people what you've been working on. Create your community.</h4>
-      </div>
-      <div class="md:col-start-1">
-        <!-- This card should be replaced with explainer graphic or text -->
-         <Card
-header="Explore the Possibilities"
-imageUrl="/obsidian-logo.png"
-imageAlt="Blog post header image"
-title="Enter a new title here"
-content="What will you share?"
-authorName="Your Name Here"
-authorAvatarUrl=""
-link="/"
-/> 
       </div>
     </div>
 
