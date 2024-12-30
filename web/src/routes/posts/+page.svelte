@@ -6,7 +6,7 @@
 	import PostCard from '$lib/components/posts/PostCard.svelte';
 	import { InputChip } from '@skeletonlabs/skeleton';
   import Connections from '$lib/components/ui/connections/Connections.svelte';
-
+  import Button from '$lib/components/ui/button/button.svelte';
   let searchQuery = '';
 	let selectedTags: string[] = [];
 	let allTags: string[] = [];
@@ -54,8 +54,8 @@
 </div>
 
 <div class="py-12">
-  <h1 class="mb-4 text-3xl font-bold">Blog Posts</h1>
-  <p class="text-sm mb-4 font-small">This blog is maintained in an Obsidian Vault</p>
+  <h1 class="mb-4 text-3xl font-bold">Knowledge Garden</h1>
+  <p class="text-sm mb-4 font-small">A digital space where ideas grow and connections flourish</p>
 
   <div class="mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 justify-end">
     <div class="container mx-auto justify-left">
@@ -68,7 +68,8 @@
       <h4 class="h4"><b>Leverage Proven Patterns</b></h4>
       <br>
       <Youtube id="UbDyjIIGaxQ" title="Network Chuck Explains fabric" />
-      <p>Post your favorite videos.</p>
+      <br>
+      <p>Share your journey through articles, videos, and insights that matter to you!</p>
       <br>
 
     </div>
@@ -78,12 +79,22 @@
         <h4 class=""><b>Find your interests, build your knowledge</b></h4>
       </div>
       <div class="m-auto md:col-start-1">
-        <p>Share it with people. Your experience is valuable. Write often and gain a better understanding of yourself.</p>
+        <p>Embark on an enriching journey of self-discovery through the power of words! Sharing your unique voice and experiences isn't just 
+          about expressing yourself; it's about connecting, inspiring, and empowering others with your story.
+        </p>
         <br>
-        <p>Use the patterns to help you create posts and templates for future posts. AI can be a powerful tool. There is no right or wrong way to use it.</p>
-        <div class="container mx-auto justify-right">
-          <button type="button"><a href="/posts/tutorial" class="btn btn-primary">Get Started</a></button>
-        </div>
+        <p>Regular writing is more than just a means to share; it's a tool that deepens your self-awareness, helping you understand yourself 
+          better and grow in the process. 
+        </p>
+        <br>
+        <p>Leverage the power of the patterns. Use AI assistance to amplify your creativity. The templates are designed to 
+          help you focus on what matters most - your ideas. Start with structured frameworks, then make them your own.
+        </p>
+        <br>
+        <p>AI isn't just a tool here - it's your creative companion. Use it to explore ideas, generate outlines, or refine your writing. 
+          But remember, the authentic voice, the unique insights, and the valuable experiences - those come from you. This is where 
+          technology meets creativity to help you build something truly meaningful.
+        </p>
       </div>
       <div class="md:col-start-2">
         <br>
@@ -91,57 +102,55 @@
           header="Let Your Voice Be Heard"
           imageUrl="/brain.png"
           imageAlt="Blog post header image"
-          title="Blogging, Podcasting, Videos, and More."
-          content="What will you create?"
+          title="Welcome to Your Digital Garden"
+          content="Start creating, connecting, and sharing your knowledge"
           authorName="Your Name Here"
-          authorAvatarUrl=""
-          link="/"
+          authorAvatarUrl="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXIiPjxwYXRoIGQ9Ik0xOSAyMXYtMmE0IDQgMCAwIDAtNC00SDlhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+"
+          link="/posts/welcome"
         />
       </div>
     </div>
     <div class="container mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
       <Card
-        header="Curate Your Content"
+        header="Shape Your Ideas"
         imageUrl="/electric.png"
         imageAlt="Blog post header image"
-        title="Enter a new title here"
-        content="What will you share"
+        title="Transform Knowledge into Action and Insight"
+        content="Create, Connect, and Share Your Knowledge"
         authorName="Your Name Here"
-        authorAvatarUrl=""
+        authorAvatarUrl="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXIiPjxwYXRoIGQ9Ik0xOSAyMXYtMmE0IDQgMCAwIDAtNC00SDlhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+"
         link="/"
       />
       <div class="container mx-auto justify-right">
-        <blockquote class="blockquote">There are countless use cases for AI. What will you use if for?</blockquote>
+        <blockquote class="blockquote">
+          There are many patterns for different use cases. How will you use them to your advantage?
+        </blockquote>
       </div>
     </div>
     <div class="container mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 justify-end max-h-36 mt-8 pb-8">
       <div class="md:col-start-1">
         <!-- This card should be replaced with explainer graphic or text -->
         <Card
-          header="Explore the Possibilities"
+          header="Backed by Obsidian"
           imageUrl="/obsidian-logo.png"
           imageAlt="Blog post header image"
-          title="Enter a new title here"
-          content="What will you share?"
+          title="Connected Thinking"
+          content="Build your knowledge network"
           authorName="Your Name Here"
-          authorAvatarUrl=""
-          link="/"
+          authorAvatarUrl="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXIiPjxwYXRoIGQ9Ik0xOSAyMXYtMmE0IDQgMCAwIDAtNC00SDlhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+"
+          link="/posts/obsidian"
         /> 
       </div>
       <div class="container mx-auto md:col-start-2 justify-left">
         <hr class="!border-t-4" />
         <br>
-        <h4 class="h4">Showcase your interests. Tell people what you've been working on. Create your community.</h4>
+        <h4 class="h4">Build Your Knowledge Network • Share Your Journey • Inspire Others</h4>
       </div>
     </div>
-
-  </div>
-  <div class="container mx-auto p-12 m-24 justify-right">
-    <blockquote class="blockquote">Turn this into a graphic that spans the page</blockquote>
   </div>
 
   <div class="rounded-tl-container-token m-auto grid grid-cols-1 gap-4 mt-8">
-    <div class="mx-auto">something here</div>
+    <div class="mx-auto max-h-52 max-w-52"><img src="/fabric-logo.png"></div>
     <!-- <Card
 header="Curate Your Content"
 imageUrl="/electric.png"
