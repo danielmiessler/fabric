@@ -18,24 +18,24 @@ function createNoteStore() {
   const createFrontmatter = (content: string): Frontmatter => {
     const now = new Date();
     const dateStr = now.toISOString();
-    
+
     // Generate a timestamp-based title instead of using content
     const title = `Note ${now.toLocaleString()}`;
-    
+
     // Clean up content for description - remove markdown and extra whitespace
     const cleanContent = content
-      .replace(/[#*`_]/g, '')  // Remove markdown characters
-      .replace(/\s+/g, ' ')    // Normalize whitespace
-      .trim();
-    
+    .replace(/[#*`_]/g, '')  // Remove markdown characters
+    .replace(/\s+/g, ' ')    // Normalize whitespace
+    .trim();
+
     return {
       title,
+      aliases: [''],
       description: cleanContent.slice(0, 150) + (cleanContent.length > 150 ? '...' : ''),
       date: dateStr,
       tags: ['inbox', 'note'],
       updated: dateStr,
       author: 'User',
-      layout: 'note'
     };
   };
 
@@ -47,22 +47,22 @@ function createNoteStore() {
       .split('.')[0];
     return `${date}-${time}.md`;
   };
-  
+
   const saveToFile = async (content: string) => {
     if (!browser) return;
 
     const filename = generateUniqueFilename();
     const frontmatter = createFrontmatter(content);
-    
+
     // Format frontmatter without extra indentation
     const fileContent = `---
 title: ${frontmatter.title}
+aliases: [${frontmatter.aliases.map(aliases => `"${aliases}"`).join(', ')}]
 description: ${frontmatter.description}
 date: ${frontmatter.date}
 tags: [${frontmatter.tags.map(tag => `"${tag}"`).join(', ')}]
 updated: ${frontmatter.updated}
 author: ${frontmatter.author}
-layout: ${frontmatter.layout}
 ---
 
 ${content}`; // Original content preserved as-is
@@ -95,7 +95,7 @@ ${content}`; // Original content preserved as-is
     save: async () => {
       const state = get({ subscribe });
       const filename = await saveToFile(state.content);
-      
+
       update(state => ({
         ...state,
         lastSaved: new Date(),

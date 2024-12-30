@@ -3,8 +3,6 @@
   import { Slider } from "$lib/components/ui/slider";
   import { modelConfig } from "$lib/store/model-store";
   import Transcripts from "./Transcripts.svelte";
-
-
   import NoteDrawer from '$lib/components/ui/noteDrawer/NoteDrawer.svelte';
   import { getDrawerStore } from '@skeletonlabs/skeleton';
   import { Button } from '$lib/components/ui/button';
