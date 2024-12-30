@@ -1,26 +1,46 @@
 ---
 title: Welcome to Your Blog
-description: First post on your new SvelteKit blog
+description: First post of your new SvelteKit blog
 date: 2024-01-17
 tags: 
   - welcome
   - blog
-  - create
-  - explore
 updated: 2024-01-17
 author: Your Name Here
 aliases: 
   - Welcome!
 ---
 <script>
-    import textarea from '$lib/components/ui/textarea/textarea.svelte'
+  import { Button } from '$lib/components/ui/button';
+  import NoteDrawer from '$lib/components/ui/noteDrawer/NoteDrawer.svelte';
+  import { getDrawerStore } from '@skeletonlabs/skeleton';
+  import { page } from '$app/stores';
+  import { beforeNavigate } from '$app/navigation';
+  
+  const drawerStore = getDrawerStore();
+  function openDrawer() {
+    drawerStore.open({});
+  }
+
+  beforeNavigate(() => {
+    drawerStore.close();
+  });
+
+  $: isVisible = $page.url.pathname.startsWith('/welcome');
 </script>
 
-**Improve the styling. Butt first, the functionality**
+This is the first post of your new blog, powered by [SvelteKit](/posts/getting-started), [Obsidian](/obsidian), and [Fabric](/about). We are excited to share this project with you and we hope you find it useful for your own writing and experiences.
 
-<textarea class="text-primary-800 min-h-[20%] resize-none" placeholder="Get started creating notes now!" />
-
-This is the first post of your new blog, powered by [SvelteKit](/posts/getting-started), [Obsidian](/obsidian), and [Fabric](/about). I'm excited to share this project with you, and I hope you find it useful for your own writing and experiences.
+**Get started:**
+<div class="flex text-inherit justify-start mt-2">
+    <Button
+        variant="primary"
+        class="btn border variant-filled-primary text-align-center"
+        on:click={openDrawer}
+    >Open Drawer
+    </Button>
+</div>
+<NoteDrawer />
 
 This part of the application is edited in <a href="http://localhost:5173/posts/obsidian" name="Obsidian">Obsidian</a>.
 

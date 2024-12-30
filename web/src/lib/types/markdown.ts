@@ -2,13 +2,13 @@
 // Declare the interface first
 export interface Frontmatter {
   title: string;
+  aliases?: string[];
   description: string;
   date: string;
   tags: string[];
   updated?: string;
   author?: string;
   layout?: string;
-  aliases?: string;
   images?: string[];
 }
 
