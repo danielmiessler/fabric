@@ -89,6 +89,4 @@
       <NoteDrawer />
     {/if}
   </div>
-
-
 </div>

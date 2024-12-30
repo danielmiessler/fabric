@@ -16,12 +16,12 @@
 </script>
 
 <div class="min-w-0">
-    <Select 
-        bind:value={selectedPreset}
-    > 
+  <Select 
+    bind:value={selectedPreset}
+  > 
     <option value="">Load a pattern...</option>
-        {#each $patterns as pattern}
-            <option value={pattern.Name}>{pattern.Description}</option>
-        {/each}
-    </Select>
+    {#each $patterns as pattern}
+      <option value={pattern.Name}>{pattern.Description}</option>
+    {/each}
+  </Select>
 </div>

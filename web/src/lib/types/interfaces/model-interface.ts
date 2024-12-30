@@ -1,8 +1,8 @@
 export interface VendorModel {
-    name: string;
-    vendor: string;
+  name: string;
+  vendor: string;
 }
-  
+
 export interface ModelsResponse {
   models: string[];
   vendors: Record<string, string[]>;
@@ -10,10 +10,10 @@ export interface ModelsResponse {
 
 
 export interface ModelConfig {
-    model: string;
-    temperature: number;
-    top_p: number;
-    maxLength: number;
-    frequency: number;
-    presence: number;
+  model: string;
+  temperature: number;
+  top_p: number;
+  maxLength: number;
+  frequency: number;
+  presence: number;
 }

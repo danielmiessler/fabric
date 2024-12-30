@@ -3,19 +3,6 @@ import type { PageLoad } from './$types';
 import type { Frontmatter } from '$lib/types/markdown';
 
 const posts = import.meta.glob<{ metadata: Frontmatter, default: unknown }>('/src/lib/content/posts/*.{md,svx}', { eager: true });
-// Refractor to use the Frontmatter type from $lib/types/markdown
-//const posts = import.meta.glob<{
-//    metadata: {
-//        title: string;
-//        description: string;
-//        date: string;
-//        tags: string[];
-//        updated?: string;
-//        author?: string;
-//        aliases?: string[];
-//    };
-//    default: unknown;
-//}>('/src/lib/content/posts/*.{md,svx}', { eager: true });
 
 export const load: PageLoad = async ({ params }) => {
     const post = Object.entries(posts).find(([path]) => 

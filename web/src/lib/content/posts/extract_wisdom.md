@@ -1,7 +1,7 @@
 ---
 title: Extract Wisdom
 date: 2024-01-01
-description: Something here
+description: Pattern - Extract Wisdom
 updated: 
 aliases: Extract Wisdom
 tags: 

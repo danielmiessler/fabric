@@ -1,4 +1,4 @@
 export interface Context {
-    name: string;
-    content: string;
+  name: string;
+  content: string;
 }

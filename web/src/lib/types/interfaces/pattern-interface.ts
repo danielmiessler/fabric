@@ -1,5 +1,5 @@
 export interface Pattern {
-    Name: string;
-    Description: string;
-    Pattern: string; // | object
-  }
+  Name: string;
+  Description: string;
+  Pattern: string; // | object
+}
