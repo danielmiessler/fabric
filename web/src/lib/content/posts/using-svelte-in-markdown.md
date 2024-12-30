@@ -1,12 +1,12 @@
 ---
-title: Using Markdown in Svelte
-description: Learn how to use your markdown documents in Svelte Applications!
+title: Using Svelte in Markdown
+description: Learn how to use your Svelte components in Markdown documents!
 date: 2023-12-22
 updated:
-aliases: Using Markdonw in Svelte, Svelte in Markdown
+aliases: Using Svelte in Markdown and Markdown in Svelte
 tags: [markdown, svelte, web-dev, docs, learn]
 ---
-[Mdsvex](https://mdsvex.pngwn.io/docs#install-it)
+**Ref:** [Mdsvex](https://mdsvex.pngwn.io/docs#install-it)
 
 Here are some examples illustrating how to use Mdsvex in a Svelte application:
 
