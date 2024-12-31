@@ -211,7 +211,7 @@ yt() {
 }
 ```
 
-This also creates a `yt` alias that allows you to use `yt https://www.youtube.com/watch?v=4b0iet22VIk` to get your transcripts.
+This also creates a `yt` alias that allows you to use `yt https://www.youtube.com/watch?v=4b0iet22VIk` to get transcripts, comments, and metadata.
 
 #### Save your files in markdown using aliases
 
@@ -323,6 +323,7 @@ Application Options:
   -y, --youtube=             YouTube video "URL" to grab transcript, comments from it and send to chat
       --transcript           Grab transcript from YouTube video and send to chat (it used per default).
       --comments             Grab comments from YouTube video and send to chat
+      --metadata             Grab metadata from YouTube video and send to chat
   -g, --language=            Specify the Language Code for the chat, e.g. -g=en -g=zh
   -u, --scrape_url=          Scrape website URL to markdown using Jina AI
   -q, --scrape_question=     Search question using Jina AI
@@ -474,16 +475,18 @@ alias pbpaste='xclip -selection clipboard -o'
 ## Web Interface
 
 Fabric now includes a built-in web interface that provides a GUI alternative to the command-line interface and an out-of-the-box website for those who want to get started with web development or blogging.  
-You can use this app as a GUI interface for Fabric, a ready to go blog-site, or a website template for your own projects.  
+You can use this app as a GUI interface for Fabric, a ready to go blog-site, or a website template for your own projects.
 
-The `web/src/lib/content` directory includes starter `.obsidian/` and `templates/` directories,  allowing you to open up the `web/src/lib/content/` directory as an [Obsidian.md](https://obsidian.md) vault. You can place your posts in the posts directory when you're ready to publish. 
+The `web/src/lib/content` directory includes starter `.obsidian/` and `templates/` directories, allowing you to open up the `web/src/lib/content/` directory as an [Obsidian.md](https://obsidian.md) vault. You can place your posts in the posts directory when you're ready to publish.
+
 ### Installing
 
-The GUI can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run the development server to start the app. 
+The GUI can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run the development server to start the app.
 
-_You will need to run fabric in a separate terminal with the `fabric --serve` command._ 
+_You will need to run fabric in a separate terminal with the `fabric --serve` command._
 
 **From the fabric project `web/` directory:**
+
 ```shell
 npm run dev
 
@@ -491,7 +494,7 @@ npm run dev
 
 pnpm run dev
 
-## or your equivalent 
+## or your equivalent
 ```
 
 ### Streamlit UI
@@ -507,10 +510,12 @@ streamlit run streamlit.py
 ```
 
 The Streamlit UI provides a user-friendly interface for:
+
 - Running and chaining patterns
 - Managing pattern outputs
 - Creating and editing patterns
 - Analyzing pattern results
+
 ## Meta
 
 > [!NOTE]
