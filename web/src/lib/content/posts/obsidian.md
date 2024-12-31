@@ -60,7 +60,7 @@ Obsidian is a powerful knowledge base that works on top of a local folder of pla
 1. **Organize Your Notes** - Create folders for potential posts. All posts are currently placed in the `posts` folder of the `src/lib/content/{posts}` directory. This can be chaged in the `src/lib/content/posts/index.ts` file.
 2. **Develop Templates** - Develop templates for your posts
 3. **Develop SvelteKit Components** - Build components for displaying content using metadata and templates
-4. **Publish Notes** - Drag notes into specific folders in Obsidian to publish them
+4. **Publish Notes** - Place notes into the posts folder in Obsidian to publish them
 5. **Test and Refine Workflow** - Regularly test the publishing process by running the SvelteKit development server
 6. **Share and Collaborate**
 

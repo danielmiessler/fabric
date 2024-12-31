@@ -69,7 +69,9 @@
       <br>
       <Youtube id="UbDyjIIGaxQ" title="Network Chuck Explains fabric" />
       <br>
-      <p>Share your journey through articles, videos, and insights that matter to you!</p>
+        <p>Leverage the power of the patterns. Use AI assistance to amplify your creativity. The templates are designed to 
+          help you focus on what matters most - your ideas. Start with structured frameworks, then make them your own.
+        </p>
       <br>
 
     </div>
@@ -78,22 +80,13 @@
       <div>
         <h4 class=""><b>Find your interests, build your knowledge</b></h4>
       </div>
-      <div class="m-auto md:col-start-1">
+      <div class="container mx-auto md:col-start-1 pt-4">
         <p>Embark on an enriching journey of self-discovery through the power of words! Sharing your unique voice and experiences isn't just 
           about expressing yourself; it's about connecting, inspiring, and empowering others with your story.
         </p>
         <br>
         <p>Regular writing is more than just a means to share; it's a tool that deepens your self-awareness, helping you understand yourself 
           better and grow in the process. 
-        </p>
-        <br>
-        <p>Leverage the power of the patterns. Use AI assistance to amplify your creativity. The templates are designed to 
-          help you focus on what matters most - your ideas. Start with structured frameworks, then make them your own.
-        </p>
-        <br>
-        <p>AI isn't just a tool here - it's your creative companion. Use it to explore ideas, generate outlines, or refine your writing. 
-          But remember, the authentic voice, the unique insights, and the valuable experiences - those come from you. This is where 
-          technology meets creativity to help you build something truly meaningful.
         </p>
       </div>
       <div class="md:col-start-2">
@@ -119,12 +112,17 @@
         content="Create, Connect, and Share Your Knowledge"
         authorName="Your Name Here"
         authorAvatarUrl="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXIiPjxwYXRoIGQ9Ik0xOSAyMXYtMmE0IDQgMCAwIDAtNC00SDlhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+"
-        link="/"
+        link="/tags/template"
       />
       <div class="container mx-auto justify-right">
         <blockquote class="blockquote">
           There are many patterns for different use cases. How will you use them to your advantage?
         </blockquote>
+        <br>
+        <p>AI isn't just a tool - it's your creative companion. Use it to explore ideas, generate outlines, or refine your writing. 
+          But remember, the authentic voice, the unique insights, and the valuable experiences - those come from you. This is where 
+          technology meets creativity to help you build something truly meaningful.
+        </p>
       </div>
     </div>
     <div class="container mx-auto ml-auto grid grid-cols-1 md:grid-cols-2 gap-4 justify-end max-h-36 mt-8 pb-8">
@@ -148,40 +146,15 @@
       </div>
     </div>
   </div>
-
+  <br>
   <div class="rounded-tl-container-token m-auto grid grid-cols-1 gap-4 mt-8">
     <div class="mx-auto max-h-52 max-w-52"><img src="/fabric-logo.png"></div>
-    <!-- <Card
-header="Curate Your Content"
-imageUrl="/electric.png"
-imageAlt="Blog post header image"
-title="Enter a new title here"
-content="What will you share"
-authorName="Your Name Here"
-authorAvatarUrl=""
-link="/"
-/> -->
-    <!-- <div class="container mx-auto justify-right">
-<blockquote class="blockquote">There are countless use cases for AI. What will you use if for?</blockquote>
-</div> -->
   </div>
-  <div class="container mx-auto justify-center grid mt-8">
-    <div class="container mx-auto justify-center">
+  <br>
+  <div class="container mx-auto justify-center grid grid-cols-1 gap-4 mt-8">
       <hr class="!border-t-4" />
       <br>
       <h4 class="h4">Showcase your interests. Tell people what you've been working on. Create your community.</h4>
-    </div>
-
-    <!--    <Card
-header="Explore the Possibilities"
-imageUrl=""
-imageAlt="Blog post header image"
-title="Enter a new title here"
-content="What will you share?"
-authorName="Your Name Here"
-authorAvatarUrl=""
-link="/"
-/> -->
   </div>
 </div>
 <div class="container py-12">
