@@ -47,8 +47,6 @@
     </div>
   {/if}
 
-  <!-- Check 24-12-08 chat-interface for more updates here  --> 
-
   <div class="messages-container p-4 flex-1 overflow-y-auto max-h-dvh" bind:this={messagesContainer}>
     <div class="messages-content flex flex-col gap-4">
       {#each $chatState.messages as message}

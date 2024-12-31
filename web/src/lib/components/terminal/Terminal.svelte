@@ -116,16 +116,16 @@
 
         <!-- Command input -->
         {#if mounted}
-          <div class="flex items-center command-input">
+          <div class="flex items-center">
             <span class="mr-2 terminal-prompt font-bold">$</span>
-            <!-- {#if showCursor}
+            {#if showCursor}
               <span class="animate-blink terminal-text">▋</span>
-            {/if} -->
+            {/if}
             <input
               type="text"
               bind:value={currentCommand}
               on:keydown={handleKeydown}
-              class="flex-1 bg-transparent border-none outline-none terminal-text caret-primary-500"
+              class="flex-1 bg-transparent border-none outline-none terminal-text"
               placeholder="Type a command..."
             />
           </div>
@@ -153,11 +153,11 @@
     @apply text-gray-600;
   }
 
-  /* .animate-blink {
+  .animate-blink {
     animation: blink 1s step-end infinite;
     flex-col: 1; 
 
-  }*/
+  }
 
   @keyframes blink {
     50% {
@@ -165,16 +165,15 @@
     }
   }
 
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    @apply w-2;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-gray-800/50 rounded-full;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-gray-600/50 rounded-full hover:bg-gray-500/50 transition-colors;
-  }
+  /*::-webkit-scrollbar {*/
+  /*  @apply w-2;*/
+  /*}*/
+  /**/
+  /*::-webkit-scrollbar-track {*/
+  /*  @apply bg-gray-800/50 rounded-full;*/
+  /*}*/
+  /**/
+  /*::-webkit-scrollbar-thumb {*/
+  /*  @apply bg-gray-600/50 rounded-full hover:bg-gray-500/50 transition-colors;*/
+  /*}*/
 </style>
