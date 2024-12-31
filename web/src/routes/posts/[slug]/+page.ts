@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import type { Frontmatter } from '$lib/types/markdown';
+import type { Frontmatter } from '$lib/utils/markdown';
 
 const posts = import.meta.glob<{ metadata: Frontmatter, default: unknown }>('/src/lib/content/posts/*.{md,svx}', { eager: true });
 

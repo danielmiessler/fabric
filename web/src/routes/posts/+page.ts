@@ -1,5 +1,5 @@
 import type { PageLoad } from './$types';
-import type { Frontmatter } from '$lib/types/markdown';
+import type { Frontmatter } from '$lib/utils/markdown';
 
 // This is duplicated at components/ui/tagSearch/tags.ts
 // Consider removing this duplication

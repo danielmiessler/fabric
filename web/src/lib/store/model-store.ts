@@ -1,7 +1,7 @@
 import { writable} from 'svelte/store';
-import { modelsApi } from '$lib/types/chat/models';
-import { configApi } from '$lib/types/chat/config';
-import type { VendorModel, ModelConfig } from '$lib/types/interfaces/model-interface';
+import { modelsApi } from '$lib/api/models';
+import { configApi } from '$lib/api/config';
+import type { VendorModel, ModelConfig } from '$lib/interfaces/model-interface';
 
 export const modelConfig = writable<ModelConfig>({
   model: '',

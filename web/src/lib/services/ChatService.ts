@@ -3,7 +3,7 @@ import type {
   StreamResponse, 
   ChatError as IChatError,
   ChatPrompt
-} from '$lib/types/interfaces/chat-interface';
+} from '$lib/interfaces/chat-interface';
 import { get } from 'svelte/store';
 import { modelConfig } from '$lib/store/model-store';
 import { systemPrompt } from '$lib/store/pattern-store';

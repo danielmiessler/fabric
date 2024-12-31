@@ -2,7 +2,7 @@
   import PostMeta from './PostMeta.svelte';
   import type { Post } from './post-interface'
   import Spinner from '$lib/components/ui/spinner/spinner.svelte';
-  import SideNav from '$lib/components/ui/side-nav/SideNav.svelte';
+  import Toc from '$lib/components/ui/toc/Toc.svelte';
 
   export let post: Post; 
 </script>
@@ -22,7 +22,7 @@
     </div> 
     <div class="items-center py-8 mx-auto gap-8 max-w-7xl relative prose prose-slate dark:prose-invert">
       {#if typeof post.content === 'function'}
-        <SideNav />
+        <Toc />
         <svelte:component this={post.content} />
       {:else if typeof post.content === 'string'}
         {post.content}

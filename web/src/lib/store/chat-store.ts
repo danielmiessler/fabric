@@ -1,5 +1,5 @@
 import { writable, derived, get } from 'svelte/store';
-import type { ChatState, Message } from '$lib/types/interfaces/chat-interface';
+import type { ChatState, Message } from '$lib/interfaces/chat-interface';
 import { ChatService, ChatError } from '$lib/services/ChatService';
 
 // Initialize chat service

@@ -1,5 +1,5 @@
-import { createStorageAPI } from '../types/chat/base';
-import type { Pattern } from '$lib/types/interfaces/pattern-interface';
+import { createStorageAPI } from '$lib/api/base';
+import type { Pattern } from '$lib/interfaces/pattern-interface';
 import { get, writable } from 'svelte/store';
 
 export const patterns = writable<Pattern[]>([]);

@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { ChatConfig } from '$lib/types/interfaces/chat-interface';
+import type { ChatConfig } from '$lib/interfaces/chat-interface';
 
 const defaultConfig: ChatConfig = {
   temperature: 0.7,

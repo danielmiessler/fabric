@@ -1,6 +1,6 @@
 import { writable, get } from 'svelte/store';
 import { browser } from '$app/environment';
-import type { Frontmatter } from '$lib/types/markdown';
+import type { Frontmatter } from '$lib/utils/markdown';
 
 interface NoteState {
   content: string;

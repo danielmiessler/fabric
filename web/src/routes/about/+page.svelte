@@ -1,12 +1,12 @@
 <script>
-  import SideNav from '$lib/components/ui/side-nav/SideNav.svelte';
+  import Toc from '$lib/components/ui/toc/Toc.svelte';
   import Content from './README.md';
 </script>
 
 {#if Content}
   <div class="items-center mx-auto pt-8 grid-cols-[80%_20%] grid gap-8 max-w-7xl relative">
     <svelte:component this={Content} />
-    <SideNav />
+    <Toc />
   </div>
 {:else}
   <div class="container py-12">

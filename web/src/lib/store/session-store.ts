@@ -1,6 +1,6 @@
-import { createStorageAPI } from '../types/chat/base';
-import type { Session } from '../types/interfaces/session-interface';
-import type { Message } from '../types/interfaces/chat-interface';
+import { createStorageAPI } from '$lib/api/base';
+import type { Session } from '$lib/interfaces/session-interface';
+import type { Message } from '$lib/interfaces/chat-interface';
 import { get, writable } from 'svelte/store';
 import { openFileDialog, readFileAsJson, saveToFile } from '../utils/file-utils';
 import { toastService } from '../services/toast-service';

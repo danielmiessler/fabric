@@ -1,5 +1,5 @@
 import type { SvelteComponent } from 'svelte';
-import type { Frontmatter } from '$lib/types/markdown';
+import type { Frontmatter } from '$lib/utils/markdown';
 
 export type PostMetadata = Frontmatter;
 
