@@ -94,9 +94,8 @@
   });
 </script>
 
-<div class="h-full">
-  <div class="flex flex-col gap-2 h-screen">
-    <div class="flex-1 rounded-lg border-current">
+  <div class="flex flex-col gap-2 h-full">
+    <div class="flex-1 relative shadow-lg">
       <Textarea 
         bind:value={$systemPrompt}
         on:input={(e) => $systemPrompt || ''}
@@ -105,7 +104,7 @@
       />
     </div>
 
-    <div class="flex-1 py-2 relative shadow-lg">
+    <div class="flex-1 relative shadow-lg">
       <Textarea
         bind:value={userInput}
         on:input={(e) => userInput}
@@ -146,7 +145,6 @@
       </div>
     </div>
   </div>
-</div>
 
 <style>
 .flex-col {

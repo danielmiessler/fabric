@@ -6,7 +6,6 @@
 	import Patterns from "./Patterns.svelte";
 </script>
 
-<div class="mt-2 flex h-screen w-full overflow-hidden">
   <div class="flex gap-4 p-2 w-full">
     <aside class="w-1/5">
       <div class="flex flex-col gap-2">
@@ -24,5 +23,3 @@
       <ChatMessages />
     </div>
   </div>
-</div>
-
