@@ -4,7 +4,8 @@ description: Create and manage your notes with Obsidian!
 aliases: Obsidian
 date: 2024-11-16
 updated: 2024-12-08
-tags: [type/note,obsidian]
+tags: 
+  - obsidian
 ---
 <div align="center">
 <a href="https://obsidian.md" target="_blank" rel="noopener noreferrer">
