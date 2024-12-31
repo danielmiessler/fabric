@@ -10,7 +10,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Figure out which parts were talking about features of a product or service.
 
-- Output the list of features as a bulleted list of 15 words per bullet.
+- Output the list of features as a bulleted list of 16 words per bullet.
 
 # OUTPUT INSTRUCTIONS
 

@@ -30,7 +30,7 @@ END EXAMPLE
 
 # OUTPUT INSTRUCTIONS
 
-- The sentence should be a single sentence that is 15 words or fewer, with no special formatting or anything else.
+- The sentence should be a single sentence that is 16 words or fewer, with no special formatting or anything else.
 
 - Do not include any setup to the sentence, e.g., "The core message is to…", etc. Just list the core message and nothing else.
 

@@ -10,11 +10,11 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Output a summary of how the project works in a section called SUMMARY:.
 
-- Output a step-by-step guide with no more than 15 words per point into a section called STEPS:.
+- Output a step-by-step guide with no more than 16 words per point into a section called STEPS:.
 
 - Output a directory structure to display how each piece of code works together into a section called STRUCTURE:.
 
-- Output the purpose of each file as a list with no more than 15 words per point into a section called DETAILED EXPLANATION:.
+- Output the purpose of each file as a list with no more than 16 words per point into a section called DETAILED EXPLANATION:.
 
 - Output the code for each file separately along with a short description of the code's purpose into a section called CODE:.
 

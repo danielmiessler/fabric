@@ -78,7 +78,7 @@ END EXAMPLE BULLETS
 
 - Only output Markdown.
 
-- Ensure all bullets are 10-15 words long, and none are over 15 words.
+- Ensure all bullets are 10-16 words long, and none are over 16 words.
 
 - Ensure you follow ALL these instructions when creating your output.
 

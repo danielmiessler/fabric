@@ -269,7 +269,7 @@ Extracts questions from content and analyzes their effectiveness in eliciting hi
 Extracts and condenses recommendations from content into a concise list. This process involves identifying both explicit and implicit advice within the given material. The output is a bulleted list of up to 20 brief recommendations.
 
 ## extract_references
-Extracts references to various forms of cultural and educational content from provided text. This process involves identifying and listing references to art, literature, and academic papers concisely. The expected output is a bulleted list of up to 20 references, each summarized in no more than 15 words.
+Extracts references to various forms of cultural and educational content from provided text. This process involves identifying and listing references to art, literature, and academic papers concisely. The expected output is a bulleted list of up to 20 references, each summarized in no more than 16 words.
 
 ## extract_song_meaning
 Analyzes and interprets the meaning of songs based on extensive research and lyric examination. This process involves deep analysis of the artist's background, song context, and lyrics to deduce the song's essence. Outputs include a summary sentence, detailed meaning in bullet points, and evidence supporting the interpretation.

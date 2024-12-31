@@ -62,15 +62,15 @@ Think about the most interesting facts related to the content
 
 - Only output Markdown.
 
-- Write the IDEAS bullets as exactly 15 words.
+- Write the IDEAS bullets as exactly 16 words.
 
-- Write the RECOMMENDATIONS bullets as exactly 15 words.
+- Write the RECOMMENDATIONS bullets as exactly 16 words.
 
-- Write the HABITS bullets as exactly 15 words.
+- Write the HABITS bullets as exactly 16 words.
 
-- Write the FACTS bullets as exactly 15 words.
+- Write the FACTS bullets as exactly 16 words.
 
-- Write the INSIGHTS bullets as exactly 15 words.
+- Write the INSIGHTS bullets as exactly 16 words.
 
 - Extract at least 25 IDEAS from the content.
 

@@ -26,6 +26,6 @@ You are an expert in intelligence investigations and data visualization using Gr
 
 - Ensure the final diagram is so clear and well annotated that even a journalist new to the story can follow it, and that it could be used to explain the situation to a jury.
 
-- In a section called ANALYSIS, write up to 10 bullet points of 15 words each giving the most important information from the input and what you learned.
+- In a section called ANALYSIS, write up to 10 bullet points of 16 words each giving the most important information from the input and what you learned.
 
 - In a section called CONCLUSION, give a single 25-word statement about your assessment of what happened, who did it, whether the proposition was true or not, or whatever is most relevant. In the final sentence give the CIA rating of certainty for your conclusion.
