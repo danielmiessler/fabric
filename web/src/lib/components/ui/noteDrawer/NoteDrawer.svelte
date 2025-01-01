@@ -93,33 +93,33 @@
           </span>
         {/if}
       </header>
-      <div class="overflow-auto">
-      <div class="flex-1 p-4 justify-center items-center m-4">
+      <div class="p-1">
+      <div class="flex-1 p-4 justify-center overflow-visible items-center m-4">
         <textarea
           bind:this={textareaEl}
           bind:value={$noteStore.content}
           on:input={adjustTextareaHeight}
           on:keydown={handleKeydown}
-          class="w-full min-h-96 p-2 rounded-container-token text-primary-800"
+          class="w-full min-h-96 max-h-[500px] overflow-y-auto resize-none p-2 rounded-container-token text-primary-800"
           placeholder="Enter your text here..."
         />
       </div>
       </div>
-        <footer class="flex justify-between p-4 items-center">
+        <footer class="flex-none flex justify-between items-center p-4 mt-auto">
           <span class="text-sm opacity-70">
             {#if $noteStore.isDirty}
               Unsaved changes
             {/if}
           </span>
-          <div class="flex gap-2 mr-5">
+          <div class="flex gap-2 m-5">
             <button
-              class="btn px-4 variant-filled-primary"
+              class="btn p-2 variant-filled-primary"
               on:click={noteStore.reset}
             >
               Reset
             </button>
             <button
-              class="btn px-4 variant-filled-primary"
+              class="btn p-2 variant-filled-primary"
               on:click={saveContent}
             >
               {#if saving}
