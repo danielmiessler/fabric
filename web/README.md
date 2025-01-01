@@ -11,17 +11,15 @@ The goal of this app is to not only provide a user interface for Fabric, but als
 
 The app can be run by navigating to the `web` directory and using `npm install`, `pnpm install`, or your preferred package manager. Then simply run `npm run dev`, `pnpm run dev`, or your equivalent command to start the app. *You will need to run fabric in a seperate terminal with the `fabric --serve` command.*
 
-A production build is available as well. You can run it with `npm run preview` or using your preferred package manager
-
 ## Tips
 
 When creating new posts make sure to include a date, description, tags, and aliases. Only a date is needed to display a note.
+
+You can include images, tags to other articles, code blocks, and more all within your markdown files. 
 
 ### If you choose to use Obsidian along side ths app
 
 You can design and order your vault however you like, though a `posts` folder should be kept in your vault to house any articles you'd like to post. 
 
-### Production
 
-The production build has not been setup to run on any particular provider. 
 
