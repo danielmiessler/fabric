@@ -10,14 +10,13 @@
 </script>
 
 <article class="prose prose-slate dark:prose-invert max-w-5xl flex-1">
-  <h1 class="inline-block text-4xl font-bold inherit-colors lg:text-5xl">{aliases}</h1> 
+  {#if aliases}
+  <h1 class="inline-block text-4xl font-bold inherit-colors lg:text-5xl">{aliases}</h1>
+  {/if}
   <slot />
 </article>
 
 <style lang="postcss">
-:global(textarea) {
-  @apply textarea;
-}
 
 :global(h1) {
   @apply h1; 
