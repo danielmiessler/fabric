@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { cn } from "$lib/utils/utils";
-	
-	export let value: any = undefined;
-	export let disabled = false;
-	let className = undefined;
-	export { className as class };
+  import { cn } from "$lib/utils/utils";
+
+  export let value: any = undefined;
+  export let disabled = false;
+  let className = undefined;
+  export { className as class };
 </script>
 
 <div class="relative">

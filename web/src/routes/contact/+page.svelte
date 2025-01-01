@@ -1,6 +1,5 @@
 <script>
   import Content from './contact.md'
-
 </script>
 
 {#if Content}

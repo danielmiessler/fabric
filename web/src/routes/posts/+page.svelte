@@ -1,50 +1,51 @@
 <script lang="ts">
   //import Search from './Search.svelte';
   import type { PageData } from './$types';
-	import Card from '$lib/components/ui/cards/card.svelte';
-	import { Youtube } from 'svelte-youtube-lite';
-	import PostCard from '$lib/components/posts/PostCard.svelte';
-	import { InputChip } from '@skeletonlabs/skeleton';
+  import Card from '$lib/components/ui/cards/card.svelte';
+  import { Youtube } from 'svelte-youtube-lite';
+  import PostCard from '$lib/components/posts/PostCard.svelte';
+  import { InputChip } from '@skeletonlabs/skeleton';
   import Connections from '$lib/components/ui/connections/Connections.svelte';
   import Button from '$lib/components/ui/button/button.svelte';
+
   let searchQuery = '';
-	let selectedTags: string[] = [];
-	let allTags: string[] = [];
+  let selectedTags: string[] = [];
+  let allTags: string[] = [];
 
-	export let data: PageData;
-	$: posts = data.posts || [];
-	
-	// Extract all unique tags from posts
-	$: {
-		const tagSet = new Set<string>();
-		posts?.forEach(post => {
-			post.metadata?.tags?.forEach(tag => tagSet.add(tag));
-		});
-		allTags = Array.from(tagSet);
-	}
+  export let data: PageData;
+  $: posts = data.posts || [];
 
-	// Filter posts based on selected tags
-	$: filteredPosts = posts?.filter(post => {
-		if (selectedTags.length === 0) return true;
-		return selectedTags.every(tag => 
-			post.metadata?.tags?.some(postTag => postTag.toLowerCase() === tag.toLowerCase())
-		);
-	}) || [];
+  // Extract all unique tags from posts
+  $: {
+    const tagSet = new Set<string>();
+    posts?.forEach(post => {
+      post.metadata?.tags?.forEach(tag => tagSet.add(tag));
+    });
+    allTags = Array.from(tagSet);
+  }
 
-	// Filter posts based on search query
-	$: searchResults = filteredPosts.filter(post => {
-		if (!searchQuery) return true;
-		const query = searchQuery.toLowerCase();
-		return (
-			post.metadata?.title?.toLowerCase().includes(query) ||
-			post.metadata?.description?.toLowerCase().includes(query) ||
-			post.metadata?.tags?.some(tag => tag.toLowerCase().includes(query))
-		);
-	});
+  // Filter posts based on selected tags
+  $: filteredPosts = posts?.filter(post => {
+    if (selectedTags.length === 0) return true;
+    return selectedTags.every(tag => 
+      post.metadata?.tags?.some(postTag => postTag.toLowerCase() === tag.toLowerCase())
+    );
+  }) || [];
 
-	function validateTag(value: string): boolean {
-		return allTags.some(tag => tag.toLowerCase() === value.toLowerCase());
-	}
+  // Filter posts based on search query
+  $: searchResults = filteredPosts.filter(post => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      post.metadata?.title?.toLowerCase().includes(query) ||
+      post.metadata?.description?.toLowerCase().includes(query) ||
+      post.metadata?.tags?.some(tag => tag.toLowerCase().includes(query))
+    );
+  });
+
+  function validateTag(value: string): boolean {
+    return allTags.some(tag => tag.toLowerCase() === value.toLowerCase());
+  }
 </script>
 
 <!-- <Search /> -->

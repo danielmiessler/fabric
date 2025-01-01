@@ -4,11 +4,11 @@
   import { patterns, patternAPI } from "$lib/store/pattern-store";
 
   let selectedPreset = "";
-	
-	$: if (selectedPreset) {
-		console.log('Pattern selected:', selectedPreset);
-		patternAPI.selectPattern(selectedPreset);
-	}
+
+  $: if (selectedPreset) {
+    console.log('Pattern selected:', selectedPreset);
+    patternAPI.selectPattern(selectedPreset);
+  }
 
     onMount(async () => {
       await patternAPI.loadPatterns();

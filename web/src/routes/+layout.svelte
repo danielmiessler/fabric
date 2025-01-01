@@ -11,21 +11,21 @@
   import { getToastStore } from '@skeletonlabs/skeleton';
   import { onMount } from 'svelte';
   import { getDrawerStore } from '@skeletonlabs/skeleton';
-	
+
   // Initialize stores
-	initializeStores();
+  initializeStores();
   const drawerStore = getDrawerStore();
   const toastStore = getToastStore();
 
-	onMount(() => {
-		toastStore.trigger({
+  onMount(() => {
+    toastStore.trigger({
       type: 'info',
       message: "👋 Welcome to the site! Tell people about yourself and what you do.",
-			background: 'variant-filled-primary',
-			timeout: 3333,
-			hoverable: true
-		});
-	});
+      background: 'variant-filled-primary',
+      timeout: 3333,
+      hoverable: true
+    });
+  });
 </script>
 
 <Toast />

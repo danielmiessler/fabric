@@ -1,9 +1,9 @@
 <script lang="ts">
-	import ChatInput from "./ChatInput.svelte";
-	import ChatMessages from "./ChatMessages.svelte";
-	import ModelConfig from "./ModelConfig.svelte";
-	import Models from "./Models.svelte";
-	import Patterns from "./Patterns.svelte";
+  import ChatInput from "./ChatInput.svelte";
+  import ChatMessages from "./ChatMessages.svelte";
+  import ModelConfig from "./ModelConfig.svelte";
+  import Models from "./Models.svelte";
+  import Patterns from "./Patterns.svelte";
 </script>
 
 <div class="flex gap-4 p-2 w-full">

@@ -11,7 +11,6 @@
     augemented = true;
     showTerminal = true;
   }, 1000);
-
 </script>
 
 <div class="absolute inset-0 -z-10 overflow-hidden h-96">

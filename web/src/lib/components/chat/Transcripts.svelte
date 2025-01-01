@@ -99,7 +99,7 @@
 {/if}
 
 {#if transcript}
-  <Toast position="b" />
+  <Toast position="l" />
   <div class="space-y-4 border rounded-lg p-4 bg-muted/50 h-96">
     <div class="flex justify-between items-center">
       <h3 class="text-xs font-semibold">{title || 'Transcript'}</h3>

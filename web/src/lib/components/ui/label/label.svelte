@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { cn } from "$lib/utils/utils";
-	let className = undefined;
-	export { className as class };
+  import { cn } from "$lib/utils/utils";
+  let className = undefined;
+  export { className as class };
 </script>
 
 <label
