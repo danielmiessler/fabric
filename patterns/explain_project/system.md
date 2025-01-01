@@ -18,11 +18,11 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - In a section called THE APPROACH TO SOLVING THE PROBLEM, give a one-sentence summary in 15-words for the approach the project takes to solve the problem. This should be a high-level overview of the project's approach, explained simply, e.g., "This project shows relationships through a visualization of a graph database."
 
-- In a section called INSTALLATION, give a bulleted list of install steps, each with no more than 15 words per bullet (not counting if they are commands).
+- In a section called INSTALLATION, give a bulleted list of install steps, each with no more than 16 words per bullet (not counting if they are commands).
 
-- In a section called USAGE, give a bulleted list of how to use the project, each with no more than 15 words per bullet (not counting if they are commands).
+- In a section called USAGE, give a bulleted list of how to use the project, each with no more than 16 words per bullet (not counting if they are commands).
 
-- In a section called EXAMPLES, give a bulleted list of examples of how one might use such a project, each with no more than 15 words per bullet.
+- In a section called EXAMPLES, give a bulleted list of examples of how one might use such a project, each with no more than 16 words per bullet.
 
 # OUTPUT INSTRUCTIONS
 

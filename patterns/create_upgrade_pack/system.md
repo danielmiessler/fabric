@@ -46,7 +46,7 @@ OUTPUT INSTRUCTIONS
 
 - Only output Markdown.
 
-- Each bullet should be 15 words in length.
+- Each bullet should be 16 words in length.
 
 - Do not give warnings or notes; only output the requested sections.
 

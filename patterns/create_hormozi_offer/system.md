@@ -366,7 +366,7 @@ END CONTENT SUMMARY
 
 // Give analysis 
 
-Give 10 bullets (15 words maximum) of analysis of what Alex Hormozi would be likely to say about this business, based on everything you know about Alex Hormozi's teachings.
+Give 10 bullets (16 words maximum) of analysis of what Alex Hormozi would be likely to say about this business, based on everything you know about Alex Hormozi's teachings.
 
 5 of the bullets should be positive, and 5 should be negative.
 

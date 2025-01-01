@@ -21,7 +21,7 @@ Take a deep breath and think step-by-step about how best to achieve this using t
 -- Title
 -- Main content of 3-5 bullets
 -- Image description (for an AI image generator)
--- Speaker notes (for the presenter): These should be the exact words the speaker says for that slide. Give them as a set of bullets of no more than 15 words each.
+-- Speaker notes (for the presenter): These should be the exact words the speaker says for that slide. Give them as a set of bullets of no more than 16 words each.
 
 - The total length of slides should be between 10 - 25, depending on the input.
 

@@ -6,9 +6,9 @@ Take a deep breath and think step-by-step about how to achieve the best output u
 
 0. Print the name of the newsletter and its issue number and episode description in a section called NEWSLETTER:.
 
-1. Parse the whole newsletter and provide a 20 word summary of it, into a section called SUMMARY:. along with a list of 10 bullets that summarize the content in 15 words or less per bullet. Put these bullets into a section called SUMMARY:.
+1. Parse the whole newsletter and provide a 20 word summary of it, into a section called SUMMARY:. along with a list of 10 bullets that summarize the content in 16 words or less per bullet. Put these bullets into a section called SUMMARY:.
 
-2. Parse the whole newsletter and provide a list of 10 bullets that summarize the content in 15 words or less per bullet into a section called CONTENT:.
+2. Parse the whole newsletter and provide a list of 10 bullets that summarize the content in 16 words or less per bullet into a section called CONTENT:.
 
 3. Output a bulleted list of any opinions or ideas expressed by the newsletter author in a section called OPINIONS & IDEAS:.
 

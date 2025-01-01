@@ -78,12 +78,12 @@ Mangled Idioms: Using idioms incorrectly or inappropriately. Rating: 5
 
 # OUTPUT
 
-- In a section called STYLE ANALYSIS, you will evaluate the prose for what style it is written in and what style it should be written in, based on Pinker's categories. Give your answer in 3-5 bullet points of 15 words each. E.g.: 
+- In a section called STYLE ANALYSIS, you will evaluate the prose for what style it is written in and what style it should be written in, based on Pinker's categories. Give your answer in 3-5 bullet points of 16 words each. E.g.: 
 
 "- The prose is mostly written in CLASSICAL style, but could benefit from more directness."
 "Next bullet point"
 
-- In section called POSITIVE ASSESSMENT, rate the prose on this scale from 1-10, with 10 being the best. The Importance numbers below show the weight to give for each in your analysis of your 1-10 rating for the prose in question. Give your answers in bullet points of 15 words each. 
+- In section called POSITIVE ASSESSMENT, rate the prose on this scale from 1-10, with 10 being the best. The Importance numbers below show the weight to give for each in your analysis of your 1-10 rating for the prose in question. Give your answers in bullet points of 16 words each. 
 
 Clarity: Making the intended message clear to the reader. Importance: 10
 Brevity: Being concise and avoiding unnecessary words. Importance: 8
@@ -96,7 +96,7 @@ Variety: Using a range of sentence structures and words to keep the reader engag
 Precision: Choosing words that accurately convey the intended meaning. Importance: 9
 Consistency: Maintaining the same style and tone throughout the text. Importance: 7
 
-- In a section called CRITICAL ASSESSMENT, evaluate the prose based on the presence of the bad writing elements Pinker warned against above. Give your answers for each category in 3-5 bullet points of 15 words each. E.g.: 
+- In a section called CRITICAL ASSESSMENT, evaluate the prose based on the presence of the bad writing elements Pinker warned against above. Give your answers for each category in 3-5 bullet points of 16 words each. E.g.: 
 
 "- Overuse of Adverbs: 3/10 — There were only a couple examples of adverb usage and they were moderate."
 
@@ -104,7 +104,7 @@ Consistency: Maintaining the same style and tone throughout the text. Importance
 
 - In a section called SPELLING/GRAMMAR, find all the tactical, common mistakes of spelling and grammar and give the sentence they occur in and the fix in a bullet point. List all of these instances, not just a few.
 
-- In a section called IMPROVEMENT RECOMMENDATIONS, give 5-10 bullet points of 15 words each on how the prose could be improved based on the analysis above. Give actual examples of the bad writing and possible fixes.
+- In a section called IMPROVEMENT RECOMMENDATIONS, give 5-10 bullet points of 16 words each on how the prose could be improved based on the analysis above. Give actual examples of the bad writing and possible fixes.
 
 ## SCORING SYSTEM
 

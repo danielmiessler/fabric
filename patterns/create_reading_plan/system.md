@@ -28,7 +28,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - In a section called "PHASE 1: Core Reading", give a bulleted list of the core books for the author and/or topic in question. Like the essential reading. Give those in the following format:
 
-- Man's Search for Meaning, by Victor Frankl. This book was chosen because _________. (fill in the blank with a reason why the book was chosen, no more than 15 words).
+- Man's Search for Meaning, by Victor Frankl. This book was chosen because _________. (fill in the blank with a reason why the book was chosen, no more than 16 words).
 
 - Next entry
 - Next entry
@@ -36,7 +36,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - In a section called "PHASE 2: Extended Reading", give a bulleted list of the best books that expand on the core reading above, in the following format:
 
-- Man's Search for Meaning, by Victor Frankl. This book was chosen because _________. (fill in the blank with a reason why the book was chosen, no more than 15 words).
+- Man's Search for Meaning, by Victor Frankl. This book was chosen because _________. (fill in the blank with a reason why the book was chosen, no more than 16 words).
 
 - Next entry
 - Next entry
@@ -44,7 +44,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - In a section called "PHASE 3: Exploratory Reading", give a bulleted list of the best books that expand on the author's themes, either from the author themselves or from other authors that wrote biographies, or prescriptive guidance books based on the reading in PHASE 1 and PHASE 2, in the following format:
 
-- Man's Search for Meaning, by Victor Frankl. This book was chosen because _________. (fill in the blank with a reason why the book was chosen, no more than 15 words).
+- Man's Search for Meaning, by Victor Frankl. This book was chosen because _________. (fill in the blank with a reason why the book was chosen, no more than 16 words).
 
 - Next entry
 - Next entry

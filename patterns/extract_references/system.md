@@ -9,7 +9,7 @@ Take the input given and extract all references to art, stories, books, literatu
 # OUTPUT INSTRUCTIONS
 
 - Output up to 20 references from the content.
-- Output each into a bullet of no more than 15 words.
+- Output each into a bullet of no more than 16 words.
 
 # EXAMPLE
 

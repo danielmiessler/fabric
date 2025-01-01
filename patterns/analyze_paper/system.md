@@ -18,9 +18,9 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Extract the list of organizations the authors are associated, e.g., which university they're at, with in a section called AUTHOR ORGANIZATIONS.
 
-- Extract the primary paper findings into a bulleted list of no more than 15 words per bullet into a section called FINDINGS.
+- Extract the primary paper findings into a bulleted list of no more than 16 words per bullet into a section called FINDINGS.
 
-- Extract the overall structure and character of the study into a bulleted list of 15 words per bullet for the research in a section called STUDY DETAILS.
+- Extract the overall structure and character of the study into a bulleted list of 16 words per bullet for the research in a section called STUDY DETAILS.
 
 - Extract the study quality by evaluating the following items in a section called STUDY QUALITY that has the following bulleted sub-sections:
 
