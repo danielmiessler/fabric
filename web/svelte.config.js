@@ -73,6 +73,17 @@ const config = {
   extensions: ['.svelte', '.md', '.svx'],
   kit: {
     adapter: adapter(),
+    prerender: {
+      handleHttpError: ({ path, referrer, message }) => {
+        // ignore 404
+        if (path === '/not-found' && referrer === '/') {
+          return warn;
+        }
+
+        // otherwise fiail
+        throw new Error(message);
+      },
+    },
   },
   preprocess: [
     vitePreprocess({

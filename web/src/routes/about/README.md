@@ -462,7 +462,7 @@ The [examples](#examples) use the macOS program `pbpaste` to paste content from 
 
 On Windows, you can use the PowerShell command `Get-Clipboard` from a PowerShell command prompt. If you like, you can also alias it to `pbpaste`. If you are using classic PowerShell, edit the file `~\Documents\WindowsPowerShell\.profile.ps1`, or if you are using PowerShell Core, edit `~\Documents\PowerShell\.profile.ps1` and add the alias,
 
-```powershell
+```
 Set-Alias pbpaste Get-Clipboard
 ```
 
@@ -535,10 +535,10 @@ The Streamlit UI provides a user-friendly interface for:
 
 ### Primary contributors
 
-<a href="https://github.com/danielmiessler"><img src="https://avatars.githubusercontent.com/u/50654?v=4" title="Daniel Miessler" width="50" height="50"></a>
-<a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/9218431?v=4" title="Jonathan Dunn" width="50" height="50"></a>
-<a href="https://github.com/sbehrens"><img src="https://avatars.githubusercontent.com/u/688589?v=4" title="Scott Behrens" width="50" height="50"></a>
-<a href="https://github.com/agu3rra"><img src="https://avatars.githubusercontent.com/u/10410523?v=4" title="Andre Guerra" width="50" height="50"></a>
+<a href="https://github.com/danielmiessler"><img src="https://avatars.githubusercontent.com/u/50654?v=4" alt="Daniel Miessler" title="Daniel Miessler" width="50" height="50"></a>
+<a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/9218431?v=4" alt="Jonathan Dunn" title="Jonathan Dunn" width="50" height="50"></a>
+<a href="https://github.com/sbehrens"><img src="https://avatars.githubusercontent.com/u/688589?v=4" alt="Scott Behrens" title="Scott Behrens" width="50" height="50"></a>
+<a href="https://github.com/agu3rra"><img src="https://avatars.githubusercontent.com/u/10410523?v=4" alt="Andre Guerra" title="Andre Guerra" width="50" height="50"></a>
 
 `fabric` was created by <a href="https://danielmiessler.com/subscribe" target="_blank">Daniel Miessler</a> in January of 2024.
 <br /><br />

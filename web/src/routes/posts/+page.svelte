@@ -149,7 +149,7 @@
   </div>
   <br>
   <div class="rounded-tl-container-token m-auto grid grid-cols-1 gap-4 mt-8">
-    <div class="mx-auto max-h-52 max-w-52"><img src="/fabric-logo.png"></div>
+    <div class="mx-auto max-h-52 max-w-52"><img src="/fabric-logo.png" alt="fabric-logo"></div>
   </div>
   <br>
   <div class="container mx-auto justify-center grid grid-cols-1 gap-4 mt-8">

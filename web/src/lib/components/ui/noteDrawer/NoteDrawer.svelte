@@ -94,7 +94,7 @@
         {/if}
       </header>
       <div class="p-1">
-      <div class="flex-1 p-4 justify-center overflow-visible items-center m-4">
+      <div class="flex-1 p-4 justify-center items-center m-4">
         <textarea
           bind:this={textareaEl}
           bind:value={$noteStore.content}
