@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Drawer, getDrawerStore, getToastStore } from '@skeletonlabs/skeleton';
-  import type { DrawerSettings, DrawerStore } from '@skeletonlabs/skeleton';
+  import type { DrawerStore } from '@skeletonlabs/skeleton';
   import { onMount } from 'svelte';
   import { noteStore } from '$lib/store/note-store';
   import { afterNavigate, beforeNavigate } from '$app/navigation'; 
@@ -80,10 +80,10 @@
   });
 </script>
 
-<Drawer width="w-[40%]" padding="p-4">
+<Drawer width="w-[40%]" class="flex flex-col h-[calc(100vh-theme(spacing.32))] p-4 mt-16">
   {#if $drawerStore.open}
-    <div class="space-y-4">
-      <header class="flex justify-between items-center">
+    <div class="flex flex-col h-full">
+      <header class="flex-none flex justify-between items-center">
         <h2 class="m-2 p-1 h2">Notes</h2>
         <p class="p-2 opacity-70">Notes are saved to <code>`src/lib/content/inbox`</code></p>
         <p class="p-2 opacity-70">Ctrl + S to save</p>
@@ -93,33 +93,43 @@
           </span>
         {/if}
       </header>
-      <div class="m-4">
+      <div class="overflow-auto">
+      <div class="flex-1 p-4 justify-center items-center m-4">
         <textarea
           bind:this={textareaEl}
           bind:value={$noteStore.content}
           on:input={adjustTextareaHeight}
           on:keydown={handleKeydown}
-          class="w-full min-h-screen p-2 rounded-container-token text-primary-800 resize-none"
+          class="w-full min-h-96 p-2 rounded-container-token text-primary-800"
           placeholder="Enter your text here..."
         />
       </div>
-      <footer class="flex justify-between pb-4 items-center">
-        <span class="text-sm opacity-70">
-          {#if $noteStore.isDirty}
-            Unsaved changes
-          {/if}
-        </span>
-        <button
-          class="btn px-4 variant-filled-primary"
-          on:click={saveContent}
-        >
-          {#if saving}
-            Saving...
-          {:else}
-            Save
-          {/if}
-        </button>
-      </footer>
+      </div>
+        <footer class="flex justify-between p-4 items-center">
+          <span class="text-sm opacity-70">
+            {#if $noteStore.isDirty}
+              Unsaved changes
+            {/if}
+          </span>
+          <div class="flex gap-2 mr-5">
+            <button
+              class="btn px-4 variant-filled-primary"
+              on:click={noteStore.reset}
+            >
+              Reset
+            </button>
+            <button
+              class="btn px-4 variant-filled-primary"
+              on:click={saveContent}
+            >
+              {#if saving}
+                Saving...
+              {:else}
+                Save
+              {/if}
+            </button>
+          </div>
+        </footer>
     </div>
   {/if}
 </Drawer>
