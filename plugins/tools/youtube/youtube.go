@@ -387,13 +387,16 @@ type VideoInfo struct {
 }
 
 type VideoMetadata struct {
-	Title        string `json:"title"`
-	Description  string `json:"description"`
-	PublishedAt  string `json:"publishedAt"`
-	ChannelId    string `json:"channelId"`
-	ChannelTitle string `json:"channelTitle"`
-	ViewCount    uint64 `json:"viewCount"`
-	LikeCount    uint64 `json:"likeCount"`
+	Id           string   `json:"id"`
+	Title        string   `json:"title"`
+	Description  string   `json:"description"`
+	PublishedAt  string   `json:"publishedAt"`
+	ChannelId    string   `json:"channelId"`
+	ChannelTitle string   `json:"channelTitle"`
+	CategoryId   string   `json:"categoryId"`
+	Tags         []string `json:"tags"`
+	ViewCount    uint64   `json:"viewCount"`
+	LikeCount    uint64   `json:"likeCount"`
 }
 
 func (o *YouTube) GrabMetadata(videoId string) (metadata *VideoMetadata, err error) {
@@ -416,11 +419,14 @@ func (o *YouTube) GrabMetadata(videoId string) (metadata *VideoMetadata, err err
 	likeCount := video.Statistics.LikeCount
 
 	metadata = &VideoMetadata{
+		Id:           video.Id,
 		Title:        video.Snippet.Title,
 		Description:  video.Snippet.Description,
 		PublishedAt:  video.Snippet.PublishedAt,
 		ChannelId:    video.Snippet.ChannelId,
 		ChannelTitle: video.Snippet.ChannelTitle,
+		CategoryId:   video.Snippet.CategoryId,
+		Tags:         video.Snippet.Tags,
 		ViewCount:    viewCount,
 		LikeCount:    likeCount,
 	}
