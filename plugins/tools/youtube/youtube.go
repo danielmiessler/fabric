@@ -238,6 +238,13 @@ func (o *YouTube) Grab(url string, options *Options) (ret *VideoInfo, err error)
 
 	ret = &VideoInfo{}
 
+	if options.Metadata {
+		if ret.Metadata, err = o.GrabMetadata(videoId); err != nil {
+			err = fmt.Errorf("error getting video metadata: %v", err)
+			return
+		}
+	}
+
 	if options.Duration {
 		if ret.Duration, err = o.GrabDuration(videoId); err != nil {
 			err = fmt.Errorf("error parsing video duration: %v", err)
@@ -369,12 +376,61 @@ type Options struct {
 	Transcript bool
 	Comments   bool
 	Lang       string
+	Metadata   bool
 }
 
 type VideoInfo struct {
-	Transcript string   `json:"transcript"`
-	Duration   int      `json:"duration"`
-	Comments   []string `json:"comments"`
+	Transcript string         `json:"transcript"`
+	Duration   int            `json:"duration"`
+	Comments   []string       `json:"comments"`
+	Metadata   *VideoMetadata `json:"metadata,omitempty"`
+}
+
+type VideoMetadata struct {
+	Id           string   `json:"id"`
+	Title        string   `json:"title"`
+	Description  string   `json:"description"`
+	PublishedAt  string   `json:"publishedAt"`
+	ChannelId    string   `json:"channelId"`
+	ChannelTitle string   `json:"channelTitle"`
+	CategoryId   string   `json:"categoryId"`
+	Tags         []string `json:"tags"`
+	ViewCount    uint64   `json:"viewCount"`
+	LikeCount    uint64   `json:"likeCount"`
+}
+
+func (o *YouTube) GrabMetadata(videoId string) (metadata *VideoMetadata, err error) {
+	if err = o.initService(); err != nil {
+		return
+	}
+
+	call := o.service.Videos.List([]string{"snippet", "statistics"}).Id(videoId)
+	var response *youtube.VideoListResponse
+	if response, err = call.Do(); err != nil {
+		return nil, fmt.Errorf("error getting video metadata: %v", err)
+	}
+
+	if len(response.Items) == 0 {
+		return nil, fmt.Errorf("no video found with ID: %s", videoId)
+	}
+
+	video := response.Items[0]
+	viewCount := video.Statistics.ViewCount
+	likeCount := video.Statistics.LikeCount
+
+	metadata = &VideoMetadata{
+		Id:           video.Id,
+		Title:        video.Snippet.Title,
+		Description:  video.Snippet.Description,
+		PublishedAt:  video.Snippet.PublishedAt,
+		ChannelId:    video.Snippet.ChannelId,
+		ChannelTitle: video.Snippet.ChannelTitle,
+		CategoryId:   video.Snippet.CategoryId,
+		Tags:         video.Snippet.Tags,
+		ViewCount:    viewCount,
+		LikeCount:    likeCount,
+	}
+	return
 }
 
 func (o *YouTube) GrabByFlags() (ret *VideoInfo, err error) {
@@ -383,6 +439,7 @@ func (o *YouTube) GrabByFlags() (ret *VideoInfo, err error) {
 	flag.BoolVar(&options.Transcript, "transcript", false, "Output only the transcript")
 	flag.BoolVar(&options.Comments, "comments", false, "Output the comments on the video")
 	flag.StringVar(&options.Lang, "lang", "en", "Language for the transcript (default: English)")
+	flag.BoolVar(&options.Metadata, "metadata", false, "Output video metadata")
 	flag.Parse()
 
 	if flag.NArg() == 0 {

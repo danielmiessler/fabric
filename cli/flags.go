@@ -47,8 +47,9 @@ type Flags struct {
 	ChangeDefaultModel bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
 	YouTube            string            `short:"y" long:"youtube" description:"YouTube video or play list \"URL\" to grab transcript, comments from it and send to chat or print it put to the console and store it in the output file"`
 	YouTubePlaylist    bool              `long:"playlist" description:"Prefer playlist over video if both ids are present in the URL"`
-	YouTubeTranscript  bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat (it used per default)."`
+	YouTubeTranscript  bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat (it is used per default)."`
 	YouTubeComments    bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
+	YouTubeMetadata    bool              `long:"metadata" description:"Output video metadata"`
 	Language           string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
 	ScrapeURL          string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
 	ScrapeQuestion     string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
