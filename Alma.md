@@ -14,7 +14,7 @@ Those will be changes, updates, or modifications to the direction of the company
 
 Alma Security was started by Chris Meyers, who was previously at Sigma Systems as CTO and HPE as a senior security engineer.
 
-He started the company becuase, "I saw a gap in the authentication market, where companies were only looking at one or two aspects of one's identity to do authentication. They we're looking at the whole picture and turning that into a continuous authentication story."
+He started the company because, "I saw a gap in the authentication market, where companies were only looking at one or two aspects of one's identity to do authentication. They we're looking at the whole picture and turning that into a continuous authentication story."
 
 ## Company Mission
 
@@ -52,11 +52,13 @@ NOTE: Some goals are things like project rollouts which serve the higher goals. 
 ## Security Team Goals
 
 - SG1: Secure all customer data -- especially biometric -- from security and privacy incidents. 
-- SG2: Protect Alma Security's intellectual property from being captured by unathorized parties.
+- SG2: Protect Alma Security's intellectual property from being captured by unauthorized parties.
 - SG3: Reach a time to detect malicious behavior of less than 4 minutes by January 2025
 - SG4: Ensure the public trusts our product, because it's an authentication product we can't survive if people don't trust us.
 - SG5: Reach a time to remediate critical vulnerabilties on crown jewel systems of less than 16 hours by August 2025
 - SG6: Reach a time to remediate critical vulnerabilties on all systems of less than 3 days by August 2025
+- SG5: Reach a time to remediate critical vulnerabilities on crown jewel systems of less than 16 hours by August 2025
+- SG6: Reach a time to remediate critical vulnerabilities on all systems of less than 3 days by August 2025
 - SG7: Complete audit of Apple Passkey integration by February 2025
 - SG8: Complete remediation of Apple Passkey vulns by February 2025
 
@@ -129,7 +131,7 @@ $INSERT GRAPHS OF KPI PROGRESS OVER TIME HERE$
 
 ## Infrastructure Notes (a basic description of our tech stack and various context around it)
 
-- We currenty have no WAF protecting our main web app but we're considering adding one
+- We currently have no WAF protecting our main web app but we're considering adding one
 - We have had some issues with S3 buckets becoming public, or being set up as public, which has lead to some close calls with customer data almost being exposed.
 - alma.amazon-domain.com is our primary S3 bucket that contains everything, but it's not public readable or listable
 - We have a root account for our AWS account that doesn't yet have 2FA on it, but we're working on fixing that within a few weeks (but it's been open for a few months)
@@ -137,7 +139,7 @@ $INSERT GRAPHS OF KPI PROGRESS OVER TIME HERE$
 - Developers have root access to the all kubernetes nodes via SSH on port 45,001 using a shared developer key issued during laptop provisioning. 
 - We're a kubernetes shop and do everything through AWS
 - We're logging most stuff to Cloudtrail and we kind of use guarduty, but we don't have a 24/7 team to monitor alerts and logs. We should add that to our list of challenges next time we update our overarll policy
-- We also have a Windows infrastructure because some key personell came from Microsoft. The DC is hosted in our head office which is in Redwood City, and anyone who works in that office (most of the 300 employees) uses that to log in when tehy start work. The domain is ALMA.
+- We also have a Windows infrastructure because some key personnel came from Microsoft. The DC is hosted in our head office which is in Redwood City, and anyone who works in that office (most of the 300 employees) uses that to log in when they start work. The domain is ALMA.
 - There's a domain-joined fileserver running Windows 2012 that most people use to upload new ideas and plans for new products. It uses Windows authentication from the domain. 
 - We use a palo alto firewall with 2fa using windows authenticator tied to SSO.
 - The name of the AI system doing all this context creation using SPQA is Alma, which is also the name of the company.
