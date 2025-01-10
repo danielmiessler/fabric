@@ -103,7 +103,7 @@ Could this be the new component for the search bar?
 
 	    </div>
 		<div>
-		<h4 class="h4"><b>Share Your Most Important Toughts and Ideas</b></h4>
+		<h4 class="h4"><b>Share Your Most Important Thoughts and Ideas</b></h4>
 		<br>
 	    <Card
 	        header="Let Your Voice Be Heard"

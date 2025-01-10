@@ -107,7 +107,7 @@ func (o *PatternsEntity) getFromDB(name string) (ret *Pattern, err error) {
 func (o *PatternsEntity) PrintLatestPatterns(latestNumber int) (err error) {
 	var contents []byte
 	if contents, err = os.ReadFile(o.UniquePatternsFilePath); err != nil {
-		err = fmt.Errorf("could not read unique patterns file. Pleas run --updatepatterns (%s)", err)
+		err = fmt.Errorf("could not read unique patterns file. Please run --updatepatterns (%s)", err)
 		return
 	}
 	uniquePatterns := strings.Split(string(contents), "\n")

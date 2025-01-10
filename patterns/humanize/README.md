@@ -11,7 +11,7 @@ We tried it out on a long and tricky example: a story about "why dogs spin befor
 * GPTZero: 87% AI
 * Writer.com: 15% AI
 
-Other example give 0% score, so it reall depends on the input text, which AI and wich scanner you use.
+Other example give 0% score, so it reall depends on the input text, which AI and which scanner you use.
 
 Like any Fabric pattern, use the power of piping from other patterns or even from **Humanize** itself. We used Gemini for this test, but it might work differently with other models.  So play around and see what you find... and yes, this text have been Humanized (and revised) 😉
 

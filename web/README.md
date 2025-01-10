@@ -9,7 +9,7 @@ The goal of this app is to not only provide a user interface for Fabric, but als
 
 ## Installing
 
-The app can be run by navigating to the `web` directory and using `npm install`, `pnpm install`, or your preferred package manager. Then simply run `npm run dev`, `pnpm run dev`, or your equivalent command to start the app. *You will need to run fabric in a seperate terminal with the `fabric --serve` command.*
+The app can be run by navigating to the `web` directory and using `npm install`, `pnpm install`, or your preferred package manager. Then simply run `npm run dev`, `pnpm run dev`, or your equivalent command to start the app. *You will need to run fabric in a separate terminal with the `fabric --serve` command.*
 
 ## Tips
 
