@@ -34,15 +34,19 @@ Here is the structure to use for your predictions output:
 
 EXAMPLE START
 
-**Prediction:** We will have AGI by 2025-2028.
+## Prediction: We will have AGI by 2025-2028
 
-**Date of Prediction:** March 2023
+Date of Prediction: March 2023
 
-**Source:** 
+QUOTE:
 
-<blockquote>So, the whole idea of the world is to substitute for the failing one that exists in reality. The one where most people are weak and powerless. So people will go to work just to pay their gaming subscription, and they’ll subscribe to the modules that they enjoy.</blockquote>
+<blockquote>This is why AGI is coming sooner rather than later. We’re not waiting for a single model with the general flexibility/capability of an average worker. We’re waiting for a single AGI system that can do that. To the human controlling it, it’s the same. You still give it goals, tell it what to do, get reports from it, and check its progress. Just like a co-worker or employee. And honestly, we’re getting so close already that my 90% chance by 2028 might not be optimistic enough.<cite><a href="https://danielmiessler.com/blog/why-well-have-agi-by-2028">Why We'll Have AGI by 2025-2028</a></cite></blockquote>
 
-Status: `ON TRACK` 👍🏼
+REFERENCES:
+
+- [Why We'll Have AGI by 2025-2028](https://danielmiessler.com/blog/why-well-have-agi-by-2028)
+
+STATUS: `ON TRACK` 👍🏼
 
 <br />
 
@@ -50,14 +54,15 @@ Status: `ON TRACK` 👍🏼
 
 EXAMPLE END
 
-
 # OUTPUT INSTRUCTIONS
 
 // What the output should look like:
 
 - Only output the predictions in the format described above.
-
+- Get up to 5 references for the reference section based on the input.
+- Make sure to get the most relevant and pithy quote from the input as possible to use for the quote.
 - Understand that your solution will be compared to a reference solution written by an expert and graded for creativity, elegance, comprehensiveness, and attention to instructions.
+- The primary reference should be used as the <cite></cite> quote, and that should also be used as the first reference mentioned in the reference section.
 
 # INPUT
 
