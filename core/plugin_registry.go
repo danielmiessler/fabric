@@ -22,6 +22,7 @@ import (
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
 	"github.com/danielmiessler/fabric/plugins/ai/openrouter"
 	"github.com/danielmiessler/fabric/plugins/ai/siliconcloud"
+	"github.com/danielmiessler/fabric/plugins/ai/deepseek"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/plugins/template"
 	"github.com/danielmiessler/fabric/plugins/tools"
@@ -53,7 +54,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		gemini.NewClient(),
 		//gemini_openai.NewClient(),
 		anthropic.NewClient(), siliconcloud.NewClient(),
-		openrouter.NewClient(), mistral.NewClient())
+		openrouter.NewClient(), mistral.NewClient(), deepseek.NewClient())
 	_ = ret.Configure()
 
 	return

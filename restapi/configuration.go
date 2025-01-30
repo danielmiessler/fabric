@@ -44,6 +44,7 @@ func (h *ConfigHandler) GetConfig(c *gin.Context) {
 			"ollama":     "",
 			"openrouter": "",
 			"silicon":    "",
+			"deepseek":   "",
 		})
 		return
 	}
@@ -63,6 +64,7 @@ func (h *ConfigHandler) GetConfig(c *gin.Context) {
 		"ollama":     os.Getenv("OLLAMA_URL"),
 		"openrouter": os.Getenv("OPENROUTER_API_KEY"),
 		"silicon":    os.Getenv("SILICON_API_KEY"),
+		"deepseek":   os.Getenv("DEEPSEEK_API_KEY"),
 	}
 
 	c.JSON(http.StatusOK, config)
@@ -83,6 +85,7 @@ func (h *ConfigHandler) UpdateConfig(c *gin.Context) {
 		OllamaURL        string `json:"ollama_url"`
 		OpenRouterApiKey string `json:"openrouter_api_key"`
 		SiliconApiKey    string `json:"silicon_api_key"`
+		DeepSeekApiKey   string `json:"deepseek_api_key"`
 	}
 
 	if err := c.BindJSON(&config); err != nil {
@@ -99,6 +102,7 @@ func (h *ConfigHandler) UpdateConfig(c *gin.Context) {
 		"OLLAMA_URL":         config.OllamaURL,
 		"OPENROUTER_API_KEY": config.OpenRouterApiKey,
 		"SILICON_API_KEY":    config.SiliconApiKey,
+		"DEEPSEEK_API_KEY":   config.DeepSeekApiKey,
 	}
 
 	var envContent strings.Builder
