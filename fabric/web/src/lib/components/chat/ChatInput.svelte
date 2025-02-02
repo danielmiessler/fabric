@@ -110,12 +110,14 @@
 
 <div class="flex flex-col gap-2 h-full">
   <div class="flex-1 relative shadow-lg">
-    <Textarea 
-      bind:value={$systemPrompt}
-      on:input={(e) => $systemPrompt || ''}
-      placeholder="Enter system instructions..."
-      class="w-full h-full resize-none bg-primary-800/30 rounded-lg border-none"
-    />
+    <div class="messages-container p-4">
+      <Textarea 
+        bind:value={$systemPrompt}
+        readonly={true}
+        placeholder="Enter system instructions..."
+        class="w-full h-[300px] bg-primary-800/30 rounded-lg border-none whitespace-pre-wrap overflow-y-auto"
+      />
+    </div>
   </div>
 
   <div class="flex-1 relative shadow-lg">
@@ -123,7 +125,7 @@
       bind:value={userInput}
       on:input={handleInput}
       on:keydown={handleKeydown}
-      placeholder="Enter your message... (YouTube URLs will be automatically processed)"
+      placeholder="Enter your message...             (YouTube URLs will be automatically processed)"
       class="w-full h-full resize-none bg-primary-800/30 rounded-lg border-none"
     />
     {#if isYouTubeURL}
@@ -169,5 +171,32 @@
 <style>
 .flex-col {
   min-height: 0;
+}
+
+
+.pattern-textarea::selection {
+  background-color: rgba(155, 155, 155, 0.3);
+}
+
+:global(textarea) {
+  scrollbar-width: thin;
+  -ms-overflow-style: thin;
+}
+
+:global(textarea::-webkit-scrollbar) {
+  width: 8px;
+}
+
+:global(textarea::-webkit-scrollbar-track) {
+  background: transparent;
+}
+
+:global(textarea::-webkit-scrollbar-thumb) {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 4px;
+}
+
+:global(textarea::-webkit-scrollbar-thumb:hover) {
+  background-color: rgba(155, 155, 155, 0.7);
 }
 </style>

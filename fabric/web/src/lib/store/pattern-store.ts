@@ -20,12 +20,16 @@ export const patternAPI = {
       const response = await fetch(`/api/patterns/names`);
       const data = await response.json();
       console.log("Load Patterns:", data);
+      console.log("Loading patterns from API...");
 
       // Create an array of promises to fetch all pattern contents
       const patternsPromises = data.map(async (pattern: string) => {
         try {
+          console.log(`Loading pattern: ${pattern}`);
           const patternResponse = await fetch(`/api/patterns/${pattern}`);
           const patternData = await patternResponse.json();
+          console.log(`Pattern ${pattern} content length:`, patternData.Pattern?.length || 0);
+          console.log(`First 100 chars:`, patternData.Pattern?.substring(0, 100));
           return {
             Name: pattern,
             Description: pattern.charAt(0).toUpperCase() + pattern.slice(1),
@@ -58,8 +62,13 @@ export const patternAPI = {
     console.log('Selecting pattern:', patternName);
     const selectedPattern = allPatterns.find(p => p.Name === patternName);
     if (selectedPattern) {
-      console.log('Found pattern content:', selectedPattern.Pattern);
-      setSystemPrompt(selectedPattern.Pattern.trim());
+      console.log('Found pattern content (length: ' + selectedPattern.Pattern.length + '):', selectedPattern.Pattern);
+      // Log the first and last 100 characters to verify content
+      console.log('First 100 chars:', selectedPattern.Pattern.substring(0, 100));
+      console.log('Last 100 chars:', selectedPattern.Pattern.substring(selectedPattern.Pattern.length - 100));
+      console.log(`Setting system prompt with content length: ${selectedPattern.Pattern.length}`);
+      console.log(`Content preview:`, selectedPattern.Pattern.substring(0, 100));
+      setSystemPrompt(selectedPattern.Pattern);
       selectedPatternName.set(patternName);
     } else {
       console.log('No pattern found for name:', patternName);
