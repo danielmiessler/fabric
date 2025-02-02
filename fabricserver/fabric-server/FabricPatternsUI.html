@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric UI</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.1.3/marked.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        textarea, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #ccc;
+        }
+        .dark-mode textarea, .dark-mode select, .dark-mode button {
+            background-color: #333333;
+            color: #ffffff;
+            border-color: #555555;
+        }
+        #output, #markdown-output {
+            border: 1px solid #ccc;
+            padding: 10px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .dark-mode #output, .dark-mode #markdown-output {
+            border-color: #555555;
+            background-color: #333333;
+        }
+        #output {
+            white-space: pre-wrap;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+        .dark-mode .error {
+            color: #ff6b6b;
+        }
+        .info {
+            color: #4a9eff;
+            margin-bottom: 10px;
+        }
+        .dark-mode .info {
+            color: #66b3ff;
+        }
+        #theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <button id="theme-toggle">🌞</button>
+    <div class="container">
+        <h1>Fabric UI</h1>
+        <div id="error" class="error"></div>
+        <div id="info" class="info"></div>
+        <textarea id="input" rows="4" placeholder="Enter your request here... (YouTube URLs will be automatically processed)"></textarea>
+        <select id="option"></select>
+        <button id="generate">Generate</button>
+        <div id="output"></div>
+        <h2>Markdown Rendered Output</h2>
+        <div id="markdown-output"></div>
+    </div>
+    <script>
+        const inputElem = document.getElementById('input');
+        const optionElem = document.getElementById('option');
+        const generateBtn = document.getElementById('generate');
+        const outputElem = document.getElementById('output');
+        const markdownOutputElem = document.getElementById('markdown-output');
+        const errorElem = document.getElementById('error');
+        const infoElem = document.getElementById('info');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // YouTube URL detection
+        function isYouTubeURL(url) {
+            return /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)/.test(url);
+        }
+
+        inputElem.addEventListener('input', () => {
+            const input = inputElem.value.trim();
+            if (isYouTubeURL(input)) {
+                infoElem.textContent = "YouTube URL detected - transcript will be processed automatically";
+            } else {
+                infoElem.textContent = "";
+            }
+        });
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            themeToggle.textContent = body.classList.contains('dark-mode') ? '🌞' : '🌙';
+        });
+
+        async function fetchOptions() {
+            try {
+                const response = await fetch('http://localhost:3001/api/fabric/options');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                optionElem.innerHTML = data.map(option => `<option value="${option}">${option}</option>`).join('');
+                errorElem.textContent = '';
+            } catch (error) {
+                console.error('Error fetching options:', error);
+                errorElem.textContent = `Failed to load options: ${error.message}`;
+                optionElem.innerHTML = '<option value="">Failed to load options</option>';
+            }
+        }
+
+        fetchOptions();
+
+        generateBtn.addEventListener('click', async () => {
+            const input = inputElem.value;
+            const option = optionElem.value;
+            generateBtn.disabled = true;
+            generateBtn.textContent = 'Generating...';
+            outputElem.textContent = '';
+            markdownOutputElem.innerHTML = '';
+            errorElem.textContent = '';
+            infoElem.textContent = '';
+
+            const isYoutube = isYouTubeURL(input);
+            if (isYoutube) {
+                infoElem.textContent = "Processing YouTube transcript...";
+            }
+            try {
+                const response = await fetch('http://localhost:3001/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        prompts: [{
+                            userInput: input,
+                            patternName: option
+                        }]
+                    }),
+                });
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let markdown = '';
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const jsonStr = line.slice(6); // Remove "data: " prefix
+                                const eventData = JSON.parse(jsonStr);
+                                if (eventData.type === 'content') {
+                                    outputElem.textContent += eventData.content;
+                                    markdown += eventData.content;
+                                    markdownOutputElem.innerHTML = marked.parse(markdown);
+                                }
+                            } catch (e) {
+                                console.error('Error parsing SSE data:', e);
+                                console.error('Malformed JSON:', jsonStr);
+                                errorElem.textContent = `JSON parsing error: ${e.message}\nReceived: ${jsonStr}`;
+                            }
+                        }
+                    }
+                    outputElem.scrollTop = outputElem.scrollHeight;
+                    markdownOutputElem.scrollTop = markdownOutputElem.scrollHeight;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorElem.textContent = `An error occurred: ${error.message}`;
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = 'Generate';
+            }
+        });
+    </script>
+</body>
+</html>
