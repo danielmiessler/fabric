@@ -67,7 +67,7 @@ export const revertLastMessage = () => {
   messageStore.update(messages => messages.slice(0, -1));
 };
 
-export async function sendMessage(userInput: string, systemPromptText?: string) {
+export async function sendMessage(content: string, systemPromptText?: string, isSystem: boolean = false) {
   try {
     const $streaming = get(streamingStore);
     if ($streaming) {
@@ -77,34 +77,39 @@ export async function sendMessage(userInput: string, systemPromptText?: string) 
     streamingStore.set(true);
     errorStore.set(null);
 
-    // Add user message
-    messageStore.update(messages => [...messages, { role: 'user', content: userInput }]);
+    // Add message
+    messageStore.update(messages => [...messages, { 
+      role: isSystem ? 'system' : 'user', 
+      content 
+    }]);
 
-    const stream = await chatService.streamChat(userInput, systemPromptText);
+    if (!isSystem) {
+      const stream = await chatService.streamChat(content, systemPromptText);
 
-    await chatService.processStream(
-      stream,
-      (content) => {
-        messageStore.update(messages => {
-          const newMessages = [...messages];
-          const lastMessage = newMessages[newMessages.length - 1];
+      await chatService.processStream(
+        stream,
+        (content) => {
+          messageStore.update(messages => {
+            const newMessages = [...messages];
+            const lastMessage = newMessages[newMessages.length - 1];
 
-          if (lastMessage?.role === 'assistant') {
-            lastMessage.content = content;
-          } else {
-            newMessages.push({
-              role: 'assistant',
-              content
-            });
-          }
+            if (lastMessage?.role === 'assistant') {
+              lastMessage.content = content;
+            } else {
+              newMessages.push({
+                role: 'assistant',
+                content
+              });
+            }
 
-          return newMessages;
-        });
-      },
-      (error) => {
-        handleError(error);
-      }
-    );
+            return newMessages;
+          });
+        },
+        (error) => {
+          handleError(error);
+        }
+      );
+    }
 
     streamingStore.set(false);
   } catch (error) {

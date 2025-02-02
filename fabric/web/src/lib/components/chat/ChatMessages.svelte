@@ -80,12 +80,18 @@
     <div class="messages-content flex flex-col gap-4">
       {#each $chatState.messages as message}
         <div 
-          class="message-item {message.role === 'assistant' ? 'pl-4 bg-primary/5 rounded-lg p-2' : 'pr-4 ml-auto'}"
+          class="message-item {message.role === 'system' ? 'w-full bg-blue-900/20' : message.role === 'assistant' ? 'pl-4 bg-primary/5 rounded-lg p-2' : 'pr-4 ml-auto'}"
           transition:fade
         >
-          <div class="message-header flex items-center gap-2 mb-1 {message.role === 'assistant' ? '' : 'justify-end'}">
-            <span class="text-xs text-muted-foreground  rounded-lg p-1 variant-glass-secondary font-bold uppercase">
-              {message.role === 'assistant' ? 'AI' : 'You'}
+          <div class="message-header flex items-center gap-2 mb-1 {message.role === 'assistant' || message.role === 'system' ? '' : 'justify-end'}">
+            <span class="text-xs text-muted-foreground rounded-lg p-1 variant-glass-secondary font-bold uppercase">
+              {#if message.role === 'system'}
+                SYSTEM
+              {:else if message.role === 'assistant'}
+                AI
+              {:else}
+                You
+              {/if}
             </span>
             {#if message.role === 'assistant' && $streamingStore}
               <span class="loading-indicator flex gap-1">
@@ -96,7 +102,11 @@
             {/if}
           </div>
 
-          {#if message.role === 'assistant'}
+          {#if message.role === 'system'}
+            <div class="text-blue-300 text-sm font-semibold">
+              {message.content}
+            </div>
+          {:else if message.role === 'assistant'}
             <div class="prose prose-slate dark:prose-invert text-inherit prose-headings:text-inherit prose-pre:bg-primary/10 prose-pre:text-inherit text-sm max-w-none">
               {@html renderMarkdown(message.content, true)}
             </div>

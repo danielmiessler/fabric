@@ -80,11 +80,16 @@
       const trimmedInput = userInput.trim() + '\n' + (finalContent || '');
       let messageHistory = JSON.stringify($messageStore);
 
+      // If it's a YouTube URL, add a system message first
+      if (isYouTubeURL) {
+        await sendMessage("Processing YouTube transcript for: " + trimmedInput, undefined, true);
+      }
+
       userInput = "";
       uploadedFiles = [];
       fileContents = [];
 
-      // Send just the user input, let the ChatService handle the pattern
+      // Send the user input
       await sendMessage(trimmedInput);
     } catch (error) {
       console.error('Chat submission error:', error);
@@ -121,7 +126,7 @@
   </div>
 
   <div class="flex-1 relative shadow-lg">
-    <div class="text-xs text-gray-400 mb-1 px-2">If YouTube URL is detected, transcript will be automatically processed</div>
+    <div class="text-xs text-gray-400 mb-1">Enter your message (YouTube URLs will be automatically processed)</div>
     <Textarea
       bind:value={userInput}
       on:input={handleInput}
@@ -129,13 +134,6 @@
       placeholder="Enter your message..."
       class="w-full h-full resize-none bg-primary-800/30 rounded-lg border-none"
     />
-    {#if isYouTubeURL}
-      <div class="absolute bottom-14 right-2">
-        <span class="text-sm text-blue-400 bg-blue-900/30 px-2 py-1 rounded">
-          YouTube URL detected - transcript will be processed
-        </span>
-      </div>
-    {/if}
     <div class="absolute bottom-5 right-2 gap-2 flex justify-end end-7">
       <FileButton
         name="file-upload"
