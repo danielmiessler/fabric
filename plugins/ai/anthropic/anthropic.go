@@ -3,6 +3,7 @@ package anthropic
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
@@ -11,7 +12,7 @@ import (
 	goopenai "github.com/sashabaranov/go-openai"
 )
 
-//const baseUrl = "https://api.anthropic.com/"
+const defaultBaseUrl = "https://api.anthropic.com/"
 
 func NewClient() (ret *Client) {
 	vendorName := "Anthropic"
@@ -23,8 +24,8 @@ func NewClient() (ret *Client) {
 		ConfigureCustom: ret.configure,
 	}
 
-	//ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
-	//ret.ApiBaseURL.Value = baseUrl
+	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
+	ret.ApiBaseURL.Value = defaultBaseUrl
 	ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", true)
 
 	// we could provide a setup question for the following settings
@@ -44,7 +45,7 @@ func NewClient() (ret *Client) {
 
 type Client struct {
 	*plugins.PluginBase
-	//ApiBaseURL *plugins.SetupQuestion
+	ApiBaseURL *plugins.SetupQuestion
 	ApiKey *plugins.SetupQuestion
 
 	maxTokens                  int
@@ -55,14 +56,24 @@ type Client struct {
 }
 
 func (an *Client) configure() (err error) {
-	/*if an.ApiBaseURL.Value != "" {
+	if an.ApiBaseURL.Value != "" {
+		baseURL := an.ApiBaseURL.Value
+		
+		// If the base URL contains a UUID, ensure it ends with /v1
+		if strings.Contains(baseURL, "-") && !strings.HasSuffix(baseURL, "/v1") {
+			if strings.HasSuffix(baseURL, "/") {
+				baseURL = strings.TrimSuffix(baseURL, "/")
+			}
+			baseURL = baseURL + "/v1"
+		}
+		
 		an.client = anthropic.NewClient(
-			option.WithAPIKey(an.ApiKey.Value), option.WithBaseURL(an.ApiBaseURL.Value),
+			option.WithAPIKey(an.ApiKey.Value),
+			option.WithBaseURL(baseURL),
 		)
 	} else {
-	*/
-	an.client = anthropic.NewClient(option.WithAPIKey(an.ApiKey.Value))
-	//}
+		an.client = anthropic.NewClient(option.WithAPIKey(an.ApiKey.Value))
+	}
 	return
 }
 
