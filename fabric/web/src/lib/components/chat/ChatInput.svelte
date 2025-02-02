@@ -121,15 +121,16 @@
   </div>
 
   <div class="flex-1 relative shadow-lg">
+    <div class="text-xs text-gray-400 mb-1 px-2">If YouTube URL is detected, transcript will be automatically processed</div>
     <Textarea
       bind:value={userInput}
       on:input={handleInput}
       on:keydown={handleKeydown}
-      placeholder="Enter your message...             (YouTube URLs will be automatically processed)"
+      placeholder="Enter your message..."
       class="w-full h-full resize-none bg-primary-800/30 rounded-lg border-none"
     />
     {#if isYouTubeURL}
-      <div class="absolute top-2 right-2">
+      <div class="absolute bottom-14 right-2">
         <span class="text-sm text-blue-400 bg-blue-900/30 px-2 py-1 rounded">
           YouTube URL detected - transcript will be processed
         </span>
