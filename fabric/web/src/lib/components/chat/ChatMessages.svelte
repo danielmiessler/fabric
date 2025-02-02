@@ -1,16 +1,42 @@
 <script lang="ts">
   import { chatState, errorStore, streamingStore } from '$lib/store/chat-store';
-  import { afterUpdate } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import { toastStore } from '$lib/store/toast-store';
   import { marked } from 'marked';
   import SessionManager from './SessionManager.svelte';
   import { fade, slide } from 'svelte/transition';
+  import { ArrowDown } from 'lucide-svelte';
 
   let messagesContainer: HTMLDivElement;
+  let showScrollButton = false;
+  let isUserMessage = false;
 
-  afterUpdate(() => {
+  function scrollToBottom() {
     if (messagesContainer) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      messagesContainer.scrollTo({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
+    }
+  }
+
+  function handleScroll() {
+    if (!messagesContainer) return;
+    const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
+    showScrollButton = scrollHeight - scrollTop - clientHeight > 100;
+  }
+
+  // Watch for changes in messages
+  $: if ($chatState.messages.length > 0) {
+    const lastMessage = $chatState.messages[$chatState.messages.length - 1];
+    isUserMessage = lastMessage.role === 'user';
+    if (isUserMessage) {
+      // Only auto-scroll on user messages
+      setTimeout(scrollToBottom, 100);
+    }
+  }
+
+  onMount(() => {
+    if (messagesContainer) {
+      messagesContainer.addEventListener('scroll', handleScroll);
+      return () => messagesContainer.removeEventListener('scroll', handleScroll);
     }
   });
 
@@ -47,7 +73,10 @@
     </div>
   {/if}
 
-  <div class="messages-container p-4 flex-1 overflow-y-auto max-h-dvh" bind:this={messagesContainer}>
+  <div 
+    class="messages-container p-4 flex-1 overflow-y-auto max-h-dvh relative" 
+    bind:this={messagesContainer}
+  >
     <div class="messages-content flex flex-col gap-4">
       {#each $chatState.messages as message}
         <div 
@@ -79,6 +108,15 @@
         </div>
       {/each}
     </div>
+    {#if showScrollButton}
+      <button
+        class="absolute bottom-4 right-4 bg-primary/20 hover:bg-primary/30 rounded-full p-2 transition-opacity"
+        on:click={scrollToBottom}
+        transition:fade
+      >
+        <ArrowDown class="w-4 h-4" />
+      </button>
+    {/if}
   </div>
 </div>
 
