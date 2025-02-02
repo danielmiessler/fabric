@@ -46,7 +46,7 @@ func NewClient() (ret *Client) {
 type Client struct {
 	*plugins.PluginBase
 	ApiBaseURL *plugins.SetupQuestion
-	ApiKey *plugins.SetupQuestion
+	ApiKey     *plugins.SetupQuestion
 
 	maxTokens                  int
 	defaultRequiredUserMessage string
@@ -58,7 +58,7 @@ type Client struct {
 func (an *Client) configure() (err error) {
 	if an.ApiBaseURL.Value != "" {
 		baseURL := an.ApiBaseURL.Value
-		
+
 		// If the base URL contains a UUID, ensure it ends with /v1
 		if strings.Contains(baseURL, "-") && !strings.HasSuffix(baseURL, "/v1") {
 			if strings.HasSuffix(baseURL, "/") {
@@ -66,7 +66,7 @@ func (an *Client) configure() (err error) {
 			}
 			baseURL = baseURL + "/v1"
 		}
-		
+
 		an.client = anthropic.NewClient(
 			option.WithAPIKey(an.ApiKey.Value),
 			option.WithBaseURL(baseURL),
