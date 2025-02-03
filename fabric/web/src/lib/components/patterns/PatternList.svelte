@@ -2,9 +2,11 @@
   import { onMount, createEventDispatcher } from 'svelte';
   import type { Pattern } from '$lib/types';
   import { favorites } from '$lib/store/favorites-store';
+  import { patternAPI } from '$lib/store/pattern-store';
 
   const dispatch = createEventDispatcher<{
     close: void;
+    select: string;
   }>();
 
   let patterns: Pattern[] = [];
@@ -75,7 +77,16 @@
       {#each sortedPatterns as pattern}
         <div class="pattern-item bg-primary/10 rounded-lg p-3">
           <div class="flex justify-between items-start gap-4 mb-2">
-            <h3 class="text-xl font-bold text-primary-300">{pattern.patternName}</h3>
+            <h3
+              class="text-xl font-bold text-primary-300 hover:text-primary-100 cursor-pointer transition-colors"
+              on:click={() => {
+                patternAPI.selectPattern(pattern.patternName);
+                dispatch('select', pattern.patternName);
+                dispatch('close');
+              }}
+            >
+              {pattern.patternName}
+            </h3>
             <button
               class="text-muted-foreground hover:text-primary-300 transition-colors"
               on:click={() => toggleFavorite(pattern.patternName)}

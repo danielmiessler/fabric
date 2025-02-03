@@ -7,6 +7,7 @@
   import { onMount } from 'svelte';
   import Modal from '$lib/components/ui/modal/Modal.svelte';
   import PatternList from '$lib/components/patterns/PatternList.svelte';
+  import { selectedPatternName } from '$lib/store/pattern-store';
 
   let isMenuOpen = false;
   let showPatternModal = false;
@@ -137,5 +138,11 @@
   show={showPatternModal}
   on:close={() => showPatternModal = false}
 >
-  <PatternList on:close={() => showPatternModal = false} />
+  <PatternList
+    on:close={() => showPatternModal = false}
+    on:select={(e) => {
+      selectedPatternName.set(e.detail);
+      showPatternModal = false;
+    }}
+  />
 </Modal>
