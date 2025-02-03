@@ -10,8 +10,8 @@
 </script>
 
 {#if show}
-  <div 
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+  <div
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 mt-2"
     on:click={() => dispatch('close')}
     transition:fade={{ duration: 200 }}
   >
