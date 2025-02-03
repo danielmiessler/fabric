@@ -6,6 +6,10 @@
   import SessionManager from './SessionManager.svelte';
   import { fade, slide } from 'svelte/transition';
   import { ArrowDown } from 'lucide-svelte';
+  import Modal from '$lib/components/ui/modal/Modal.svelte';
+  import PatternList from '$lib/components/patterns/PatternList.svelte';
+
+  let showPatternModal = false;
 
   let messagesContainer: HTMLDivElement;
   let showScrollButton = false;
@@ -59,11 +63,24 @@
 
 <div class="bg-primary-800/30 rounded-lg flex flex-col h-full shadow-lg">
   <div class="flex justify-between items-center mb-1 mt-1 flex-none">
-    <div class="flex items-center gap-2 pl-4">
+    <div class="flex items-center gap-4 pl-4">
       <b class="text-sm text-muted-foreground font-bold">Chat History</b>
+      <button
+        class="text-sm text-muted-foreground hover:text-primary-300 transition-colors"
+        on:click={() => showPatternModal = true}
+      >
+        Pattern Description
+      </button>
     </div>
     <SessionManager />
   </div>
+
+  <Modal
+    show={showPatternModal}
+    on:close={() => showPatternModal = false}
+  >
+    <PatternList on:close={() => showPatternModal = false} />
+  </Modal>
 
   {#if $errorStore}
     <div class="error-message" transition:slide>

@@ -1,13 +1,17 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
   import type { Pattern } from '$lib/types';
+
+  const dispatch = createEventDispatcher<{
+    close: void;
+  }>();
 
   let patterns: Pattern[] = [];
   let patternsContainer: HTMLDivElement;
 
   onMount(async () => {
     try {
-      const response = await fetch('/myfiles/pattern_descriptions.json');
+      const response = await fetch('/data/pattern_descriptions.json');
       const data = await response.json();
       patterns = data.patterns;
     } catch (error) {
@@ -16,20 +20,26 @@
   });
 </script>
 
-<div class="bg-primary-800/30 rounded-lg flex flex-col h-full shadow-lg">
-  <div class="flex justify-between items-center mb-1 mt-1 flex-none pl-4">
-    <b class="text-sm text-muted-foreground font-bold">Pattern List</b>
+<div class="bg-primary-800/70 rounded-lg flex flex-col h-[85vh] w-[600px] shadow-lg">
+  <div class="flex justify-between items-center p-4 border-b border-primary-700/30">
+    <b class="text-lg text-muted-foreground font-bold">Pattern Descriptions</b>
+    <button
+      on:click={() => dispatch('close')}
+      class="text-muted-foreground hover:text-primary-300 transition-colors"
+    >
+      ✕
+    </button>
   </div>
 
-  <div 
-    class="patterns-container p-4 flex-1 overflow-y-auto max-h-dvh"
+  <div
+    class="patterns-container p-4 flex-1 overflow-y-auto"
     bind:this={patternsContainer}
   >
-    <div class="patterns-grid">
+    <div class="patterns-list space-y-2">
       {#each patterns as pattern}
-        <div class="pattern-item bg-primary/5 rounded-lg p-3">
-          <h3 class="text-sm font-semibold mb-1 text-primary-300">{pattern.patternName}</h3>
-          <p class="text-sm text-muted-foreground">{pattern.description}</p>
+        <div class="pattern-item bg-primary/10 rounded-lg p-3">
+          <h3 class="text-xl font-bold mb-2 text-primary-300">{pattern.patternName}</h3>
+          <p class="text-sm text-muted-foreground break-words leading-relaxed">{pattern.description}</p>
         </div>
       {/each}
     </div>
@@ -44,20 +54,21 @@
     -ms-overflow-style: thin;
   }
 
-  .patterns-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+  .patterns-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
   }
 
   .pattern-item {
     display: flex;
     flex-direction: column;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  @media (max-width: 768px) {
-    .patterns-grid {
-      grid-template-columns: 1fr;
-    }
+  .pattern-item:last-child {
+    border-bottom: none;
   }
 </style>
