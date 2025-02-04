@@ -40,12 +40,19 @@ logger.addHandler(file_handler)
 def get_fabric_path():
     """Get the fabric executable path with enhanced logging."""
     try:
-        import fabric_cli
-        module_dir = os.path.dirname(fabric_cli.__file__)
-        logger.info(f"Module directory: {module_dir}")
-        return '-m fabric_cli'
-    except ImportError as e:
-        logger.error(f"Cannot import fabric_cli: {e}")
+        # Get the fabric directory
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        # Check if we're in the fabric directory with main.go
+        if os.path.isfile(os.path.join(current_dir, 'main.go')):
+            logger.info(f"Found fabric source in: {current_dir}")
+            # Return command that will be run from fabric directory
+            return ['go', 'run', '.']
+
+        logger.error("Could not find fabric source in the fabric directory")
+        return None
+    except Exception as e:
+        logger.error(f"Error finding fabric source: {e}")
         return None
 
 def safe_run_command(command: str) -> Tuple[str, str]:
@@ -55,16 +62,24 @@ def safe_run_command(command: str) -> Tuple[str, str]:
         if not module_path:
             raise FileNotFoundError("Fabric CLI module not found")
         
-        # Set PYTHONPATH to include fabric_cli location
-        venv_site_packages = os.path.join(os.environ.get('VIRTUAL_ENV', ''), 
-                                        'lib/python3.12/site-packages')
-        
+        # Set environment variables
         env = os.environ.copy()
-        env.update({
-            'PYTHONPATH': venv_site_packages,
-            'VIRTUAL_ENV': os.environ.get('VIRTUAL_ENV', ''),
-            'PATH': f"{os.path.dirname(sys.executable)}:{env.get('PATH', '')}"
-        })
+        
+        # Get Python version dynamically
+        python_version = f"python{sys.version_info.major}.{sys.version_info.minor}"
+        
+        if 'VIRTUAL_ENV' in os.environ:
+            venv_site_packages = os.path.join(
+                os.environ['VIRTUAL_ENV'],
+                'lib',
+                python_version,
+                'site-packages'
+            )
+            env.update({
+                'PYTHONPATH': venv_site_packages,
+                'VIRTUAL_ENV': os.environ['VIRTUAL_ENV'],
+                'PATH': f"{os.path.dirname(sys.executable)}:{env.get('PATH', '')}"
+            })
         
         # Construct command using Python module
         python_exe = sys.executable
@@ -85,11 +100,11 @@ def safe_run_command(command: str) -> Tuple[str, str]:
 
 def initialize_fabric():
     """Initialize fabric environment."""
-    fabric_path = get_fabric_path()
-    if not fabric_path:
-        st.error("Fabric CLI not found. Please install with: pip install fabric-cli")
+    cmd = get_fabric_path()
+    if not cmd:
+        st.error("Fabric source not found. Please ensure main.go exists in the fabric directory.")
         st.stop()
-    return fabric_path
+    return cmd
 
 # Add to the top of main or app initialization
 initialize_fabric()
@@ -129,7 +144,7 @@ logger.info("🚀 Fabric UI Starting Up")
 logger.info(f"💾 Log file: {log_file}")
 
 # Global variables
-pattern_dir = os.path.expanduser("~/.config/fabric/patterns")
+pattern_dir = os.getenv('FABRIC_PATTERNS_DIR') or os.path.expanduser("~/.config/fabric/patterns")
 MAX_RETRIES = 3
 RETRY_DELAY = 1  # seconds
 
@@ -221,10 +236,14 @@ def safe_run_command(command: List[str], retry: bool = True) -> Tuple[bool, str,
     cmd_str = " ".join(command)
     logger.info(f"Executing command: {cmd_str}")
     
+    # Get the fabric directory to run commands from
+    fabric_dir = os.path.dirname(os.path.abspath(__file__))
+    
     for attempt in range(MAX_RETRIES if retry else 1):
         try:
             logger.debug(f"Attempt {attempt + 1}/{MAX_RETRIES if retry else 1}")
-            result = run(command, capture_output=True, text=True)
+            # Run command from fabric directory
+            result = run(command, capture_output=True, text=True, cwd=fabric_dir)
             if result.returncode == 0:
                 logger.debug("Command executed successfully")
                 return True, result.stdout, ""
@@ -252,7 +271,14 @@ def fetch_models_once() -> Dict[str, List[str]]:
         return st.session_state.cached_models
     
     logger.debug("Cache expired or not available, fetching new models")
-    success, stdout, stderr = safe_run_command(["fabric", "--listmodels"])
+    cmd = get_fabric_path()
+    if not cmd:
+        logger.error("Fabric executable not found")
+        st.error("Fabric executable not found. Please ensure fabric is installed and accessible.")
+        return {}
+        
+    cmd.extend(["--listmodels"])
+    success, stdout, stderr = safe_run_command(cmd)
     if not success:
         logger.error(f"Failed to fetch models: {stderr}")
         st.error(f"Failed to fetch models: {stderr}")
@@ -286,23 +312,51 @@ def load_configuration() -> bool:
     """Load environment variables and initialize configuration."""
     logger.info("Loading configuration")
     try:
-        env_path = os.path.expanduser("~/.config/fabric/.env")
-        logger.debug(f"Looking for .env file at: {env_path}")
+        # Get the project root (parent of fabric directory)
+        fabric_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(fabric_dir)
+        
+        # Define base paths to check
+        base_paths = [
+            project_root,                         # Project root (FABRIC2)
+            fabric_dir,                           # fabric directory
+            os.path.expanduser("~/.config/fabric") # Default location
+        ]
 
-        if not os.path.exists(env_path):
-            logger.error(f"Configuration file not found at {env_path}")
-            st.error(f"Configuration file not found at {env_path}")
+        env_loaded = False
+        
+        # For each base path, try both ENV and .env
+        for base_path in base_paths:
+            # First try ENV (priority)
+            env_path = os.path.join(base_path, "ENV")
+            if os.path.exists(env_path):
+                logger.debug(f"Found ENV file at: {env_path}")
+                load_dotenv(dotenv_path=env_path)
+                env_loaded = True
+                break
+                
+            # Then try .env as fallback
+            env_path = os.path.join(base_path, ".env")
+            if os.path.exists(env_path):
+                logger.debug(f"Found .env file at: {env_path}")
+                logger.info("Note: Using .env file. For compatibility with the project, consider renaming to ENV")
+                load_dotenv(dotenv_path=env_path)
+                env_loaded = True
+                break
+
+        if not env_loaded:
+            logger.error("No configuration file (ENV or .env) found")
+            st.error("Configuration file not found. Please ensure either ENV or .env exists in the project root (FABRIC2) directory.")
             return False
 
-        load_dotenv(dotenv_path=env_path)
-        logger.debug("Environment variables loaded")
+        logger.debug("Environment variables loaded successfully")
 
         with st.spinner("Loading providers and models..."):
             providers = get_configured_providers()
         
         if not providers:
             logger.error("No providers configured")
-            st.error("No providers configured. Please run 'fabric --setup' first.")
+            st.error("No providers configured. Please ensure your ENV file contains valid API keys and run 'fabric --setup' first.")
             return False
 
         default_vendor = os.getenv("DEFAULT_VENDOR")
@@ -450,7 +504,11 @@ def create_pattern(pattern_name: str, content: Optional[str] = None) -> Tuple[bo
                     raise ValueError("Please select a provider and model first.")
                 
                 # Execute fabric create_pattern with input content
-                cmd = ["fabric", "--pattern", "create_pattern"]
+                cmd = get_fabric_path()
+                if not cmd:
+                    raise FileNotFoundError("Fabric executable not found. Please ensure fabric is installed and accessible.")
+                
+                cmd.extend(["--pattern", "create_pattern"])
                 if current_provider and current_model:
                     cmd.extend(["--vendor", current_provider, "--model", current_model])
                 
@@ -843,7 +901,11 @@ def execute_patterns(patterns_to_run: List[str], chain_mode: bool = False, initi
         for pattern in patterns_to_run:
             logger.info(f"Running pattern: {pattern}")
             try:
-                cmd = ["fabric", "--pattern", pattern]
+                cmd = get_fabric_path()
+                if not cmd:
+                    raise FileNotFoundError("Fabric executable not found. Please ensure fabric is installed and accessible.")
+                
+                cmd.extend(["--pattern", pattern])
                 logger.debug(f"Executing command: {' '.join(cmd)}")
 
                 message = current_input if chain_mode else st.session_state.input_content
@@ -1023,7 +1085,7 @@ def pattern_editor(pattern_name):
 
 def get_outputs_dir() -> str:
     """Get the directory for storing outputs."""
-    outputs_dir = os.path.expanduser("~/.config/fabric/outputs")
+    outputs_dir = os.getenv('FABRIC_OUTPUTS_DIR') or os.path.expanduser("~/.config/fabric/outputs")
     os.makedirs(outputs_dir, exist_ok=True)
     return outputs_dir
 
@@ -1163,7 +1225,11 @@ def execute_pattern_chain(patterns_sequence: List[str], initial_input: str) -> D
             }
             
             try:
-                cmd = ["fabric", "--pattern", pattern]
+                cmd = get_fabric_path()
+                if not cmd:
+                    raise FileNotFoundError("Fabric executable not found. Please ensure fabric is installed and accessible.")
+                
+                cmd.extend(["--pattern", pattern])
                 result = run(cmd, input=current_input, capture_output=True, text=True, check=True)
                 output = result.stdout.strip()
                 
@@ -1394,7 +1460,7 @@ def main():
             success = load_configuration()
             if not success:
                 logger.error("Failed to load configuration")
-                st.error("Failed to load configuration. Please check your .env file.")
+                st.error("Failed to load configuration. Please check your ENV file (or .env) exists in ~/.config/fabric/ or the current directory.")
                 st.stop()
 
         with st.sidebar:
