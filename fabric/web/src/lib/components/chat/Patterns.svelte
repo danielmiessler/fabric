@@ -4,9 +4,17 @@
   import { patterns, patternAPI, systemPrompt, selectedPatternName } from "$lib/store/pattern-store";
   import { get } from 'svelte/store';
 
-  let selectedPreset = "";
+  let selectedPreset = $selectedPatternName || "";
 
-  // Only update pattern selection when selectedPreset changes from user selection
+  // Subscribe to selectedPatternName changes
+  selectedPatternName.subscribe(value => {
+    if (value && value !== selectedPreset) {
+      console.log('Pattern selected from modal:', value);
+      selectedPreset = value;
+    }
+  });
+
+  // Watch selectedPreset changes
   $: if (selectedPreset) {
     console.log('Pattern selected from dropdown:', selectedPreset);
     try {
@@ -33,9 +41,9 @@
 </script>
 
 <div class="min-w-0">
-  <Select 
+  <Select
     bind:value={selectedPreset}
-  > 
+  >
     <option value="">Load a pattern...</option>
     {#each $patterns as pattern}
       <option value={pattern.Name}>{pattern.Description}</option>
