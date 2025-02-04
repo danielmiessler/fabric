@@ -12,7 +12,7 @@ __pycache__/
 
 # C extensions
 *.so
-ENV
+
 # Distribution / packaging
 .Python
 .idea
@@ -342,3 +342,5 @@ web/.svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
+# Project specific
+ENV
