@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
+  import { get } from 'svelte/store';
   import type { Pattern } from '$lib/types';
   import { favorites } from '$lib/store/favorites-store';
-  import { patternAPI } from '$lib/store/pattern-store';
+  import { patternAPI, systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
 
   const dispatch = createEventDispatcher<{
     close: void;
@@ -79,10 +80,36 @@
           <div class="flex justify-between items-start gap-4 mb-2">
             <h3
               class="text-xl font-bold text-primary-300 hover:text-primary-100 cursor-pointer transition-colors"
-              on:click={() => {
-                patternAPI.selectPattern(pattern.patternName);
-                dispatch('select', pattern.patternName);
-                dispatch('close');
+              role="button"
+              tabindex="0"
+              on:click={async () => {
+                try {
+                  console.log('Selecting pattern:', pattern.patternName);
+                  // Update pattern selection
+                  patternAPI.selectPattern(pattern.patternName);
+                  // Verify the selection
+                  const currentSystemPrompt = get(systemPrompt);
+                  const currentPattern = get(selectedPatternName);
+                  console.log('After selection - Pattern:', currentPattern);
+                  console.log('After selection - System Prompt length:', currentSystemPrompt?.length);
+                  
+                  // Only close if selection was successful
+                  if (currentPattern === pattern.patternName && currentSystemPrompt) {
+                    dispatch('select', pattern.patternName);
+                    dispatch('close');
+                  } else {
+                    console.error('Pattern selection failed - Pattern:', currentPattern);
+                    console.error('Pattern selection failed - System Prompt:', currentSystemPrompt);
+                  }
+                } catch (error) {
+                  console.error('Error selecting pattern:', error);
+                }
+              }}
+              on:keydown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  e.currentTarget.click();
+                }
               }}
             >
               {pattern.patternName}

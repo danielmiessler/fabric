@@ -1,0 +1,1 @@
+// This endpoint is no longer needed as we're using the chat endpoint

@@ -7,6 +7,7 @@
   import { FileButton } from '@skeletonlabs/skeleton';
   import { Paperclip, Send, FileCheck } from 'lucide-svelte';
   import { onMount } from 'svelte';
+  import { getTranscript } from '$lib/services/transcriptService';
 
   let userInput = "";
   let isYouTubeURL = false;
@@ -16,7 +17,14 @@
 
   function detectYouTubeURL(input: string): boolean {
     const youtubePattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)/i;
-    return youtubePattern.test(input);
+    const isYoutube = youtubePattern.test(input);
+    if (isYoutube) {
+      console.log('YouTube URL detected:', input);
+      // Log current pattern selection state
+      console.log('Current system prompt:', $systemPrompt?.length);
+      console.log('Selected pattern:', $selectedPatternName);
+    }
+    return isYoutube;
   }
   let uploadedFiles: string[] = [];
   let fileContents: string[] = [];
@@ -80,17 +88,42 @@
       const trimmedInput = userInput.trim() + '\n' + (finalContent || '');
       let messageHistory = JSON.stringify($messageStore);
 
-      // If it's a YouTube URL, add a system message first
       if (isYouTubeURL) {
-        await sendMessage("Processing YouTube transcript for: " + trimmedInput, undefined, true);
+        console.log('Processing YouTube URL in handleSubmit');
+        console.log('Current pattern state:');
+        console.log('- Selected Pattern:', $selectedPatternName);
+        console.log('- System Prompt length:', $systemPrompt?.length);
+        console.log('- Message content:', trimmedInput);
+        
+        try {
+          // First get the transcript
+          const { transcript } = await getTranscript(trimmedInput);
+          console.log('Got transcript, length:', transcript.length);
+          
+          // Send system message with transcript
+          await sendMessage("Processing YouTube transcript...", $systemPrompt, true);
+          
+          // Send transcript with pattern
+          await sendMessage(transcript);
+          
+          userInput = "";
+          uploadedFiles = [];
+          fileContents = [];
+        } catch (error) {
+          console.error('Error processing YouTube URL:', error);
+          toastStore.trigger({
+            message: 'Failed to process YouTube video. Please try again.',
+            background: 'variant-filled-error'
+          });
+        }
+      } else {
+        userInput = "";
+        uploadedFiles = [];
+        fileContents = [];
+        
+        // Send regular message
+        await sendMessage(trimmedInput);
       }
-
-      userInput = "";
-      uploadedFiles = [];
-      fileContents = [];
-
-      // Send the user input
-      await sendMessage(trimmedInput);
     } catch (error) {
       console.error('Chat submission error:', error);
       toastStore.trigger({

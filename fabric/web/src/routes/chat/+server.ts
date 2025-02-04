@@ -1,7 +1,6 @@
-// For the Youtube API
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getTranscript } from '$lib/services/transcriptService';
+import { YoutubeTranscript } from 'youtube-transcript';
 
 export const POST: RequestHandler = async ({ request }) => {
   try {
@@ -14,16 +13,29 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 
     console.log('Fetching transcript for URL:', url);
-    const transcriptData = await getTranscript(url);
+    
+    // Extract video ID
+    const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    const videoId = match ? match[1] : null;
+    
+    if (!videoId) {
+      return json({ error: 'Invalid YouTube URL' }, { status: 400 });
+    }
+
+    const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId);
+    const transcript = transcriptItems
+      .map(item => item.text)
+      .join(' ');
+
+    const response = {
+      transcript,
+      title: videoId
+    };
 
     console.log('Successfully fetched transcript, preparing response');
-    const response = json(transcriptData);
+    console.log('Response (first 200 chars):', transcript.slice(0, 200) + '...');
 
-    // Log the actual response being sent
-    const responseText = JSON.stringify(transcriptData);
-    console.log('Sending response (first 200 chars):', responseText.slice(0, 200) + '...');
-
-    return response;
+    return json(response);
   } catch (error) {
     console.error('Server error:', error);
     return json(

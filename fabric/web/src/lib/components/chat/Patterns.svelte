@@ -1,17 +1,30 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { Select } from "$lib/components/ui/select";
-  import { patterns, patternAPI, selectedPatternName } from "$lib/store/pattern-store";
+  import { patterns, patternAPI, systemPrompt, selectedPatternName } from "$lib/store/pattern-store";
+  import { get } from 'svelte/store';
 
   let selectedPreset = "";
 
-  // Update selectedPreset when selectedPatternName changes
-  $: selectedPreset = $selectedPatternName;
-
-  // Update pattern selection when selectedPreset changes
+  // Only update pattern selection when selectedPreset changes from user selection
   $: if (selectedPreset) {
-    console.log('Pattern selected:', selectedPreset);
-    patternAPI.selectPattern(selectedPreset);
+    console.log('Pattern selected from dropdown:', selectedPreset);
+    try {
+      patternAPI.selectPattern(selectedPreset);
+      // Verify the selection
+      const currentSystemPrompt = get(systemPrompt);
+      const currentPattern = get(selectedPatternName);
+      console.log('After dropdown selection - Pattern:', currentPattern);
+      console.log('After dropdown selection - System Prompt length:', currentSystemPrompt?.length);
+      
+      if (!currentPattern || !currentSystemPrompt) {
+        console.error('Pattern selection verification failed:');
+        console.error('- Selected Pattern:', currentPattern);
+        console.error('- System Prompt:', currentSystemPrompt);
+      }
+    } catch (error) {
+      console.error('Error in pattern selection:', error);
+    }
   }
 
     onMount(async () => {
