@@ -8,6 +8,10 @@
   import { Paperclip, Send, FileCheck } from 'lucide-svelte';
   import { onMount } from 'svelte';
   import { getTranscript } from '$lib/services/transcriptService';
+  import { ChatService } from '$lib/services/ChatService';
+  import type { StreamResponse } from '$lib/interfaces/chat-interface';
+
+  const chatService = new ChatService();
 
   let userInput = "";
   let isYouTubeURL = false;
@@ -96,15 +100,44 @@
         console.log('- Message content:', trimmedInput);
         
         try {
-          // First get the transcript
+          // Show processing message
+          await sendMessage("Processing YouTube transcript...", $systemPrompt, true);
+          
+          // Get transcript but don't display it
           const { transcript } = await getTranscript(trimmedInput);
           console.log('Got transcript, length:', transcript.length);
           
-          // Send system message with transcript
-          await sendMessage("Processing YouTube transcript...", $systemPrompt, true);
+          // Get stream from chat service
+          const stream = await chatService.streamChat(transcript, $systemPrompt);
           
-          // Send transcript with pattern
-          await sendMessage(transcript);
+          // Process stream directly
+          await chatService.processStream(
+            stream,
+            (content: string) => {
+              messageStore.update(messages => {
+                const newMessages = [...messages];
+                const lastMessage = newMessages[newMessages.length - 1];
+                
+                if (lastMessage?.role === 'assistant') {
+                  lastMessage.content = content;
+                } else {
+                  newMessages.push({
+                    role: 'assistant',
+                    content
+                  });
+                }
+                
+                return newMessages;
+              });
+            },
+            (error: Error) => {
+              console.error('Stream processing error:', error);
+              toastStore.trigger({
+                message: 'Error processing transcript',
+                background: 'variant-filled-error'
+              });
+            }
+          );
           
           userInput = "";
           uploadedFiles = [];
