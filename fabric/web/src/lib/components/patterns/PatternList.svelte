@@ -4,6 +4,7 @@
   import type { Pattern } from '$lib/types';
   import { favorites } from '$lib/store/favorites-store';
   import { patternAPI, systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
+  import { Input } from "$lib/components/ui/input";
 
   const dispatch = createEventDispatcher<{
     close: void;
@@ -13,12 +14,19 @@
   let patterns: Pattern[] = [];
   let patternsContainer: HTMLDivElement;
   let sortBy: 'alphabetical' | 'favorites' = 'alphabetical';
+  let searchText = ""; // For pattern filtering
 
+  // First filter patterns by search text
+  $: filteredPatterns = patterns.filter(p =>
+    p.patternName.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  // Then sort the filtered patterns
   $: sortedPatterns = sortBy === 'alphabetical'
-    ? [...patterns].sort((a, b) => a.patternName.localeCompare(b.patternName))
+    ? [...filteredPatterns].sort((a, b) => a.patternName.localeCompare(b.patternName))
     : [
-        ...patterns.filter(p => $favorites.includes(p.patternName)).sort((a, b) => a.patternName.localeCompare(b.patternName)),
-        ...patterns.filter(p => !$favorites.includes(p.patternName)).sort((a, b) => a.patternName.localeCompare(b.patternName))
+        ...filteredPatterns.filter(p => $favorites.includes(p.patternName)).sort((a, b) => a.patternName.localeCompare(b.patternName)),
+        ...filteredPatterns.filter(p => !$favorites.includes(p.patternName)).sort((a, b) => a.patternName.localeCompare(b.patternName))
       ];
 
   onMount(async () => {
@@ -36,7 +44,7 @@
   }
 </script>
 
-<div class="bg-primary-800/70 rounded-lg flex flex-col h-[85vh] w-[600px] shadow-lg">
+<div class="bg-primary-800 rounded-lg flex flex-col h-[85vh] w-[600px] shadow-lg">
   <div class="flex flex-col border-b border-primary-700/30">
     <div class="flex justify-between items-center p-4">
       <b class="text-lg text-muted-foreground font-bold">Pattern Descriptions</b>
@@ -48,25 +56,34 @@
       </button>
     </div>
     
-    <div class="px-4 pb-4 flex gap-4">
-      <label class="flex items-center gap-2 text-sm text-muted-foreground">
-        <input
-          type="radio"
-          bind:group={sortBy}
-          value="alphabetical"
-          class="radio"
-        >
-        Alphabetical
-      </label>
-      <label class="flex items-center gap-2 text-sm text-muted-foreground">
-        <input
-          type="radio"
-          bind:group={sortBy}
-          value="favorites"
-          class="radio"
-        >
-        Favorites First
-      </label>
+    <div class="px-4 pb-4 flex items-center justify-between">
+      <div class="flex gap-4">
+        <label class="flex items-center gap-2 text-sm text-muted-foreground">
+          <input
+            type="radio"
+            bind:group={sortBy}
+            value="alphabetical"
+            class="radio"
+          >
+          Alphabetical
+        </label>
+        <label class="flex items-center gap-2 text-sm text-muted-foreground">
+          <input
+            type="radio"
+            bind:group={sortBy}
+            value="favorites"
+            class="radio"
+          >
+          Favorites First
+        </label>
+      </div>
+      <div class="w-64 mr-4">
+        <Input
+          bind:value={searchText}
+          placeholder="Search patterns..."
+          class_="text-emerald-700"
+        />
+      </div>
     </div>
   </div>
 
@@ -95,6 +112,7 @@
                   
                   // Only close if selection was successful
                   if (currentPattern === pattern.patternName && currentSystemPrompt) {
+                    searchText = ""; // Reset search before closing
                     dispatch('select', pattern.patternName);
                     dispatch('close');
                   } else {

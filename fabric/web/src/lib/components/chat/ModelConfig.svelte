@@ -96,6 +96,7 @@
             id="note-name"
             bind:value={$obsidianSettings.noteName}
             placeholder="Enter note name..."
+            class_="text-emerald-700"
           />
         </div>
       {/if}

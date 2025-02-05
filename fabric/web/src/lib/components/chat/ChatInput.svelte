@@ -276,8 +276,8 @@
 
 <div class="flex flex-col gap-2 h-full">
   <div class="flex-1 relative shadow-lg">
-    <div class="messages-container p-4">
-      <Textarea 
+    <div class="messages-container">
+      <Textarea
         bind:value={$systemPrompt}
         readonly={true}
         placeholder="Enter system instructions..."
