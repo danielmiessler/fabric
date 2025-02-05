@@ -10,6 +10,7 @@
   import { getTranscript } from '$lib/services/transcriptService';
   import { ChatService } from '$lib/services/ChatService';
   import type { StreamResponse } from '$lib/interfaces/chat-interface';
+  import { obsidianSettings } from '$lib/store/obsidian-store';
 
   const chatService = new ChatService();
 
@@ -24,12 +25,12 @@
     const isYoutube = youtubePattern.test(input);
     if (isYoutube) {
       console.log('YouTube URL detected:', input);
-      // Log current pattern selection state
       console.log('Current system prompt:', $systemPrompt?.length);
       console.log('Selected pattern:', $selectedPatternName);
     }
     return isYoutube;
   }
+
   let uploadedFiles: string[] = [];
   let fileContents: string[] = [];
   let isProcessingFiles = false;
@@ -78,6 +79,87 @@
     });
   }
 
+  async function saveToObsidian(content: string) {
+    // Validate all required fields
+    if (!$obsidianSettings.saveToObsidian) {
+      console.log('Obsidian saving is disabled');
+      return;
+    }
+    
+    if (!$obsidianSettings.noteName) {
+      toastStore.trigger({
+        message: 'Please enter a note name in Obsidian settings',
+        background: 'variant-filled-error'
+      });
+      return;
+    }
+
+    if (!$selectedPatternName) {
+      toastStore.trigger({
+        message: 'No pattern selected',
+        background: 'variant-filled-error'
+      });
+      return;
+    }
+
+    if (!content) {
+      toastStore.trigger({
+        message: 'No content to save',
+        background: 'variant-filled-error'
+      });
+      return;
+    }
+
+    console.log('Saving to Obsidian:', {
+      pattern: $selectedPatternName,
+      noteName: $obsidianSettings.noteName,
+      contentLength: content.length
+    });
+
+    try {
+      // Use relative path to hit the frontend server endpoint
+      try {
+        const response = await fetch('/obsidian', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            pattern: $selectedPatternName,
+            noteName: $obsidianSettings.noteName,
+            content
+          })
+        });
+
+        const responseData = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(responseData.error || 'Failed to save to Obsidian');
+        }
+
+        // Log success details
+        console.log('Obsidian save response:', responseData);
+
+        // Show success message with file name
+        toastStore.trigger({
+          message: responseData.message || `Saved to Obsidian: ${responseData.fileName}`,
+          background: 'variant-filled-success'
+        });
+      } catch (error) {
+        console.error('Failed to save to Obsidian:', error);
+        throw error; // Re-throw to be caught by outer catch block
+      }
+    } catch (error) {
+      console.error('Failed to save to Obsidian:', error);
+      
+      // Show detailed error message
+      toastStore.trigger({
+        message: error instanceof Error ? error.message : 'Failed to save to Obsidian',
+        background: 'variant-filled-error'
+      });
+    }
+  }
+
   async function handleSubmit() {
     if (!userInput.trim()) return;
 
@@ -90,14 +172,14 @@
       }
 
       const trimmedInput = userInput.trim() + '\n' + (finalContent || '');
-      let messageHistory = JSON.stringify($messageStore);
 
       if (isYouTubeURL) {
         console.log('Processing YouTube URL in handleSubmit');
-        console.log('Current pattern state:');
+        console.log('Current state:');
         console.log('- Selected Pattern:', $selectedPatternName);
         console.log('- System Prompt length:', $systemPrompt?.length);
         console.log('- Message content:', trimmedInput);
+        console.log('- Obsidian settings:', $obsidianSettings);
         
         try {
           // Show processing message
@@ -110,20 +192,28 @@
           // Get stream from chat service
           const stream = await chatService.streamChat(transcript, $systemPrompt);
           
-          // Process stream directly
+          // Process stream and track final content
+          let lastContent = '';
           await chatService.processStream(
             stream,
-            (content: string) => {
+            (content: string, response?: StreamResponse) => {
+              lastContent = content;
               messageStore.update(messages => {
                 const newMessages = [...messages];
                 const lastMessage = newMessages[newMessages.length - 1];
                 
                 if (lastMessage?.role === 'assistant') {
                   lastMessage.content = content;
+                  // Explicitly set format to plain for pattern execution output
+                  if (response) {
+                    lastMessage.format = 'plain';
+                    console.log('Setting message format:', lastMessage.format); // Debug log
+                  }
                 } else {
                   newMessages.push({
                     role: 'assistant',
-                    content
+                    content,
+                    format: response ? 'plain' : undefined // Explicitly set format for new messages
                   });
                 }
                 
@@ -138,6 +228,11 @@
               });
             }
           );
+
+          // After stream is complete, save to Obsidian
+          if ($obsidianSettings.saveToObsidian && lastContent) {
+            await saveToObsidian(lastContent);
+          }
           
           userInput = "";
           uploadedFiles = [];

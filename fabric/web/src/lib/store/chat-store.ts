@@ -1,5 +1,5 @@
 import { writable, derived, get } from 'svelte/store';
-import type { ChatState, Message } from '$lib/interfaces/chat-interface';
+import type { ChatState, Message, StreamResponse } from '$lib/interfaces/chat-interface';
 import { ChatService, ChatError } from '$lib/services/ChatService';
 
 // Initialize chat service
@@ -88,17 +88,21 @@ export async function sendMessage(content: string, systemPromptText?: string, is
 
       await chatService.processStream(
         stream,
-        (content) => {
+        (content: string, response?: StreamResponse) => {
           messageStore.update(messages => {
             const newMessages = [...messages];
             const lastMessage = newMessages[newMessages.length - 1];
 
             if (lastMessage?.role === 'assistant') {
               lastMessage.content = content;
+              if (response) {
+                lastMessage.format = response.format;
+              }
             } else {
               newMessages.push({
                 role: 'assistant',
-                content
+                content,
+                format: response?.format
               });
             }
 

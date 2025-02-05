@@ -8,6 +8,10 @@
   import { Button } from '$lib/components/ui/button';
   import { page } from '$app/stores';
   import { beforeNavigate } from '$app/navigation';
+  import { Input } from "$lib/components/ui/input";
+  import { Checkbox } from "$lib/components/ui/checkbox";
+  import { obsidianSettings } from "$lib/store/obsidian-store";
+  import { featureFlags } from "$lib/config/features";
 
   const drawerStore = getDrawerStore();
   function openDrawer() {
@@ -19,6 +23,7 @@
   });
 
   $: isVisible = $page.url.pathname.startsWith('/chat');
+  $: showObsidian = $featureFlags.enableObsidianIntegration;
 </script>
 
 <div class="p-2">
@@ -71,6 +76,32 @@
       step={0.01}
     />
   </div>
+
+  {#if showObsidian}
+    <div class="mt-4 space-y-4 border-t pt-4">
+      <Label class="font-bold">Obsidian Settings</Label>
+      
+      <div class="flex items-center space-x-2">
+        <Checkbox
+          bind:checked={$obsidianSettings.saveToObsidian}
+          id="save-to-obsidian"
+        />
+        <Label for="save-to-obsidian">Save to Obsidian</Label>
+      </div>
+
+      {#if $obsidianSettings.saveToObsidian}
+        <div class="space-y-2">
+          <Label for="note-name">Note Name</Label>
+          <Input
+            id="note-name"
+            bind:value={$obsidianSettings.noteName}
+            placeholder="Enter note name..."
+          />
+        </div>
+      {/if}
+    </div>
+  {/if}
+
   <br>
   <div class="space-y-1">
     <Transcripts />
@@ -79,12 +110,12 @@
   <div class="flex flex-col gap-2">
     {#if isVisible}
       <div class="flex text-inherit justify-start mt-2">
-        <Button
-          variant="primary"
-          class="btn border variant-filled-primary text-align-center"
+        <button
+          class="btn variant-filled-primary"
           on:click={openDrawer}
-        >Open Drawer
-        </Button>
+        >
+          Open Drawer
+        </button>
       </div>
       <NoteDrawer />
     {/if}

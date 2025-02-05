@@ -28,6 +28,7 @@ export interface ChatRequest {
 export interface Message {
   role: MessageRole;
   content: string;
+  format?: ResponseFormat;
 }
 
 export interface ChatState {

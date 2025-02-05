@@ -8,10 +8,11 @@
   import { ArrowDown } from 'lucide-svelte';
   import Modal from '$lib/components/ui/modal/Modal.svelte';
   import PatternList from '$lib/components/patterns/PatternList.svelte';
+  import type { Message } from '$lib/interfaces/chat-interface';
 
   let showPatternModal = false;
 
-  let messagesContainer: HTMLDivElement;
+  let messagesContainer: HTMLDivElement | null = null;
   let showScrollButton = false;
   let isUserMessage = false;
 
@@ -40,37 +41,49 @@
   onMount(() => {
     if (messagesContainer) {
       messagesContainer.addEventListener('scroll', handleScroll);
-      return () => messagesContainer.removeEventListener('scroll', handleScroll);
+      return () => {
+        if (messagesContainer) {
+          messagesContainer.removeEventListener('scroll', handleScroll);
+        }
+      };
     }
   });
 
+  // Configure marked to be synchronous
+  const renderer = new marked.Renderer();
   marked.setOptions({
     gfm: true,
     breaks: true,
+    renderer,
+    async: false
   });
 
-  function renderMarkdown(content: string, isAssistant: boolean) {
-    content = content.replace(/\\n/g, '\n');
-    if (!isAssistant) return content;
-    try {
-      return marked.parse(content);
-    } catch (error) {
-      console.error('Error rendering markdown:', error);
-      return content;
+  function shouldRenderAsMarkdown(message: Message): boolean {
+    // Check if the message has a format property indicating it should be markdown
+    return message.role === 'assistant' && (!message.format || message.format === 'markdown');
+  }
+
+  function renderContent(message: Message): string {
+    const content = message.content.replace(/\\n/g, '\n');
+    
+    if (shouldRenderAsMarkdown(message)) {
+      try {
+        // Use marked synchronously
+        return marked.parse(content, { async: false }) as string;
+      } catch (error) {
+        console.error('Error rendering markdown:', error);
+        return content;
+      }
     }
+    
+    return content;
   }
 </script>
 
 <div class="bg-primary-800/30 rounded-lg flex flex-col h-full shadow-lg">
   <div class="flex justify-between items-center mb-1 mt-1 flex-none">
-    <div class="flex items-center gap-4 pl-4">
+    <div class="pl-4">
       <b class="text-sm text-muted-foreground font-bold">Chat History</b>
-      <button
-        class="text-sm text-muted-foreground hover:text-primary-300 transition-colors"
-        on:click={() => showPatternModal = true}
-      >
-        Pattern Description
-      </button>
     </div>
     <SessionManager />
   </div>
@@ -124,8 +137,8 @@
               {message.content}
             </div>
           {:else if message.role === 'assistant'}
-            <div class="prose prose-slate dark:prose-invert text-inherit prose-headings:text-inherit prose-pre:bg-primary/10 prose-pre:text-inherit text-sm max-w-none">
-              {@html renderMarkdown(message.content, true)}
+            <div class="{shouldRenderAsMarkdown(message) ? 'prose prose-slate dark:prose-invert text-inherit prose-headings:text-inherit prose-pre:bg-primary/10 prose-pre:text-inherit' : 'whitespace-pre-wrap'} text-sm max-w-none">
+              {@html renderContent(message)}
             </div>
           {:else}
             <div class="whitespace-pre-wrap text-sm">
@@ -148,12 +161,6 @@
 </div>
 
 <style>
-/*.chat-messages-wrapper {*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  min-height: 0;*/
-/*}*/
-
 .messages-container {
   flex: 1;
   overflow-y: auto;
@@ -195,8 +202,8 @@
 }
 
 @keyframes blink {
-0%, 100% { opacity: 0; }
-50% { opacity: 1; }
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 
 :global(.prose pre) {
