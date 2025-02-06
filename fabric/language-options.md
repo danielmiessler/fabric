@@ -24,6 +24,14 @@ if (qualifier === 'fr') {
   languageStore.set('en');
   userInput = userInput.replace(/--en\s*/, '');
 }
+
+// After sending message
+try {
+  await sendMessage(userInput);
+  languageStore.set('en'); // Reset to default after send
+} catch (error) {
+  console.error('Failed to send message:', error);
+}
 ```
 
 ### 3. Chat Service (ChatService.ts)
@@ -37,12 +45,30 @@ const languageInstruction = language !== 'en'
 const fullInput = userInput + languageInstruction;
 ```
 
+### 4. Global Settings UI (Chat.svelte)
+```typescript
+// Language selector in Global Settings
+<div class="flex flex-col gap-2">
+  <Label>Language</Label>
+  <Select bind:value={selectedLanguage}>
+    <option value="">Default</option>
+    <option value="en">English</option>
+    <option value="fr">French</option>
+  </Select>
+</div>
+
+// Script section
+let selectedLanguage = $languageStore;
+$: languageStore.set(selectedLanguage);
+```
+
 ## How It Works
 
 1. User Input:
    - User types message with language qualifier (e.g., "--fr Hello")
    - ChatInput detects qualifier and updates language store
    - Qualifier is stripped from message
+   - OR user selects language from Global Settings dropdown
 
 2. Request Processing:
    - ChatService gets language from store
@@ -52,6 +78,7 @@ const fullInput = userInput + languageInstruction;
 3. Response:
    - AI responds in requested language
    - Response is displayed without modification
+   - Language store is reset to English after message is sent
 
 ## Usage Examples
 
@@ -67,6 +94,14 @@ User: --fr What is the weather?
 AI: Voici les informations météo...
 ```
 
+3. Using Global Settings:
+```
+1. Select "French" from language dropdown
+2. Type: What is the weather?
+3. AI responds in French
+4. Language resets to English after response
+```
+
 ## Implementation Notes
 
 1. Simple Design:
@@ -77,16 +112,23 @@ AI: Voici les informations météo...
 2. Stateful:
    - Language persists until changed
    - Resets to English on page refresh
+   - Resets to English after each message
 
 3. Extensible:
    - Easy to add new languages
    - Just add new qualifiers and store values
+   - Update Global Settings dropdown options
+
+4. Error Handling:
+   - Invalid qualifiers are ignored
+   - Unknown languages default to English
+   - Store reset on error to prevent state issues
 
 ## Best Practices
 
 1. Always reset language after message:
 ```typescript
-// Reset stores
+// Reset stores after successful send
 languageStore.set('en');
 ```
 
@@ -100,3 +142,14 @@ const language = get(languageStore) || 'en';
 const languageInstruction = language !== 'en' 
   ? `. Please use the language '${language}' for the output.` 
   : '';
+```
+
+4. Handle UI State:
+```typescript
+// In Chat.svelte
+let selectedLanguage = $languageStore;
+$: {
+  languageStore.set(selectedLanguage);
+  // Update UI immediately when store changes
+  selectedLanguage = $languageStore;
+}
