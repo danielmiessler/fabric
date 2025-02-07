@@ -48,6 +48,7 @@ type Flags struct {
 	YouTube            string            `short:"y" long:"youtube" description:"YouTube video or play list \"URL\" to grab transcript, comments from it and send to chat or print it put to the console and store it in the output file"`
 	YouTubePlaylist    bool              `long:"playlist" description:"Prefer playlist over video if both ids are present in the URL"`
 	YouTubeTranscript  bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat (it is used per default)."`
+	YouTubeTranscriptWithTimestamps bool `long:"transcript-with-timestamps" description:"Grab transcript from YouTube video with timestamps and send to chat"`
 	YouTubeComments    bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
 	YouTubeMetadata    bool              `long:"metadata" description:"Output video metadata"`
 	Language           string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
