@@ -113,6 +113,45 @@ func (o *YouTube) GrabTranscript(videoId string, language string) (ret string, e
 	return
 }
 
+func (o *YouTube) GrabTranscriptWithTimestamps(videoId string, language string) (ret string, err error) {
+	var transcript string
+	if transcript, err = o.GrabTranscriptBase(videoId, language); err != nil {
+		err = fmt.Errorf("transcript not available. (%v)", err)
+		return
+	}
+
+	// Parse the XML transcript
+	doc := soup.HTMLParse(transcript)
+	// Extract the text content from the <text> tags
+	textTags := doc.FindAll("text")
+	var textBuilder strings.Builder
+	for _, textTag := range textTags {
+		// Extract the start and duration attributes
+		start := textTag.Attrs()["start"]
+		dur := textTag.Attrs()["dur"]
+		end := fmt.Sprintf("%f", parseFloat(start)+parseFloat(dur))
+		// Format the timestamps
+		startFormatted := formatTimestamp(parseFloat(start))
+		endFormatted := formatTimestamp(parseFloat(end))
+		text := strings.ReplaceAll(textTag.Text(), "&#39;", "'")
+		textBuilder.WriteString(fmt.Sprintf("[%s - %s] %s\n", startFormatted, endFormatted, text))
+	}
+	ret = textBuilder.String()
+	return
+}
+
+func parseFloat(s string) float64 {
+	f, _ := strconv.ParseFloat(s, 64)
+	return f
+}
+
+func formatTimestamp(seconds float64) string {
+	hours := int(seconds) / 3600
+	minutes := (int(seconds) % 3600) / 60
+	secs := int(seconds) % 60
+	return fmt.Sprintf("%02d:%02d:%02d", hours, minutes, secs)
+}
+
 func (o *YouTube) GrabTranscriptBase(videoId string, language string) (ret string, err error) {
 	if err = o.initService(); err != nil {
 		return
@@ -265,6 +304,13 @@ func (o *YouTube) Grab(url string, options *Options) (ret *VideoInfo, err error)
 			return
 		}
 	}
+
+	if options.TranscriptWithTimestamps {
+		if ret.Transcript, err = o.GrabTranscriptWithTimestamps(videoId, "en"); err != nil {
+			return
+		}
+	}
+
 	return
 }
 
@@ -372,11 +418,12 @@ type VideoMeta struct {
 }
 
 type Options struct {
-	Duration   bool
-	Transcript bool
-	Comments   bool
-	Lang       string
-	Metadata   bool
+	Duration                 bool
+	Transcript               bool
+	TranscriptWithTimestamps bool
+	Comments                 bool
+	Lang                     string
+	Metadata                 bool
 }
 
 type VideoInfo struct {
@@ -437,6 +484,7 @@ func (o *YouTube) GrabByFlags() (ret *VideoInfo, err error) {
 	options := &Options{}
 	flag.BoolVar(&options.Duration, "duration", false, "Output only the duration")
 	flag.BoolVar(&options.Transcript, "transcript", false, "Output only the transcript")
+	flag.BoolVar(&options.TranscriptWithTimestamps, "transcriptWithTimestamps", false, "Output only the transcript with timestamps")
 	flag.BoolVar(&options.Comments, "comments", false, "Output the comments on the video")
 	flag.StringVar(&options.Lang, "lang", "en", "Language for the transcript (default: English)")
 	flag.BoolVar(&options.Metadata, "metadata", false, "Output video metadata")
