@@ -1,6 +1,8 @@
 import { writable, derived, get } from 'svelte/store';
 import type { ChatState, Message, StreamResponse } from '$lib/interfaces/chat-interface';
 import { ChatService, ChatError } from '$lib/services/ChatService';
+import { languageStore } from '$lib/store/language-store';
+import { selectedPatternName } from '$lib/store/pattern-store';
 
 // Initialize chat service
 const chatService = new ChatService();
@@ -69,6 +71,16 @@ export const revertLastMessage = () => {
 
 export async function sendMessage(content: string, systemPromptText?: string, isSystem: boolean = false) {
   try {
+    console.log('\n=== Message Processing Start ===');
+    console.log('1. Initial state:', {
+      content: content.substring(0, 100) + '...',
+      isSystem,
+      hasSystemPrompt: !!systemPromptText,
+      currentLanguage: get(languageStore),
+      messageCount: get(messageStore).length,
+      pattern: get(selectedPatternName)
+    });
+
     const $streaming = get(streamingStore);
     if ($streaming) {
       throw new ChatError('Message submission blocked - already streaming', 'STREAMING_BLOCKED');
@@ -83,12 +95,34 @@ export async function sendMessage(content: string, systemPromptText?: string, is
       content 
     }]);
 
+    console.log('2. Message added to store:', {
+      role: isSystem ? 'system' : 'user',
+      contentLength: content.length,
+      totalMessages: get(messageStore).length,
+      language: get(languageStore)
+    });
+
     if (!isSystem) {
+      console.log('3. Preparing chat stream:', {
+        language: get(languageStore),
+        pattern: get(selectedPatternName),
+        hasSystemPrompt: !!systemPromptText,
+        systemPromptLength: systemPromptText?.length
+      });
+
       const stream = await chatService.streamChat(content, systemPromptText);
+      console.log('4. Stream created, beginning processing');
 
       await chatService.processStream(
         stream,
         (content: string, response?: StreamResponse) => {
+          console.log('5. Processing stream chunk:', {
+            contentLength: content.length,
+            format: response?.format,
+            type: response?.type,
+            language: get(languageStore)
+          });
+
           messageStore.update(messages => {
             const newMessages = [...messages];
             const lastMessage = newMessages[newMessages.length - 1];
@@ -98,10 +132,20 @@ export async function sendMessage(content: string, systemPromptText?: string, is
               if (response) {
                 lastMessage.format = response.format;
               }
+              console.log('6a. Updated existing message:', {
+                role: 'assistant',
+                contentLength: content.length,
+                format: response?.format
+              });
             } else {
               newMessages.push({
                 role: 'assistant',
                 content,
+                format: response?.format
+              });
+              console.log('6b. Added new message:', {
+                role: 'assistant',
+                contentLength: content.length,
                 format: response?.format
               });
             }

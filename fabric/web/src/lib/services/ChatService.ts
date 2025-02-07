@@ -25,12 +25,35 @@ export class ChatError extends Error implements IChatError {
 export class ChatService {
   private async fetchStream(request: ChatRequest): Promise<ReadableStream<StreamResponse>> {
     try {
+      console.log('\n=== ChatService Request Start ===');
+      console.log('1. Request details:', {
+        language: get(languageStore),
+        pattern: get(selectedPatternName),
+        promptCount: request.prompts?.length,
+        messageCount: request.messages?.length
+      });
+
+      console.log('2. First prompt:', {
+        pattern: request.prompts?.[0]?.patternName,
+        inputLength: request.prompts?.[0]?.userInput?.length,
+        hasLanguageInInput: request.prompts?.[0]?.userInput?.includes(get(languageStore)),
+        systemPromptLength: request.prompts?.[0]?.systemPrompt?.length
+      });
+
+      console.log('3. Full request:', JSON.stringify(request, null, 2));
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(request),
+      });
+
+      console.log('4. Response received:', {
+        status: response.status,
+        ok: response.ok,
+        type: response.type
       });
 
       if (!response.ok) {
@@ -46,6 +69,7 @@ export class ChatService {
         throw new ChatError('Response body is null', 'NULL_RESPONSE');
       }
 
+      console.log('5. Creating message stream');
       return this.createMessageStream(reader);
     } catch (error) {
       if (error instanceof ChatError) {
@@ -87,9 +111,13 @@ export class ChatService {
     return new ReadableStream({
       async start(controller) {
         try {
+          console.log('\n=== Stream Processing Start ===');
           while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
+            if (done) {
+              console.log('Stream complete');
+              break;
+            }
 
             buffer += new TextDecoder().decode(value);
             const messages = buffer
@@ -102,7 +130,12 @@ export class ChatService {
               for (const msg of messages) {
                 try {
                   const response = JSON.parse(msg.slice(6)) as StreamResponse;
-                  console.log('Parsed stream response:', response);
+                  console.log('Processing chunk:', {
+                    contentLength: response.content?.length,
+                    format: response.format,
+                    type: response.type,
+                    hasPattern: !!get(selectedPatternName)
+                  });
                   
                   // Clean pattern output if it's a pattern response and ensure markdown format
                   if (get(selectedPatternName)) {
@@ -122,7 +155,12 @@ export class ChatService {
           if (buffer.startsWith('data: ')) {
             try {
               const response = JSON.parse(buffer.slice(6)) as StreamResponse;
-              console.log('Parsed final stream response:', response);
+              console.log('Processing final chunk:', {
+                contentLength: response.content?.length,
+                format: response.format,
+                type: response.type,
+                hasPattern: !!get(selectedPatternName)
+              });
               
               // Clean pattern output if it's a pattern response and ensure markdown format
               if (get(selectedPatternName)) {
@@ -161,24 +199,64 @@ export class ChatService {
       ? `. Please use the language '${language}' for the output.`
       : '';
 
-    return {
+    console.log('\n=== Creating Chat Prompt ===');
+    console.log('1. Current state:', {
+      language,
+      hasLanguageInstruction: language !== 'en',
+      instruction: languageInstruction,
+      pattern: get(selectedPatternName)
+    });
+
+    const prompt = {
       userInput: userInput + languageInstruction,
       systemPrompt: systemPromptText ?? get(systemPrompt),
       model: config.model,
       patternName: get(selectedPatternName)
     };
+
+    console.log('2. Created prompt:', {
+      finalInput: prompt.userInput.substring(0, 100) + '...',
+      hasLanguageInInput: prompt.userInput.includes(language),
+      pattern: prompt.patternName,
+      language
+    });
+
+    return prompt;
   }
 
-  public async createChatRequest(userInput: string, systemPromptText?: string): Promise<ChatRequest> {
+  public async createChatRequest(userInput: string, systemPromptText?: string, isPattern: boolean = false): Promise<ChatRequest> {
+    console.log('\n=== Creating Chat Request ===');
+    console.log('1. Input:', {
+      userInput,
+      isPattern,
+      language: get(languageStore)
+    });
+
     const prompt = this.createChatPrompt(userInput, systemPromptText);
     const config = get(chatConfig);
-    const messages = get(messageStore);
+    
+    // For pattern processing, don't include message history to ensure clean context
+    const messages = isPattern ? [] : get(messageStore);
 
-    return {
+    const request = {
       prompts: [prompt],
-      messages: messages,  
+      messages: messages,
       ...config
     };
+
+    console.log('2. Final request:', {
+      promptCount: request.prompts.length,
+      messageCount: request.messages.length,
+      firstPromptInput: request.prompts[0].userInput,
+      hasLanguageInPrompt: request.prompts[0].userInput.includes(get(languageStore))
+    });
+
+    return request;
+  }
+
+  public async streamPattern(userInput: string, systemPromptText?: string): Promise<ReadableStream<StreamResponse>> {
+    const request = await this.createChatRequest(userInput, systemPromptText, true);
+    return this.fetchStream(request);
   }
 
   public async streamChat(userInput: string, systemPromptText?: string): Promise<ReadableStream<StreamResponse>> {

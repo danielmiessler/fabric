@@ -1,3 +1,6 @@
+import { get } from 'svelte/store';
+import { languageStore } from '$lib/store/language-store';
+
 export interface TranscriptResponse {
   transcript: string;
   title: string;
@@ -11,15 +14,33 @@ function decodeHtmlEntities(text: string): string {
 
 export async function getTranscript(url: string): Promise<TranscriptResponse> {
   try {
-    console.log('\n=== Getting Transcript ===');
-    console.log('1. URL:', url);
+    const originalLanguage = get(languageStore);
+    console.log('\n=== YouTube Transcript Service Start ===');
+    console.log('1. Request details:', {
+      url,
+      endpoint: '/chat',
+      method: 'POST',
+      isYouTubeURL: url.includes('youtube.com') || url.includes('youtu.be'),
+      originalLanguage
+    });
 
     const response = await fetch('/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ url })
+      body: JSON.stringify({ 
+        url,
+        language: originalLanguage // Pass original language to server
+      })
+    });
+
+    console.log('2. Server response:', {
+      status: response.status,
+      ok: response.ok,
+      type: response.type,
+      originalLanguage,
+      currentLanguage: get(languageStore)
     });
 
     if (!response.ok) {
@@ -35,8 +56,22 @@ export async function getTranscript(url: string): Promise<TranscriptResponse> {
     // Decode HTML entities in transcript
     data.transcript = decodeHtmlEntities(data.transcript);
 
-    console.log('2. Got transcript, length:', data.transcript.length);
-    console.log('3. First 100 chars:', data.transcript.substring(0, 100));
+    // Ensure language is preserved
+    if (get(languageStore) !== originalLanguage) {
+      console.log('3a. Restoring original language:', originalLanguage);
+      languageStore.set(originalLanguage);
+    }
+
+    console.log('3b. Processed transcript:', {
+      status: response.status,
+      transcriptLength: data.transcript.length,
+      firstChars: data.transcript.substring(0, 100),
+      hasError: !!data.error,
+      videoId: data.title,
+      originalLanguage,
+      currentLanguage: get(languageStore)
+    });
+
     return data;
   } catch (error) {
     console.error('Transcript fetch error:', error);

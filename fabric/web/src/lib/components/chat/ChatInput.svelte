@@ -38,8 +38,10 @@
   let isProcessingFiles = false;
 
   function handleInput(event: Event) {
+    console.log('\n=== Handle Input ===');
     const target = event.target as HTMLTextAreaElement;
     userInput = target.value;
+    console.log('1. Raw input:', userInput);
 
     // Check for language qualifiers
     const languageQualifiers = {
@@ -51,15 +53,28 @@
       '--ja': 'ja'
     };
 
+    let detectedLang = '';
     for (const [qualifier, lang] of Object.entries(languageQualifiers)) {
       if (userInput.includes(qualifier)) {
+        detectedLang = lang;
         languageStore.set(lang);
         userInput = userInput.replace(new RegExp(`${qualifier}\\s*`), '');
         break; // Only apply the first language qualifier found
       }
     }
 
+    console.log('2. Language detection:', {
+      detectedLang,
+      currentLanguage: get(languageStore),
+      inputAfterLangRemoval: userInput
+    });
+
     isYouTubeURL = detectYouTubeURL(userInput);
+    console.log('3. URL detection:', {
+      isYouTube: isYouTubeURL,
+      pattern: $selectedPatternName,
+      systemPromptLength: $systemPrompt?.length
+    });
   }
 
   async function handleFileUpload(e: Event) {
@@ -182,74 +197,66 @@
   }
 
   async function processYouTubeURL(input: string) {
-    // Add processing message to UI
-    messageStore.update(messages => [...messages, {
-      role: 'system',
-      content: 'Processing YouTube transcript...',
-      format: 'plain'
-    }]);
+    console.log('\n=== YouTube Flow Start ===');
+    // Store original language
+    const originalLanguage = get(languageStore);
+    console.log('1. Initial state:', {
+      input: input.substring(0, 100) + '...',
+      language: originalLanguage,
+      pattern: $selectedPatternName,
+      systemPromptLength: $systemPrompt?.length
+    });
 
     try {
       // Get transcript
+      console.log('2. Requesting transcript with language:', originalLanguage);
       const { transcript } = await getTranscript(input);
-      console.log('Got transcript, length:', transcript.length);
+      console.log('3. Got transcript:', {
+        length: transcript.length,
+        originalLanguage,
+        currentLanguage: get(languageStore),
+        firstChars: transcript.substring(0, 50)
+      });
 
-      // Get current language from store (for logging only)
-      const currentLanguage = get(languageStore);
-      console.log('Processing transcript with language:', currentLanguage);
+      // Always restore original language before processing
+      console.log('4a. Restoring original language:', originalLanguage);
+      languageStore.set(originalLanguage);
 
-      // Pass transcript to ChatService which will add language instruction:
-      // ". Please use the language 'X' for the output."
-      // This matches how regular text input is handled
-      const stream = await chatService.streamChat(transcript, $systemPrompt);
+      // Process transcript with pattern and language
+      console.log('4b. Preparing to process transcript:', {
+        language: get(languageStore),
+        pattern: $selectedPatternName,
+        transcriptLength: transcript.length,
+        hasLanguageInstruction: originalLanguage !== 'en'
+      });
       
-      // Process stream and track final content
+      // Use sendMessage to process transcript like regular text
+      console.log('5. Sending to message processing...');
+      await sendMessage(transcript, $systemPrompt);
+
+      // Verify language was preserved through processing
+      console.log('6. Post-processing language check:', {
+        originalLanguage,
+        finalLanguage: get(languageStore),
+        languageMatches: get(languageStore) === originalLanguage
+      });
+      
+      // Get the last message which should be the assistant's response
       let lastContent = '';
-      await chatService.processStream(
-        stream,
-        (content: string, response?: StreamResponse) => {
-          // Ensure each chunk maintains the language instruction
-          if (currentLanguage !== 'en') {
-            // Add language instruction in exact same format as ChatService
-            content = `${content}. Please use the language '${currentLanguage}' for the output.`;
-          }
-          lastContent = content;
-          messageStore.update(messages => {
-            const newMessages = [...messages];
-            const lastMessage = newMessages[newMessages.length - 1];
-            
-            if (lastMessage?.role === 'assistant') {
-              lastMessage.content = content;
-              if (response) {
-                lastMessage.format = response.format;
-                console.log('Setting message format:', lastMessage.format);
-              }
-            } else {
-              newMessages.push({
-                role: 'assistant',
-                content,
-                format: response?.format
-              });
-            }
-            
-            return newMessages;
-          });
-        },
-        (error: Error) => {
-          console.error('Stream processing error:', error);
-          toastStore.trigger({
-            message: 'Error processing transcript',
-            background: 'variant-filled-error'
-          });
+      messageStore.subscribe(messages => {
+        const lastMessage = messages[messages.length - 1];
+        if (lastMessage?.role === 'assistant') {
+          lastContent = lastMessage.content;
         }
-      );
+      })();
 
       // After stream is complete, save to Obsidian
       if ($obsidianSettings.saveToObsidian && lastContent) {
         await saveToObsidian(lastContent);
       }
 
-      // Clear inputs but keep language
+      // Reset language to English and clear inputs
+      languageStore.set('en');
       userInput = "";
       uploadedFiles = [];
       fileContents = [];
@@ -257,6 +264,8 @@
       console.error('Error processing YouTube URL:', error);
       // Remove processing message on error
       messageStore.update(messages => messages.slice(0, -1));
+      // Reset language even on error
+      languageStore.set('en');
       toastStore.trigger({
         message: 'Failed to process YouTube video. Please try again.',
         background: 'variant-filled-error'
@@ -269,6 +278,7 @@
     if (!userInput.trim()) return;
 
     try {
+      console.log('\n=== Submit Handler Start ===');
       let finalContent = "";
       if (fileContents.length > 0) {
         finalContent += '\n\nFile Contents:\n' + fileContents.map((content, index) => 
@@ -277,27 +287,30 @@
       }
 
       const trimmedInput = userInput.trim() + '\n' + (finalContent || '');
+      console.log('1. Prepared input:', {
+        isYouTube: isYouTubeURL,
+        language: get(languageStore),
+        pattern: $selectedPatternName,
+        inputLength: trimmedInput.length
+      });
 
       if (isYouTubeURL) {
-        console.log('Processing YouTube URL in handleSubmit');
-        console.log('Current state:');
-        console.log('- Selected Pattern:', $selectedPatternName);
-        console.log('- System Prompt length:', $systemPrompt?.length);
-        console.log('- Message content:', trimmedInput);
-        console.log('- Obsidian settings:', $obsidianSettings);
-        
+        console.log('2a. Starting YouTube flow');
         await processYouTubeURL(trimmedInput);
       } else {
-        // Send regular message
+        console.log('2b. Starting regular text flow');
         await sendMessage(trimmedInput);
         
-        // Clear inputs but keep language
+        // Reset language to English and clear inputs
+        languageStore.set('en');
         userInput = "";
         uploadedFiles = [];
         fileContents = [];
       }
     } catch (error) {
       console.error('Chat submission error:', error);
+      // Reset language even on error
+      languageStore.set('en');
       toastStore.trigger({
         message: 'Failed to send message. Please try again.',
         background: 'variant-filled-error'

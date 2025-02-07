@@ -10,7 +10,11 @@ export const POST: RequestHandler = async ({ request }) => {
 
     // Handle YouTube URL request
     if (body.url) {
-      console.log('2. Processing YouTube URL:', body.url);
+      console.log('2. Processing YouTube URL:', {
+        url: body.url,
+        language: body.language,
+        hasLanguageParam: true
+      });
       
       // Extract video ID
       const match = body.url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
@@ -20,31 +24,71 @@ export const POST: RequestHandler = async ({ request }) => {
         return json({ error: 'Invalid YouTube URL' }, { status: 400 });
       }
 
-      console.log('3. Video ID:', videoId);
+      console.log('3. Video ID:', {
+        id: videoId,
+        language: body.language
+      });
+
       const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId);
       const transcript = transcriptItems
         .map(item => item.text)
         .join(' ');
 
-      console.log('4. Transcript length:', transcript.length);
-      return json({
+      // Create response with transcript and language
+      const response = {
         transcript,
-        title: videoId
+        title: videoId,
+        language: body.language
+      };
+
+      console.log('4. Transcript processed:', {
+        length: transcript.length,
+        language: body.language,
+        firstChars: transcript.substring(0, 50),
+        responseSize: JSON.stringify(response).length
       });
+
+      return json(response);
     }
 
     // Handle pattern execution request
-    console.log('\n=== Pattern Request ===');
-    console.log('1. Request to fabric backend:', JSON.stringify(body, null, 2));
+    console.log('\n=== Server Request Analysis ===');
+    console.log('1. Request overview:', {
+      pattern: body.prompts?.[0]?.patternName,
+      hasPrompts: !!body.prompts?.length,
+      messageCount: body.messages?.length,
+      isYouTube: body.url ? 'Yes' : 'No',
+      language: body.language
+    });
+
+    // Ensure language instruction is present
+    if (body.prompts?.[0] && body.language && body.language !== 'en') {
+      const languageInstruction = `. Please use the language '${body.language}' for the output.`;
+      if (!body.prompts[0].userInput?.includes(languageInstruction)) {
+        body.prompts[0].userInput = (body.prompts[0].userInput || '') + languageInstruction;
+      }
+    }
+
+    console.log('2. Language analysis:', {
+      input: body.prompts?.[0]?.userInput?.substring(0, 100),
+      hasLanguageInstruction: body.prompts?.[0]?.userInput?.includes('language'),
+      containsFr: body.prompts?.[0]?.userInput?.includes('fr'),
+      containsEn: body.prompts?.[0]?.userInput?.includes('en'),
+      requestLanguage: body.language
+    });
+
+    // Log full request for debugging
+    console.log('3. Full request:', JSON.stringify(body, null, 2));
 
     // Log important fields
-    console.log('2. Key fields:');
-    console.log('- Pattern name:', body.prompts?.[0]?.patternName);
-    console.log('- User input length:', body.prompts?.[0]?.userInput?.length);
-    console.log('- System prompt length:', body.prompts?.[0]?.systemPrompt?.length);
-    console.log('- Top level output path:', body.output?.path);
-    console.log('- Prompt level output path:', body.prompts?.[0]?.output?.path);
+    console.log('4. Key fields:', {
+      patternName: body.prompts?.[0]?.patternName,
+      inputLength: body.prompts?.[0]?.userInput?.length,
+      systemPromptLength: body.prompts?.[0]?.systemPrompt?.length,
+      messageCount: body.messages?.length
+    });
 
+    console.log('5. Sending to Fabric backend...');
     const fabricResponse = await fetch('http://localhost:8080/api/chat', {
       method: 'POST',
       headers: {
@@ -53,15 +97,19 @@ export const POST: RequestHandler = async ({ request }) => {
       body: JSON.stringify(body)
     });
 
+    console.log('6. Fabric response:', {
+      status: fabricResponse.status,
+      ok: fabricResponse.ok,
+      statusText: fabricResponse.statusText
+    });
+
     if (!fabricResponse.ok) {
-      console.error('3. Fabric API error:', {
+      console.error('Error from Fabric API:', {
         status: fabricResponse.status,
         statusText: fabricResponse.statusText
       });
       throw new Error(`Fabric API error: ${fabricResponse.statusText}`);
     }
-
-    console.log('3. Fabric response status:', fabricResponse.status);
 
     const stream = fabricResponse.body;
     if (!stream) {
