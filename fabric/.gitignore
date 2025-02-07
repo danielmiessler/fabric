@@ -335,5 +335,14 @@ web/.svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
+# Sensitive files
+/Users/jmdb/.config/fabric/.env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Personal files
+fabric/myfiles/Obsidian_perso_not_share/
+
 # Project specific
-ENV
