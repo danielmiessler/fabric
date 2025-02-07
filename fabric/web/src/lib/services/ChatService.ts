@@ -1,6 +1,6 @@
-import type { 
-  ChatRequest, 
-  StreamResponse, 
+import type {
+  ChatRequest,
+  StreamResponse,
   ChatError as IChatError,
   ChatPrompt
 } from '$lib/interfaces/chat-interface';
@@ -9,6 +9,7 @@ import { modelConfig } from '$lib/store/model-store';
 import { systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
 import { chatConfig } from '$lib/store/chat-config';
 import { messageStore } from '$lib/store/chat-store';
+import { languageStore } from '$lib/store/language-store';
 
 export class ChatError extends Error implements IChatError {
   constructor(
@@ -155,8 +156,13 @@ export class ChatService {
 
   private createChatPrompt(userInput: string, systemPromptText?: string): ChatPrompt {
     const config = get(modelConfig);
+    const language = get(languageStore);
+    const languageInstruction = language !== 'en'
+      ? `. Please use the language '${language}' for the output.`
+      : '';
+
     return {
-      userInput,
+      userInput: userInput + languageInstruction,
       systemPrompt: systemPromptText ?? get(systemPrompt),
       model: config.model,
       patternName: get(selectedPatternName)

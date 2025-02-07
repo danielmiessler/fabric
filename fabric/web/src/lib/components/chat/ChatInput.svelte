@@ -11,6 +11,7 @@
   import { ChatService } from '$lib/services/ChatService';
   import type { StreamResponse } from '$lib/interfaces/chat-interface';
   import { obsidianSettings } from '$lib/store/obsidian-store';
+  import { languageStore } from '$lib/store/language-store';
 
   const chatService = new ChatService();
 
@@ -38,6 +39,25 @@
   function handleInput(event: Event) {
     const target = event.target as HTMLTextAreaElement;
     userInput = target.value;
+
+    // Check for language qualifiers
+    const languageQualifiers = {
+      '--en': 'en',
+      '--fr': 'fr',
+      '--es': 'es',
+      '--de': 'de',
+      '--zh': 'zh',
+      '--ja': 'ja'
+    };
+
+    for (const [qualifier, lang] of Object.entries(languageQualifiers)) {
+      if (userInput.includes(qualifier)) {
+        languageStore.set(lang);
+        userInput = userInput.replace(new RegExp(`${qualifier}\\s*`), '');
+        break; // Only apply the first language qualifier found
+      }
+    }
+
     isYouTubeURL = detectYouTubeURL(userInput);
   }
 
@@ -237,6 +257,7 @@
           userInput = "";
           uploadedFiles = [];
           fileContents = [];
+          languageStore.set('en'); // Reset language to English after sending
         } catch (error) {
           console.error('Error processing YouTube URL:', error);
           toastStore.trigger({
@@ -251,6 +272,7 @@
         
         // Send regular message
         await sendMessage(trimmedInput);
+        languageStore.set('en'); // Reset language to English after sending
       }
     } catch (error) {
       console.error('Chat submission error:', error);

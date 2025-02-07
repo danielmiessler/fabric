@@ -12,6 +12,7 @@
   import { Checkbox } from "$lib/components/ui/checkbox";
   import { obsidianSettings } from "$lib/store/obsidian-store";
   import { featureFlags } from "$lib/config/features";
+  import LanguageSelector from '../settings/LanguageSelector.svelte';
 
   const drawerStore = getDrawerStore();
   function openDrawer() {
@@ -27,6 +28,10 @@
 </script>
 
 <div class="p-2">
+  <div class="space-y-4 mb-4">
+    <LanguageSelector />
+  </div>
+
   <div class="space-y-1">
     <Label>Maximum Length ({$modelConfig.maxLength})</Label>
     <Slider
