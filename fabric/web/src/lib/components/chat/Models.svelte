@@ -9,7 +9,7 @@
 </script>
 
 <div class="min-w-0">
-  <Select 
+  <Select
     bind:value={$modelConfig.model}
   >
     <option value="">Default Model</option>

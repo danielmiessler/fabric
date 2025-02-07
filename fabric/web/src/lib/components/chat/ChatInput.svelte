@@ -7,6 +7,7 @@
   import { FileButton } from '@skeletonlabs/skeleton';
   import { Paperclip, Send, FileCheck } from 'lucide-svelte';
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
   import { getTranscript } from '$lib/services/transcriptService';
   import { ChatService } from '$lib/services/ChatService';
   import type { StreamResponse } from '$lib/interfaces/chat-interface';
@@ -180,6 +181,82 @@
     }
   }
 
+  async function processYouTubeURL(input: string) {
+    // Add processing message to UI
+    messageStore.update(messages => [...messages, {
+      role: 'system',
+      content: 'Processing YouTube transcript...',
+      format: 'plain'
+    }]);
+
+    try {
+      // Get transcript
+      const { transcript } = await getTranscript(input);
+      console.log('Got transcript, length:', transcript.length);
+
+      // Remove processing message
+      messageStore.update(messages => messages.slice(0, -1));
+
+      // Get stream from chat service (handles pattern and language)
+      const stream = await chatService.streamChat(transcript, $systemPrompt);
+      
+      // Process stream and track final content
+      let lastContent = '';
+      await chatService.processStream(
+        stream,
+        (content: string, response?: StreamResponse) => {
+          lastContent = content;
+          messageStore.update(messages => {
+            const newMessages = [...messages];
+            const lastMessage = newMessages[newMessages.length - 1];
+            
+            if (lastMessage?.role === 'assistant') {
+              lastMessage.content = content;
+              if (response) {
+                lastMessage.format = response.format;
+                console.log('Setting message format:', lastMessage.format);
+              }
+            } else {
+              newMessages.push({
+                role: 'assistant',
+                content,
+                format: response?.format
+              });
+            }
+            
+            return newMessages;
+          });
+        },
+        (error: Error) => {
+          console.error('Stream processing error:', error);
+          toastStore.trigger({
+            message: 'Error processing transcript',
+            background: 'variant-filled-error'
+          });
+        }
+      );
+
+      // After stream is complete, save to Obsidian
+      if ($obsidianSettings.saveToObsidian && lastContent) {
+        await saveToObsidian(lastContent);
+      }
+
+      // Clear inputs but keep language
+      userInput = "";
+      uploadedFiles = [];
+      fileContents = [];
+    } catch (error) {
+      console.error('Error processing YouTube URL:', error);
+      // Remove processing message on error
+      messageStore.update(messages => messages.slice(0, -1));
+      toastStore.trigger({
+        message: 'Failed to process YouTube video. Please try again.',
+        background: 'variant-filled-error'
+      });
+      throw error;
+    }
+  }
+
   async function handleSubmit() {
     if (!userInput.trim()) return;
 
@@ -201,78 +278,15 @@
         console.log('- Message content:', trimmedInput);
         console.log('- Obsidian settings:', $obsidianSettings);
         
-        try {
-          // Show processing message
-          await sendMessage("Processing YouTube transcript...", $systemPrompt, true);
-          
-          // Get transcript but don't display it
-          const { transcript } = await getTranscript(trimmedInput);
-          console.log('Got transcript, length:', transcript.length);
-          
-          // Get stream from chat service
-          const stream = await chatService.streamChat(transcript, $systemPrompt);
-          
-          // Process stream and track final content
-          let lastContent = '';
-          await chatService.processStream(
-            stream,
-            (content: string, response?: StreamResponse) => {
-              lastContent = content;
-              messageStore.update(messages => {
-                const newMessages = [...messages];
-                const lastMessage = newMessages[newMessages.length - 1];
-                
-                if (lastMessage?.role === 'assistant') {
-                  lastMessage.content = content;
-                  // Use the format from the response
-                  if (response) {
-                    lastMessage.format = response.format;
-                    console.log('Setting message format:', lastMessage.format); // Debug log
-                  }
-                } else {
-                  newMessages.push({
-                    role: 'assistant',
-                    content,
-                    format: response ? response.format : undefined // Use format from response for new messages
-                  });
-                }
-                
-                return newMessages;
-              });
-            },
-            (error: Error) => {
-              console.error('Stream processing error:', error);
-              toastStore.trigger({
-                message: 'Error processing transcript',
-                background: 'variant-filled-error'
-              });
-            }
-          );
-
-          // After stream is complete, save to Obsidian
-          if ($obsidianSettings.saveToObsidian && lastContent) {
-            await saveToObsidian(lastContent);
-          }
-          
-          userInput = "";
-          uploadedFiles = [];
-          fileContents = [];
-          languageStore.set('en'); // Reset language to English after sending
-        } catch (error) {
-          console.error('Error processing YouTube URL:', error);
-          toastStore.trigger({
-            message: 'Failed to process YouTube video. Please try again.',
-            background: 'variant-filled-error'
-          });
-        }
+        await processYouTubeURL(trimmedInput);
       } else {
+        // Send regular message
+        await sendMessage(trimmedInput);
+        
+        // Clear inputs but keep language
         userInput = "";
         uploadedFiles = [];
         fileContents = [];
-        
-        // Send regular message
-        await sendMessage(trimmedInput);
-        languageStore.set('en'); // Reset language to English after sending
       }
     } catch (error) {
       console.error('Chat submission error:', error);
