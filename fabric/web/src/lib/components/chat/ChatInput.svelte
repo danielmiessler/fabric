@@ -224,16 +224,16 @@
                 
                 if (lastMessage?.role === 'assistant') {
                   lastMessage.content = content;
-                  // Explicitly set format to plain for pattern execution output
+                  // Use the format from the response
                   if (response) {
-                    lastMessage.format = 'plain';
+                    lastMessage.format = response.format;
                     console.log('Setting message format:', lastMessage.format); // Debug log
                   }
                 } else {
                   newMessages.push({
                     role: 'assistant',
                     content,
-                    format: response ? 'plain' : undefined // Explicitly set format for new messages
+                    format: response ? response.format : undefined // Use format from response for new messages
                   });
                 }
                 

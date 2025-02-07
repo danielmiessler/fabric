@@ -104,10 +104,10 @@ export class ChatService {
                   const response = JSON.parse(msg.slice(6)) as StreamResponse;
                   console.log('Parsed stream response:', response);
                   
-                  // Clean pattern output if it's a pattern response
+                  // Clean pattern output if it's a pattern response and ensure markdown format
                   if (get(selectedPatternName)) {
                     response.content = cleanPatternOutput(response.content);
-                    response.format = 'plain';
+                    response.format = 'markdown';
                   }
                   
                   controller.enqueue(response);
@@ -124,10 +124,10 @@ export class ChatService {
               const response = JSON.parse(buffer.slice(6)) as StreamResponse;
               console.log('Parsed final stream response:', response);
               
-              // Clean pattern output if it's a pattern response
+              // Clean pattern output if it's a pattern response and ensure markdown format
               if (get(selectedPatternName)) {
                 response.content = cleanPatternOutput(response.content);
-                response.format = 'plain';
+                response.format = 'markdown';
               }
               
               controller.enqueue(response);
