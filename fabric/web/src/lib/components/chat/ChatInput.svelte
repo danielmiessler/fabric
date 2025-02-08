@@ -15,12 +15,13 @@
   import { languageStore } from '$lib/store/language-store';
 
   const chatService = new ChatService();
-
   let userInput = "";
   let isYouTubeURL = false;
   const toastStore = getToastStore();
-
   let files: FileList | undefined = undefined;
+  let uploadedFiles: string[] = [];
+  let fileContents: string[] = [];
+  let isProcessingFiles = false;
 
   function detectYouTubeURL(input: string): boolean {
     const youtubePattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)/i;
@@ -33,17 +34,13 @@
     return isYoutube;
   }
 
-  let uploadedFiles: string[] = [];
-  let fileContents: string[] = [];
-  let isProcessingFiles = false;
-
   function handleInput(event: Event) {
     console.log('\n=== Handle Input ===');
     const target = event.target as HTMLTextAreaElement;
     userInput = target.value;
-    console.log('1. Raw input:', userInput);
-
-    // Check for language qualifiers
+    
+    const currentLanguage = get(languageStore);
+    
     const languageQualifiers = {
       '--en': 'en',
       '--fr': 'fr',
@@ -59,13 +56,14 @@
         detectedLang = lang;
         languageStore.set(lang);
         userInput = userInput.replace(new RegExp(`${qualifier}\\s*`), '');
-        break; // Only apply the first language qualifier found
+        break;
       }
     }
 
-    console.log('2. Language detection:', {
-      detectedLang,
+    console.log('2. Language state:', {
+      previousLanguage: currentLanguage,
       currentLanguage: get(languageStore),
+      detectedOverride: detectedLang,
       inputAfterLangRemoval: userInput
     });
 
@@ -116,7 +114,6 @@
   }
 
   async function saveToObsidian(content: string) {
-    // Validate all required fields
     if (!$obsidianSettings.saveToObsidian) {
       console.log('Obsidian saving is disabled');
       return;
@@ -146,49 +143,31 @@
       return;
     }
 
-    console.log('Saving to Obsidian:', {
-      pattern: $selectedPatternName,
-      noteName: $obsidianSettings.noteName,
-      contentLength: content.length
-    });
-
     try {
-      // Use relative path to hit the frontend server endpoint
-      try {
-        const response = await fetch('/obsidian', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            pattern: $selectedPatternName,
-            noteName: $obsidianSettings.noteName,
-            content
-          })
-        });
+      const response = await fetch('/obsidian', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pattern: $selectedPatternName,
+          noteName: $obsidianSettings.noteName,
+          content
+        })
+      });
 
-        const responseData = await response.json();
-        
-        if (!response.ok) {
-          throw new Error(responseData.error || 'Failed to save to Obsidian');
-        }
-
-        // Log success details
-        console.log('Obsidian save response:', responseData);
-
-        // Show success message with file name
-        toastStore.trigger({
-          message: responseData.message || `Saved to Obsidian: ${responseData.fileName}`,
-          background: 'variant-filled-success'
-        });
-      } catch (error) {
-        console.error('Failed to save to Obsidian:', error);
-        throw error; // Re-throw to be caught by outer catch block
+      const responseData = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(responseData.error || 'Failed to save to Obsidian');
       }
+
+      toastStore.trigger({
+        message: responseData.message || `Saved to Obsidian: ${responseData.fileName}`,
+        background: 'variant-filled-success'
+      });
     } catch (error) {
       console.error('Failed to save to Obsidian:', error);
-      
-      // Show detailed error message
       toastStore.trigger({
         message: error instanceof Error ? error.message : 'Failed to save to Obsidian',
         background: 'variant-filled-error'
@@ -198,79 +177,35 @@
 
   async function processYouTubeURL(input: string) {
     console.log('\n=== YouTube Flow Start ===');
-    // Store original language
     const originalLanguage = get(languageStore);
-    console.log('1. Initial state:', {
-      input: input.substring(0, 100) + '...',
-      language: originalLanguage,
-      pattern: $selectedPatternName,
-      systemPromptLength: $systemPrompt?.length
-    });
-
+    
     try {
-      // Get transcript
-      console.log('2. Requesting transcript with language:', originalLanguage);
-      const { transcript } = await getTranscript(input);
-      console.log('3. Got transcript:', {
-        length: transcript.length,
-        originalLanguage,
-        currentLanguage: get(languageStore),
-        firstChars: transcript.substring(0, 50)
-      });
+        // Get transcript first
+        const { transcript } = await getTranscript(input);
+        
+        // Process with current language and pattern
+        await sendMessage(transcript, $systemPrompt);
+        
+        // Get last message for Obsidian
+        let lastContent = '';
+        messageStore.subscribe(messages => {
+            const lastMessage = messages[messages.length - 1];
+            if (lastMessage?.role === 'assistant') {
+                lastContent = lastMessage.content;
+            }
+        })();
 
-      // Always restore original language before processing
-      console.log('4a. Restoring original language:', originalLanguage);
-      languageStore.set(originalLanguage);
-
-      // Process transcript with pattern and language
-      console.log('4b. Preparing to process transcript:', {
-        language: get(languageStore),
-        pattern: $selectedPatternName,
-        transcriptLength: transcript.length,
-        hasLanguageInstruction: originalLanguage !== 'en'
-      });
-      
-      // Use sendMessage to process transcript like regular text
-      console.log('5. Sending to message processing...');
-      await sendMessage(transcript, $systemPrompt);
-
-      // Verify language was preserved through processing
-      console.log('6. Post-processing language check:', {
-        originalLanguage,
-        finalLanguage: get(languageStore),
-        languageMatches: get(languageStore) === originalLanguage
-      });
-      
-      // Get the last message which should be the assistant's response
-      let lastContent = '';
-      messageStore.subscribe(messages => {
-        const lastMessage = messages[messages.length - 1];
-        if (lastMessage?.role === 'assistant') {
-          lastContent = lastMessage.content;
+        if ($obsidianSettings.saveToObsidian && lastContent) {
+            await saveToObsidian(lastContent);
         }
-      })();
 
-      // After stream is complete, save to Obsidian
-      if ($obsidianSettings.saveToObsidian && lastContent) {
-        await saveToObsidian(lastContent);
-      }
-
-      // Reset language to English and clear inputs
-      languageStore.set('en');
-      userInput = "";
-      uploadedFiles = [];
-      fileContents = [];
+        userInput = "";
+        uploadedFiles = [];
+        fileContents = [];
     } catch (error) {
-      console.error('Error processing YouTube URL:', error);
-      // Remove processing message on error
-      messageStore.update(messages => messages.slice(0, -1));
-      // Reset language even on error
-      languageStore.set('en');
-      toastStore.trigger({
-        message: 'Failed to process YouTube video. Please try again.',
-        background: 'variant-filled-error'
-      });
-      throw error;
+        console.error('Error processing YouTube URL:', error);
+        messageStore.update(messages => messages.slice(0, -1));
+        throw error;
     }
   }
 
@@ -278,47 +213,28 @@
     if (!userInput.trim()) return;
 
     try {
-      console.log('\n=== Submit Handler Start ===');
-      let finalContent = "";
-      if (fileContents.length > 0) {
-        finalContent += '\n\nFile Contents:\n' + fileContents.map((content, index) => 
-          `[${uploadedFiles[index]}]:\n${content}`
-        ).join('\n\n');
-      }
-
-      const trimmedInput = userInput.trim() + '\n' + (finalContent || '');
-      console.log('1. Prepared input:', {
-        isYouTube: isYouTubeURL,
-        language: get(languageStore),
-        pattern: $selectedPatternName,
-        inputLength: trimmedInput.length
-      });
-
-      if (isYouTubeURL) {
-        console.log('2a. Starting YouTube flow');
-        await processYouTubeURL(trimmedInput);
-      } else {
-        console.log('2b. Starting regular text flow');
-        await sendMessage(trimmedInput);
+        console.log('\n=== Submit Handler Start ===');
         
-        // Reset language to English and clear inputs
-        languageStore.set('en');
+        if (isYouTubeURL) {
+            console.log('2a. Starting YouTube flow');
+            await processYouTubeURL(userInput);
+            return;
+        }
+        
+        const finalContent = fileContents.length > 0 
+            ? userInput + '\n\nFile Contents:\n' + fileContents.join('\n\n')
+            : userInput;
+            
+        await sendMessage(finalContent);
+        
         userInput = "";
         uploadedFiles = [];
         fileContents = [];
-      }
     } catch (error) {
-      console.error('Chat submission error:', error);
-      // Reset language even on error
-      languageStore.set('en');
-      toastStore.trigger({
-        message: 'Failed to send message. Please try again.',
-        background: 'variant-filled-error'
-      });
+        console.error('Chat submission error:', error);
     }
   }
 
-  // Handle keyboard shortcuts
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
@@ -386,34 +302,33 @@
 </div>
 
 <style>
-.flex-col {
-  min-height: 0;
-}
+  .flex-col {
+    min-height: 0;
+  }
 
+  .pattern-textarea::selection {
+    background-color: rgba(155, 155, 155, 0.3);
+  }
 
-.pattern-textarea::selection {
-  background-color: rgba(155, 155, 155, 0.3);
-}
+  :global(textarea) {
+    scrollbar-width: thin;
+    -ms-overflow-style: thin;
+  }
 
-:global(textarea) {
-  scrollbar-width: thin;
-  -ms-overflow-style: thin;
-}
+  :global(textarea::-webkit-scrollbar) {
+    width: 8px;
+  }
 
-:global(textarea::-webkit-scrollbar) {
-  width: 8px;
-}
+  :global(textarea::-webkit-scrollbar-track) {
+    background: transparent;
+  }
 
-:global(textarea::-webkit-scrollbar-track) {
-  background: transparent;
-}
+  :global(textarea::-webkit-scrollbar-thumb) {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 4px;
+  }
 
-:global(textarea::-webkit-scrollbar-thumb) {
-  background-color: rgba(155, 155, 155, 0.5);
-  border-radius: 4px;
-}
-
-:global(textarea::-webkit-scrollbar-thumb:hover) {
-  background-color: rgba(155, 155, 155, 0.7);
-}
+  :global(textarea::-webkit-scrollbar-thumb:hover) {
+    background-color: rgba(155, 155, 155, 0.7);
+  }
 </style>

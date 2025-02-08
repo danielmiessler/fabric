@@ -1,18 +1,23 @@
 <script>
   import { disableScrollHandling } from "$app/navigation";
+  import { languageStore } from '$lib/store/language-store';
+  import { browser } from '$app/environment';
+  import LanguageDisplay from '$lib/components/LanguageDisplay.svelte';
   import { onMount } from "svelte";
 
   onMount(() => {
     disableScrollHandling();
   });
 
-  function updateLanguage(lang) {
-    document.documentElement.lang = lang;
+  // Reactive statement for lang attribute
+  $: if (browser) {
+    document.documentElement.lang = $languageStore;
   }
 </script>
 
 <div id="page" class="page-wrapper">
   <div class="viewport-container flex h-[calc(100vh-8rem)]">
+    <LanguageDisplay />
     <slot />
   </div>
 </div>
@@ -43,17 +48,3 @@
     overflow: hidden;
   }
 </style>
- 
-
-
-
-
-
-
-<div role="navigation" aria-label="Language selection">
-  <label for="language-select">Language</label>
-  <select id="language-select" name="language" aria-label="Select language">
-    <option value="en">English</option>
-    <!-- other language options -->
-  </select>
-</div>
