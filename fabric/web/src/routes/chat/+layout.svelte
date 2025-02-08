@@ -1,23 +1,14 @@
 <script>
   import { disableScrollHandling } from "$app/navigation";
-  import { languageStore } from '$lib/store/language-store';
-  import { browser } from '$app/environment';
-  import LanguageDisplay from '$lib/components/LanguageDisplay.svelte';
   import { onMount } from "svelte";
 
   onMount(() => {
     disableScrollHandling();
   });
-
-  // Reactive statement for lang attribute
-  $: if (browser) {
-    document.documentElement.lang = $languageStore;
-  }
 </script>
 
 <div id="page" class="page-wrapper">
   <div class="viewport-container flex h-[calc(100vh-8rem)]">
-    <LanguageDisplay />
     <slot />
   </div>
 </div>
@@ -48,3 +39,4 @@
     overflow: hidden;
   }
 </style>
+
