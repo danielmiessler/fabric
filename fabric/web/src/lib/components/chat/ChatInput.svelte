@@ -176,39 +176,71 @@
   }
 
   async function processYouTubeURL(input: string) {
-    console.log('\n=== YouTube Flow Start ===');
-    const originalLanguage = get(languageStore);
+      console.log('\n=== YouTube Flow Start ===');
+      const originalLanguage = get(languageStore);
     
-    try {
-        // Get transcript first
-        const { transcript } = await getTranscript(input);
+      try {
+          // Add processing message first
+          messageStore.update(messages => [...messages, {
+              role: 'system',
+              content: 'Processing YouTube video...',
+              format: 'loading'
+          }]);
         
-        // Process with current language and pattern
-        await sendMessage(transcript, $systemPrompt);
+          // Get transcript but don't display it
+          const { transcript } = await getTranscript(input);
         
-        // Get last message for Obsidian
-        let lastContent = '';
-        messageStore.subscribe(messages => {
-            const lastMessage = messages[messages.length - 1];
-            if (lastMessage?.role === 'assistant') {
-                lastContent = lastMessage.content;
-            }
-        })();
+          // Process with current language and pattern
+          const stream = await chatService.streamChat(transcript, $systemPrompt);
+          await chatService.processStream(
+              stream,
+              (content, response) => {
+                  messageStore.update(messages => {
+                      const newMessages = [...messages];
+                      // Replace the processing message with actual content
+                      const lastMessage = newMessages[newMessages.length - 1];
+                      if (lastMessage?.format === 'loading') {
+                          newMessages.pop();
+                      }
+                      newMessages.push({
+                          role: 'assistant',
+                          content,
+                          format: response?.format
+                      });
+                      return newMessages;
+                  });
+              },
+              (error) => {
+                  messageStore.update(messages => 
+                      messages.filter(m => m.format !== 'loading')
+                  );
+                  throw error;
+              }
+          );
 
-        if ($obsidianSettings.saveToObsidian && lastContent) {
-            await saveToObsidian(lastContent);
-        }
+          // Handle Obsidian saving if needed
+          if ($obsidianSettings.saveToObsidian) {
+              let lastContent = '';
+              messageStore.subscribe(messages => {
+                  const lastMessage = messages[messages.length - 1];
+                  if (lastMessage?.role === 'assistant') {
+                      lastContent = lastMessage.content;
+                  }
+              })();
+              if (lastContent) await saveToObsidian(lastContent);
+          }
 
-        userInput = "";
-        uploadedFiles = [];
-        fileContents = [];
-    } catch (error) {
-        console.error('Error processing YouTube URL:', error);
-        messageStore.update(messages => messages.slice(0, -1));
-        throw error;
-    }
+          userInput = "";
+          uploadedFiles = [];
+          fileContents = [];
+      } catch (error) {
+          console.error('Error processing YouTube URL:', error);
+          messageStore.update(messages => 
+              messages.filter(m => m.format !== 'loading')
+          );
+          throw error;
+      }
   }
-
   async function handleSubmit() {
     if (!userInput.trim()) return;
 

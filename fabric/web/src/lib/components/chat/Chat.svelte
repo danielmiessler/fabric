@@ -23,3 +23,15 @@
     <ChatMessages />
   </div>
 </div>
+
+<style>
+    .loading-message {
+        animation: flash 1.5s ease-in-out infinite;
+    }
+
+    @keyframes flash {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+</style>

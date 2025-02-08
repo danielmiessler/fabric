@@ -112,7 +112,10 @@
         <div 
           class="message-item {message.role === 'system' ? 'w-full bg-blue-900/20' : message.role === 'assistant' ? 'pl-4 bg-primary/5 rounded-lg p-2' : 'pr-4 ml-auto'}"
           transition:fade
+          class:loading-message={message.format === 'loading'}       
         >
+
+        
           <div class="message-header flex items-center gap-2 mb-1 {message.role === 'assistant' || message.role === 'system' ? '' : 'justify-end'}">
             <span class="text-xs text-muted-foreground rounded-lg p-1 variant-glass-secondary font-bold uppercase">
               {#if message.role === 'system'}
@@ -161,6 +164,19 @@
 </div>
 
 <style>
+
+
+    :global(.loading-message) {
+        animation: flash 1.5s ease-in-out infinite;
+    }
+
+    @keyframes flash {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+
+
 .messages-container {
   flex: 1;
   overflow-y: auto;
@@ -221,3 +237,5 @@
   border-radius: 0.25rem;
 }
 </style>
+
+
