@@ -5,6 +5,10 @@
   onMount(() => {
     disableScrollHandling();
   });
+
+  function updateLanguage(lang) {
+    document.documentElement.lang = lang;
+  }
 </script>
 
 <div id="page" class="page-wrapper">
@@ -40,3 +44,16 @@
   }
 </style>
  
+
+
+
+
+
+
+<div role="navigation" aria-label="Language selection">
+  <label for="language-select">Language</label>
+  <select id="language-select" name="language" aria-label="Select language">
+    <option value="en">English</option>
+    <!-- other language options -->
+  </select>
+</div>
