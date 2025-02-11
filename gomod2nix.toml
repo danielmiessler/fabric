@@ -8,14 +8,14 @@ schema = 3
     version = "v0.8.0"
     hash = "sha256-833SmzVY8+tci2RozAlcdKQZ63RlU2CmeY/8xttP+WI="
   [mod."cloud.google.com/go/auth"]
-    version = "v0.10.1"
-    hash = "sha256-MCEvsZxxLYC/qGUiFNejtQnf4ptoFVKSNMS+XdjteJo="
+    version = "v0.14.1"
+    hash = "sha256-nBYUu/RQv3aAUgUaYbXJ3bCNkJfF9W05NThkwrL3sZg="
   [mod."cloud.google.com/go/auth/oauth2adapt"]
-    version = "v0.2.5"
-    hash = "sha256-494whmtNBk1sF3ud3dre97U+mLSTs+XTqZK8w5zG/hk="
+    version = "v0.2.7"
+    hash = "sha256-U+pXaY0kPnSeBzHWxELZ75bZnb74nygwIVZDdXYcP5g="
   [mod."cloud.google.com/go/compute/metadata"]
-    version = "v0.5.2"
-    hash = "sha256-EtBj20lhjM3SJVKCp70GHMnsItwJ9gOyJOW91wugojc="
+    version = "v0.6.0"
+    hash = "sha256-E8/cwio4xR8buCryR4HwR7+agb4M3zqgXSm7rBglmIY="
   [mod."cloud.google.com/go/longrunning"]
     version = "v0.5.7"
     hash = "sha256-hZUbysdaEbFB2nDAg+wjOZHt6E99oEnH7Lo6IQr7FxU="
@@ -119,11 +119,11 @@ schema = 3
     version = "v0.0.0-20210331224755-41bb18bfe9da"
     hash = "sha256-7Gs7CS9gEYZkbu5P4hqPGBpeGZWC64VDwraSKFF+VR0="
   [mod."github.com/google/generative-ai-go"]
-    version = "v0.18.0"
-    hash = "sha256-Ye+1rV3gzb2FG9ATq8cihlUiCynRv0eejMwsSfxOXcM="
+    version = "v0.19.0"
+    hash = "sha256-x2K1nkRwtne9MeP5B8FpwavYqQx564go5LzmcBJ0KT4="
   [mod."github.com/google/s2a-go"]
-    version = "v0.1.8"
-    hash = "sha256-H4jy3iElh82CTujW3UpaSvsdfN7fZHBLJ4Z4M7kiMSk="
+    version = "v0.1.9"
+    hash = "sha256-0AdSpSTso4bATmM/9qamWzKrVtOLDf7afvDhoiT/UpA="
   [mod."github.com/google/uuid"]
     version = "v1.6.0"
     hash = "sha256-VWl9sqUzdOuhW0KzQlv0gwwUQClYkmZwSydHG2sALYw="
@@ -131,8 +131,8 @@ schema = 3
     version = "v0.3.4"
     hash = "sha256-RVHWa0I68CTegjlXnM/GlishoZhmmwG4z+9KBucAJ1A="
   [mod."github.com/googleapis/gax-go/v2"]
-    version = "v2.13.0"
-    hash = "sha256-p1SEjRjI/SkWSBWjeptQ5M/Tgrcj8IiH/beXBYqRVko="
+    version = "v2.14.1"
+    hash = "sha256-iRS/KsAVTePrvTlwA7vKcQnwY6Jz329WdgzFw0hF8wk="
   [mod."github.com/jbenet/go-context"]
     version = "v0.0.0-20150711004518-d14ea06fba99"
     hash = "sha256-VANNCWNNpARH/ILQV9sCQsBWgyL2iFT+4AHZREpxIWE="
@@ -194,8 +194,8 @@ schema = 3
     version = "v1.3.0"
     hash = "sha256-piR5IdfqxK9nxyErJ+IRDLnkaeNQwX93ztTFZyPm5MQ="
   [mod."github.com/stretchr/testify"]
-    version = "v1.9.0"
-    hash = "sha256-uUp/On+1nK+lARkTVtb5RxlW15zxtw2kaAFuIASA+J0="
+    version = "v1.10.0"
+    hash = "sha256-fJ4gnPr0vnrOhjQYQwJ3ARDKPsOtA7d4olQmQWR+wpI="
   [mod."github.com/tidwall/gjson"]
     version = "v1.14.4"
     hash = "sha256-3DS2YNL95wG0qSajgRtIABD32J+oblaKVk8LIw+KSOc="
@@ -217,63 +217,63 @@ schema = 3
   [mod."github.com/xanzy/ssh-agent"]
     version = "v0.3.3"
     hash = "sha256-l3pGB6IdzcPA/HLk93sSN6NM2pKPy+bVOoacR5RC2+c="
-  [mod."go.opencensus.io"]
-    version = "v0.24.0"
-    hash = "sha256-4H+mGZgG2c9I1y0m8avF4qmt8LUKxxVsTqR8mKgP4yo="
+  [mod."go.opentelemetry.io/auto/sdk"]
+    version = "v1.1.0"
+    hash = "sha256-cA9qCCu8P1NSJRxgmpfkfa5rKyn9X+Y/9FSmSd5xjyo="
   [mod."go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"]
-    version = "v0.54.0"
-    hash = "sha256-wcGPcPYAsWQztlYRqNF5iTwIzmhf/i7N24n7AQhIkkA="
+    version = "v0.58.0"
+    hash = "sha256-OLDNgjHOItKSyzI3cWWZbMiap5QnULp3G4z8HhhJsrA="
   [mod."go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"]
-    version = "v0.57.0"
-    hash = "sha256-cvG6gfqfX3IasDlC8SeS7u1sp3LG9ezbX+hU5LyWKBY="
+    version = "v0.58.0"
+    hash = "sha256-iqTPHfR1wXZY/yVTWtRBMjWlZkRxasaBGNhsNWHYxGw="
   [mod."go.opentelemetry.io/otel"]
-    version = "v1.32.0"
-    hash = "sha256-Z2PoBBncuUkAksk8wT4lW6+uUu1wg24sGfwIYozIzaY="
+    version = "v1.34.0"
+    hash = "sha256-hnuuTSxaf9yMO/23xWdcTGNzvnnJiqUiL4nzYwUV5bc="
   [mod."go.opentelemetry.io/otel/metric"]
-    version = "v1.32.0"
-    hash = "sha256-f2H8itkQflk/m98dSk1TCv37wvsnMojaGNZRJ6BcksU="
+    version = "v1.34.0"
+    hash = "sha256-JklGKJiMf1fpsE9pmnuLUq26g6wVp173v4GWJ7Xp5s4="
   [mod."go.opentelemetry.io/otel/trace"]
-    version = "v1.32.0"
-    hash = "sha256-WtOrB2L8wQFiMb5BHK7a6FTw2wb3rW495whNjzdxC1I="
+    version = "v1.34.0"
+    hash = "sha256-u11KJ4WTDtcb0tVv7d/HOdhq8Ea+c1QPBO8MbsCQu9Q="
   [mod."golang.org/x/arch"]
     version = "v0.12.0"
     hash = "sha256-olf8Pa5o8H4xC1gXTMlZiyxvMvK0jCablZyaPbqzlYA="
   [mod."golang.org/x/crypto"]
-    version = "v0.29.0"
-    hash = "sha256-sqckobR2VWucCgb7xpY2wLktnAA+XyXJbhCm80yCo78="
+    version = "v0.32.0"
+    hash = "sha256-4l8XyVfpunL7d03otqfx3ouG3qkSF+LT7VuH1K3oo2I="
   [mod."golang.org/x/net"]
-    version = "v0.31.0"
-    hash = "sha256-G+vGyCnn8jywmX3KvsIwhZkOv3+oAERNNeCeiQqfIL0="
+    version = "v0.34.0"
+    hash = "sha256-AZOLY4MUNxxDw5ZQtO9dmY/YRo1gFW87YvpX/eLTy4Q="
   [mod."golang.org/x/oauth2"]
-    version = "v0.24.0"
-    hash = "sha256-808F4hzvNOQNoQZehOlIyPgwQG3L5aANiNPLLhaL9NQ="
+    version = "v0.25.0"
+    hash = "sha256-MpFrvO9Z54mFG1Zi6V1GIEJY8Paq9SCWbgvuy+J55+Y="
   [mod."golang.org/x/sync"]
-    version = "v0.9.0"
-    hash = "sha256-sGvzGqaaXE5dxohKkpbJMnu+bMmismsSqr8YMtrK+Rc="
+    version = "v0.10.0"
+    hash = "sha256-HWruKClrdoBKVdxKCyoazxeQV4dIYLdkHekQvx275/o="
   [mod."golang.org/x/sys"]
-    version = "v0.27.0"
-    hash = "sha256-BXQcF9RrJ55Pq7Nl67TeFGkgkyuKkQ8hHKN4/L4ggWc="
+    version = "v0.29.0"
+    hash = "sha256-qfsodJQ1H1CBI8yQWOvsXJgY5qHmiuw566HrrIseYHI="
   [mod."golang.org/x/text"]
-    version = "v0.20.0"
-    hash = "sha256-YP8zSo2e9okqhxVB8me8sJyij2O0tTQEg5t+8bsIUx8="
+    version = "v0.21.0"
+    hash = "sha256-QaMwddBRnoS2mv9Y86eVC2x2wx/GZ7kr2zAJvwDeCPc="
   [mod."golang.org/x/time"]
-    version = "v0.7.0"
-    hash = "sha256-o1ol/hTpfrc06KUXSepAgm4QUuWmH1S+vqg6kmFad64="
+    version = "v0.9.0"
+    hash = "sha256-ipaWVIk1+DZg0rfCzBSkz/Y6DEnB7xkX2RRYycHkhC0="
   [mod."google.golang.org/api"]
-    version = "v0.205.0"
-    hash = "sha256-IoKjeItw89bhoEDQl52nOa9VC6/r1UtyeqKx1VOACXI="
+    version = "v0.220.0"
+    hash = "sha256-E59ap7v+RBpokxGmmZXw4gSpYP4KwjtzQdcI6fmm48o="
   [mod."google.golang.org/genproto/googleapis/api"]
-    version = "v0.0.0-20241021214115-324edc3d5d38"
-    hash = "sha256-ASsqfJU1DA57PLRoitSkdlS/p10EEuzl0YuZTdbmMCw="
+    version = "v0.0.0-20241209162323-e6fa225c2576"
+    hash = "sha256-BE1xUsMUOYJLYuPm0AZtU5VxMTYgw0wyk7c+sDRsl+Q="
   [mod."google.golang.org/genproto/googleapis/rpc"]
-    version = "v0.0.0-20241104194629-dd2ea8efbc28"
-    hash = "sha256-Fk+cG5bRI3BvnqhWzvMzbU36cC7PM+o2oAOJmvVx9M0="
+    version = "v0.0.0-20250127172529-29210b9bc287"
+    hash = "sha256-qtyowIn84hBTrwH3R0m80udJ7OOo6wgAZbkRHcmNzrY="
   [mod."google.golang.org/grpc"]
-    version = "v1.68.0"
-    hash = "sha256-HeaHAeeuyGdCOg0hPF7+Q8XD9Ek9F45O4Hxl3rvc5Q8="
+    version = "v1.70.0"
+    hash = "sha256-7SCJx6Y35O/0P3cFtELDXrOSOb+HshxaTQYdzv2gVmg="
   [mod."google.golang.org/protobuf"]
-    version = "v1.35.1"
-    hash = "sha256-4NtUQoBvlPGFGjo7c+E1EBS/sb8oy50MGy45KGWPpWo="
+    version = "v1.36.4"
+    hash = "sha256-+5wKklNoydwfYpx4BVhKjLNhqlisN9ddxhyGb8uP6a8="
   [mod."gopkg.in/warnings.v0"]
     version = "v0.1.2"
     hash = "sha256-ATVL9yEmgYbkJ1DkltDGRn/auGAjqGOfjQyBYyUo8s8="
