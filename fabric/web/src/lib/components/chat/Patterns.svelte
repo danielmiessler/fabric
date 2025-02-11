@@ -43,6 +43,7 @@
 <div class="min-w-0">
   <Select
     bind:value={selectedPreset}
+    class="bg-primary-800/30 border-none hover:bg-primary-800/40 transition-colors"
   >
     <option value="">Load a pattern...</option>
     {#each $patterns as pattern}

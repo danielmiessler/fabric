@@ -5,7 +5,7 @@
   import type { ToastMessage } from '$lib/store/toast-store';
 
   export let toast: ToastMessage;
-  const TOAST_TIMEOUT = 3000;
+  const TOAST_TIMEOUT = 5000;
 
   onMount(() => {
       const timer = setTimeout(() => {

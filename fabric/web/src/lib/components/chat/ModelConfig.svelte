@@ -1,129 +1,94 @@
 <script lang="ts">
+  export {};
   import { Label } from "$lib/components/ui/label";
   import { Slider } from "$lib/components/ui/slider";
   import { modelConfig } from "$lib/store/model-store";
-  import Transcripts from "./Transcripts.svelte";
-  import NoteDrawer from '$lib/components/ui/noteDrawer/NoteDrawer.svelte';
-  import { getDrawerStore } from '@skeletonlabs/skeleton';
-  import { Button } from '$lib/components/ui/button';
-  import { page } from '$app/stores';
-  import { beforeNavigate } from '$app/navigation';
-  import { Input } from "$lib/components/ui/input";
-  import { Checkbox } from "$lib/components/ui/checkbox";
-  import { obsidianSettings } from "$lib/store/obsidian-store";
-  import { featureFlags } from "$lib/config/features";
-  import LanguageSelector from '../settings/LanguageSelector.svelte';
+  import { slide } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
+  import { browser } from '$app/environment';
+  import { clickOutside } from '$lib/actions/clickOutside';
+  import Tooltip from "$lib/components/ui/tooltip/Tooltip.svelte";
 
-  const drawerStore = getDrawerStore();
-  function openDrawer() {
-    drawerStore.open({});
+  // Load expanded state from localStorage
+  const STORAGE_KEY = 'modelConfigExpanded';
+  let isExpanded = false;
+  if (browser) {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    isExpanded = stored ? JSON.parse(stored) : false;
   }
 
-  beforeNavigate(() => {
-    drawerStore.close();
-  });
+  // Save expanded state
+  function toggleExpanded() {
+    isExpanded = !isExpanded;
+    saveState();
+  }
 
-  $: isVisible = $page.url.pathname.startsWith('/chat');
-  $: showObsidian = $featureFlags.enableObsidianIntegration;
+  function saveState() {
+    if (browser) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(isExpanded));
+    }
+  }
+
+  function handleClickOutside() {
+    if (isExpanded) {
+      isExpanded = false;
+      saveState();
+    }
+  }
+
+  const settings = [
+    { key: 'maxLength', label: 'Maximum Length', min: 1, max: 4000, step: 1, tooltip: "Maximum number of tokens in the response" },
+    { key: 'temperature', label: 'Temperature', min: 0, max: 2, step: 0.1, tooltip: "Higher values make output more random, lower values more focused" },
+    { key: 'top_p', label: 'Top P', min: 0, max: 1, step: 0.01, tooltip: "Controls diversity via nucleus sampling" },
+    { key: 'frequency', label: 'Frequency Penalty', min: 0, max: 1, step: 0.01, tooltip: "Reduces repetition of the same words" },
+    { key: 'presence', label: 'Presence Penalty', min: 0, max: 1, step: 0.01, tooltip: "Reduces repetition of similar topics" }
+  ] as const;
 </script>
 
-<div class="p-2">
-  <div class="space-y-4 mb-4">
-    <LanguageSelector />
-  </div>
+<div class="w-full" use:clickOutside={handleClickOutside}>
+  <button 
+    class="w-full flex items-center py-2 px-2 hover:text-white/90 transition-colors rounded-t"
+    on:click={toggleExpanded}
+  >
+    <span class="text-sm font-semibold">Model Configuration</span>
+    <span class="transform transition-transform duration-200 opacity-70 ml-1 text-xs" class:rotate-180={isExpanded}>
+      ▼
+    </span>
+  </button>
 
-  <div class="space-y-1">
-    <Label>Maximum Length ({$modelConfig.maxLength})</Label>
-    <Slider
-      bind:value={$modelConfig.maxLength}
-      min={1}
-      max={4000}
-      step={1}
-    />
-  </div>
-
-  <div class="space-y-1">
-    <Label>Temperature ({$modelConfig.temperature.toFixed(1)})</Label>
-    <Slider
-      bind:value={$modelConfig.temperature}
-      min={0}
-      max={2}
-      step={0.1}
-    />
-  </div>
-
-  <div class="space-y-1">
-    <Label>Top P ({$modelConfig.top_p.toFixed(2)})</Label>
-    <Slider
-      bind:value={$modelConfig.top_p}
-      min={0}
-      max={1}
-      step={0.01}
-    />
-  </div>
-
-  <div class="space-y-1">
-    <Label>Frequency Penalty ({$modelConfig.frequency.toFixed(2)})</Label>
-    <Slider
-      bind:value={$modelConfig.frequency}
-      min={0}
-      max={1}
-      step={0.01}
-    />
-  </div>
-
-  <div class="space-y-1">
-    <Label>Presence Penalty ({$modelConfig.presence.toFixed(2)})</Label>
-    <Slider
-      bind:value={$modelConfig.presence}
-      min={0}
-      max={1}
-      step={0.01}
-    />
-  </div>
-
-  {#if showObsidian}
-    <div class="mt-4 space-y-4 border-t pt-4">
-      <Label class="font-bold">Obsidian Settings</Label>
-      
-      <div class="flex items-center space-x-2">
-        <Checkbox
-          bind:checked={$obsidianSettings.saveToObsidian}
-          id="save-to-obsidian"
-        />
-        <Label for="save-to-obsidian">Save to Obsidian</Label>
-      </div>
-
-      {#if $obsidianSettings.saveToObsidian}
-        <div class="space-y-2">
-          <Label for="note-name">Note Name</Label>
-          <Input
-            id="note-name"
-            bind:value={$obsidianSettings.noteName}
-            placeholder="Enter note name..."
-            class_="text-emerald-700"
-          />
+  {#if isExpanded}
+    <div 
+      class="pt-2 px-2 space-y-3"
+      transition:slide={{ 
+        duration: 200,
+        easing: cubicOut,
+      }}
+    >
+      {#each settings as setting}
+      <div class="group">
+        <div class="flex justify-between items-center mb-0.5">
+          <Tooltip text={setting.tooltip} position="right">
+            <Label class="text-[10px] text-white/70 cursor-help group-hover:text-white/90 transition-colors">{setting.label}</Label>
+          </Tooltip>
+          <span class="text-[10px] font-mono text-white/50 group-hover:text-white/70 transition-colors">
+            {typeof $modelConfig[setting.key] === 'number' ? $modelConfig[setting.key].toFixed(2) : $modelConfig[setting.key]}
+          </span>
         </div>
-      {/if}
+        <Slider
+          bind:value={$modelConfig[setting.key]}
+          min={setting.min}
+          max={setting.max}
+          step={setting.step}
+          class="h-3 group-hover:opacity-90 transition-opacity"
+        />
+      </div>
+      {/each}
     </div>
   {/if}
-
-  <br>
-  <div class="space-y-1">
-    <Transcripts />
-  </div>
-
-  <div class="flex flex-col gap-2">
-    {#if isVisible}
-      <div class="flex text-inherit justify-start mt-2">
-        <button
-          class="btn variant-filled-primary"
-          on:click={openDrawer}
-        >
-          Open Drawer
-        </button>
-      </div>
-      <NoteDrawer />
-    {/if}
-  </div>
 </div>
+
+<style>
+  :global(.slider) {
+    height: 0.75rem !important;
+  }
+</style>

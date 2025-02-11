@@ -81,7 +81,7 @@
         <Input
           bind:value={searchText}
           placeholder="Search patterns..."
-          class_="text-emerald-700"
+          class="text-emerald-900"
         />
       </div>
     </div>

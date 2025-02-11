@@ -8,12 +8,12 @@ This PR adds several Web UI and functionality improvements to make pattern selec
 - Enhanced pattern selection interface for better user experience
 - Improved pattern descriptions and context
 - Web UI refinements for clearer interaction
+- Help section  
 
 ### 2. Multilingual Support System
-- Seamless language switching using qualifiers (e.g., `--fr`, `--en`)
+- Seamless language switching 
 - Global language settings through UI dropdown
 - Persistent language state management
-- Automatic language reset after each interaction
 - Support for both chat messages and pattern processing
 
 ### 3. YouTube Integration Enhancement

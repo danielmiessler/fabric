@@ -7,10 +7,12 @@
   import { onMount } from 'svelte';
   import Modal from '$lib/components/ui/modal/Modal.svelte';
   import PatternList from '$lib/components/patterns/PatternList.svelte';
+  import HelpModal from '$lib/components/ui/help/HelpModal.svelte';
   import { selectedPatternName } from '$lib/store/pattern-store';
 
   let isMenuOpen = false;
   let showPatternModal = false;
+  let showHelpModal = false;
 
   function goToGithub() {
     window.open('https://github.com/danielmiessler/fabric', '_blank');
@@ -100,6 +102,15 @@
         <span class="sr-only">Toggle theme</span>
       </button>
 
+      <button name="help"
+        on:click={() => showHelpModal = true}
+        class="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ml-3"
+        aria-label="Help"
+      >
+        <span class="text-xl font-bold text-white/90 hover:text-white">?</span>
+        <span class="sr-only">Help</span>
+      </button>
+
       <!-- Mobile Menu Button -->
       <button name="toggle-menu"
         class="inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
@@ -144,5 +155,14 @@
       selectedPatternName.set(e.detail);
       showPatternModal = false;
     }}
+  />
+</Modal>
+
+<Modal
+  show={showHelpModal}
+  on:close={() => showHelpModal = false}
+>
+  <HelpModal
+    on:close={() => showHelpModal = false}
   />
 </Modal>

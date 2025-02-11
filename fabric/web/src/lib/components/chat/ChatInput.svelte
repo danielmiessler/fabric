@@ -3,7 +3,7 @@
   import { Textarea } from "$lib/components/ui/textarea";
   import { sendMessage, messageStore } from '$lib/store/chat-store';
   import { systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
-  import { getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
+  import { getToastStore } from '@skeletonlabs/skeleton';
   import { FileButton } from '@skeletonlabs/skeleton';
   import { Paperclip, Send, FileCheck } from 'lucide-svelte';
   import { onMount } from 'svelte';
@@ -241,6 +241,7 @@
           throw error;
       }
   }
+
   async function handleSubmit() {
     if (!userInput.trim()) return;
 
@@ -279,76 +280,60 @@
   });
 </script>
 
-<div class="flex flex-col gap-2 h-full">
-  <div class="flex-1 relative shadow-lg">
-    <div class="messages-container">
-      <Textarea
-        bind:value={$systemPrompt}
-        readonly={true}
-        placeholder="Enter system instructions..."
-        class="w-full h-[300px] bg-primary-800/30 rounded-lg border-none whitespace-pre-wrap overflow-y-auto"
-      />
-    </div>
-  </div>
-
-  <div class="flex-1 relative shadow-lg">
-    <div class="text-xs text-gray-400 mb-1">Enter your message (YouTube URLs will be automatically processed)</div>
+<div class="h-full flex flex-col p-2">
+  <div class="relative flex-1 min-h-0 bg-primary-800/30 rounded-lg">
     <Textarea
       bind:value={userInput}
       on:input={handleInput}
       on:keydown={handleKeydown}
-      placeholder="Enter your message..."
-      class="w-full h-full resize-none bg-primary-800/30 rounded-lg border-none"
+      placeholder="Enter your message (YouTube URLs will be automatically processed)..."
+      class="w-full h-full resize-none bg-transparent border-none text-sm focus:ring-0 transition-colors p-3 pb-[48px]"
     />
-    <div class="absolute bottom-5 right-2 gap-2 flex justify-end end-7">
-      <FileButton
-        name="file-upload"
-        button="btn variant-default"
-        bind:files
-        on:change={handleFileUpload}
-        disabled={isProcessingFiles || uploadedFiles.length >= 5}
-      >
+    <div class="absolute bottom-3 right-3 flex items-center gap-2">
+      <div class="flex items-center gap-2">
         {#if uploadedFiles.length > 0}
-          <FileCheck class="w-4 h-4" />
-        {:else}
-          <Paperclip class="w-4 h-4" />
+          <span class="text-xs text-white/70">
+            {uploadedFiles.length} file{uploadedFiles.length > 1 ? 's' : ''} attached
+          </span>
         {/if}
-      </FileButton>
-      {#if uploadedFiles.length > 0}
-        <span class="text-sm text-gray-500 space-x-2">
-          {uploadedFiles.length} file{uploadedFiles.length > 1 ? 's' : ''} attached
-        </span>
-      {/if}
-      <br>
-      <Button
-        type="button"
-        variant="default"
-        name="send"
-        on:click={handleSubmit}
-        disabled={isProcessingFiles || !userInput.trim()}
-      >
-        <Send class="w-4 h-4" />
-      </Button>
+        <FileButton
+          name="file-upload"
+          button="btn-icon variant-ghost"
+          bind:files
+          on:change={handleFileUpload}
+          disabled={isProcessingFiles || uploadedFiles.length >= 5}
+          class="h-10 w-10 bg-primary-800/30 hover:bg-primary-800/50 rounded-full transition-colors"
+        >
+          {#if uploadedFiles.length > 0}
+            <FileCheck class="w-5 h-5" />
+          {:else}
+            <Paperclip class="w-5 h-5" />
+          {/if}
+        </FileButton>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          name="send"
+          on:click={handleSubmit}
+          disabled={isProcessingFiles || !userInput.trim()}
+          class="h-10 w-10 bg-primary-800/30 hover:bg-primary-800/50 rounded-full transition-colors disabled:opacity-30"
+        >
+          <Send class="w-5 h-5" />
+        </Button>
+      </div>
     </div>
   </div>
 </div>
 
 <style>
-  .flex-col {
-    min-height: 0;
-  }
-
-  .pattern-textarea::selection {
-    background-color: rgba(155, 155, 155, 0.3);
-  }
-
   :global(textarea) {
     scrollbar-width: thin;
-    -ms-overflow-style: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
   }
 
   :global(textarea::-webkit-scrollbar) {
-    width: 8px;
+    width: 6px;
   }
 
   :global(textarea::-webkit-scrollbar-track) {
@@ -356,11 +341,15 @@
   }
 
   :global(textarea::-webkit-scrollbar-thumb) {
-    background-color: rgba(155, 155, 155, 0.5);
-    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
   }
 
   :global(textarea::-webkit-scrollbar-thumb:hover) {
-    background-color: rgba(155, 155, 155, 0.7);
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  :global(textarea::selection) {
+    background-color: rgba(255, 255, 255, 0.1);
   }
 </style>

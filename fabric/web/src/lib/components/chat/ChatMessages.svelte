@@ -81,9 +81,9 @@
 </script>
 
 <div class="bg-primary-800/30 rounded-lg flex flex-col h-full shadow-lg">
-  <div class="flex justify-between items-center mb-1 mt-1 flex-none">
-    <div class="pl-4">
-      <b class="text-sm text-muted-foreground font-bold">Chat History</b>
+  <div class="flex justify-between items-center p-3 flex-none border-b border-white/5">
+    <div>
+      <span class="text-xs text-white/70 font-medium">Chat History</span>
     </div>
     <SessionManager />
   </div>
@@ -104,13 +104,13 @@
   {/if}
 
   <div 
-    class="messages-container p-4 flex-1 overflow-y-auto max-h-dvh relative" 
+    class="messages-container p-3 flex-1 overflow-y-auto max-h-dvh relative" 
     bind:this={messagesContainer}
   >
-    <div class="messages-content flex flex-col gap-4">
+    <div class="messages-content flex flex-col gap-3">
       {#each $chatState.messages as message}
         <div 
-          class="message-item {message.role === 'system' ? 'w-full bg-blue-900/20' : message.role === 'assistant' ? 'pl-4 bg-primary/5 rounded-lg p-2' : 'pr-4 ml-auto'}"
+          class="message-item {message.role === 'system' ? 'w-full bg-blue-900/20' : message.role === 'assistant' ? 'bg-primary/5 rounded-lg p-3' : 'ml-auto'}"
           transition:fade
           class:loading-message={message.format === 'loading'}       
         >
@@ -187,7 +187,7 @@
 .messages-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0.75rem;
 }
 
 .message-header {
@@ -237,5 +237,3 @@
   border-radius: 0.25rem;
 }
 </style>
-
-
