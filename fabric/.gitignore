@@ -343,6 +343,11 @@ web/.svelte-kit
 !.env.test
 
 # Personal files
-fabric/myfiles/Obsidian_perso_not_share/
+fabric/myfiles/
+
+#PROJECT PATTERNS
+fabric/patterns/
+
+/fabricserver/
 
 # Project specific
