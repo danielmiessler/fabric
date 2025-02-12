@@ -1,4 +1,4 @@
-# Nix
+. # Nix
 .direnv
 result
 
@@ -351,3 +351,8 @@ fabric/patterns/
 /fabricserver/
 
 # Project specific
+
+- uses: actions/upload-artifact@v4
+  with:
+    name: patterns
+    path: patterns/
