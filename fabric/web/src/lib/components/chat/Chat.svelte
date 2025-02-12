@@ -45,12 +45,12 @@
 
     <!-- System Instructions -->
     <div class="flex-1 min-h-0 bg-background/5 p-2 rounded-lg">
-      <div class="h-full">
+      <div class="h-full flex flex-col">
         <Textarea
           bind:value={$systemPrompt}
           readonly={true}
           placeholder="System instructions will appear here when you select a pattern..."
-          class="w-full h-full bg-primary-800/30 rounded-lg border-none whitespace-pre-wrap overflow-y-auto resize-none text-sm"
+          class="w-full flex-1 bg-primary-800/30 rounded-lg border-none whitespace-pre-wrap overflow-y-auto resize-none text-sm scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent hover:scrollbar-thumb-white/20"
         />
       </div>
     </div>
