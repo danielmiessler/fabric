@@ -1,5 +1,5 @@
 import { createStorageAPI } from '$lib/api/base';
-import type { Pattern } from '$lib/interfaces/pattern-interface';
+import type { Pattern, PatternDescription } from '$lib/interfaces/pattern-interface';
 import { get, writable, derived } from 'svelte/store';
 import { languageStore } from './language-store';
 
@@ -41,6 +41,13 @@ export const patternAPI = {
 
   async loadPatterns() {
     try {
+      // First load pattern descriptions
+      const descriptionsResponse = await fetch('/static/data/pattern_descriptions.json');
+      const descriptionsData = await descriptionsResponse.json();
+      const descriptions = descriptionsData.patterns as PatternDescription[];
+      console.log("Loaded pattern descriptions:", descriptions.length);
+
+      // Then load pattern names and contents
       const response = await fetch(`/api/patterns/names`);
       const data = await response.json();
       console.log("Load Patterns:", data);
@@ -53,17 +60,25 @@ export const patternAPI = {
           const patternResponse = await fetch(`/api/patterns/${pattern}`);
           const patternData = await patternResponse.json();
           console.log(`Pattern ${pattern} content length:`, patternData.Pattern?.length || 0);
-          console.log(`First 100 chars:`, patternData.Pattern?.substring(0, 100));
+          
+          // Find matching description from JSON
+          const desc = descriptions.find(d => d.patternName === pattern);
+          if (!desc) {
+            console.warn(`No description found for pattern: ${pattern}`);
+          }
+          
           return {
             Name: pattern,
-            Description: pattern.charAt(0).toUpperCase() + pattern.slice(1),
-            Pattern: patternData.Pattern
+            Description: desc?.description || pattern.charAt(0).toUpperCase() + pattern.slice(1), // Fallback to capitalized name
+            Pattern: patternData.Pattern || ""
           };
         } catch (error) {
           console.error(`Failed to load pattern ${pattern}:`, error);
+          // Still try to get description even if pattern content fails
+          const desc = descriptions.find(d => d.patternName === pattern);
           return {
             Name: pattern,
-            Description: pattern.charAt(0).toUpperCase() + pattern.slice(1),
+            Description: desc?.description || pattern.charAt(0).toUpperCase() + pattern.slice(1),
             Pattern: ""
           };
         }

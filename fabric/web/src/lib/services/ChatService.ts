@@ -88,16 +88,10 @@ export class ChatService {
         const validator = new LanguageValidator(language);
 
     const processResponse = (response: StreamResponse) => {
-        // Always set markdown format for pattern responses
         const pattern = get(selectedPatternName);
         if (pattern) {
             response.content = cleanPatternOutput(response.content);
             response.format = 'markdown';
-            console.log('Processing pattern response:', {
-                pattern,
-                format: response.format,
-                contentLength: response.content.length
-            });
         }
         if (response.type === 'content') {
             response.content = validator.enforceLanguage(response.content);

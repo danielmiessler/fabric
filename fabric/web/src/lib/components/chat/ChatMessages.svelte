@@ -59,8 +59,8 @@
   });
 
   function shouldRenderAsMarkdown(message: Message): boolean {
-    // Check if the message has a format property indicating it should be markdown
-    return message.role === 'assistant' && (!message.format || message.format === 'markdown');
+    // Always render assistant messages as markdown unless explicitly set to a different format
+    return message.role === 'assistant' && message.format !== 'plain';
   }
 
   function renderContent(message: Message): string {
