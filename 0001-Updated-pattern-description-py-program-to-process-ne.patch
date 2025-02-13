@@ -1,0 +1,1695 @@
+From eaec3b6f5468a416ce77bce219f26c979ccaca8f Mon Sep 17 00:00:00 2001
+From: jmd1010 <jmdb1414@gmail.com>
+Date: Thu, 13 Feb 2025 11:15:17 -0500
+Subject: [PATCH] Updated pattern description py program to process new
+ patterns
+
+---
+ .../Pattern_Description_Update_Process.md     | 116 +++++
+ fabric/PATTERN_DESCRIPTIONS/README.md         | 108 +++++
+ .../PATTERN_DESCRIPTIONS/extract_patterns.py  | 127 +++--
+ .../pattern_descriptions.json                 | 432 ++++++++++++++++++
+ .../pattern_extracts.json                     |  60 +++
+ .../src/lib/components/chat/Patterns.svelte   |   2 +-
+ .../components/patterns/PatternList.svelte    |  60 +--
+ .../src/lib/interfaces/pattern-interface.ts   |  17 +-
+ fabric/web/src/lib/services/ChatService.ts    |  29 +-
+ fabric/web/src/lib/store/chat-store.ts        |  12 +-
+ fabric/web/src/lib/store/pattern-store.ts     |  38 +-
+ .../web/static/data/pattern_descriptions.json | 432 ++++++++++++++++++
+ 12 files changed, 1331 insertions(+), 102 deletions(-)
+ create mode 100644 fabric/PATTERN_DESCRIPTIONS/Pattern_Description_Update_Process.md
+ create mode 100644 fabric/PATTERN_DESCRIPTIONS/README.md
+
+diff --git a/fabric/PATTERN_DESCRIPTIONS/Pattern_Description_Update_Process.md b/fabric/PATTERN_DESCRIPTIONS/Pattern_Description_Update_Process.md
+new file mode 100644
+index 0000000..16cf606
+--- /dev/null
++++ b/fabric/PATTERN_DESCRIPTIONS/Pattern_Description_Update_Process.md
+@@ -0,0 +1,116 @@
++# Pattern Description Update Process
++
++This document explains the process of generating and updating pattern descriptions for the Fabric project.
++
++## Overview
++
++The pattern description generation is a two-step process:
++1. Extract pattern information using Python script
++2. Generate descriptions using AI
++
++## Step 1: Extract Pattern Information
++
++First, run the extract_patterns.py script to gather information about all patterns:
++
++```bash
++cd fabric/PATTERN_DESCRIPTIONS
++python extract_patterns.py
++```
++
++This script:
++1. Scans the patterns directory
++2. Reads each pattern's system.md file
++3. Extracts key information like identity, purpose, and steps
++4. Outputs the extracted data to pattern_extracts.json
++
++## Step 2: Generate Descriptions
++
++After extracting the pattern information:
++
++1. Use an AI model (like GPT-4) to read pattern_extracts.json
++2. For each pattern, ask the AI to:
++   - Analyze the extracted information
++   - Generate a concise, clear description
++   - Focus on the pattern's primary purpose and capabilities
++   - Keep descriptions consistent in style and length
++
++Example prompt for the AI:
++```
++Please read the pattern information from pattern_extracts.json and generate concise, clear descriptions for each pattern. Each description should:
++- Be 1-2 sentences long
++- Focus on what the pattern does and its primary use case
++- Use consistent style across all patterns
++- Be clear and actionable
++```
++
++3. The AI will generate descriptions in the format required by pattern_descriptions.json:
++```json
++{
++  "patterns": [
++    {
++      "patternName": "pattern_name",
++      "description": "Generated description"
++    }
++  ]
++}
++```
++
++## Updating Process for New Patterns
++
++When new patterns are added:
++
++1. Run the Extract Script:
++```bash
++python extract_patterns.py
++```
++This script will:
++- Update pattern_extracts.json with information from all patterns, including new ones
++- Automatically detect new patterns by comparing with existing pattern_descriptions.json
++- Add placeholder entries in pattern_descriptions.json for new patterns with a description of "NEEDS_DESCRIPTION"
++
++Example of placeholder entries:
++```json
++{
++  "patterns": [
++    {
++      "patternName": "existing_pattern",
++      "description": "Original description"
++    },
++    {
++      "patternName": "new_pattern",
++      "description": "NEEDS_DESCRIPTION"
++    }
++  ]
++}
++```
++
++2. Generate Descriptions for New Patterns:
++   - Look for patterns marked with "NEEDS_DESCRIPTION" in pattern_descriptions.json
++   - Use AI to generate descriptions only for these marked patterns
++   - The placeholders make it easy to identify which patterns need new descriptions
++   - Replace "NEEDS_DESCRIPTION" with the AI-generated descriptions
++
++3. Verify Updates:
++   - Check that no "NEEDS_DESCRIPTION" placeholders remain
++   - Ensure descriptions are consistent in style with existing ones
++   - Verify the JSON format is valid
++
++## Best Practices
++
++1. Always run extract_patterns.py first to ensure you have the latest pattern information
++2. Keep descriptions concise and focused on the pattern's primary purpose
++3. Maintain consistent style across all descriptions
++4. Verify JSON formatting after updates
++5. Keep backups of pattern_descriptions.json before major updates
++
++## File Locations
++
++- Extract Script: `/PATTERN_DESCRIPTIONS/extract_patterns.py`
++- Pattern Extracts: `/PATTERN_DESCRIPTIONS/pattern_extracts.json`
++- Pattern Descriptions: `/PATTERN_DESCRIPTIONS/pattern_descriptions.json`
++
++## Notes
++
++- The extract_patterns.py script automatically handles new patterns
++- Pattern descriptions are used by both the CLI and web interface
++- Descriptions should be clear enough for users to understand the pattern's purpose without reading the full implementation
+diff --git a/fabric/PATTERN_DESCRIPTIONS/README.md b/fabric/PATTERN_DESCRIPTIONS/README.md
+new file mode 100644
+index 0000000..59de3b6
+--- /dev/null
++++ b/fabric/PATTERN_DESCRIPTIONS/README.md
+@@ -0,0 +1,108 @@
++# Pattern Descriptions Management
++
++This document explains how to update pattern descriptions and maintain synchronization between the source files and the web interface.
++
++## Overview
++
++The pattern system follows this hierarchy:
++1. `patterns/` directory: The source of truth for available patterns
++2. `pattern_descriptions.json`: Generated descriptions for each pattern
++3. `web/static/data/pattern_descriptions.json`: Web-accessible copy for the modal interface
++
++The system is managed through:
++- `extract_patterns.py`: Python script that scans patterns directory and updates descriptions
++
++## Updating Pattern Descriptions
++
++### Using the Python Script
++
++The `extract_patterns.py` script maintains synchronization between all components:
++
++```bash
++# From the fabric/PATTERN_DESCRIPTIONS directory
++python extract_patterns.py
++```
++
++This will automatically:
++1. Scan all pattern directories
++2. Extract pattern names and descriptions
++3. Update pattern_descriptions.json
++4. Copy the file to web/static/data/ for the modal interface
++
++No manual file copying is needed - the script handles the entire synchronization process.
++
++## File Structure
++
++```
++fabric/
++├── patterns/                    # Source of truth - pattern directories
++├── PATTERN_DESCRIPTIONS/
++│   ├── extract_patterns.py      # Script to update & sync descriptions
++│   ├── pattern_descriptions.json # Generated descriptions
++│   └── README.md               # This documentation
++└── web/
++    └── static/
++        └── data/
++            └── pattern_descriptions.json # Auto-synced web copy
++```
++
++## How It Works
++
++1. Pattern Description Flow:
++   ```
++   patterns/ directory (source of truth)
++          ↓
++   extract_patterns.py (scans & processes)
++          ↓
++   PATTERN_DESCRIPTIONS/pattern_descriptions.json
++          ↓ (automatic sync)
++   web/static/data/pattern_descriptions.json
++          ↓
++   Web Modal Display
++   ```
++
++2. The web interface:
++   - Loads descriptions from `/static/data/pattern_descriptions.json`
++   - Uses PatternDescription interface to type the data:
++     ```typescript
++     interface PatternDescription {
++       patternName: string;
++       description: string;
++     }
++     ```
++   - Displays patterns in the modal with search and sort capabilities
++
++## Best Practices
++
++1. Always run `extract_patterns.py` when:
++   - Adding new patterns to the patterns/ directory
++   - Modifying pattern descriptions
++   - Removing patterns
++
++2. The script automatically maintains synchronization:
++   - Scans patterns/ directory for the complete list
++   - Updates pattern_descriptions.json with any changes
++   - Syncs to web/static/data/ for the modal interface
++
++3. Test the web interface after updates to ensure:
++   - All patterns from patterns/ directory are listed
++   - Descriptions are correct
++   - Search functionality works
++   - Pattern selection works
++
++## Troubleshooting
++
++If patterns are not showing in the web modal:
++
++1. Verify JSON files:
++   - Check both JSON files exist
++   - Ensure JSON format is valid
++   - Compare contents of both files
++
++2. Check web paths:
++   - Verify `/static/data/pattern_descriptions.json` is accessible
++   - Check browser console for loading errors
++
++3. Clear cache:
++   - Clear browser cache
++   - Rebuild web application
+diff --git a/fabric/PATTERN_DESCRIPTIONS/extract_patterns.py b/fabric/PATTERN_DESCRIPTIONS/extract_patterns.py
+index c6f3ec5..4c15d74 100644
+--- a/fabric/PATTERN_DESCRIPTIONS/extract_patterns.py
++++ b/fabric/PATTERN_DESCRIPTIONS/extract_patterns.py
+@@ -1,63 +1,124 @@
+ import os
+ import json
++import shutil
++
++def load_existing_file(filepath):
++    """Load existing JSON file or return default structure"""
++    if os.path.exists(filepath):
++        with open(filepath, 'r', encoding='utf-8') as f:
++            return json.load(f)
++    return {"patterns": []}
+ 
+ def extract_pattern_info():
+-    # Get the directory where the script is located
++    """Extract pattern information and manage both extract and description files"""
+     script_dir = os.path.dirname(os.path.abspath(__file__))
+-    # Go up one level to fabric directory
+     fabric_dir = os.path.dirname(script_dir)
+     patterns_dir = os.path.join(fabric_dir, "patterns")
++    extracts_path = os.path.join(script_dir, "pattern_extracts.json")
++    descriptions_path = os.path.join(script_dir, "pattern_descriptions.json")
++    
++    # Load existing data
++    existing_extracts = load_existing_file(extracts_path)
++    existing_descriptions = load_existing_file(descriptions_path)
++    
++    # Create lookup sets
++    existing_extract_names = {p["patternName"] for p in existing_extracts["patterns"]}
++    existing_description_names = {p["patternName"] for p in existing_descriptions["patterns"]}
+     
+-    pattern_info = {"patterns": []}
++    # Track new patterns
++    new_extracts = []
++    new_descriptions = []
+     
+-    # Walk through all directories in patterns folder
++    # Process patterns directory
+     for dirname in sorted(os.listdir(patterns_dir)):
+-        # Skip .DS_Store and raycast directory
+         if dirname in ['.DS_Store', 'raycast']:
+             continue
+             
+         pattern_path = os.path.join(patterns_dir, dirname)
+         system_md_path = os.path.join(pattern_path, "system.md")
+         
+-        # Check if it's a directory and contains system.md
+         if os.path.isdir(pattern_path) and os.path.exists(system_md_path):
+             try:
+-                with open(system_md_path, 'r', encoding='utf-8') as f:
+-                    # Read first 25 lines
+-                    lines = []
+-                    for i, line in enumerate(f):
+-                        if i >= 25:
+-                            break
+-                        lines.append(line.rstrip())
+-                    
+-                    # Join lines with newlines
+-                    pattern_extract = "\n".join(lines)
+-                    
+-                    # Add to pattern info
+-                    pattern_info["patterns"].append({
++                # Process pattern extracts
++                if dirname not in existing_extract_names:
++                    with open(system_md_path, 'r', encoding='utf-8') as f:
++                        lines = []
++                        for i, line in enumerate(f):
++                            if i >= 25:
++                                break
++                            lines.append(line.rstrip())
++                        
++                        pattern_extract = "\n".join(lines)
++                        new_extracts.append({
++                            "patternName": dirname,
++                            "pattern_extract": pattern_extract
++                        })
++                        print(f"Added new pattern extract: {dirname}")
++                
++                # Add placeholder for pattern descriptions
++                if dirname not in existing_description_names:
++                    new_descriptions.append({
+                         "patternName": dirname,
+-                        "pattern_extract": pattern_extract
++                        "description": "[Description pending - Requires AI generation]"
+                     })
+-                    print(f"Processed {dirname}")
++                    print(f"Added description placeholder for: {dirname}")
++                    
+             except Exception as e:
+                 print(f"Error processing {dirname}: {str(e)}")
+     
+-    return pattern_info
+-
+-def save_pattern_info():
+-    # Get the pattern information
+-    pattern_info = extract_pattern_info()
++    # Merge new data with existing
++    existing_extracts["patterns"].extend(new_extracts)
++    existing_descriptions["patterns"].extend(new_descriptions)
+     
+-    # Get script directory for output path
++    return existing_extracts, existing_descriptions
++
++def update_web_static(descriptions_path):
++    """Copy pattern descriptions to web static directory"""
++    try:
++        script_dir = os.path.dirname(os.path.abspath(__file__))
++        fabric_dir = os.path.dirname(script_dir)
++        static_dir = os.path.join(fabric_dir, "web", "static", "data")
++        
++        # Create static/data directory if it doesn't exist
++        os.makedirs(static_dir, exist_ok=True)
++        
++        # Copy pattern descriptions to web static
++        static_path = os.path.join(static_dir, "pattern_descriptions.json")
++        shutil.copy2(descriptions_path, static_path)
++        print(f"Updated web static file: {static_path}")
++    except Exception as e:
++        print(f"Error updating web static: {str(e)}")
++
++def save_pattern_files():
++    """Save both pattern files"""
+     script_dir = os.path.dirname(os.path.abspath(__file__))
+-    output_path = os.path.join(script_dir, "pattern_extracts.json")
++    extracts_path = os.path.join(script_dir, "pattern_extracts.json")
++    descriptions_path = os.path.join(script_dir, "pattern_descriptions.json")
++    
++    # Load existing descriptions to calculate new patterns
++    existing_descriptions = load_existing_file(descriptions_path)
++    existing_description_count = len(existing_descriptions["patterns"])
++    
++    pattern_extracts, pattern_descriptions = extract_pattern_info()
+     
+     try:
+-        with open(output_path, 'w', encoding='utf-8') as f:
+-            json.dump(pattern_info, f, indent=2, ensure_ascii=False)
+-        print(f"\nSuccessfully saved {len(pattern_info['patterns'])} pattern extracts to {output_path}")
++        # Save pattern extracts
++        with open(extracts_path, 'w', encoding='utf-8') as f:
++            json.dump(pattern_extracts, f, indent=2, ensure_ascii=False)
++            
++        # Save pattern descriptions
++        with open(descriptions_path, 'w', encoding='utf-8') as f:
++            json.dump(pattern_descriptions, f, indent=2, ensure_ascii=False)
++            
++        # Update web static directory
++        update_web_static(descriptions_path)
++            
++        print(f"\nProcessing complete:")
++        print(f"Total patterns: {len(pattern_extracts['patterns'])}")
++        print(f"New patterns added: {len(pattern_descriptions['patterns']) - existing_description_count}")
++        
+     except Exception as e:
+-        print(f"Error saving JSON file: {str(e)}")
++        print(f"Error saving JSON files: {str(e)}")
+ 
+ if __name__ == "__main__":
+-    save_pattern_info()
+\ No newline at end of file
++    save_pattern_files()
+diff --git a/fabric/PATTERN_DESCRIPTIONS/pattern_descriptions.json b/fabric/PATTERN_DESCRIPTIONS/pattern_descriptions.json
+index e91ab38..1cf1631 100644
+--- a/fabric/PATTERN_DESCRIPTIONS/pattern_descriptions.json
++++ b/fabric/PATTERN_DESCRIPTIONS/pattern_descriptions.json
+@@ -383,6 +383,438 @@
+     {
+       "patternName": "ask_secure_by_design_questions",
+       "description": "Generate comprehensive security-focused questions to guide secure system design and implementation across different architectural components."
++    },
++    {
++      "patternName": "analyze_patent",
++      "description": "Analyze patent documents to evaluate novelty, inventive steps, and technical advantages while providing detailed explanations of problems solved and implementation approaches."
++    },
++    {
++      "patternName": "analyze_threat_report_cmds",
++      "description": "Extract and interpret cybersecurity commands from threat reports, providing detailed command-line arguments and implementation guidance from diverse expert perspectives."
++    },
++    {
++      "patternName": "enrich_blog_post",
++      "description": "Enhance markdown blog posts by improving structure, visuals, and formatting to optimize readability and engagement for static site generation."
++    },
++    {
++      "patternName": "explain_docs",
++      "description": "Transform technical documentation and instructions into clearer, more accessible explanations with improved structure and practical usage examples."
++    },
++    {
++      "patternName": "explain_math",
++      "description": "Explain mathematical concepts and equations clearly for students using step-by-step instructions, visual aids, and practical examples."
++    },
++    {
++      "patternName": "explain_project",
++      "description": "Create comprehensive project overviews with installation instructions, usage examples, and practical applications while maintaining clear documentation structure."
++    },
++    {
++      "patternName": "explain_terms",
++      "description": "Create comprehensive glossaries of advanced terms from content, providing clear definitions, explanations, and helpful analogies for better understanding."
++    },
++    {
++      "patternName": "export_data_as_csv",
++      "description": "Extract structured data from content and convert it into properly formatted CSV files while preserving relationships and data integrity."
++    },
++    {
++      "patternName": "extract_algorithm_update_recommendations",
++      "description": "Extract concise, practical recommendations for improving algorithms and processes from content, focusing on actionable implementation steps."
++    },
++    {
++      "patternName": "extract_article_wisdom",
++      "description": "Extract key insights, practical advice, and timeless wisdom from articles, organizing them into clear, actionable takeaways."
++    },
++    {
++      "patternName": "extract_book_ideas",
++      "description": "Identify and extract novel concepts, unique perspectives, and innovative ideas from books that could inspire new projects or creative works."
++    },
++    {
++      "patternName": "extract_business_ideas",
++      "description": "Identify potential business opportunities, market gaps, and entrepreneurial insights from content, presenting them as actionable venture concepts."
++    },
++    {
++      "patternName": "extract_controversial_ideas",
++      "description": "Identify and analyze contentious viewpoints, challenging assumptions, and debatable claims from content while maintaining objective analysis."
++    },
++    {
++      "patternName": "extract_ctf_writeup",
++      "description": "Extract key techniques, tools, and methodologies from CTF challenge writeups to create structured, educational security learning resources."
++    },
++    {
++      "patternName": "extract_ideas",
++      "description": "Extract and organize key concepts, innovative thoughts, and potential applications from content into structured, actionable idea collections."
++    },
++    {
++      "patternName": "extract_insights_dm",
++      "description": "Extract and organize key insights from direct messages or conversations, focusing on valuable learnings and actionable takeaways."
++    },
++    {
++      "patternName": "extract_instructions",
++      "description": "Extract and organize step-by-step procedures and guidelines from content into clear, sequential instructions for practical implementation."
++    },
++    {
++      "patternName": "extract_jokes",
++      "description": "Extract and categorize humorous content from text, organizing jokes, puns, and witty remarks while preserving their comedic timing and context."
++    },
++    {
++      "patternName": "extract_latest_video",
++      "description": "Extract and summarize key information from the most recent video in a channel or playlist, including title, timestamp, and main content points."
++    },
++    {
++      "patternName": "extract_most_redeeming_thing",
++      "description": "Identify and analyze the most positive or valuable aspect from content, even in challenging or critical contexts, to highlight constructive elements."
++    },
++    {
++      "patternName": "extract_patterns",
++      "description": "Identify and extract recurring patterns, themes, and methodologies from content to create reusable templates and systematic approaches."
++    },
++    {
++      "patternName": "extract_poc",
++      "description": "Extract and document proof-of-concept demonstrations from technical content, including implementation steps, code samples, and validation methods."
++    },
++    {
++      "patternName": "extract_primary_problem",
++      "description": "Identify and analyze the core problem or challenge from content, focusing on root causes and fundamental issues rather than symptoms."
++    },
++    {
++      "patternName": "extract_primary_solution",
++      "description": "Identify and analyze the main solution or approach proposed in content, focusing on key implementation steps and expected outcomes."
++    },
++    {
++      "patternName": "extract_product_features",
++      "description": "Extract and categorize key product features, capabilities, and specifications from content into a structured, comprehensive feature list."
++    },
++    {
++      "patternName": "extract_questions",
++      "description": "Extract and categorize key questions, inquiries, and discussion points from content to create comprehensive Q&A resources."
++    },
++    {
++      "patternName": "extract_recipe",
++      "description": "Extract and format cooking recipes from content into structured instructions with ingredients, steps, and preparation details."
++    },
++    {
++      "patternName": "extract_recommendations",
++      "description": "Extract and prioritize suggested actions, advice, and recommendations from content, organizing them into clear, actionable guidance."
++    },
++    {
++      "patternName": "extract_references",
++      "description": "Extract and format citations, sources, and bibliographic references from content into a structured, properly formatted reference list."
++    },
++    {
++      "patternName": "extract_song_meaning",
++      "description": "Analyze and interpret song lyrics to uncover deeper meanings, themes, metaphors, and cultural or historical references within musical compositions."
++    },
++    {
++      "patternName": "extract_sponsors",
++      "description": "Extract and organize sponsorship information from content, including sponsor names, promotional messages, and partnership details."
++    },
++    {
++      "patternName": "extract_videoid",
++      "description": "Extract and parse video identifiers and URLs from content to create structured lists of video references and links."
++    },
++    {
++      "patternName": "extract_wisdom_agents",
++      "description": "Extract and synthesize insights from AI agent interactions, focusing on emergent behaviors, learning patterns, and decision-making processes."
++    },
++    {
++      "patternName": "extract_wisdom_dm",
++      "description": "Extract and analyze key insights and learnings from direct message conversations, focusing on personal growth and practical wisdom."
++    },
++    {
++      "patternName": "extract_wisdom_nometa",
++      "description": "Extract pure insights and wisdom from content without metadata or contextual annotations, focusing on core principles and essential truths."
++    },
++    {
++      "patternName": "find_hidden_message",
++      "description": "Analyze content to uncover concealed meanings, subtle implications, and embedded messages that may not be immediately apparent."
++    },
++    {
++      "patternName": "find_logical_fallacies",
++      "description": "Identify and analyze logical errors, reasoning flaws, and argumentative fallacies in content to evaluate argument validity and soundness."
++    },
++    {
++      "patternName": "get_wow_per_minute",
++      "description": "Calculate and analyze the frequency of impressive or surprising moments in content to measure engagement and impact density."
++    },
++    {
++      "patternName": "get_youtube_rss",
++      "description": "Generate and format RSS feed URLs for YouTube channels and playlists to enable automated content tracking and updates."
++    },
++    {
++      "patternName": "humanize",
++      "description": "Transform technical or complex content into more approachable, relatable language while maintaining accuracy and key information."
++    },
++    {
++      "patternName": "identify_dsrp_distinctions",
++      "description": "Analyze content using DSRP framework to identify key distinctions, differences, and unique characteristics between concepts and ideas."
++    },
++    {
++      "patternName": "identify_dsrp_perspectives",
++      "description": "Analyze content using DSRP framework to identify different viewpoints, stakeholder perspectives, and alternative ways of understanding concepts."
++    },
++    {
++      "patternName": "identify_dsrp_relationships",
++      "description": "Analyze content using DSRP framework to identify connections, correlations, and causal relationships between different concepts and elements."
++    },
++    {
++      "patternName": "identify_dsrp_systems",
++      "description": "Analyze content using DSRP framework to identify systems, hierarchies, and organizational structures that connect different components and ideas."
++    },
++    {
++      "patternName": "identify_job_stories",
++      "description": "Extract and analyze user job stories from content to understand core motivations, situational contexts, and desired outcomes in product usage."
++    },
++    {
++      "patternName": "improve_academic_writing",
++      "description": "Enhance academic writing by improving clarity, structure, argumentation, and scholarly tone while maintaining rigorous academic standards."
++    },
++    {
++      "patternName": "improve_prompt",
++      "description": "Enhance AI prompts by refining clarity, specificity, and structure to generate more accurate, relevant, and useful responses."
++    },
++    {
++      "patternName": "improve_report_finding",
++      "description": "Enhance security report findings by improving clarity, technical accuracy, risk assessment, and remediation recommendations."
++    },
++    {
++      "patternName": "improve_writing",
++      "description": "Enhance written content by improving clarity, flow, structure, and style while maintaining the original message and intent."
++    },
++    {
++      "patternName": "judge_output",
++      "description": "Evaluate AI-generated outputs for quality, accuracy, relevance, and adherence to specified requirements and standards."
++    },
++    {
++      "patternName": "label_and_rate",
++      "description": "Categorize and evaluate content by assigning descriptive labels and numerical ratings based on defined criteria and quality metrics."
++    },
++    {
++      "patternName": "md_callout",
++      "description": "Generate markdown callout blocks to highlight important information, warnings, notes, and tips with appropriate styling and formatting."
++    },
++    {
++      "patternName": "official_pattern_template",
++      "description": "Define standardized pattern templates with structured sections for identity, purpose, steps, and output specifications to ensure consistent pattern creation."
++    },
++    {
++      "patternName": "prepare_7s_strategy",
++      "description": "Apply McKinsey's 7S framework to analyze organizational alignment across strategy, structure, systems, shared values, style, staff, and skills."
++    },
++    {
++      "patternName": "provide_guidance",
++      "description": "Offer expert advice and recommendations tailored to specific situations, providing clear, actionable steps and best practices for implementation."
++    },
++    {
++      "patternName": "rate_ai_response",
++      "description": "Evaluate AI responses for quality, coherence, relevance, and effectiveness, providing detailed scoring and improvement suggestions."
++    },
++    {
++      "patternName": "rate_ai_result",
++      "description": "Assess AI-generated outputs against predefined success criteria, providing quantitative scores and qualitative feedback for improvement."
++    },
++    {
++      "patternName": "rate_content",
++      "description": "Evaluate content quality across multiple dimensions including accuracy, clarity, engagement, and value, providing comprehensive scoring with detailed justification."
++    },
++    {
++      "patternName": "rate_value",
++      "description": "Assess the practical value and impact potential of content by evaluating its utility, applicability, and potential return on investment."
++    },
++    {
++      "patternName": "raw_query",
++      "description": "Process direct, unstructured queries by interpreting intent and providing focused, relevant responses without additional formatting or templates."
++    },
++    {
++      "patternName": "recommend_artists",
++      "description": "Suggest relevant artists and creators based on user preferences, style similarities, and thematic connections across various artistic mediums."
++    },
++    {
++      "patternName": "recommend_pipeline_upgrades",
++      "description": "Analyze CI/CD pipelines and suggest improvements for efficiency, reliability, and security based on industry best practices and modern tooling."
++    },
++    {
++      "patternName": "recommend_talkpanel_topics",
++      "description": "Generate engaging discussion topics and questions for panel talks based on audience interests, current trends, and speaker expertise."
++    },
++    {
++      "patternName": "refine_design_document",
++      "description": "Enhance software design documentation by improving clarity, completeness, technical accuracy, and alignment with architectural best practices."
++    },
++    {
++      "patternName": "review_design",
++      "description": "Evaluate software design proposals and architectures for scalability, maintainability, security, and adherence to design principles and patterns."
++    },
++    {
++      "patternName": "sanitize_broken_html_to_markdown",
++      "description": "Clean and convert malformed HTML content into well-structured markdown format while preserving content hierarchy and semantic meaning."
++    },
++    {
++      "patternName": "show_fabric_options_markmap",
++      "description": "Generate hierarchical mind maps visualizing Fabric framework capabilities, patterns, and configuration options using Markmap syntax."
++    },
++    {
++      "patternName": "solve_with_cot",
++      "description": "Solve complex problems using chain-of-thought reasoning, breaking down solutions into clear, logical steps with explicit intermediate reasoning."
++    },
++    {
++      "patternName": "suggest_pattern",
++      "description": "Recommend appropriate Fabric patterns based on user requirements, task characteristics, and desired outcomes to optimize pattern selection."
++    },
++    {
++      "patternName": "summarize",
++      "description": "Generate comprehensive content summaries that capture key points, main arguments, and essential details while maintaining context and clarity."
++    },
++    {
++      "patternName": "summarize_debate",
++      "description": "Create structured summaries of debates highlighting key arguments, points of agreement, areas of contention, and notable exchanges between participants."
++    },
++    {
++      "patternName": "summarize_git_changes",
++      "description": "Generate clear, concise summaries of git repository changes, highlighting key modifications, additions, and deletions across commits."
++    },
++    {
++      "patternName": "summarize_git_diff",
++      "description": "Analyze git diff output to provide clear, structured summaries of code changes, highlighting functional modifications and their potential impact."
++    },
++    {
++      "patternName": "summarize_lecture",
++      "description": "Create structured summaries of academic lectures capturing key concepts, examples, methodologies, and important takeaways in an organized format."
++    },
++    {
++      "patternName": "summarize_legislation",
++      "description": "Create comprehensive summaries of legislative documents highlighting key provisions, amendments, implications, and affected stakeholders."
++    },
++    {
++      "patternName": "summarize_meeting",
++      "description": "Create structured meeting summaries capturing key discussions, decisions, action items, and assigned responsibilities in a clear, organized format."
++    },
++    {
++      "patternName": "summarize_micro",
++      "description": "Generate extremely concise summaries of content by distilling complex information into essential points using minimal words while preserving key meaning."
++    },
++    {
++      "patternName": "summarize_newsletter",
++      "description": "Create concise summaries of newsletter content highlighting key updates, announcements, trends, and notable developments in a structured format."
++    },
++    {
++      "patternName": "summarize_paper",
++      "description": "Create structured summaries of academic papers highlighting research objectives, methodology, key findings, and significant conclusions in a clear format."
++    },
++    {
++      "patternName": "summarize_prompt",
++      "description": "Analyze and summarize AI prompts to identify key instructions, requirements, constraints, and expected outputs in a clear, structured format."
++    },
++    {
++      "patternName": "summarize_pull-requests",
++      "description": "Create concise summaries of pull requests highlighting key code changes, implementation details, and potential impacts in a clear, developer-friendly format."
++    },
++    {
++      "patternName": "summarize_rpg_session",
++      "description": "Create detailed summaries of roleplaying game sessions capturing key story events, character developments, combat encounters, and important decisions in a narrative format."
++    },
++    {
++      "patternName": "t_analyze_challenge_handling",
++      "description": "Evaluate approaches to handling challenges by analyzing response strategies, coping mechanisms, and problem-solving methods to identify effective patterns."
++    },
++    {
++      "patternName": "t_check_metrics",
++      "description": "Analyze and evaluate performance metrics, tracking progress against goals while identifying trends, patterns, and areas for improvement."
++    },
++    {
++      "patternName": "t_create_h3_career",
++      "description": "Generate structured career development plans using the Head, Heart, Hands (H3) framework to align skills, passions, and practical actions."
++    },
++    {
++      "patternName": "t_create_opening_sentences",
++      "description": "Generate compelling opening sentences for content that capture attention, establish context, and effectively introduce key themes or concepts."
++    },
++    {
++      "patternName": "t_describe_life_outlook",
++      "description": "Analyze and articulate personal life philosophies, values, and worldviews to understand core beliefs and their influence on decision-making and behavior."
++    },
++    {
++      "patternName": "t_extract_intro_sentences",
++      "description": "Extract and analyze introductory sentences from content to identify effective hooks, context-setting techniques, and engagement strategies."
++    },
++    {
++      "patternName": "t_extract_panel_topics",
++      "description": "Extract and organize potential discussion topics from content to create engaging panel discussions, identifying key themes, controversies, and audience-relevant points."
++    },
++    {
++      "patternName": "t_find_blindspots",
++      "description": "Identify and analyze potential blind spots in thinking, planning, or decision-making processes to uncover overlooked factors and improve strategic awareness."
++    },
++    {
++      "patternName": "t_find_negative_thinking",
++      "description": "Identify and analyze patterns of negative thinking in content to recognize cognitive distortions, self-limiting beliefs, and opportunities for reframing."
++    },
++    {
++      "patternName": "t_find_neglected_goals",
++      "description": "Identify and analyze goals, aspirations, or objectives that have been overlooked or deprioritized to surface opportunities for renewed focus and action."
++    },
++    {
++      "patternName": "t_give_encouragement",
++      "description": "Generate personalized, context-aware messages of encouragement that acknowledge challenges while reinforcing strengths and promoting resilience."
++    },
++    {
++      "patternName": "t_red_team_thinking",
++      "description": "Apply adversarial thinking to analyze plans, systems, or ideas by identifying potential weaknesses, attack vectors, and failure modes to improve resilience."
++    },
++    {
++      "patternName": "t_threat_model_plans",
++      "description": "Analyze plans and strategies through a security lens to identify potential threats, vulnerabilities, and risks while providing mitigation recommendations."
++    },
++    {
++      "patternName": "t_visualize_mission_goals_projects",
++      "description": "Create visual representations of organizational missions, strategic goals, and project hierarchies to clarify relationships and track progress toward objectives."
++    },
++    {
++      "patternName": "t_year_in_review",
++      "description": "Generate comprehensive annual reviews by analyzing achievements, challenges, learnings, and growth opportunities while identifying patterns and setting future directions."
++    },
++    {
++      "patternName": "to_flashcards",
++      "description": "Convert educational content into structured flashcard format with clear questions and answers, optimized for spaced repetition learning."
++    },
++    {
++      "patternName": "transcribe_minutes",
++      "description": "Convert meeting recordings or notes into structured, well-organized minutes capturing key discussions, decisions, action items, and attendee contributions."
++    },
++    {
++      "patternName": "translate",
++      "description": "Convert content between languages while preserving meaning, context, and cultural nuances, ensuring accurate and natural-sounding translations."
++    },
++    {
++      "patternName": "tweet",
++      "description": "Transform content into concise, engaging tweets that capture key messages while adhering to platform constraints and social media best practices."
++    },
++    {
++      "patternName": "write_essay",
++      "description": "Create well-structured essays with clear thesis statements, supporting arguments, evidence, and conclusions while maintaining academic writing standards."
++    },
++    {
++      "patternName": "write_hackerone_report",
++      "description": "Create detailed vulnerability reports following HackerOne's format, including clear reproduction steps, impact analysis, and remediation recommendations."
++    },
++    {
++      "patternName": "write_latex",
++      "description": "Generate professional LaTeX documents with proper formatting, mathematical notation, citations, and cross-references following academic publishing standards."
++    },
++    {
++      "patternName": "write_micro_essay",
++      "description": "Create concise, focused essays that present a single key idea with supporting evidence and analysis in a highly condensed format."
++    },
++    {
++      "patternName": "write_nuclei_template_rule",
++      "description": "Generate Nuclei vulnerability scanning templates with detection logic, payload patterns, and validation rules following the template syntax specification."
++    },
++    {
++      "patternName": "write_pull-request",
++      "description": "Create comprehensive pull request descriptions with clear summaries of changes, implementation details, testing procedures, and related issue references."
++    },
++    {
++      "patternName": "write_semgrep_rule",
++      "description": "Create Semgrep pattern matching rules for static code analysis, including detection patterns, metadata, and fix suggestions following the rule syntax specification."
+     }
+   ]
+ }
+\ No newline at end of file
+diff --git a/fabric/PATTERN_DESCRIPTIONS/pattern_extracts.json b/fabric/PATTERN_DESCRIPTIONS/pattern_extracts.json
+index ff32b24..3ce1d82 100644
+--- a/fabric/PATTERN_DESCRIPTIONS/pattern_extracts.json
++++ b/fabric/PATTERN_DESCRIPTIONS/pattern_extracts.json
+@@ -759,6 +759,66 @@
+     {
+       "patternName": "write_semgrep_rule",
+       "pattern_extract": "# IDENTITY and PURPOSE\n\nYou are an expert at writing Semgrep rules.\n\nTake a deep breath and think step by step about how to best accomplish this goal using the following context.\n\n# OUTPUT SECTIONS\n\n- Write a Semgrep rule that will match the input provided.\n\n# CONTEXT FOR CONSIDERATION\n\nThis context will teach you about how to write better Semgrep rules:\n\nYou are an expert Semgrep rule creator.\n\nTake a deep breath and work on this problem step-by-step.\n\nYou output only a working Semgrep rule.\n\n\"\"\",\n}\nuser_message = {\n\"role\": \"user\",\n\"content\": \"\"\""
++    },
++    {
++      "patternName": "t_analyze_challenge_handling",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 8 16-word bullets describing how well or poorly I'm addressing my challenges. Call me out if I'm not putting work into them, and/or if you can see evidence of them affecting me in my journal or elsewhere.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_check_metrics",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Check this person's Metrics or KPIs (M's or K's) to see their current state and if they've been improved recently.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_create_h3_career",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Analyze everything in my TELOS file and think about what I could and should do after my legacy corporate / technical skills are automated away. What can I contribute that's based on human-to-human interaction and exchanges of value?\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_create_opening_sentences",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 4 32-word bullets describing who I am and what I do in a non-douchey way. Use the who I am, the problem I see in the world, and what I'm doing about it as the template. Something like:\n    a. I'm a programmer by trade, and one thing that really bothers me is kids being so stuck inside of tech and games. So I started a school where I teach kids to build things with their hands.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_describe_life_outlook",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 5 16-word bullets describing this person's life outlook.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_extract_intro_sentences",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 5 16-word bullets describing who this person is, what they do, and what they're working on. The goal is to concisely and confidently project who they are while being humble and grounded.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_extract_panel_topics",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 5 48-word bullet points, each including a 3-5 word panel title, that would be wonderful panels for this person to participate on.\n5. Write them so that they'd be good panels for others to participate in as well, not just me.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_find_blindspots",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 8 16-word bullets describing possible blindspots in my thinking, i.e., flaws in my frames or models that might leave me exposed to error or risk.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_find_negative_thinking",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 4 16-word bullets identifying negative thinking either in my main document or in my journal.\n5. Add some tough love encouragement (not fluff) to help get me out of that mindset.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_find_neglected_goals",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 5 16-word bullets describing which of their goals and/or projects don't seem to have been worked on recently.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_give_encouragement",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 8 16-word bullets looking at what I'm trying to do, and any progress I've made, and give some encouragement on the positive aspects and recommendations to continue the work.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_red_team_thinking",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 4 16-word bullets red-teaming my thinking, models, frames, etc, especially as evidenced throughout my journal.\n5. Give a set of recommendations on how to fix the issues identified in the red-teaming.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_threat_model_plans",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 8 16-word bullets threat modeling my life plan and what could go wrong.\n5. Provide recommendations on how to address the threats and improve the life plan.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_visualize_mission_goals_projects",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Create an ASCII art diagram of the relationship my missions, goals, and projects.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
++    },
++    {
++      "patternName": "t_year_in_review",
++      "pattern_extract": "# IDENTITY\n\nYou are an expert at understanding deep context about a person or entity, and then creating wisdom from that context combined with the instruction or question given in the input.\n\n# STEPS\n\n1. Read the incoming TELOS File thoroughly. Fully understand everything about this person or entity.\n2. Deeply study the input instruction or question.\n3. Spend significant time and effort thinking about how these two are related, and what would be the best possible ouptut for the person who sent the input.\n4. Write 8 16-word bullets describing what you accomplished this year.\n5. End with an ASCII art visualization of what you worked on and accomplished vs. what you didn't work on or finish.\n\n# OUTPUT INSTRUCTIONS\n\n1. Only use basic markdown formatting. No special formatting or italics or bolding or anything.\n2. Only output the list, nothing else."
+     }
+   ]
+ }
+\ No newline at end of file
+diff --git a/fabric/web/src/lib/components/chat/Patterns.svelte b/fabric/web/src/lib/components/chat/Patterns.svelte
+index 4000229..b96c378 100644
+--- a/fabric/web/src/lib/components/chat/Patterns.svelte
++++ b/fabric/web/src/lib/components/chat/Patterns.svelte
+@@ -47,7 +47,7 @@
+   >
+     <option value="">Load a pattern...</option>
+     {#each $patterns as pattern}
+-      <option value={pattern.Name}>{pattern.Description}</option>
++      <option value={pattern.Name}>{pattern.Name}</option>
+     {/each}
+   </Select>
+ </div>
+diff --git a/fabric/web/src/lib/components/patterns/PatternList.svelte b/fabric/web/src/lib/components/patterns/PatternList.svelte
+index 41e5b50..dd179d8 100644
+--- a/fabric/web/src/lib/components/patterns/PatternList.svelte
++++ b/fabric/web/src/lib/components/patterns/PatternList.svelte
+@@ -1,9 +1,9 @@
+ <script lang="ts">
+   import { onMount, createEventDispatcher } from 'svelte';
+   import { get } from 'svelte/store';
+-  import type { Pattern } from '$lib/types';
++  import type { Pattern } from '$lib/interfaces/pattern-interface';
+   import { favorites } from '$lib/store/favorites-store';
+-  import { patternAPI, systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
++  import { patterns, patternAPI, systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
+   import { Input } from "$lib/components/ui/input";
+ 
+   const dispatch = createEventDispatcher<{
+@@ -11,36 +11,33 @@
+     select: string;
+   }>();
+ 
+-  let patterns: Pattern[] = [];
+   let patternsContainer: HTMLDivElement;
+   let sortBy: 'alphabetical' | 'favorites' = 'alphabetical';
+   let searchText = ""; // For pattern filtering
+ 
+   // First filter patterns by search text
+-  $: filteredPatterns = patterns.filter(p =>
+-    p.patternName.toLowerCase().includes(searchText.toLowerCase())
++  $: filteredPatterns = $patterns.filter((p: Pattern) =>
++    p.Name.toLowerCase().includes(searchText.toLowerCase())
+   );
+ 
+   // Then sort the filtered patterns
+   $: sortedPatterns = sortBy === 'alphabetical'
+-    ? [...filteredPatterns].sort((a, b) => a.patternName.localeCompare(b.patternName))
++    ? [...filteredPatterns].sort((a: Pattern, b: Pattern) => a.Name.localeCompare(b.Name))
+     : [
+-        ...filteredPatterns.filter(p => $favorites.includes(p.patternName)).sort((a, b) => a.patternName.localeCompare(b.patternName)),
+-        ...filteredPatterns.filter(p => !$favorites.includes(p.patternName)).sort((a, b) => a.patternName.localeCompare(b.patternName))
++        ...filteredPatterns.filter((p: Pattern) => $favorites.includes(p.Name)).sort((a: Pattern, b: Pattern) => a.Name.localeCompare(b.Name)),
++        ...filteredPatterns.filter((p: Pattern) => !$favorites.includes(p.Name)).sort((a: Pattern, b: Pattern) => a.Name.localeCompare(b.Name))
+       ];
+ 
+   onMount(async () => {
+     try {
+-      const response = await fetch('/data/pattern_descriptions.json');
+-      const data = await response.json();
+-      patterns = data.patterns;
++      await patternAPI.loadPatterns();
+     } catch (error) {
+       console.error('Error loading patterns:', error);
+     }
+   });
+ 
+-  function toggleFavorite(patternName: string) {
+-    favorites.toggleFavorite(patternName);
++  function toggleFavorite(name: string) {
++    favorites.toggleFavorite(name);
+   }
+ </script>
+ 
+@@ -99,29 +96,12 @@
+               class="text-xl font-bold text-primary-300 hover:text-primary-100 cursor-pointer transition-colors"
+               role="button"
+               tabindex="0"
+-              on:click={async () => {
+-                try {
+-                  console.log('Selecting pattern:', pattern.patternName);
+-                  // Update pattern selection
+-                  patternAPI.selectPattern(pattern.patternName);
+-                  // Verify the selection
+-                  const currentSystemPrompt = get(systemPrompt);
+-                  const currentPattern = get(selectedPatternName);
+-                  console.log('After selection - Pattern:', currentPattern);
+-                  console.log('After selection - System Prompt length:', currentSystemPrompt?.length);
+-                  
+-                  // Only close if selection was successful
+-                  if (currentPattern === pattern.patternName && currentSystemPrompt) {
+-                    searchText = ""; // Reset search before closing
+-                    dispatch('select', pattern.patternName);
+-                    dispatch('close');
+-                  } else {
+-                    console.error('Pattern selection failed - Pattern:', currentPattern);
+-                    console.error('Pattern selection failed - System Prompt:', currentSystemPrompt);
+-                  }
+-                } catch (error) {
+-                  console.error('Error selecting pattern:', error);
+-                }
++              on:click={() => {
++                console.log('Selecting pattern:', pattern.Name);
++                patternAPI.selectPattern(pattern.Name);
++                searchText = ""; // Reset search before closing
++                dispatch('select', pattern.Name);
++                dispatch('close');
+               }}
+               on:keydown={(e) => {
+                 if (e.key === 'Enter' || e.key === ' ') {
+@@ -130,20 +110,20 @@
+                 }
+               }}
+             >
+-              {pattern.patternName}
++              {pattern.Name}
+             </h3>
+             <button
+               class="text-muted-foreground hover:text-primary-300 transition-colors"
+-              on:click={() => toggleFavorite(pattern.patternName)}
++              on:click={() => toggleFavorite(pattern.Name)}
+             >
+-              {#if $favorites.includes(pattern.patternName)}
++              {#if $favorites.includes(pattern.Name)}
+                 ★
+               {:else}
+                 ☆
+               {/if}
+             </button>
+           </div>
+-          <p class="text-sm text-muted-foreground break-words leading-relaxed">{pattern.description}</p>
++          <p class="text-sm text-muted-foreground break-words leading-relaxed">{pattern.Description}</p>
+         </div>
+       {/each}
+     </div>
+diff --git a/fabric/web/src/lib/interfaces/pattern-interface.ts b/fabric/web/src/lib/interfaces/pattern-interface.ts
+index 92b34de..5c48bc9 100644
+--- a/fabric/web/src/lib/interfaces/pattern-interface.ts
++++ b/fabric/web/src/lib/interfaces/pattern-interface.ts
+@@ -1,5 +1,14 @@
+-export interface Pattern {
+-  Name: string;
+-  Description: string;
+-  Pattern: string; // | object
++import type { StorageEntity } from './storage-interface';
++
++// Interface matching the JSON structure from pattern_descriptions.json
++export interface PatternDescription {
++  patternName: string;
++  description: string;
++}
++
++// Interface for storage compatibility - must use uppercase for StorageEntity
++export interface Pattern extends StorageEntity {
++  Name: string;        // maps to patternName from JSON
++  Description: string; // maps to description from JSON
++  Pattern: string;     // pattern content from API
+ }
+diff --git a/fabric/web/src/lib/services/ChatService.ts b/fabric/web/src/lib/services/ChatService.ts
+index 4e8b943..a1a392e 100644
+--- a/fabric/web/src/lib/services/ChatService.ts
++++ b/fabric/web/src/lib/services/ChatService.ts
+@@ -87,16 +87,23 @@ export class ChatService {
+         const language = get(languageStore);
+         const validator = new LanguageValidator(language);
+ 
+-        const processResponse = (response: StreamResponse) => {
+-            if (get(selectedPatternName)) {
+-                response.content = cleanPatternOutput(response.content);
+-                response.format = 'markdown';
+-            }
+-            if (response.type === 'content') {
+-                response.content = validator.enforceLanguage(response.content);
+-            }
+-            return response;
+-        };
++    const processResponse = (response: StreamResponse) => {
++        // Always set markdown format for pattern responses
++        const pattern = get(selectedPatternName);
++        if (pattern) {
++            response.content = cleanPatternOutput(response.content);
++            response.format = 'markdown';
++            console.log('Processing pattern response:', {
++                pattern,
++                format: response.format,
++                contentLength: response.content.length
++            });
++        }
++        if (response.type === 'content') {
++            response.content = validator.enforceLanguage(response.content);
++        }
++        return response;
++    };
+ 
+         return new ReadableStream({
+             async start(controller) {
+@@ -216,4 +223,4 @@ export class ChatService {
+             reader.releaseLock();
+         }
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/fabric/web/src/lib/store/chat-store.ts b/fabric/web/src/lib/store/chat-store.ts
+index b869481..319924d 100644
+--- a/fabric/web/src/lib/store/chat-store.ts
++++ b/fabric/web/src/lib/store/chat-store.ts
+@@ -129,24 +129,24 @@ export async function sendMessage(content: string, systemPromptText?: string, is
+ 
+             if (lastMessage?.role === 'assistant') {
+               lastMessage.content = content;
+-              if (response) {
+-                lastMessage.format = response.format;
+-              }
++              // Always preserve format from response
++              lastMessage.format = response?.format || lastMessage.format;
+               console.log('6a. Updated existing message:', {
+                 role: 'assistant',
+                 contentLength: content.length,
+-                format: response?.format
++                format: lastMessage.format
+               });
+             } else {
++              // Ensure new messages have format from response
+               newMessages.push({
+                 role: 'assistant',
+                 content,
+-                format: response?.format
++                format: response?.format || 'markdown'  // Default to markdown for pattern responses
+               });
+               console.log('6b. Added new message:', {
+                 role: 'assistant',
+                 contentLength: content.length,
+-                format: response?.format
++                format: response?.format || 'markdown'
+               });
+             }
+ 
+diff --git a/fabric/web/src/lib/store/pattern-store.ts b/fabric/web/src/lib/store/pattern-store.ts
+index d351d8f..55343b2 100644
+--- a/fabric/web/src/lib/store/pattern-store.ts
++++ b/fabric/web/src/lib/store/pattern-store.ts
+@@ -1,8 +1,32 @@
+ import { createStorageAPI } from '$lib/api/base';
+ import type { Pattern } from '$lib/interfaces/pattern-interface';
+-import { get, writable } from 'svelte/store';
++import { get, writable, derived } from 'svelte/store';
++import { languageStore } from './language-store';
++
++// Store for all patterns
++const allPatterns = writable<Pattern[]>([]);
++
++// Filtered patterns based on language
++export const patterns = derived(
++  [allPatterns, languageStore],
++  ([$allPatterns, $language]) => {
++    if (!$language) return $allPatterns;
++    // If language is selected, filter out patterns of other languages
++    return $allPatterns.filter(p => {
++      // Keep all patterns if no language is selected
++      if (!$language) return true;
++      
++      // Check if pattern has a language prefix (e.g., en_, fr_)
++      const match = p.Name.match(/^([a-z]{2})_/);
++      if (!match) return true; // Keep patterns without language prefix
++      
++      // Only filter out patterns that have a different language prefix
++      const patternLang = match[1];
++      return patternLang === $language;
++    });
++  }
++);
+ 
+-export const patterns = writable<Pattern[]>([]);
+ export const systemPrompt = writable<string>('');
+ export const selectedPatternName = writable<string>('');
+ 
+@@ -48,19 +72,19 @@ export const patternAPI = {
+       // Wait for all pattern contents to be fetched
+       const loadedPatterns = await Promise.all(patternsPromises);
+       console.log("Patterns with content:", loadedPatterns);
+-      patterns.set(loadedPatterns);
++      allPatterns.set(loadedPatterns);
+       return loadedPatterns;
+     } catch (error) {
+       console.error('Failed to load patterns:', error);
+-      patterns.set([]);
++      allPatterns.set([]);
+       return [];
+     }
+   },
+ 
+   selectPattern(patternName: string) {
+-    const allPatterns = get(patterns);
++    const patterns = get(allPatterns);
+     console.log('Selecting pattern:', patternName);
+-    const selectedPattern = allPatterns.find(p => p.Name === patternName);
++    const selectedPattern = patterns.find(p => p.Name === patternName);
+     if (selectedPattern) {
+       console.log('Found pattern content (length: ' + selectedPattern.Pattern.length + '):', selectedPattern.Pattern);
+       // Log the first and last 100 characters to verify content
+@@ -69,7 +93,7 @@ export const patternAPI = {
+       console.log(`Setting system prompt with content length: ${selectedPattern.Pattern.length}`);
+       console.log(`Content preview:`, selectedPattern.Pattern.substring(0, 100));
+       setSystemPrompt(selectedPattern.Pattern);
+-      selectedPatternName.set(patternName);
++      selectedPatternName.set(patternName);  // Make sure this is set before setting system prompt
+     } else {
+       console.log('No pattern found for name:', patternName);
+       setSystemPrompt('');
+diff --git a/fabric/web/static/data/pattern_descriptions.json b/fabric/web/static/data/pattern_descriptions.json
+index e91ab38..1cf1631 100644
+--- a/fabric/web/static/data/pattern_descriptions.json
++++ b/fabric/web/static/data/pattern_descriptions.json
+@@ -383,6 +383,438 @@
+     {
+       "patternName": "ask_secure_by_design_questions",
+       "description": "Generate comprehensive security-focused questions to guide secure system design and implementation across different architectural components."
++    },
++    {
++      "patternName": "analyze_patent",
++      "description": "Analyze patent documents to evaluate novelty, inventive steps, and technical advantages while providing detailed explanations of problems solved and implementation approaches."
++    },
++    {
++      "patternName": "analyze_threat_report_cmds",
++      "description": "Extract and interpret cybersecurity commands from threat reports, providing detailed command-line arguments and implementation guidance from diverse expert perspectives."
++    },
++    {
++      "patternName": "enrich_blog_post",
++      "description": "Enhance markdown blog posts by improving structure, visuals, and formatting to optimize readability and engagement for static site generation."
++    },
++    {
++      "patternName": "explain_docs",
++      "description": "Transform technical documentation and instructions into clearer, more accessible explanations with improved structure and practical usage examples."
++    },
++    {
++      "patternName": "explain_math",
++      "description": "Explain mathematical concepts and equations clearly for students using step-by-step instructions, visual aids, and practical examples."
++    },
++    {
++      "patternName": "explain_project",
++      "description": "Create comprehensive project overviews with installation instructions, usage examples, and practical applications while maintaining clear documentation structure."
++    },
++    {
++      "patternName": "explain_terms",
++      "description": "Create comprehensive glossaries of advanced terms from content, providing clear definitions, explanations, and helpful analogies for better understanding."
++    },
++    {
++      "patternName": "export_data_as_csv",
++      "description": "Extract structured data from content and convert it into properly formatted CSV files while preserving relationships and data integrity."
++    },
++    {
++      "patternName": "extract_algorithm_update_recommendations",
++      "description": "Extract concise, practical recommendations for improving algorithms and processes from content, focusing on actionable implementation steps."
++    },
++    {
++      "patternName": "extract_article_wisdom",
++      "description": "Extract key insights, practical advice, and timeless wisdom from articles, organizing them into clear, actionable takeaways."
++    },
++    {
++      "patternName": "extract_book_ideas",
++      "description": "Identify and extract novel concepts, unique perspectives, and innovative ideas from books that could inspire new projects or creative works."
++    },
++    {
++      "patternName": "extract_business_ideas",
++      "description": "Identify potential business opportunities, market gaps, and entrepreneurial insights from content, presenting them as actionable venture concepts."
++    },
++    {
++      "patternName": "extract_controversial_ideas",
++      "description": "Identify and analyze contentious viewpoints, challenging assumptions, and debatable claims from content while maintaining objective analysis."
++    },
++    {
++      "patternName": "extract_ctf_writeup",
++      "description": "Extract key techniques, tools, and methodologies from CTF challenge writeups to create structured, educational security learning resources."
++    },
++    {
++      "patternName": "extract_ideas",
++      "description": "Extract and organize key concepts, innovative thoughts, and potential applications from content into structured, actionable idea collections."
++    },
++    {
++      "patternName": "extract_insights_dm",
++      "description": "Extract and organize key insights from direct messages or conversations, focusing on valuable learnings and actionable takeaways."
++    },
++    {
++      "patternName": "extract_instructions",
++      "description": "Extract and organize step-by-step procedures and guidelines from content into clear, sequential instructions for practical implementation."
++    },
++    {
++      "patternName": "extract_jokes",
++      "description": "Extract and categorize humorous content from text, organizing jokes, puns, and witty remarks while preserving their comedic timing and context."
++    },
++    {
++      "patternName": "extract_latest_video",
++      "description": "Extract and summarize key information from the most recent video in a channel or playlist, including title, timestamp, and main content points."
++    },
++    {
++      "patternName": "extract_most_redeeming_thing",
++      "description": "Identify and analyze the most positive or valuable aspect from content, even in challenging or critical contexts, to highlight constructive elements."
++    },
++    {
++      "patternName": "extract_patterns",
++      "description": "Identify and extract recurring patterns, themes, and methodologies from content to create reusable templates and systematic approaches."
++    },
++    {
++      "patternName": "extract_poc",
++      "description": "Extract and document proof-of-concept demonstrations from technical content, including implementation steps, code samples, and validation methods."
++    },
++    {
++      "patternName": "extract_primary_problem",
++      "description": "Identify and analyze the core problem or challenge from content, focusing on root causes and fundamental issues rather than symptoms."
++    },
++    {
++      "patternName": "extract_primary_solution",
++      "description": "Identify and analyze the main solution or approach proposed in content, focusing on key implementation steps and expected outcomes."
++    },
++    {
++      "patternName": "extract_product_features",
++      "description": "Extract and categorize key product features, capabilities, and specifications from content into a structured, comprehensive feature list."
++    },
++    {
++      "patternName": "extract_questions",
++      "description": "Extract and categorize key questions, inquiries, and discussion points from content to create comprehensive Q&A resources."
++    },
++    {
++      "patternName": "extract_recipe",
++      "description": "Extract and format cooking recipes from content into structured instructions with ingredients, steps, and preparation details."
++    },
++    {
++      "patternName": "extract_recommendations",
++      "description": "Extract and prioritize suggested actions, advice, and recommendations from content, organizing them into clear, actionable guidance."
++    },
++    {
++      "patternName": "extract_references",
++      "description": "Extract and format citations, sources, and bibliographic references from content into a structured, properly formatted reference list."
++    },
++    {
++      "patternName": "extract_song_meaning",
++      "description": "Analyze and interpret song lyrics to uncover deeper meanings, themes, metaphors, and cultural or historical references within musical compositions."
++    },
++    {
++      "patternName": "extract_sponsors",
++      "description": "Extract and organize sponsorship information from content, including sponsor names, promotional messages, and partnership details."
++    },
++    {
++      "patternName": "extract_videoid",
++      "description": "Extract and parse video identifiers and URLs from content to create structured lists of video references and links."
++    },
++    {
++      "patternName": "extract_wisdom_agents",
++      "description": "Extract and synthesize insights from AI agent interactions, focusing on emergent behaviors, learning patterns, and decision-making processes."
++    },
++    {
++      "patternName": "extract_wisdom_dm",
++      "description": "Extract and analyze key insights and learnings from direct message conversations, focusing on personal growth and practical wisdom."
++    },
++    {
++      "patternName": "extract_wisdom_nometa",
++      "description": "Extract pure insights and wisdom from content without metadata or contextual annotations, focusing on core principles and essential truths."
++    },
++    {
++      "patternName": "find_hidden_message",
++      "description": "Analyze content to uncover concealed meanings, subtle implications, and embedded messages that may not be immediately apparent."
++    },
++    {
++      "patternName": "find_logical_fallacies",
++      "description": "Identify and analyze logical errors, reasoning flaws, and argumentative fallacies in content to evaluate argument validity and soundness."
++    },
++    {
++      "patternName": "get_wow_per_minute",
++      "description": "Calculate and analyze the frequency of impressive or surprising moments in content to measure engagement and impact density."
++    },
++    {
++      "patternName": "get_youtube_rss",
++      "description": "Generate and format RSS feed URLs for YouTube channels and playlists to enable automated content tracking and updates."
++    },
++    {
++      "patternName": "humanize",
++      "description": "Transform technical or complex content into more approachable, relatable language while maintaining accuracy and key information."
++    },
++    {
++      "patternName": "identify_dsrp_distinctions",
++      "description": "Analyze content using DSRP framework to identify key distinctions, differences, and unique characteristics between concepts and ideas."
++    },
++    {
++      "patternName": "identify_dsrp_perspectives",
++      "description": "Analyze content using DSRP framework to identify different viewpoints, stakeholder perspectives, and alternative ways of understanding concepts."
++    },
++    {
++      "patternName": "identify_dsrp_relationships",
++      "description": "Analyze content using DSRP framework to identify connections, correlations, and causal relationships between different concepts and elements."
++    },
++    {
++      "patternName": "identify_dsrp_systems",
++      "description": "Analyze content using DSRP framework to identify systems, hierarchies, and organizational structures that connect different components and ideas."
++    },
++    {
++      "patternName": "identify_job_stories",
++      "description": "Extract and analyze user job stories from content to understand core motivations, situational contexts, and desired outcomes in product usage."
++    },
++    {
++      "patternName": "improve_academic_writing",
++      "description": "Enhance academic writing by improving clarity, structure, argumentation, and scholarly tone while maintaining rigorous academic standards."
++    },
++    {
++      "patternName": "improve_prompt",
++      "description": "Enhance AI prompts by refining clarity, specificity, and structure to generate more accurate, relevant, and useful responses."
++    },
++    {
++      "patternName": "improve_report_finding",
++      "description": "Enhance security report findings by improving clarity, technical accuracy, risk assessment, and remediation recommendations."
++    },
++    {
++      "patternName": "improve_writing",
++      "description": "Enhance written content by improving clarity, flow, structure, and style while maintaining the original message and intent."
++    },
++    {
++      "patternName": "judge_output",
++      "description": "Evaluate AI-generated outputs for quality, accuracy, relevance, and adherence to specified requirements and standards."
++    },
++    {
++      "patternName": "label_and_rate",
++      "description": "Categorize and evaluate content by assigning descriptive labels and numerical ratings based on defined criteria and quality metrics."
++    },
++    {
++      "patternName": "md_callout",
++      "description": "Generate markdown callout blocks to highlight important information, warnings, notes, and tips with appropriate styling and formatting."
++    },
++    {
++      "patternName": "official_pattern_template",
++      "description": "Define standardized pattern templates with structured sections for identity, purpose, steps, and output specifications to ensure consistent pattern creation."
++    },
++    {
++      "patternName": "prepare_7s_strategy",
++      "description": "Apply McKinsey's 7S framework to analyze organizational alignment across strategy, structure, systems, shared values, style, staff, and skills."
++    },
++    {
++      "patternName": "provide_guidance",
++      "description": "Offer expert advice and recommendations tailored to specific situations, providing clear, actionable steps and best practices for implementation."
++    },
++    {
++      "patternName": "rate_ai_response",
++      "description": "Evaluate AI responses for quality, coherence, relevance, and effectiveness, providing detailed scoring and improvement suggestions."
++    },
++    {
++      "patternName": "rate_ai_result",
++      "description": "Assess AI-generated outputs against predefined success criteria, providing quantitative scores and qualitative feedback for improvement."
++    },
++    {
++      "patternName": "rate_content",
++      "description": "Evaluate content quality across multiple dimensions including accuracy, clarity, engagement, and value, providing comprehensive scoring with detailed justification."
++    },
++    {
++      "patternName": "rate_value",
++      "description": "Assess the practical value and impact potential of content by evaluating its utility, applicability, and potential return on investment."
++    },
++    {
++      "patternName": "raw_query",
++      "description": "Process direct, unstructured queries by interpreting intent and providing focused, relevant responses without additional formatting or templates."
++    },
++    {
++      "patternName": "recommend_artists",
++      "description": "Suggest relevant artists and creators based on user preferences, style similarities, and thematic connections across various artistic mediums."
++    },
++    {
++      "patternName": "recommend_pipeline_upgrades",
++      "description": "Analyze CI/CD pipelines and suggest improvements for efficiency, reliability, and security based on industry best practices and modern tooling."
++    },
++    {
++      "patternName": "recommend_talkpanel_topics",
++      "description": "Generate engaging discussion topics and questions for panel talks based on audience interests, current trends, and speaker expertise."
++    },
++    {
++      "patternName": "refine_design_document",
++      "description": "Enhance software design documentation by improving clarity, completeness, technical accuracy, and alignment with architectural best practices."
++    },
++    {
++      "patternName": "review_design",
++      "description": "Evaluate software design proposals and architectures for scalability, maintainability, security, and adherence to design principles and patterns."
++    },
++    {
++      "patternName": "sanitize_broken_html_to_markdown",
++      "description": "Clean and convert malformed HTML content into well-structured markdown format while preserving content hierarchy and semantic meaning."
++    },
++    {
++      "patternName": "show_fabric_options_markmap",
++      "description": "Generate hierarchical mind maps visualizing Fabric framework capabilities, patterns, and configuration options using Markmap syntax."
++    },
++    {
++      "patternName": "solve_with_cot",
++      "description": "Solve complex problems using chain-of-thought reasoning, breaking down solutions into clear, logical steps with explicit intermediate reasoning."
++    },
++    {
++      "patternName": "suggest_pattern",
++      "description": "Recommend appropriate Fabric patterns based on user requirements, task characteristics, and desired outcomes to optimize pattern selection."
++    },
++    {
++      "patternName": "summarize",
++      "description": "Generate comprehensive content summaries that capture key points, main arguments, and essential details while maintaining context and clarity."
++    },
++    {
++      "patternName": "summarize_debate",
++      "description": "Create structured summaries of debates highlighting key arguments, points of agreement, areas of contention, and notable exchanges between participants."
++    },
++    {
++      "patternName": "summarize_git_changes",
++      "description": "Generate clear, concise summaries of git repository changes, highlighting key modifications, additions, and deletions across commits."
++    },
++    {
++      "patternName": "summarize_git_diff",
++      "description": "Analyze git diff output to provide clear, structured summaries of code changes, highlighting functional modifications and their potential impact."
++    },
++    {
++      "patternName": "summarize_lecture",
++      "description": "Create structured summaries of academic lectures capturing key concepts, examples, methodologies, and important takeaways in an organized format."
++    },
++    {
++      "patternName": "summarize_legislation",
++      "description": "Create comprehensive summaries of legislative documents highlighting key provisions, amendments, implications, and affected stakeholders."
++    },
++    {
++      "patternName": "summarize_meeting",
++      "description": "Create structured meeting summaries capturing key discussions, decisions, action items, and assigned responsibilities in a clear, organized format."
++    },
++    {
++      "patternName": "summarize_micro",
++      "description": "Generate extremely concise summaries of content by distilling complex information into essential points using minimal words while preserving key meaning."
++    },
++    {
++      "patternName": "summarize_newsletter",
++      "description": "Create concise summaries of newsletter content highlighting key updates, announcements, trends, and notable developments in a structured format."
++    },
++    {
++      "patternName": "summarize_paper",
++      "description": "Create structured summaries of academic papers highlighting research objectives, methodology, key findings, and significant conclusions in a clear format."
++    },
++    {
++      "patternName": "summarize_prompt",
++      "description": "Analyze and summarize AI prompts to identify key instructions, requirements, constraints, and expected outputs in a clear, structured format."
++    },
++    {
++      "patternName": "summarize_pull-requests",
++      "description": "Create concise summaries of pull requests highlighting key code changes, implementation details, and potential impacts in a clear, developer-friendly format."
++    },
++    {
++      "patternName": "summarize_rpg_session",
++      "description": "Create detailed summaries of roleplaying game sessions capturing key story events, character developments, combat encounters, and important decisions in a narrative format."
++    },
++    {
++      "patternName": "t_analyze_challenge_handling",
++      "description": "Evaluate approaches to handling challenges by analyzing response strategies, coping mechanisms, and problem-solving methods to identify effective patterns."
++    },
++    {
++      "patternName": "t_check_metrics",
++      "description": "Analyze and evaluate performance metrics, tracking progress against goals while identifying trends, patterns, and areas for improvement."
++    },
++    {
++      "patternName": "t_create_h3_career",
++      "description": "Generate structured career development plans using the Head, Heart, Hands (H3) framework to align skills, passions, and practical actions."
++    },
++    {
++      "patternName": "t_create_opening_sentences",
++      "description": "Generate compelling opening sentences for content that capture attention, establish context, and effectively introduce key themes or concepts."
++    },
++    {
++      "patternName": "t_describe_life_outlook",
++      "description": "Analyze and articulate personal life philosophies, values, and worldviews to understand core beliefs and their influence on decision-making and behavior."
++    },
++    {
++      "patternName": "t_extract_intro_sentences",
++      "description": "Extract and analyze introductory sentences from content to identify effective hooks, context-setting techniques, and engagement strategies."
++    },
++    {
++      "patternName": "t_extract_panel_topics",
++      "description": "Extract and organize potential discussion topics from content to create engaging panel discussions, identifying key themes, controversies, and audience-relevant points."
++    },
++    {
++      "patternName": "t_find_blindspots",
++      "description": "Identify and analyze potential blind spots in thinking, planning, or decision-making processes to uncover overlooked factors and improve strategic awareness."
++    },
++    {
++      "patternName": "t_find_negative_thinking",
++      "description": "Identify and analyze patterns of negative thinking in content to recognize cognitive distortions, self-limiting beliefs, and opportunities for reframing."
++    },
++    {
++      "patternName": "t_find_neglected_goals",
++      "description": "Identify and analyze goals, aspirations, or objectives that have been overlooked or deprioritized to surface opportunities for renewed focus and action."
++    },
++    {
++      "patternName": "t_give_encouragement",
++      "description": "Generate personalized, context-aware messages of encouragement that acknowledge challenges while reinforcing strengths and promoting resilience."
++    },
++    {
++      "patternName": "t_red_team_thinking",
++      "description": "Apply adversarial thinking to analyze plans, systems, or ideas by identifying potential weaknesses, attack vectors, and failure modes to improve resilience."
++    },
++    {
++      "patternName": "t_threat_model_plans",
++      "description": "Analyze plans and strategies through a security lens to identify potential threats, vulnerabilities, and risks while providing mitigation recommendations."
++    },
++    {
++      "patternName": "t_visualize_mission_goals_projects",
++      "description": "Create visual representations of organizational missions, strategic goals, and project hierarchies to clarify relationships and track progress toward objectives."
++    },
++    {
++      "patternName": "t_year_in_review",
++      "description": "Generate comprehensive annual reviews by analyzing achievements, challenges, learnings, and growth opportunities while identifying patterns and setting future directions."
++    },
++    {
++      "patternName": "to_flashcards",
++      "description": "Convert educational content into structured flashcard format with clear questions and answers, optimized for spaced repetition learning."
++    },
++    {
++      "patternName": "transcribe_minutes",
++      "description": "Convert meeting recordings or notes into structured, well-organized minutes capturing key discussions, decisions, action items, and attendee contributions."
++    },
++    {
++      "patternName": "translate",
++      "description": "Convert content between languages while preserving meaning, context, and cultural nuances, ensuring accurate and natural-sounding translations."
++    },
++    {
++      "patternName": "tweet",
++      "description": "Transform content into concise, engaging tweets that capture key messages while adhering to platform constraints and social media best practices."
++    },
++    {
++      "patternName": "write_essay",
++      "description": "Create well-structured essays with clear thesis statements, supporting arguments, evidence, and conclusions while maintaining academic writing standards."
++    },
++    {
++      "patternName": "write_hackerone_report",
++      "description": "Create detailed vulnerability reports following HackerOne's format, including clear reproduction steps, impact analysis, and remediation recommendations."
++    },
++    {
++      "patternName": "write_latex",
++      "description": "Generate professional LaTeX documents with proper formatting, mathematical notation, citations, and cross-references following academic publishing standards."
++    },
++    {
++      "patternName": "write_micro_essay",
++      "description": "Create concise, focused essays that present a single key idea with supporting evidence and analysis in a highly condensed format."
++    },
++    {
++      "patternName": "write_nuclei_template_rule",
++      "description": "Generate Nuclei vulnerability scanning templates with detection logic, payload patterns, and validation rules following the template syntax specification."
++    },
++    {
++      "patternName": "write_pull-request",
++      "description": "Create comprehensive pull request descriptions with clear summaries of changes, implementation details, testing procedures, and related issue references."
++    },
++    {
++      "patternName": "write_semgrep_rule",
++      "description": "Create Semgrep pattern matching rules for static code analysis, including detection patterns, metadata, and fix suggestions following the rule syntax specification."
+     }
+   ]
+ }
+\ No newline at end of file
+-- 
+2.39.2 (Apple Git-143)
+
