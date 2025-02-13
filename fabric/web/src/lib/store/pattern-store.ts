@@ -1,8 +1,32 @@
 import { createStorageAPI } from '$lib/api/base';
 import type { Pattern } from '$lib/interfaces/pattern-interface';
-import { get, writable } from 'svelte/store';
+import { get, writable, derived } from 'svelte/store';
+import { languageStore } from './language-store';
 
-export const patterns = writable<Pattern[]>([]);
+// Store for all patterns
+const allPatterns = writable<Pattern[]>([]);
+
+// Filtered patterns based on language
+export const patterns = derived(
+  [allPatterns, languageStore],
+  ([$allPatterns, $language]) => {
+    if (!$language) return $allPatterns;
+    // If language is selected, filter out patterns of other languages
+    return $allPatterns.filter(p => {
+      // Keep all patterns if no language is selected
+      if (!$language) return true;
+      
+      // Check if pattern has a language prefix (e.g., en_, fr_)
+      const match = p.Name.match(/^([a-z]{2})_/);
+      if (!match) return true; // Keep patterns without language prefix
+      
+      // Only filter out patterns that have a different language prefix
+      const patternLang = match[1];
+      return patternLang === $language;
+    });
+  }
+);
+
 export const systemPrompt = writable<string>('');
 export const selectedPatternName = writable<string>('');
 
@@ -48,19 +72,19 @@ export const patternAPI = {
       // Wait for all pattern contents to be fetched
       const loadedPatterns = await Promise.all(patternsPromises);
       console.log("Patterns with content:", loadedPatterns);
-      patterns.set(loadedPatterns);
+      allPatterns.set(loadedPatterns);
       return loadedPatterns;
     } catch (error) {
       console.error('Failed to load patterns:', error);
-      patterns.set([]);
+      allPatterns.set([]);
       return [];
     }
   },
 
   selectPattern(patternName: string) {
-    const allPatterns = get(patterns);
+    const patterns = get(allPatterns);
     console.log('Selecting pattern:', patternName);
-    const selectedPattern = allPatterns.find(p => p.Name === patternName);
+    const selectedPattern = patterns.find(p => p.Name === patternName);
     if (selectedPattern) {
       console.log('Found pattern content (length: ' + selectedPattern.Pattern.length + '):', selectedPattern.Pattern);
       // Log the first and last 100 characters to verify content
@@ -69,7 +93,7 @@ export const patternAPI = {
       console.log(`Setting system prompt with content length: ${selectedPattern.Pattern.length}`);
       console.log(`Content preview:`, selectedPattern.Pattern.substring(0, 100));
       setSystemPrompt(selectedPattern.Pattern);
-      selectedPatternName.set(patternName);
+      selectedPatternName.set(patternName);  // Make sure this is set before setting system prompt
     } else {
       console.log('No pattern found for name:', patternName);
       setSystemPrompt('');

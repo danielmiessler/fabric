@@ -129,24 +129,24 @@ export async function sendMessage(content: string, systemPromptText?: string, is
 
             if (lastMessage?.role === 'assistant') {
               lastMessage.content = content;
-              if (response) {
-                lastMessage.format = response.format;
-              }
+              // Always preserve format from response
+              lastMessage.format = response?.format || lastMessage.format;
               console.log('6a. Updated existing message:', {
                 role: 'assistant',
                 contentLength: content.length,
-                format: response?.format
+                format: lastMessage.format
               });
             } else {
+              // Ensure new messages have format from response
               newMessages.push({
                 role: 'assistant',
                 content,
-                format: response?.format
+                format: response?.format || 'markdown'  // Default to markdown for pattern responses
               });
               console.log('6b. Added new message:', {
                 role: 'assistant',
                 contentLength: content.length,
-                format: response?.format
+                format: response?.format || 'markdown'
               });
             }
 

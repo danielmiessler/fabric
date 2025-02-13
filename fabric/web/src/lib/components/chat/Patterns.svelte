@@ -47,7 +47,7 @@
   >
     <option value="">Load a pattern...</option>
     {#each $patterns as pattern}
-      <option value={pattern.Name}>{pattern.Description}</option>
+      <option value={pattern.Name}>{pattern.Name}</option>
     {/each}
   </Select>
 </div>

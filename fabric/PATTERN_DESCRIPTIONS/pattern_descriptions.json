@@ -383,6 +383,438 @@
     {
       "patternName": "ask_secure_by_design_questions",
       "description": "Generate comprehensive security-focused questions to guide secure system design and implementation across different architectural components."
+    },
+    {
+      "patternName": "analyze_patent",
+      "description": "Analyze patent documents to evaluate novelty, inventive steps, and technical advantages while providing detailed explanations of problems solved and implementation approaches."
+    },
+    {
+      "patternName": "analyze_threat_report_cmds",
+      "description": "Extract and interpret cybersecurity commands from threat reports, providing detailed command-line arguments and implementation guidance from diverse expert perspectives."
+    },
+    {
+      "patternName": "enrich_blog_post",
+      "description": "Enhance markdown blog posts by improving structure, visuals, and formatting to optimize readability and engagement for static site generation."
+    },
+    {
+      "patternName": "explain_docs",
+      "description": "Transform technical documentation and instructions into clearer, more accessible explanations with improved structure and practical usage examples."
+    },
+    {
+      "patternName": "explain_math",
+      "description": "Explain mathematical concepts and equations clearly for students using step-by-step instructions, visual aids, and practical examples."
+    },
+    {
+      "patternName": "explain_project",
+      "description": "Create comprehensive project overviews with installation instructions, usage examples, and practical applications while maintaining clear documentation structure."
+    },
+    {
+      "patternName": "explain_terms",
+      "description": "Create comprehensive glossaries of advanced terms from content, providing clear definitions, explanations, and helpful analogies for better understanding."
+    },
+    {
+      "patternName": "export_data_as_csv",
+      "description": "Extract structured data from content and convert it into properly formatted CSV files while preserving relationships and data integrity."
+    },
+    {
+      "patternName": "extract_algorithm_update_recommendations",
+      "description": "Extract concise, practical recommendations for improving algorithms and processes from content, focusing on actionable implementation steps."
+    },
+    {
+      "patternName": "extract_article_wisdom",
+      "description": "Extract key insights, practical advice, and timeless wisdom from articles, organizing them into clear, actionable takeaways."
+    },
+    {
+      "patternName": "extract_book_ideas",
+      "description": "Identify and extract novel concepts, unique perspectives, and innovative ideas from books that could inspire new projects or creative works."
+    },
+    {
+      "patternName": "extract_business_ideas",
+      "description": "Identify potential business opportunities, market gaps, and entrepreneurial insights from content, presenting them as actionable venture concepts."
+    },
+    {
+      "patternName": "extract_controversial_ideas",
+      "description": "Identify and analyze contentious viewpoints, challenging assumptions, and debatable claims from content while maintaining objective analysis."
+    },
+    {
+      "patternName": "extract_ctf_writeup",
+      "description": "Extract key techniques, tools, and methodologies from CTF challenge writeups to create structured, educational security learning resources."
+    },
+    {
+      "patternName": "extract_ideas",
+      "description": "Extract and organize key concepts, innovative thoughts, and potential applications from content into structured, actionable idea collections."
+    },
+    {
+      "patternName": "extract_insights_dm",
+      "description": "Extract and organize key insights from direct messages or conversations, focusing on valuable learnings and actionable takeaways."
+    },
+    {
+      "patternName": "extract_instructions",
+      "description": "Extract and organize step-by-step procedures and guidelines from content into clear, sequential instructions for practical implementation."
+    },
+    {
+      "patternName": "extract_jokes",
+      "description": "Extract and categorize humorous content from text, organizing jokes, puns, and witty remarks while preserving their comedic timing and context."
+    },
+    {
+      "patternName": "extract_latest_video",
+      "description": "Extract and summarize key information from the most recent video in a channel or playlist, including title, timestamp, and main content points."
+    },
+    {
+      "patternName": "extract_most_redeeming_thing",
+      "description": "Identify and analyze the most positive or valuable aspect from content, even in challenging or critical contexts, to highlight constructive elements."
+    },
+    {
+      "patternName": "extract_patterns",
+      "description": "Identify and extract recurring patterns, themes, and methodologies from content to create reusable templates and systematic approaches."
+    },
+    {
+      "patternName": "extract_poc",
+      "description": "Extract and document proof-of-concept demonstrations from technical content, including implementation steps, code samples, and validation methods."
+    },
+    {
+      "patternName": "extract_primary_problem",
+      "description": "Identify and analyze the core problem or challenge from content, focusing on root causes and fundamental issues rather than symptoms."
+    },
+    {
+      "patternName": "extract_primary_solution",
+      "description": "Identify and analyze the main solution or approach proposed in content, focusing on key implementation steps and expected outcomes."
+    },
+    {
+      "patternName": "extract_product_features",
+      "description": "Extract and categorize key product features, capabilities, and specifications from content into a structured, comprehensive feature list."
+    },
+    {
+      "patternName": "extract_questions",
+      "description": "Extract and categorize key questions, inquiries, and discussion points from content to create comprehensive Q&A resources."
+    },
+    {
+      "patternName": "extract_recipe",
+      "description": "Extract and format cooking recipes from content into structured instructions with ingredients, steps, and preparation details."
+    },
+    {
+      "patternName": "extract_recommendations",
+      "description": "Extract and prioritize suggested actions, advice, and recommendations from content, organizing them into clear, actionable guidance."
+    },
+    {
+      "patternName": "extract_references",
+      "description": "Extract and format citations, sources, and bibliographic references from content into a structured, properly formatted reference list."
+    },
+    {
+      "patternName": "extract_song_meaning",
+      "description": "Analyze and interpret song lyrics to uncover deeper meanings, themes, metaphors, and cultural or historical references within musical compositions."
+    },
+    {
+      "patternName": "extract_sponsors",
+      "description": "Extract and organize sponsorship information from content, including sponsor names, promotional messages, and partnership details."
+    },
+    {
+      "patternName": "extract_videoid",
+      "description": "Extract and parse video identifiers and URLs from content to create structured lists of video references and links."
+    },
+    {
+      "patternName": "extract_wisdom_agents",
+      "description": "Extract and synthesize insights from AI agent interactions, focusing on emergent behaviors, learning patterns, and decision-making processes."
+    },
+    {
+      "patternName": "extract_wisdom_dm",
+      "description": "Extract and analyze key insights and learnings from direct message conversations, focusing on personal growth and practical wisdom."
+    },
+    {
+      "patternName": "extract_wisdom_nometa",
+      "description": "Extract pure insights and wisdom from content without metadata or contextual annotations, focusing on core principles and essential truths."
+    },
+    {
+      "patternName": "find_hidden_message",
+      "description": "Analyze content to uncover concealed meanings, subtle implications, and embedded messages that may not be immediately apparent."
+    },
+    {
+      "patternName": "find_logical_fallacies",
+      "description": "Identify and analyze logical errors, reasoning flaws, and argumentative fallacies in content to evaluate argument validity and soundness."
+    },
+    {
+      "patternName": "get_wow_per_minute",
+      "description": "Calculate and analyze the frequency of impressive or surprising moments in content to measure engagement and impact density."
+    },
+    {
+      "patternName": "get_youtube_rss",
+      "description": "Generate and format RSS feed URLs for YouTube channels and playlists to enable automated content tracking and updates."
+    },
+    {
+      "patternName": "humanize",
+      "description": "Transform technical or complex content into more approachable, relatable language while maintaining accuracy and key information."
+    },
+    {
+      "patternName": "identify_dsrp_distinctions",
+      "description": "Analyze content using DSRP framework to identify key distinctions, differences, and unique characteristics between concepts and ideas."
+    },
+    {
+      "patternName": "identify_dsrp_perspectives",
+      "description": "Analyze content using DSRP framework to identify different viewpoints, stakeholder perspectives, and alternative ways of understanding concepts."
+    },
+    {
+      "patternName": "identify_dsrp_relationships",
+      "description": "Analyze content using DSRP framework to identify connections, correlations, and causal relationships between different concepts and elements."
+    },
+    {
+      "patternName": "identify_dsrp_systems",
+      "description": "Analyze content using DSRP framework to identify systems, hierarchies, and organizational structures that connect different components and ideas."
+    },
+    {
+      "patternName": "identify_job_stories",
+      "description": "Extract and analyze user job stories from content to understand core motivations, situational contexts, and desired outcomes in product usage."
+    },
+    {
+      "patternName": "improve_academic_writing",
+      "description": "Enhance academic writing by improving clarity, structure, argumentation, and scholarly tone while maintaining rigorous academic standards."
+    },
+    {
+      "patternName": "improve_prompt",
+      "description": "Enhance AI prompts by refining clarity, specificity, and structure to generate more accurate, relevant, and useful responses."
+    },
+    {
+      "patternName": "improve_report_finding",
+      "description": "Enhance security report findings by improving clarity, technical accuracy, risk assessment, and remediation recommendations."
+    },
+    {
+      "patternName": "improve_writing",
+      "description": "Enhance written content by improving clarity, flow, structure, and style while maintaining the original message and intent."
+    },
+    {
+      "patternName": "judge_output",
+      "description": "Evaluate AI-generated outputs for quality, accuracy, relevance, and adherence to specified requirements and standards."
+    },
+    {
+      "patternName": "label_and_rate",
+      "description": "Categorize and evaluate content by assigning descriptive labels and numerical ratings based on defined criteria and quality metrics."
+    },
+    {
+      "patternName": "md_callout",
+      "description": "Generate markdown callout blocks to highlight important information, warnings, notes, and tips with appropriate styling and formatting."
+    },
+    {
+      "patternName": "official_pattern_template",
+      "description": "Define standardized pattern templates with structured sections for identity, purpose, steps, and output specifications to ensure consistent pattern creation."
+    },
+    {
+      "patternName": "prepare_7s_strategy",
+      "description": "Apply McKinsey's 7S framework to analyze organizational alignment across strategy, structure, systems, shared values, style, staff, and skills."
+    },
+    {
+      "patternName": "provide_guidance",
+      "description": "Offer expert advice and recommendations tailored to specific situations, providing clear, actionable steps and best practices for implementation."
+    },
+    {
+      "patternName": "rate_ai_response",
+      "description": "Evaluate AI responses for quality, coherence, relevance, and effectiveness, providing detailed scoring and improvement suggestions."
+    },
+    {
+      "patternName": "rate_ai_result",
+      "description": "Assess AI-generated outputs against predefined success criteria, providing quantitative scores and qualitative feedback for improvement."
+    },
+    {
+      "patternName": "rate_content",
+      "description": "Evaluate content quality across multiple dimensions including accuracy, clarity, engagement, and value, providing comprehensive scoring with detailed justification."
+    },
+    {
+      "patternName": "rate_value",
+      "description": "Assess the practical value and impact potential of content by evaluating its utility, applicability, and potential return on investment."
+    },
+    {
+      "patternName": "raw_query",
+      "description": "Process direct, unstructured queries by interpreting intent and providing focused, relevant responses without additional formatting or templates."
+    },
+    {
+      "patternName": "recommend_artists",
+      "description": "Suggest relevant artists and creators based on user preferences, style similarities, and thematic connections across various artistic mediums."
+    },
+    {
+      "patternName": "recommend_pipeline_upgrades",
+      "description": "Analyze CI/CD pipelines and suggest improvements for efficiency, reliability, and security based on industry best practices and modern tooling."
+    },
+    {
+      "patternName": "recommend_talkpanel_topics",
+      "description": "Generate engaging discussion topics and questions for panel talks based on audience interests, current trends, and speaker expertise."
+    },
+    {
+      "patternName": "refine_design_document",
+      "description": "Enhance software design documentation by improving clarity, completeness, technical accuracy, and alignment with architectural best practices."
+    },
+    {
+      "patternName": "review_design",
+      "description": "Evaluate software design proposals and architectures for scalability, maintainability, security, and adherence to design principles and patterns."
+    },
+    {
+      "patternName": "sanitize_broken_html_to_markdown",
+      "description": "Clean and convert malformed HTML content into well-structured markdown format while preserving content hierarchy and semantic meaning."
+    },
+    {
+      "patternName": "show_fabric_options_markmap",
+      "description": "Generate hierarchical mind maps visualizing Fabric framework capabilities, patterns, and configuration options using Markmap syntax."
+    },
+    {
+      "patternName": "solve_with_cot",
+      "description": "Solve complex problems using chain-of-thought reasoning, breaking down solutions into clear, logical steps with explicit intermediate reasoning."
+    },
+    {
+      "patternName": "suggest_pattern",
+      "description": "Recommend appropriate Fabric patterns based on user requirements, task characteristics, and desired outcomes to optimize pattern selection."
+    },
+    {
+      "patternName": "summarize",
+      "description": "Generate comprehensive content summaries that capture key points, main arguments, and essential details while maintaining context and clarity."
+    },
+    {
+      "patternName": "summarize_debate",
+      "description": "Create structured summaries of debates highlighting key arguments, points of agreement, areas of contention, and notable exchanges between participants."
+    },
+    {
+      "patternName": "summarize_git_changes",
+      "description": "Generate clear, concise summaries of git repository changes, highlighting key modifications, additions, and deletions across commits."
+    },
+    {
+      "patternName": "summarize_git_diff",
+      "description": "Analyze git diff output to provide clear, structured summaries of code changes, highlighting functional modifications and their potential impact."
+    },
+    {
+      "patternName": "summarize_lecture",
+      "description": "Create structured summaries of academic lectures capturing key concepts, examples, methodologies, and important takeaways in an organized format."
+    },
+    {
+      "patternName": "summarize_legislation",
+      "description": "Create comprehensive summaries of legislative documents highlighting key provisions, amendments, implications, and affected stakeholders."
+    },
+    {
+      "patternName": "summarize_meeting",
+      "description": "Create structured meeting summaries capturing key discussions, decisions, action items, and assigned responsibilities in a clear, organized format."
+    },
+    {
+      "patternName": "summarize_micro",
+      "description": "Generate extremely concise summaries of content by distilling complex information into essential points using minimal words while preserving key meaning."
+    },
+    {
+      "patternName": "summarize_newsletter",
+      "description": "Create concise summaries of newsletter content highlighting key updates, announcements, trends, and notable developments in a structured format."
+    },
+    {
+      "patternName": "summarize_paper",
+      "description": "Create structured summaries of academic papers highlighting research objectives, methodology, key findings, and significant conclusions in a clear format."
+    },
+    {
+      "patternName": "summarize_prompt",
+      "description": "Analyze and summarize AI prompts to identify key instructions, requirements, constraints, and expected outputs in a clear, structured format."
+    },
+    {
+      "patternName": "summarize_pull-requests",
+      "description": "Create concise summaries of pull requests highlighting key code changes, implementation details, and potential impacts in a clear, developer-friendly format."
+    },
+    {
+      "patternName": "summarize_rpg_session",
+      "description": "Create detailed summaries of roleplaying game sessions capturing key story events, character developments, combat encounters, and important decisions in a narrative format."
+    },
+    {
+      "patternName": "t_analyze_challenge_handling",
+      "description": "Evaluate approaches to handling challenges by analyzing response strategies, coping mechanisms, and problem-solving methods to identify effective patterns."
+    },
+    {
+      "patternName": "t_check_metrics",
+      "description": "Analyze and evaluate performance metrics, tracking progress against goals while identifying trends, patterns, and areas for improvement."
+    },
+    {
+      "patternName": "t_create_h3_career",
+      "description": "Generate structured career development plans using the Head, Heart, Hands (H3) framework to align skills, passions, and practical actions."
+    },
+    {
+      "patternName": "t_create_opening_sentences",
+      "description": "Generate compelling opening sentences for content that capture attention, establish context, and effectively introduce key themes or concepts."
+    },
+    {
+      "patternName": "t_describe_life_outlook",
+      "description": "Analyze and articulate personal life philosophies, values, and worldviews to understand core beliefs and their influence on decision-making and behavior."
+    },
+    {
+      "patternName": "t_extract_intro_sentences",
+      "description": "Extract and analyze introductory sentences from content to identify effective hooks, context-setting techniques, and engagement strategies."
+    },
+    {
+      "patternName": "t_extract_panel_topics",
+      "description": "Extract and organize potential discussion topics from content to create engaging panel discussions, identifying key themes, controversies, and audience-relevant points."
+    },
+    {
+      "patternName": "t_find_blindspots",
+      "description": "Identify and analyze potential blind spots in thinking, planning, or decision-making processes to uncover overlooked factors and improve strategic awareness."
+    },
+    {
+      "patternName": "t_find_negative_thinking",
+      "description": "Identify and analyze patterns of negative thinking in content to recognize cognitive distortions, self-limiting beliefs, and opportunities for reframing."
+    },
+    {
+      "patternName": "t_find_neglected_goals",
+      "description": "Identify and analyze goals, aspirations, or objectives that have been overlooked or deprioritized to surface opportunities for renewed focus and action."
+    },
+    {
+      "patternName": "t_give_encouragement",
+      "description": "Generate personalized, context-aware messages of encouragement that acknowledge challenges while reinforcing strengths and promoting resilience."
+    },
+    {
+      "patternName": "t_red_team_thinking",
+      "description": "Apply adversarial thinking to analyze plans, systems, or ideas by identifying potential weaknesses, attack vectors, and failure modes to improve resilience."
+    },
+    {
+      "patternName": "t_threat_model_plans",
+      "description": "Analyze plans and strategies through a security lens to identify potential threats, vulnerabilities, and risks while providing mitigation recommendations."
+    },
+    {
+      "patternName": "t_visualize_mission_goals_projects",
+      "description": "Create visual representations of organizational missions, strategic goals, and project hierarchies to clarify relationships and track progress toward objectives."
+    },
+    {
+      "patternName": "t_year_in_review",
+      "description": "Generate comprehensive annual reviews by analyzing achievements, challenges, learnings, and growth opportunities while identifying patterns and setting future directions."
+    },
+    {
+      "patternName": "to_flashcards",
+      "description": "Convert educational content into structured flashcard format with clear questions and answers, optimized for spaced repetition learning."
+    },
+    {
+      "patternName": "transcribe_minutes",
+      "description": "Convert meeting recordings or notes into structured, well-organized minutes capturing key discussions, decisions, action items, and attendee contributions."
+    },
+    {
+      "patternName": "translate",
+      "description": "Convert content between languages while preserving meaning, context, and cultural nuances, ensuring accurate and natural-sounding translations."
+    },
+    {
+      "patternName": "tweet",
+      "description": "Transform content into concise, engaging tweets that capture key messages while adhering to platform constraints and social media best practices."
+    },
+    {
+      "patternName": "write_essay",
+      "description": "Create well-structured essays with clear thesis statements, supporting arguments, evidence, and conclusions while maintaining academic writing standards."
+    },
+    {
+      "patternName": "write_hackerone_report",
+      "description": "Create detailed vulnerability reports following HackerOne's format, including clear reproduction steps, impact analysis, and remediation recommendations."
+    },
+    {
+      "patternName": "write_latex",
+      "description": "Generate professional LaTeX documents with proper formatting, mathematical notation, citations, and cross-references following academic publishing standards."
+    },
+    {
+      "patternName": "write_micro_essay",
+      "description": "Create concise, focused essays that present a single key idea with supporting evidence and analysis in a highly condensed format."
+    },
+    {
+      "patternName": "write_nuclei_template_rule",
+      "description": "Generate Nuclei vulnerability scanning templates with detection logic, payload patterns, and validation rules following the template syntax specification."
+    },
+    {
+      "patternName": "write_pull-request",
+      "description": "Create comprehensive pull request descriptions with clear summaries of changes, implementation details, testing procedures, and related issue references."
+    },
+    {
+      "patternName": "write_semgrep_rule",
+      "description": "Create Semgrep pattern matching rules for static code analysis, including detection patterns, metadata, and fix suggestions following the rule syntax specification."
     }
   ]
 }

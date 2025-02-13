@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
   import { get } from 'svelte/store';
-  import type { Pattern } from '$lib/types';
+  import type { Pattern } from '$lib/interfaces/pattern-interface';
   import { favorites } from '$lib/store/favorites-store';
-  import { patternAPI, systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
+  import { patterns, patternAPI, systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
   import { Input } from "$lib/components/ui/input";
 
   const dispatch = createEventDispatcher<{
@@ -11,36 +11,33 @@
     select: string;
   }>();
 
-  let patterns: Pattern[] = [];
   let patternsContainer: HTMLDivElement;
   let sortBy: 'alphabetical' | 'favorites' = 'alphabetical';
   let searchText = ""; // For pattern filtering
 
   // First filter patterns by search text
-  $: filteredPatterns = patterns.filter(p =>
-    p.patternName.toLowerCase().includes(searchText.toLowerCase())
+  $: filteredPatterns = $patterns.filter((p: Pattern) =>
+    p.Name.toLowerCase().includes(searchText.toLowerCase())
   );
 
   // Then sort the filtered patterns
   $: sortedPatterns = sortBy === 'alphabetical'
-    ? [...filteredPatterns].sort((a, b) => a.patternName.localeCompare(b.patternName))
+    ? [...filteredPatterns].sort((a: Pattern, b: Pattern) => a.Name.localeCompare(b.Name))
     : [
-        ...filteredPatterns.filter(p => $favorites.includes(p.patternName)).sort((a, b) => a.patternName.localeCompare(b.patternName)),
-        ...filteredPatterns.filter(p => !$favorites.includes(p.patternName)).sort((a, b) => a.patternName.localeCompare(b.patternName))
+        ...filteredPatterns.filter((p: Pattern) => $favorites.includes(p.Name)).sort((a: Pattern, b: Pattern) => a.Name.localeCompare(b.Name)),
+        ...filteredPatterns.filter((p: Pattern) => !$favorites.includes(p.Name)).sort((a: Pattern, b: Pattern) => a.Name.localeCompare(b.Name))
       ];
 
   onMount(async () => {
     try {
-      const response = await fetch('/data/pattern_descriptions.json');
-      const data = await response.json();
-      patterns = data.patterns;
+      await patternAPI.loadPatterns();
     } catch (error) {
       console.error('Error loading patterns:', error);
     }
   });
 
-  function toggleFavorite(patternName: string) {
-    favorites.toggleFavorite(patternName);
+  function toggleFavorite(name: string) {
+    favorites.toggleFavorite(name);
   }
 </script>
 
@@ -99,29 +96,12 @@
               class="text-xl font-bold text-primary-300 hover:text-primary-100 cursor-pointer transition-colors"
               role="button"
               tabindex="0"
-              on:click={async () => {
-                try {
-                  console.log('Selecting pattern:', pattern.patternName);
-                  // Update pattern selection
-                  patternAPI.selectPattern(pattern.patternName);
-                  // Verify the selection
-                  const currentSystemPrompt = get(systemPrompt);
-                  const currentPattern = get(selectedPatternName);
-                  console.log('After selection - Pattern:', currentPattern);
-                  console.log('After selection - System Prompt length:', currentSystemPrompt?.length);
-                  
-                  // Only close if selection was successful
-                  if (currentPattern === pattern.patternName && currentSystemPrompt) {
-                    searchText = ""; // Reset search before closing
-                    dispatch('select', pattern.patternName);
-                    dispatch('close');
-                  } else {
-                    console.error('Pattern selection failed - Pattern:', currentPattern);
-                    console.error('Pattern selection failed - System Prompt:', currentSystemPrompt);
-                  }
-                } catch (error) {
-                  console.error('Error selecting pattern:', error);
-                }
+              on:click={() => {
+                console.log('Selecting pattern:', pattern.Name);
+                patternAPI.selectPattern(pattern.Name);
+                searchText = ""; // Reset search before closing
+                dispatch('select', pattern.Name);
+                dispatch('close');
               }}
               on:keydown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -130,20 +110,20 @@
                 }
               }}
             >
-              {pattern.patternName}
+              {pattern.Name}
             </h3>
             <button
               class="text-muted-foreground hover:text-primary-300 transition-colors"
-              on:click={() => toggleFavorite(pattern.patternName)}
+              on:click={() => toggleFavorite(pattern.Name)}
             >
-              {#if $favorites.includes(pattern.patternName)}
+              {#if $favorites.includes(pattern.Name)}
                 ★
               {:else}
                 ☆
               {/if}
             </button>
           </div>
-          <p class="text-sm text-muted-foreground break-words leading-relaxed">{pattern.description}</p>
+          <p class="text-sm text-muted-foreground break-words leading-relaxed">{pattern.Description}</p>
         </div>
       {/each}
     </div>

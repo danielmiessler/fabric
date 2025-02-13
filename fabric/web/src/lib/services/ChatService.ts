@@ -87,16 +87,23 @@ export class ChatService {
         const language = get(languageStore);
         const validator = new LanguageValidator(language);
 
-        const processResponse = (response: StreamResponse) => {
-            if (get(selectedPatternName)) {
-                response.content = cleanPatternOutput(response.content);
-                response.format = 'markdown';
-            }
-            if (response.type === 'content') {
-                response.content = validator.enforceLanguage(response.content);
-            }
-            return response;
-        };
+    const processResponse = (response: StreamResponse) => {
+        // Always set markdown format for pattern responses
+        const pattern = get(selectedPatternName);
+        if (pattern) {
+            response.content = cleanPatternOutput(response.content);
+            response.format = 'markdown';
+            console.log('Processing pattern response:', {
+                pattern,
+                format: response.format,
+                contentLength: response.content.length
+            });
+        }
+        if (response.type === 'content') {
+            response.content = validator.enforceLanguage(response.content);
+        }
+        return response;
+    };
 
         return new ReadableStream({
             async start(controller) {
