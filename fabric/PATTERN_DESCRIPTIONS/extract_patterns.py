@@ -9,116 +9,106 @@ def load_existing_file(filepath):
             return json.load(f)
     return {"patterns": []}
 
+def get_pattern_extract(pattern_path):
+    """Extract first 500 words from pattern's system.md file"""
+    system_md_path = os.path.join(pattern_path, "system.md")
+    with open(system_md_path, 'r', encoding='utf-8') as f:
+        content = ' '.join(f.read().split()[:500])
+    return content
+
 def extract_pattern_info():
-    """Extract pattern information and manage both extract and description files"""
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    fabric_dir = os.path.dirname(script_dir)
-    patterns_dir = os.path.join(fabric_dir, "patterns")
+    patterns_dir = os.path.expanduser("~/.config/fabric/patterns")
+    print(f"\nScanning patterns directory: {patterns_dir}")
+    
     extracts_path = os.path.join(script_dir, "pattern_extracts.json")
     descriptions_path = os.path.join(script_dir, "pattern_descriptions.json")
     
-    # Load existing data
     existing_extracts = load_existing_file(extracts_path)
     existing_descriptions = load_existing_file(descriptions_path)
     
-    # Create lookup sets
     existing_extract_names = {p["patternName"] for p in existing_extracts["patterns"]}
     existing_description_names = {p["patternName"] for p in existing_descriptions["patterns"]}
+    print(f"Found existing patterns: {len(existing_extract_names)}")
     
-    # Track new patterns
     new_extracts = []
     new_descriptions = []
     
-    # Process patterns directory
+    
     for dirname in sorted(os.listdir(patterns_dir)):
-        if dirname in ['.DS_Store', 'raycast']:
-            continue
+        # Only log new pattern processing
+        if dirname not in existing_extract_names:
+            print(f"Processing new pattern: {dirname}")
+    
             
         pattern_path = os.path.join(patterns_dir, dirname)
         system_md_path = os.path.join(pattern_path, "system.md")
+        print(f"Checking system.md at: {system_md_path}")
         
         if os.path.isdir(pattern_path) and os.path.exists(system_md_path):
+            print(f"Valid pattern directory found: {dirname}")
             try:
-                # Process pattern extracts
                 if dirname not in existing_extract_names:
-                    with open(system_md_path, 'r', encoding='utf-8') as f:
-                        lines = []
-                        for i, line in enumerate(f):
-                            if i >= 25:
-                                break
-                            lines.append(line.rstrip())
-                        
-                        pattern_extract = "\n".join(lines)
-                        new_extracts.append({
-                            "patternName": dirname,
-                            "pattern_extract": pattern_extract
-                        })
-                        print(f"Added new pattern extract: {dirname}")
+                    print(f"Creating new extract for: {dirname}")
+                    pattern_extract = get_pattern_extract(pattern_path)  # Pass directory path
+                    new_extracts.append({
+                        "patternName": dirname,
+                        "pattern_extract": pattern_extract
+                    })
                 
-                # Add placeholder for pattern descriptions
                 if dirname not in existing_description_names:
+                    print(f"Creating new description for: {dirname}")
                     new_descriptions.append({
                         "patternName": dirname,
-                        "description": "[Description pending - Requires AI generation]"
+                        "description": "[Description pending]",
+                        "tags": []
                     })
-                    print(f"Added description placeholder for: {dirname}")
                     
             except Exception as e:
                 print(f"Error processing {dirname}: {str(e)}")
+        else:
+            print(f"Invalid pattern directory or missing system.md: {dirname}")
     
-    # Merge new data with existing
+    print(f"\nProcessing summary:")
+    print(f"New extracts created: {len(new_extracts)}")
+    print(f"New descriptions added: {len(new_descriptions)}")
+    
     existing_extracts["patterns"].extend(new_extracts)
     existing_descriptions["patterns"].extend(new_descriptions)
     
-    return existing_extracts, existing_descriptions
+    return existing_extracts, existing_descriptions, len(new_descriptions)
+
 
 def update_web_static(descriptions_path):
     """Copy pattern descriptions to web static directory"""
-    try:
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        fabric_dir = os.path.dirname(script_dir)
-        static_dir = os.path.join(fabric_dir, "web", "static", "data")
-        
-        # Create static/data directory if it doesn't exist
-        os.makedirs(static_dir, exist_ok=True)
-        
-        # Copy pattern descriptions to web static
-        static_path = os.path.join(static_dir, "pattern_descriptions.json")
-        shutil.copy2(descriptions_path, static_path)
-        print(f"Updated web static file: {static_path}")
-    except Exception as e:
-        print(f"Error updating web static: {str(e)}")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    static_dir = os.path.join(script_dir, "..", "web", "static", "data")
+    os.makedirs(static_dir, exist_ok=True)
+    static_path = os.path.join(static_dir, "pattern_descriptions.json")
+    shutil.copy2(descriptions_path, static_path)
 
 def save_pattern_files():
-    """Save both pattern files"""
+    """Save both pattern files and sync to web"""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     extracts_path = os.path.join(script_dir, "pattern_extracts.json")
     descriptions_path = os.path.join(script_dir, "pattern_descriptions.json")
     
-    # Load existing descriptions to calculate new patterns
-    existing_descriptions = load_existing_file(descriptions_path)
-    existing_description_count = len(existing_descriptions["patterns"])
+    pattern_extracts, pattern_descriptions, new_count = extract_pattern_info()
     
-    pattern_extracts, pattern_descriptions = extract_pattern_info()
+    # Save files
+    with open(extracts_path, 'w', encoding='utf-8') as f:
+        json.dump(pattern_extracts, f, indent=2, ensure_ascii=False)
     
-    try:
-        # Save pattern extracts
-        with open(extracts_path, 'w', encoding='utf-8') as f:
-            json.dump(pattern_extracts, f, indent=2, ensure_ascii=False)
-            
-        # Save pattern descriptions
-        with open(descriptions_path, 'w', encoding='utf-8') as f:
-            json.dump(pattern_descriptions, f, indent=2, ensure_ascii=False)
-            
-        # Update web static directory
-        update_web_static(descriptions_path)
-            
-        print(f"\nProcessing complete:")
-        print(f"Total patterns: {len(pattern_extracts['patterns'])}")
-        print(f"New patterns added: {len(pattern_descriptions['patterns']) - existing_description_count}")
-        
-    except Exception as e:
-        print(f"Error saving JSON files: {str(e)}")
+    with open(descriptions_path, 'w', encoding='utf-8') as f:
+        json.dump(pattern_descriptions, f, indent=2, ensure_ascii=False)
+    
+    # Update web static
+    update_web_static(descriptions_path)
+    
+    print(f"\nProcessing complete:")
+    print(f"Total patterns: {len(pattern_descriptions['patterns'])}")
+    print(f"New patterns added: {new_count}")
 
 if __name__ == "__main__":
     save_pattern_files()
+
