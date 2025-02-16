@@ -440,8 +440,6 @@ Tags: BUSINESS
 Description: Identify and analyze contentious viewpoints, challenging assumptions, and debatable claims from content while maintaining objective analysis.
 Tags: EXTRACTION, ANALYSIS, RESEARCH, CRITICAL THINKING
 
-
-
 ## Pattern: extract_ctf_writeup
 Description: Extract key techniques, tools, and methodologies from CTF challenge writeups to create structured, educational security learning resources.
 Tags: SECURITY
@@ -469,8 +467,6 @@ Tags: EXTRACTION, SUMMARIZATION
 ## Pattern: extract_most_redeeming_thing
 Description: Identify and analyze the most positive or valuable aspect from content, even in challenging or critical contexts, to highlight constructive elements.
 Tags: ANALYSIS, SELF, WISDOM
-
-
 
 ## Pattern: extract_patterns
 Description: Identify and extract recurring patterns, themes, and methodologies from content to create reusable templates and systematic approaches.
@@ -563,8 +559,6 @@ Tags: ANALYSIS, RESEARCH
 ## Pattern: identify_dsrp_relationships
 Description: Analyze content using DSRP framework to identify connections, correlations, and causal relationships between different concepts and elements.
 Tags: ANALYSIS, RESEARCH
-
-[...continuing with remaining patterns...]
 
 ## Pattern: identify_dsrp_systems
 Description: Analyze content using DSRP framework to identify systems, hierarchies, and organizational structures that connect different components and ideas.
@@ -686,7 +680,6 @@ Tags: DEVELOPMENT, SUMMARIZATION
 ## Pattern: summarize_git_diff
 Description: Analyze git diff output to provide clear, structured summaries of code changes, highlighting functional modifications and their potential impact.
 Tags: DEVELOPMENT, ANALYSIS
-
 
 ## Pattern: summarize_lecture
 Description: Create structured summaries of academic lectures capturing key concepts, examples, methodologies, and important takeaways in an organized format.
