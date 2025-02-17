@@ -69,8 +69,9 @@ export const patternAPI = {
           
           return {
             Name: pattern,
-            Description: desc?.description || pattern.charAt(0).toUpperCase() + pattern.slice(1), // Fallback to capitalized name
-            Pattern: patternData.Pattern || ""
+            Description: desc?.description || pattern.charAt(0).toUpperCase() + pattern.slice(1),
+            Pattern: patternData.Pattern || "",
+            tags: desc?.tags || []  // Add tags from description
           };
         } catch (error) {
           console.error(`Failed to load pattern ${pattern}:`, error);
@@ -79,7 +80,8 @@ export const patternAPI = {
           return {
             Name: pattern,
             Description: desc?.description || pattern.charAt(0).toUpperCase() + pattern.slice(1),
-            Pattern: ""
+            Pattern: "",
+            tags: desc?.tags || []  // Add tags here too for consistency
           };
         }
       });

@@ -5,28 +5,45 @@
   import { favorites } from '$lib/store/favorites-store';
   import { patterns, patternAPI, systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
   import { Input } from "$lib/components/ui/input";
+  import TagFilterPanel from './TagFilterPanel.svelte';
+  
+  let tagFilterRef: TagFilterPanel;
+
 
   const dispatch = createEventDispatcher<{
     close: void;
     select: string;
   }>();
 
-  let patternsContainer: HTMLDivElement;
-  let sortBy: 'alphabetical' | 'favorites' = 'alphabetical';
-  let searchText = ""; // For pattern filtering
+let patternsContainer: HTMLDivElement;
+let sortBy: 'alphabetical' | 'favorites' = 'alphabetical';
+let searchText = ""; // For pattern filtering
+let selectedTags: string[] = [];
 
-  // First filter patterns by search text
-  $: filteredPatterns = $patterns.filter((p: Pattern) =>
-    p.Name.toLowerCase().includes(searchText.toLowerCase())
-  );
+// First filter patterns by both text and tags
+// First filter patterns by both text and tags
+$: filteredPatterns = $patterns
+    .filter((p: Pattern) => 
+        p.Name.toLowerCase().includes(searchText.toLowerCase())
+    )
+    .filter((p: Pattern) => 
+        selectedTags.length === 0 || 
+        (p.tags && selectedTags.every(tag => p.tags.includes(tag)))
+    );
 
-  // Then sort the filtered patterns
-  $: sortedPatterns = sortBy === 'alphabetical'
+// Then sort the filtered patterns
+$: sortedPatterns = sortBy === 'alphabetical'
     ? [...filteredPatterns].sort((a: Pattern, b: Pattern) => a.Name.localeCompare(b.Name))
     : [
         ...filteredPatterns.filter((p: Pattern) => $favorites.includes(p.Name)).sort((a: Pattern, b: Pattern) => a.Name.localeCompare(b.Name)),
         ...filteredPatterns.filter((p: Pattern) => !$favorites.includes(p.Name)).sort((a: Pattern, b: Pattern) => a.Name.localeCompare(b.Name))
-      ];
+    ];
+
+
+function handleTagFilter(event: CustomEvent<string[]>) {
+    selectedTags = event.detail;
+}
+
 
   onMount(async () => {
     try {
@@ -39,9 +56,16 @@
   function toggleFavorite(name: string) {
     favorites.toggleFavorite(name);
   }
+
+  
+ 
+
+
+
 </script>
 
-<div class="bg-primary-800 rounded-lg flex flex-col h-[85vh] w-[600px] shadow-lg">
+<div class="bg-primary-800 rounded-lg flex flex-col h-[85vh] w-[600px] shadow-lg relative">
+
   <div class="flex flex-col border-b border-primary-700/30">
     <div class="flex justify-between items-center p-4">
       <b class="text-lg text-muted-foreground font-bold">Pattern Descriptions</b>
@@ -84,47 +108,53 @@
     </div>
   </div>
 
+  <TagFilterPanel 
+  patterns={$patterns} 
+  on:tagsChanged={handleTagFilter}
+  bind:this={tagFilterRef}
+/>
+
   <div
     class="patterns-container p-4 flex-1 overflow-y-auto"
     bind:this={patternsContainer}
   >
     <div class="patterns-list space-y-2">
       {#each sortedPatterns as pattern}
-        <div class="pattern-item bg-primary/10 rounded-lg p-3">
-          <div class="flex justify-between items-start gap-4 mb-2">
-            <h3
-              class="text-xl font-bold text-primary-300 hover:text-primary-100 cursor-pointer transition-colors"
-              role="button"
-              tabindex="0"
-              on:click={() => {
-                console.log('Selecting pattern:', pattern.Name);
-                patternAPI.selectPattern(pattern.Name);
-                searchText = ""; // Reset search before closing
-                dispatch('select', pattern.Name);
-                dispatch('close');
-              }}
-              on:keydown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  e.currentTarget.click();
-                }
-              }}
-            >
-              {pattern.Name}
-            </h3>
+      <div class="pattern-item bg-primary/10 rounded-lg p-3">
+        <div class="flex justify-between items-start gap-4 mb-2">
             <button
-              class="text-muted-foreground hover:text-primary-300 transition-colors"
-              on:click={() => toggleFavorite(pattern.Name)}
+                class="text-xl font-bold text-primary-300 hover:text-primary-100 cursor-pointer transition-colors text-left w-full"
+                on:click={() => {
+                    console.log('Selecting pattern:', pattern.Name);
+                    patternAPI.selectPattern(pattern.Name);
+                    searchText = ""; 
+                    tagFilterRef.reset();
+                    dispatch('select', pattern.Name);
+                    dispatch('close');
+                }}
+                on:keydown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        e.currentTarget.click();
+                    }
+                }}
             >
-              {#if $favorites.includes(pattern.Name)}
-                ★
-              {:else}
-                ☆
-              {/if}
+                {pattern.Name}
             </button>
-          </div>
-          <p class="text-sm text-muted-foreground break-words leading-relaxed">{pattern.Description}</p>
+            <button
+                class="text-muted-foreground hover:text-primary-300 transition-colors"
+                on:click={() => toggleFavorite(pattern.Name)}
+            >
+                {#if $favorites.includes(pattern.Name)}
+                    ★
+                {:else}
+                    ☆
+                {/if}
+            </button>
         </div>
+        <p class="text-sm text-muted-foreground break-words leading-relaxed">{pattern.Description}</p>
+    </div>
+    
       {/each}
     </div>
   </div>
