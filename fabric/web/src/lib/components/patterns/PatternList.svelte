@@ -13,7 +13,9 @@
   const dispatch = createEventDispatcher<{
     close: void;
     select: string;
-  }>();
+    tagsChanged: string[];  // Add this line
+}>();
+
 
 let patternsContainer: HTMLDivElement;
 let sortBy: 'alphabetical' | 'favorites' = 'alphabetical';
@@ -68,45 +70,64 @@ function handleTagFilter(event: CustomEvent<string[]>) {
 
   <div class="flex flex-col border-b border-primary-700/30">
     <div class="flex justify-between items-center p-4">
-      <b class="text-lg text-muted-foreground font-bold">Pattern Descriptions</b>
-      <button
-        on:click={() => dispatch('close')}
-        class="text-muted-foreground hover:text-primary-300 transition-colors"
-      >
-        ✕
-      </button>
+        <b class="text-lg text-muted-foreground font-bold">Pattern Descriptions</b>
+        <button
+            on:click={() => dispatch('close')}
+            class="text-muted-foreground hover:text-primary-300 transition-colors"
+        >
+            ✕
+        </button>
     </div>
     
     <div class="px-4 pb-4 flex items-center justify-between">
-      <div class="flex gap-4">
-        <label class="flex items-center gap-2 text-sm text-muted-foreground">
-          <input
-            type="radio"
-            bind:group={sortBy}
-            value="alphabetical"
-            class="radio"
-          >
-          Alphabetical
-        </label>
-        <label class="flex items-center gap-2 text-sm text-muted-foreground">
-          <input
-            type="radio"
-            bind:group={sortBy}
-            value="favorites"
-            class="radio"
-          >
-          Favorites First
-        </label>
-      </div>
-      <div class="w-64 mr-4">
-        <Input
-          bind:value={searchText}
-          placeholder="Search patterns..."
-          class="text-emerald-900"
-        />
-      </div>
+        <div class="flex gap-4">
+            <label class="flex items-center gap-2 text-sm text-muted-foreground">
+                <input
+                    type="radio"
+                    bind:group={sortBy}
+                    value="alphabetical"
+                    class="radio"
+                >
+                Alphabetical
+            </label>
+            <label class="flex items-center gap-2 text-sm text-muted-foreground">
+                <input
+                    type="radio"
+                    bind:group={sortBy}
+                    value="favorites"
+                    class="radio"
+                >
+                Favorites First
+            </label>
+        </div>
+        <div class="w-64 mr-4">
+            <Input
+                bind:value={searchText}
+                placeholder="Search patterns..."
+                class="text-emerald-900"
+            />
+        </div>
     </div>
+
+    <!-- New tag display section -->
+    <div class="px-4 pb-2">
+      <div class="text-sm text-white/70 bg-primary-700/30 rounded-md p-2 flex justify-between items-center">
+          <div>Tags: {selectedTags.length ? selectedTags.join(', ') : 'none'}</div>
+          <button 
+              class="px-2 py-1 text-xs text-white/70 bg-primary-600/30 rounded hover:bg-primary-600/50 transition-colors"
+              on:click={() => {
+                  selectedTags = [];
+                  dispatch('tagsChanged', selectedTags);
+              }}
+          >
+              reset
+          </button>
+      </div>
   </div>
+  
+  
+</div>
+
 
   <TagFilterPanel 
   patterns={$patterns} 
