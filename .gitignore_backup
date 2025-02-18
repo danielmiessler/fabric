@@ -1,0 +1,6 @@
+# Sensitive credentials only
+.env
+.config/fabric/.env
+**/ENV
+**/.env
+
