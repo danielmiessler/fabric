@@ -10,7 +10,6 @@
   import { get } from 'svelte/store';
   import { getTranscript } from '$lib/services/transcriptService';
   import { ChatService } from '$lib/services/ChatService';
-  import type { StreamResponse } from '$lib/interfaces/chat-interface';
   // import { obsidianSettings } from '$lib/store/obsidian-store';
   import { languageStore } from '$lib/store/language-store';
   import { obsidianSettings, updateObsidianSettings } from '$lib/store/obsidian-store';
@@ -195,7 +194,12 @@
           // Get transcript but don't display it
           const { transcript } = await getTranscript(input);
         
-          // Process with current language and pattern
+          // Log system prompt BEFORE createChatRequest
+          console.log('System prompt BEFORE createChatRequest in YouTube flow:', $systemPrompt);
+
+          // Log system prompt BEFORE streamChat
+          console.log(`System prompt BEFORE streamChat in YouTube flow: ${$systemPrompt}`);
+
           const stream = await chatService.streamChat(transcript, $systemPrompt);
           await chatService.processStream(
               stream,
@@ -251,25 +255,25 @@
     if (!userInput.trim()) return;
 
     try {
-        console.log('\n=== Submit Handler Start ===');
+      console.log('\n=== Submit Handler Start ===');
+      
+      if (isYouTubeURL) {
+        console.log('2a. Starting YouTube flow');
+        await processYouTubeURL(userInput);
+        return;
+      }
+      
+      const finalContent = fileContents.length > 0 
+        ? userInput + '\n\nFile Contents:\n' + fileContents.join('\n\n')
+        : userInput;
         
-        if (isYouTubeURL) {
-            console.log('2a. Starting YouTube flow');
-            await processYouTubeURL(userInput);
-            return;
-        }
-        
-        const finalContent = fileContents.length > 0 
-            ? userInput + '\n\nFile Contents:\n' + fileContents.join('\n\n')
-            : userInput;
-            
-        await sendMessage(finalContent);
-        
-        userInput = "";
-        uploadedFiles = [];
-        fileContents = [];
+      await sendMessage(finalContent);
+      
+      userInput = "";
+      uploadedFiles = [];
+      fileContents = [];
     } catch (error) {
-        console.error('Chat submission error:', error);
+      console.error('Chat submission error:', error);
     }
   }
 

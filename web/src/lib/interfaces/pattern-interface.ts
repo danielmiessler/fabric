@@ -4,6 +4,7 @@ import type { StorageEntity } from './storage-interface';
 export interface PatternDescription {
   patternName: string;
   description: string;
+  tags?: string[]; // Optional tags property for PatternDescription
 }
 
 // Interface for storage compatibility - must use uppercase for StorageEntity

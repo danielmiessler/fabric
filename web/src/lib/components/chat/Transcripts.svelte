@@ -1,7 +1,7 @@
 <script lang='ts'>
   import { getToastStore } from '@skeletonlabs/skeleton';
   import { Button } from "$lib/components/ui/button";
-  import Input from '$lib/components/ui/input/input.svelte';
+  import Input from '$lib/components/ui/input/Input.svelte';
   import { Toast } from '@skeletonlabs/skeleton';
 
   let url = '';
@@ -75,7 +75,6 @@
 
 <div class="flex gap-2">
   <Input
-    type="text"
     bind:value={url}
     placeholder="YouTube URL"
     class="flex-1 rounded-full border bg-background px-4"
