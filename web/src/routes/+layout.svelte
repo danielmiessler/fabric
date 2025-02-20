@@ -1,34 +1,24 @@
 <script>
   import '../app.postcss';
   import { AppShell } from '@skeletonlabs/skeleton';
-  import { Toast } from '@skeletonlabs/skeleton';
-  import  ToastContainer  from '$lib/components/ui/toast/ToastContainer.svelte';
+  import ToastContainer from '$lib/components/ui/toast/ToastContainer.svelte';
   import Footer from '$lib/components/home/Footer.svelte';
   import Header from '$lib/components/home/Header.svelte';
-  import { initializeStores } from '@skeletonlabs/skeleton';
+  import { initializeStores, getDrawerStore } from '@skeletonlabs/skeleton';
   import { page } from '$app/stores';
   import { fly } from 'svelte/transition';
-  import { getToastStore } from '@skeletonlabs/skeleton';
   import { onMount } from 'svelte';
-  import { getDrawerStore } from '@skeletonlabs/skeleton';
+  import { toastStore } from '$lib/store/toast-store';
 
   // Initialize stores
   initializeStores();
   const drawerStore = getDrawerStore();
-  const toastStore = getToastStore();
 
   onMount(() => {
-    toastStore.trigger({
-      type: 'info',
-      message: "👋 Welcome to the site! Tell people about yourself and what you do.",
-      background: 'variant-filled-primary',
-      timeout: 3333,
-      hoverable: true
-    });
+    toastStore.info("👋 Welcome to the site! Tell people about yourself and what you do.");
   });
 </script>
 
-<Toast />
 <ToastContainer />
 
 {#key $page.url.pathname}

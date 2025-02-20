@@ -3,7 +3,8 @@
   import type { DrawerStore } from '@skeletonlabs/skeleton';
   import { onMount } from 'svelte';
   import { noteStore } from '$lib/store/note-store';
-  import { afterNavigate, beforeNavigate } from '$app/navigation'; 
+  import { afterNavigate, beforeNavigate } from '$app/navigation';
+  import { clickOutside } from '$lib/actions/clickOutside';
   
   const drawerStore = getDrawerStore();
   const toastStore = getToastStore();
@@ -82,54 +83,70 @@
 
 <Drawer width="w-[40%]" class="flex flex-col h-[calc(100vh-theme(spacing.32))] p-4 mt-16">
   {#if $drawerStore.open}
-    <div class="flex flex-col h-full">
-      <header class="flex-none flex justify-between items-center">
-        <h2 class="m-2 p-1 h2">Notes</h2>
-        <p class="p-2 opacity-70">Notes are saved to <code>`src/lib/content/inbox`</code></p>
-        <p class="p-2 opacity-70">Ctrl + S to save</p>
-        {#if $noteStore.lastSaved}
-          <span class="text-sm opacity-70">
-            Last saved: {$noteStore.lastSaved.toLocaleTimeString()}
-          </span>
-        {/if}
+    <div 
+      class="flex flex-col h-full"
+      use:clickOutside={() => {
+        if ($noteStore.isDirty) {
+          if (confirm('You have unsaved changes. Are you sure you want to close?')) {
+            noteStore.reset();
+            drawerStore.close();
+          }
+        } else {
+          drawerStore.close();
+        }
+      }}
+    >
+      <header class="flex-none p-2 border-b border-white/10">
+        <div class="flex justify-between items-center">
+          <h2 class="text-lg font-semibold">Notes</h2>
+          {#if $noteStore.lastSaved}
+            <span class="text-xs opacity-70">
+              Last saved: {$noteStore.lastSaved.toLocaleTimeString()}
+            </span>
+          {/if}
+        </div>
+        <div class="flex gap-4 mt-2 text-xs opacity-70">
+          <span>Notes saved to <code>inbox/</code></span>
+          <span>Ctrl + S to save</span>
+        </div>
       </header>
-      <div class="p-1">
-      <div class="flex-1 p-4 justify-center items-center m-4">
+
+      <div class="flex-1 p-2">
         <textarea
-          bind:this={textareaEl}
-          bind:value={$noteStore.content}
-          on:input={adjustTextareaHeight}
-          on:keydown={handleKeydown}
-          class="w-full min-h-96 max-h-[500px] overflow-y-auto resize-none p-2 rounded-container-token text-primary-800"
-          placeholder="Enter your text here..."
+        bind:this={textareaEl}
+        value={$noteStore.content}
+        on:input={e => noteStore.updateContent(e.currentTarget.value)}
+        on:keydown={handleKeydown}
+        class="w-full h-full min-h-[300px] resize-none p-2 rounded-lg bg-primary-800/30 border-none text-sm"
+        placeholder="Enter your text here..." 
         />
       </div>
-      </div>
-        <footer class="flex-none flex justify-between items-center p-4 mt-auto">
-          <span class="text-sm opacity-70">
-            {#if $noteStore.isDirty}
-              Unsaved changes
+
+      <footer class="flex-none flex justify-between items-center p-2 border-t border-white/10">
+        <span class="text-xs opacity-70">
+          {#if $noteStore.isDirty}
+            Unsaved changes
+          {/if}
+        </span>
+        <div class="flex gap-2">
+          <button
+            class="btn btn-sm variant-filled-surface"
+            on:click={noteStore.reset}
+          >
+            Reset
+          </button>
+          <button
+            class="btn btn-sm variant-filled-primary"
+            on:click={saveContent}
+          >
+            {#if saving}
+              Saving...
+            {:else}
+              Save
             {/if}
-          </span>
-          <div class="flex gap-2 m-5">
-            <button
-              class="btn p-2 variant-filled-primary"
-              on:click={noteStore.reset}
-            >
-              Reset
-            </button>
-            <button
-              class="btn p-2 variant-filled-primary"
-              on:click={saveContent}
-            >
-              {#if saving}
-                Saving...
-              {:else}
-                Save
-              {/if}
-            </button>
-          </div>
-        </footer>
+          </button>
+        </div>
+      </footer>
     </div>
   {/if}
 </Drawer>
