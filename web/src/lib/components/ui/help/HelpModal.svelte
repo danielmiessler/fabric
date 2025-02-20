@@ -16,11 +16,10 @@
 
 
 <div class="bg-primary-800 rounded-lg flex flex-col h-[85vh] w-[600px] shadow-lg">
-    <div class="flex justify-between items-center p-4 border-b border-primary-700/30">
-      <h2 class="text-xl font-bold text-primary-300">Help</h2>
+    <div class="flex justify-between items-center p-6 border-b-2 border-primary-700">
+      <h1 class="text-3xl font-bold text-primary-300">Help</h1>
         <button class="text-muted-foreground hover:text-primary-300 transition-colors" on:click={() => dispatch('close')}>✕</button>
     </div>
-
     <div class="p-6 flex-1 overflow-y-auto" bind:this={modalContent}>
         <div class="space-y-4">
             <section>
@@ -29,7 +28,7 @@
             </section>
 
             <section>
-                <h3 class="text-base font-bold text-primary-300 mb-2">YouTube & Other website URL</h3>
+                <h3 class="text-base font-bold text-primary-300 mb-2">YouTube & other website URL</h3>
                 <p class="text-sm text-muted-foreground">Paste a YouTube URL or an article URL in the message box and the link will be processed automatically. Youtube transcripts will be fetch and website html will be converted to markdown for LLM processing. Make sure to setup your Jina API key.</p>
             </section>
 
@@ -55,11 +54,16 @@
 
             <section>
                 <h3 class="text-base font-bold text-primary-300 mb-2">Taking notes and saving to Obsidian</h3>
-                <p class="text-sm text-muted-foreground">Make sure to setup your files path for those options before using.</p>
+                <p class="text-sm text-muted-foreground">By default, your personal folders should be located exactly here: web/myfiles/Fabric_obsidian and web/myfiles/inbox for notes.  </p>
             </section>
 
-            <section class="mt-8 pt-4 border-t border-primary-700/30">
-              <h1 class="text-lg font-bold text-primary-300 mb-4">PATTERN TAGS</h1>
+            <section>
+              <h3 class="text-base font-bold text-primary-300 mb-2">Managing Pattern Descriptions and Tags</h3>
+              <p class="text-sm text-muted-foreground">Refer to instructions in the WEB INTERFACE MOD README FILES folder.  </p>
+          </section>
+
+            <section class="mt-12 pt-8 border-t-2 border-primary-700">
+              <h1 class="text-2xl font-bold text-primary-300 mb-4">PATTERN TAGS</h1>
               <p class="text-sm text-muted-foreground mb-6">You can configure the TAGs as you wish and modify or replace these TAGs with yours.</p>
               <div class="text-sm text-muted-foreground space-y-4">
                     <div>

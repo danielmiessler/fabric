@@ -42,7 +42,7 @@ export const patternAPI = {
   async loadPatterns() {
     try {
       // First load pattern descriptions
-      const descriptionsResponse = await fetch('/static/data/pattern_descriptions.json');
+      const descriptionsResponse = await fetch('/data/pattern_descriptions.json');
       const descriptionsData = await descriptionsResponse.json();
       const descriptions = descriptionsData.patterns as PatternDescription[];
       console.log("Loaded pattern descriptions:", descriptions.length);

@@ -3,7 +3,7 @@
 This Cummulative PR adds several Web UI and functionality improvements to make pattern selection more intuitive (pattern descriptions), ability to save favorite patterns, powerful multilingual capabilities, a Pattern TAG system, a help reference section, more robust Youtube processing and a variety of ui improvements. 
 
 ## 🎥 Demo Video
-https://youtu.be/05YsSwNV_DA
+https://youtu.be/IhE8Iey8hSU
 
 
 
