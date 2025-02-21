@@ -5,18 +5,32 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/danielmiessler/fabric/core"
-	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/danielmiessler/fabric/core"
+	"github.com/gin-gonic/gin"
 )
 
 type OllamaModel struct {
 	Models []Model `json:"models"`
 }
+
+func isValidOllamaRequestBody(body OllamaRequestBody) bool {
+	if body.Model == "" || len(body.Messages) == 0 {
+		return false
+	}
+	for _, msg := range body.Messages {
+		if msg.Content == "" || msg.Role == "" {
+			return false
+		}
+	}
+	return true
+}
+
 type Model struct {
 	Details    ModelDetails `json:"details"`
 	Digest     string       `json:"digest"`
@@ -142,12 +156,16 @@ func (f APIConvert) ollamaTags(c *gin.Context) {
 		})
 	}
 
-	c.JSON(200, response)
-
-}
-
-func (f APIConvert) ollamaChat(c *gin.Context) {
-	body, err := io.ReadAll(c.Request.Body)
+	if !isValidOllamaRequestBody(prompt) {
+		log.Printf("Invalid request body: %v", prompt)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+	if !isValidOllamaRequestBody(prompt) {
+		log.Printf("Invalid request body: %v", prompt)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
 	if err != nil {
 		log.Printf("Error reading body: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "testing endpoint"})
