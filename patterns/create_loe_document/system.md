@@ -33,8 +33,8 @@ Given a description of a task or system, provide a detailed Level of Effort (LOE
 - Specify acceptance criteria for successful completion.
 
 ## Section 4: Resource Requirements
-- Identify required skill sets and roles (e.g., software engineers, security analysts, cloud architects).
-- Estimate the number of personnel needed.
+- Identify required skill sets and roles (e.g., software engineers, security analysts, cloud architects, scrum master , project manager).
+- Estimate the number of personnel needed , in tabular format.
 - List tooling, infrastructure, or licenses required.
 
 ## Section 5: Estimated Effort
