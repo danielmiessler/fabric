@@ -15,6 +15,12 @@ export const sessionAPI = {
       const response = await fetch(`/api/sessions/names`);
       const sessionNames: string[] = await response.json();
 
+      // Add null check and default to empty array
+      if (!sessionNames) {
+        sessions.set([]);
+        return [];
+      }
+
       const sessionPromises = sessionNames.map(async (name: string) => {
         try {
           const response = await fetch(`/api/sessions/${name}`);
@@ -43,6 +49,7 @@ export const sessionAPI = {
       return [];
     }
   },
+
 
   selectSession(sessionName: string) {
     const allSessions = get(sessions);
