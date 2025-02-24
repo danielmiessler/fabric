@@ -66,9 +66,9 @@
 ## Updates
 
 > [!NOTE]
-> February 5, 2025
+> February 24, 2025
 >
-> - Remember that `fabric` supports `o1` and `o3` models, but you need to 1) not use `-s`, and 2) use the `--raw` flag because the o1 and o3 models don't support the `--stream` option or temperature settings.
+> - Fabric now supports Sonnet 3.7! Update and use `-S` to select it as your default if you want, or just use the shortcut `-m claude-3-7-sonnet-latest`. Enjoy!
 
 ## What and why
 
