@@ -65,6 +65,7 @@ func (h *ConfigHandler) GetConfig(c *gin.Context) {
 		"openrouter": os.Getenv("OPENROUTER_API_KEY"),
 		"silicon":    os.Getenv("SILICON_API_KEY"),
 		"deepseek":   os.Getenv("DEEPSEEK_API_KEY"),
+		"lmstudio":   os.Getenv("LM_STUDIO_API_BASE_URL"),
 	}
 
 	c.JSON(http.StatusOK, config)
@@ -86,6 +87,7 @@ func (h *ConfigHandler) UpdateConfig(c *gin.Context) {
 		OpenRouterApiKey string `json:"openrouter_api_key"`
 		SiliconApiKey    string `json:"silicon_api_key"`
 		DeepSeekApiKey   string `json:"deepseek_api_key"`
+		LMStudioURL      string `json:"lm_studio_base_url"`
 	}
 
 	if err := c.BindJSON(&config); err != nil {
@@ -94,15 +96,16 @@ func (h *ConfigHandler) UpdateConfig(c *gin.Context) {
 	}
 
 	envVars := map[string]string{
-		"OPENAI_API_KEY":     config.OpenAIApiKey,
-		"ANTHROPIC_API_KEY":  config.AnthropicApiKey,
-		"GROQ_API_KEY":       config.GroqApiKey,
-		"MISTRAL_API_KEY":    config.MistralApiKey,
-		"GEMINI_API_KEY":     config.GeminiApiKey,
-		"OLLAMA_URL":         config.OllamaURL,
-		"OPENROUTER_API_KEY": config.OpenRouterApiKey,
-		"SILICON_API_KEY":    config.SiliconApiKey,
-		"DEEPSEEK_API_KEY":   config.DeepSeekApiKey,
+		"OPENAI_API_KEY":         config.OpenAIApiKey,
+		"ANTHROPIC_API_KEY":      config.AnthropicApiKey,
+		"GROQ_API_KEY":           config.GroqApiKey,
+		"MISTRAL_API_KEY":        config.MistralApiKey,
+		"GEMINI_API_KEY":         config.GeminiApiKey,
+		"OLLAMA_URL":             config.OllamaURL,
+		"OPENROUTER_API_KEY":     config.OpenRouterApiKey,
+		"SILICON_API_KEY":        config.SiliconApiKey,
+		"DEEPSEEK_API_KEY":       config.DeepSeekApiKey,
+		"LM_STUDIO_API_BASE_URL": config.LMStudioURL,
 	}
 
 	var envContent strings.Builder
