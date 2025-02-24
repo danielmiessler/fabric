@@ -2,9 +2,9 @@
   import { cn } from "$lib/utils/utils";
   import { buttonVariants } from "./index.js";
 
-  let className = undefined;
-  export let variant = "";
-  export let size = "default";
+  let className: string | undefined = undefined;
+  export let variant: string = "";
+  export let size: string = "default";
   export { className as class };
 
   $: classes = cn(

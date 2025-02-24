@@ -1,43 +1,109 @@
 <script lang="ts">
   import { chatState, errorStore, streamingStore } from '$lib/store/chat-store';
-  import { afterUpdate } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import { toastStore } from '$lib/store/toast-store';
   import { marked } from 'marked';
   import SessionManager from './SessionManager.svelte';
   import { fade, slide } from 'svelte/transition';
+  import { ArrowDown } from 'lucide-svelte';
+  import Modal from '$lib/components/ui/modal/Modal.svelte';
+  import PatternList from '$lib/components/patterns/PatternList.svelte';
+  import type { Message } from '$lib/interfaces/chat-interface';
+  import { get } from 'svelte/store';
+  import { selectedPatternName } from '$lib/store/pattern-store';
 
-  let messagesContainer: HTMLDivElement;
 
-  afterUpdate(() => {
+  let showPatternModal = false;
+
+  let messagesContainer: HTMLDivElement | null = null;
+  let showScrollButton = false;
+  let isUserMessage = false;
+
+  function scrollToBottom() {
     if (messagesContainer) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      messagesContainer.scrollTo({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
+    }
+  }
+
+  function handleScroll() {
+    if (!messagesContainer) return;
+    const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
+    showScrollButton = scrollHeight - scrollTop - clientHeight > 100;
+  }
+
+  // Watch for changes in messages
+  $: if ($chatState.messages.length > 0) {
+    const lastMessage = $chatState.messages[$chatState.messages.length - 1];
+    isUserMessage = lastMessage.role === 'user';
+    if (isUserMessage) {
+      // Only auto-scroll on user messages
+      setTimeout(scrollToBottom, 100);
+    }
+  }
+
+  onMount(() => {
+    if (messagesContainer) {
+      messagesContainer.addEventListener('scroll', handleScroll);
+      return () => {
+        if (messagesContainer) {
+          messagesContainer.removeEventListener('scroll', handleScroll);
+        }
+      };
     }
   });
 
+  // Configure marked to be synchronous
+  const renderer = new marked.Renderer();
   marked.setOptions({
     gfm: true,
     breaks: true,
+    renderer,
+    async: false
   });
 
-  function renderMarkdown(content: string, isAssistant: boolean) {
-    content = content.replace(/\\n/g, '\n');
-    if (!isAssistant) return content;
-    try {
-      return marked.parse(content);
-    } catch (error) {
-      console.error('Error rendering markdown:', error);
-      return content;
+  // New shouldRenderAsMarkdown function
+function shouldRenderAsMarkdown(message: Message): boolean {
+    const pattern = get(selectedPatternName);
+    if (pattern && message.role === 'assistant') {
+        return message.format !== 'mermaid';
     }
-  }
+    return message.role === 'assistant' && message.format !== 'plain';
+}
+
+// Keep the original renderContent function
+function renderContent(message: Message): string {
+    const content = message.content.replace(/\\n/g, '\n');
+    
+    if (shouldRenderAsMarkdown(message)) {
+        try {
+            return marked.parse(content, { async: false }) as string;
+        } catch (error) {
+            console.error('Error rendering markdown:', error);
+            return content;
+        }
+    }
+    return content;
+}
+
+
+
+  
 </script>
 
 <div class="bg-primary-800/30 rounded-lg flex flex-col h-full shadow-lg">
-  <div class="flex justify-between items-center mb-1 mt-1 flex-none">
-    <div class="flex items-center gap-2 pl-4">
-      <b class="text-sm text-muted-foreground font-bold">Chat History</b>
+  <div class="flex justify-between items-center p-3 flex-none border-b border-white/5">
+    <div>
+      <span class="text-xs text-white/70 font-medium">Chat History</span>
     </div>
     <SessionManager />
   </div>
+
+  <Modal
+    show={showPatternModal}
+    on:close={() => showPatternModal = false}
+  >
+    <PatternList on:close={() => showPatternModal = false} />
+  </Modal>
 
   {#if $errorStore}
     <div class="error-message" transition:slide>
@@ -47,16 +113,28 @@
     </div>
   {/if}
 
-  <div class="messages-container p-4 flex-1 overflow-y-auto max-h-dvh" bind:this={messagesContainer}>
-    <div class="messages-content flex flex-col gap-4">
+  <div 
+    class="messages-container p-3 flex-1 overflow-y-auto max-h-dvh relative" 
+    bind:this={messagesContainer}
+  >
+    <div class="messages-content flex flex-col gap-3">
       {#each $chatState.messages as message}
         <div 
-          class="message-item {message.role === 'assistant' ? 'pl-4 bg-primary/5 rounded-lg p-2' : 'pr-4 ml-auto'}"
+          class="message-item {message.role === 'system' ? 'w-full bg-blue-900/20' : message.role === 'assistant' ? 'bg-primary/5 rounded-lg p-3' : 'ml-auto'}"
           transition:fade
+          class:loading-message={message.format === 'loading'}       
         >
-          <div class="message-header flex items-center gap-2 mb-1 {message.role === 'assistant' ? '' : 'justify-end'}">
-            <span class="text-xs text-muted-foreground  rounded-lg p-1 variant-glass-secondary font-bold uppercase">
-              {message.role === 'assistant' ? 'AI' : 'You'}
+
+        
+          <div class="message-header flex items-center gap-2 mb-1 {message.role === 'assistant' || message.role === 'system' ? '' : 'justify-end'}">
+            <span class="text-xs text-muted-foreground rounded-lg p-1 variant-glass-secondary font-bold uppercase">
+              {#if message.role === 'system'}
+                SYSTEM
+              {:else if message.role === 'assistant'}
+                AI
+              {:else}
+                You
+              {/if}
             </span>
             {#if message.role === 'assistant' && $streamingStore}
               <span class="loading-indicator flex gap-1">
@@ -67,9 +145,13 @@
             {/if}
           </div>
 
-          {#if message.role === 'assistant'}
-            <div class="prose prose-slate dark:prose-invert text-inherit prose-headings:text-inherit prose-pre:bg-primary/10 prose-pre:text-inherit text-sm max-w-none">
-              {@html renderMarkdown(message.content, true)}
+          {#if message.role === 'system'}
+            <div class="text-blue-300 text-sm font-semibold">
+              {message.content}
+            </div>
+          {:else if message.role === 'assistant'}
+            <div class="{shouldRenderAsMarkdown(message) ? 'prose prose-slate dark:prose-invert text-inherit prose-headings:text-inherit prose-pre:bg-primary/10 prose-pre:text-inherit' : 'whitespace-pre-wrap'} text-sm max-w-none">
+              {@html renderContent(message)}
             </div>
           {:else}
             <div class="whitespace-pre-wrap text-sm">
@@ -79,15 +161,31 @@
         </div>
       {/each}
     </div>
+    {#if showScrollButton}
+      <button
+        class="absolute bottom-4 right-4 bg-primary/20 hover:bg-primary/30 rounded-full p-2 transition-opacity"
+        on:click={scrollToBottom}
+        transition:fade
+      >
+        <ArrowDown class="w-4 h-4" />
+      </button>
+    {/if}
   </div>
 </div>
 
 <style>
-/*.chat-messages-wrapper {*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  min-height: 0;*/
-/*}*/
+
+
+    :global(.loading-message) {
+        animation: flash 1.5s ease-in-out infinite;
+    }
+
+    @keyframes flash {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+
 
 .messages-container {
   flex: 1;
@@ -99,7 +197,7 @@
 .messages-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0.75rem;
 }
 
 .message-header {
@@ -130,8 +228,8 @@
 }
 
 @keyframes blink {
-0%, 100% { opacity: 0; }
-50% { opacity: 1; }
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 
 :global(.prose pre) {

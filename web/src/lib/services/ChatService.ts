@@ -1,14 +1,24 @@
-import type { 
-  ChatRequest, 
-  StreamResponse, 
+import type {
+  ChatRequest,
+  StreamResponse,
   ChatError as IChatError,
   ChatPrompt
 } from '$lib/interfaces/chat-interface';
 import { get } from 'svelte/store';
 import { modelConfig } from '$lib/store/model-store';
-import { systemPrompt } from '$lib/store/pattern-store';
+import { systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
 import { chatConfig } from '$lib/store/chat-config';
-import { messageStore } from '$lib/store/chat-store'; // Import messageStore
+import { messageStore } from '$lib/store/chat-store';
+import { languageStore } from '$lib/store/language-store';
+
+class LanguageValidator {
+  constructor(private targetLanguage: string) {}
+
+  enforceLanguage(content: string): string {
+    if (this.targetLanguage === 'en') return content;
+    return `[Language: ${this.targetLanguage}]\n${content}`;
+  }
+}
 
 export class ChatError extends Error implements IChatError {
   constructor(
@@ -22,22 +32,30 @@ export class ChatError extends Error implements IChatError {
 }
 
 export class ChatService {
+  private validator: LanguageValidator;
+
+  constructor() {
+    this.validator = new LanguageValidator(get(languageStore));
+  }
+
   private async fetchStream(request: ChatRequest): Promise<ReadableStream<StreamResponse>> {
     try {
+      console.log('\n=== ChatService Request Start ===');
+      console.log('1. Request details:', {
+        language: get(languageStore),
+        pattern: get(selectedPatternName),
+        promptCount: request.prompts?.length,
+        messageCount: request.messages?.length
+      });
+
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(request),
       });
 
       if (!response.ok) {
-        throw new ChatError(
-          `HTTP error! status: ${response.status}`,
-          'HTTP_ERROR',
-          { status: response.status }
-        );
+        throw new ChatError(`HTTP error! status: ${response.status}`, 'HTTP_ERROR', { status: response.status });
       }
 
       const reader = response.body?.getReader();
@@ -47,82 +65,140 @@ export class ChatService {
 
       return this.createMessageStream(reader);
     } catch (error) {
-      if (error instanceof ChatError) {
-        throw error;
-      }
-      throw new ChatError(
-        'Failed to fetch chat stream',
-        'FETCH_ERROR',
-        error
-      );
+      if (error instanceof ChatError) throw error;
+      throw new ChatError('Failed to fetch chat stream', 'FETCH_ERROR', error);
     }
   }
 
-  private createMessageStream(reader: ReadableStreamDefaultReader<Uint8Array>): ReadableStream<StreamResponse> {
-    let buffer = '';
-
-    return new ReadableStream({
-      async start(controller) {
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += new TextDecoder().decode(value);
-            const messages = buffer
-            .split('\n\n')
-            .filter(msg => msg.startsWith('data: '));
-
-            if (messages.length > 1) {
-              buffer = messages.pop() || '';
-
-              for (const msg of messages) {
-                controller.enqueue(JSON.parse(msg.slice(6)) as StreamResponse);
+  private cleanPatternOutput(content: string): string {
+    // Remove markdown fence if present
+    content = content.replace(/^```markdown\n/, '');
+    content = content.replace(/\n```$/, '');
+    
+    // Existing cleaning
+    content = content.replace(/^# OUTPUT\s*\n/, '');
+    content = content.replace(/^\s*\n/, '');
+    content = content.replace(/\n\s*$/, '');
+    content = content.replace(/^#\s+([A-Z]+):/gm, '$1:');
+    content = content.replace(/^#\s+([A-Z]+)\s*$/gm, '$1');
+    content = content.trim();
+    content = content.replace(/\n{3,}/g, '\n\n');
+    return content;
+  }
+  
+      
+      
+      private createMessageStream(reader: ReadableStreamDefaultReader<Uint8Array>): ReadableStream<StreamResponse> {
+          let buffer = '';
+          const cleanPatternOutput = this.cleanPatternOutput.bind(this);
+          const language = get(languageStore);
+          const validator = new LanguageValidator(language);
+      
+          const processResponse = (response: StreamResponse) => {
+              const pattern = get(selectedPatternName);
+              
+              if (pattern) {
+                  response.content = cleanPatternOutput(response.content);
+                  // Simplified format determination - always markdown unless mermaid
+                  const isMermaid = [
+                      'graph TD', 'gantt', 'flowchart', 
+                      'sequenceDiagram', 'classDiagram', 'stateDiagram'
+                  ].some(starter => response.content.trim().startsWith(starter));
+                  
+                  response.format = isMermaid ? 'mermaid' : 'markdown';
               }
-            }
-          }
+      
+              if (response.type === 'content') {
+                  response.content = validator.enforceLanguage(response.content);
+              }
+      
+              return response;
+          };
+      return new ReadableStream({
+          async start(controller) {
+              try {
+                  while (true) {
+                      const { done, value } = await reader.read();
+                      if (done) break;
 
-          if (buffer.startsWith('data: ')) {
-            controller.enqueue(JSON.parse(buffer.slice(6)) as StreamResponse);
-          }
-        } catch (error) {
-          controller.error(new ChatError(
-            'Error processing stream',
-            'STREAM_PROCESSING_ERROR',
-            error
-          ));
-        } finally {
-          reader.releaseLock();
-          controller.close();
-        }
-      },
+                      buffer += new TextDecoder().decode(value);
+                      const messages = buffer.split('\n\n').filter(msg => msg.startsWith('data: '));
 
-      cancel() {
-        reader.cancel();
-      }
-    });
+                      if (messages.length > 1) {
+                          buffer = messages.pop() || '';
+                          for (const msg of messages) {
+                              try {
+                                  let response = JSON.parse(msg.slice(6)) as StreamResponse;
+                                  response = processResponse(response);
+                                  controller.enqueue(response);
+                              } catch (parseError) {
+                                  console.error('Error parsing stream message:', parseError);
+                              }
+                          }
+                      }
+                  }
+
+                  if (buffer.startsWith('data: ')) {
+                      try {
+                          let response = JSON.parse(buffer.slice(6)) as StreamResponse;
+                          response = processResponse(response);
+                          controller.enqueue(response);
+                      } catch (parseError) {
+                          console.error('Error parsing final message:', parseError);
+                      }
+                  }
+              } catch (error) {
+                  controller.error(new ChatError('Stream processing error', 'STREAM_ERROR', error));
+              } finally {
+                  reader.releaseLock();
+                  controller.close();
+              }
+          },
+          cancel() {
+              reader.cancel();
+          }
+      });
   }
 
   private createChatPrompt(userInput: string, systemPromptText?: string): ChatPrompt {
     const config = get(modelConfig);
+    const language = get(languageStore);
+    
+    const languageInstruction = language !== 'en' 
+        ? `You MUST respond in ${language} language. ALL output, including section headers, titles, and formatting, MUST be translated into ${language}.  It is CRITICAL that you translate ALL headers, such as SUMMARY, IDEAS, QUOTES, TAKEAWAYS, MAIN POINTS, etc., into ${language}. Maintain markdown formatting in the response. Do not output any English headers.`
+        : '';
+    
+    const finalSystemPrompt = languageInstruction + (systemPromptText ?? get(systemPrompt));
+    console.log('Final system prompt in createChatPrompt:', finalSystemPrompt);
+    const finalUserInput = language !== 'en'
+        ? `${userInput}\n\nIMPORTANT: Respond in ${language} language only.`
+        : userInput;
+  
     return {
-      userInput,
-      systemPrompt: systemPromptText ?? get(systemPrompt),
-      model: config.model,
-      patternName: ''
+        userInput: finalUserInput,
+        systemPrompt: finalSystemPrompt,
+        model: config.model,
+        patternName: get(selectedPatternName)
+    };
+  }
+  
+    
+
+
+  public async createChatRequest(userInput: string, systemPromptText?: string, isPattern: boolean = false): Promise<ChatRequest> {
+    const prompt = this.createChatPrompt(userInput, systemPromptText);
+    const config = get(chatConfig);
+    
+    return {
+      prompts: [prompt],
+      messages: [],
+      ...config
     };
   }
 
-  public async createChatRequest(userInput: string, systemPromptText?: string): Promise<ChatRequest> {
-    const prompt = this.createChatPrompt(userInput, systemPromptText);
-    const config = get(chatConfig);
-    const messages = get(messageStore);
-
-    return {
-      prompts: [prompt],
-      messages: messages,  
-      ...config
-    };
+  public async streamPattern(userInput: string, systemPromptText?: string): Promise<ReadableStream<StreamResponse>> {
+    const request = await this.createChatRequest(userInput, systemPromptText, true);
+    return this.fetchStream(request);
   }
 
   public async streamChat(userInput: string, systemPromptText?: string): Promise<ReadableStream<StreamResponse>> {
@@ -132,37 +208,33 @@ export class ChatService {
 
   public async processStream(
     stream: ReadableStream<StreamResponse>,
-    onContent: (content: string) => void,
+    onContent: (content: string, response?: StreamResponse) => void,
     onError: (error: Error) => void
   ): Promise<void> {
     const reader = stream.getReader();
-    let accumulatedContent = '';
-
+  
     try {
       while (true) {
         const { done, value } = await reader.read();
-
         if (done) break;
-
+  
         if (value.type === 'error') {
           throw new ChatError(value.content, 'STREAM_CONTENT_ERROR');
         }
-
-        accumulatedContent += value.content;
-        onContent(accumulatedContent);
+  
+        if (value.type === 'content') {
+          onContent(value.content, value);
+        }
       }
     } catch (error) {
-      if (error instanceof ChatError) {
-        onError(error);
-      } else {
-        onError(new ChatError(
-          'Error processing stream content',
-          'STREAM_PROCESSING_ERROR',
-          error
-        ));
-      }
+      onError(error instanceof ChatError ? error : new ChatError('Stream processing error', 'STREAM_ERROR', error));
     } finally {
       reader.releaseLock();
+      
     }
   }
+  
+  
+   
+    
 }

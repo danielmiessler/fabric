@@ -1,5 +1,5 @@
 export type MessageRole = 'system' | 'user' | 'assistant';
-export type ResponseFormat = 'markdown' | 'mermaid' | 'plain';
+export type ResponseFormat = 'markdown' | 'mermaid' | 'plain' | 'loading';
 export type ResponseType = 'content' | 'error' | 'complete';
 
 export interface ChatPrompt {
@@ -28,6 +28,7 @@ export interface ChatRequest {
 export interface Message {
   role: MessageRole;
   content: string;
+  format?: ResponseFormat;
 }
 
 export interface ChatState {
