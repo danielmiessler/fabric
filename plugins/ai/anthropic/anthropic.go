@@ -31,12 +31,13 @@ func NewClient() (ret *Client) {
 	ret.maxTokens = 4096
 	ret.defaultRequiredUserMessage = "Hi"
 	ret.models = []string{
+		anthropic.ModelClaude3_7SonnetLatest, anthropic.ModelClaude3_7Sonnet20250219,
 		anthropic.ModelClaude3_5HaikuLatest, anthropic.ModelClaude3_5Haiku20241022,
 		anthropic.ModelClaude3_5SonnetLatest, anthropic.ModelClaude3_5Sonnet20241022,
 		anthropic.ModelClaude_3_5_Sonnet_20240620, anthropic.ModelClaude3OpusLatest,
 		anthropic.ModelClaude_3_Opus_20240229, anthropic.ModelClaude_3_Sonnet_20240229,
 		anthropic.ModelClaude_3_Haiku_20240307, anthropic.ModelClaude_2_1,
-		anthropic.ModelClaude_2_0, anthropic.ModelClaude_Instant_1_2,
+		anthropic.ModelClaude_2_0,
 	}
 
 	return
