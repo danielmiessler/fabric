@@ -81,14 +81,14 @@ jobs:
 
       - name: Upload build artifact
         if: matrix.os != 'windows-latest'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: fabric-${OS}-${{ matrix.arch }}
           path: fabric-${OS}-${{ matrix.arch }}
 
       - name: Upload build artifact
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: fabric-windows-${{ matrix.arch }}.exe
           path: fabric-windows-${{ matrix.arch }}.exe
