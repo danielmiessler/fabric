@@ -159,28 +159,31 @@ export class ChatService {
           }
       });
   }
-
+ 
   private createChatPrompt(userInput: string, systemPromptText?: string): ChatPrompt {
     const config = get(modelConfig);
     const language = get(languageStore);
     
     const languageInstruction = language !== 'en' 
-        ? `You MUST respond in ${language} language. ALL output, including section headers, titles, and formatting, MUST be translated into ${language}.  It is CRITICAL that you translate ALL headers, such as SUMMARY, IDEAS, QUOTES, TAKEAWAYS, MAIN POINTS, etc., into ${language}. Maintain markdown formatting in the response. Do not output any English headers.`
+        ? `You MUST respond in ${language} language. All output must be in ${language}. `
+        // ? `You MUST respond in ${language} language. ALL output, including section headers, titles, and formatting, MUST be translated into ${language}.  It is CRITICAL that you translate ALL headers, such as SUMMARY, IDEAS, QUOTES, TAKEAWAYS, MAIN POINTS, etc., into ${language}. Maintain markdown formatting in the response. Do not output any English headers.`
         : '';
     
     const finalSystemPrompt = languageInstruction + (systemPromptText ?? get(systemPrompt));
-    console.log('Final system prompt in createChatPrompt:', finalSystemPrompt);
+    
     const finalUserInput = language !== 'en'
         ? `${userInput}\n\nIMPORTANT: Respond in ${language} language only.`
         : userInput;
-  
+
     return {
         userInput: finalUserInput,
         systemPrompt: finalSystemPrompt,
         model: config.model,
         patternName: get(selectedPatternName)
     };
-  }
+}
+
+
   
     
 

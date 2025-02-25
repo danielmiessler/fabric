@@ -4,6 +4,11 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [sveltekit(), purgeCss()],
+  build: {
+		commonjsOptions: {
+			transformMixedEsModules: true
+		}
+	},
   define: {
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV)
