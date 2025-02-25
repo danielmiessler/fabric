@@ -6,11 +6,11 @@ toolchain go1.23.1
 
 require (
 	github.com/anaskhan96/soup v1.2.5
-	github.com/anthropics/anthropic-sdk-go v0.2.0-alpha.4
+	github.com/anthropics/anthropic-sdk-go v0.2.0-alpha.11
 	github.com/atotto/clipboard v0.1.4
 	github.com/gabriel-vasile/mimetype v1.4.6
 	github.com/gin-gonic/gin v1.10.0
-	github.com/go-git/go-git/v5 v5.12.0
+	github.com/go-git/go-git/v5 v5.13.0
 	github.com/go-shiori/go-readability v0.0.0-20241012063810-92284fa8a71f
 	github.com/google/generative-ai-go v0.19.0
 	github.com/jessevdk/go-flags v1.6.1
@@ -36,7 +36,7 @@ require (
 	cloud.google.com/go/longrunning v0.5.7 // indirect
 	dario.cat/mergo v1.0.1 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
-	github.com/ProtonMail/go-crypto v1.1.2 // indirect
+	github.com/ProtonMail/go-crypto v1.1.3 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de // indirect
 	github.com/bytedance/sonic v1.12.4 // indirect

@@ -26,8 +26,8 @@ schema = 3
     version = "v0.6.2"
     hash = "sha256-tVNWDUMILZbJvarcl/E7tpSnkn7urqgSHa2Eaka5vSU="
   [mod."github.com/ProtonMail/go-crypto"]
-    version = "v1.1.2"
-    hash = "sha256-7pTf7aJt2mGC/u8/+AQ1erGypAO0Rg0HqlIOLeiqLEg="
+    version = "v1.1.3"
+    hash = "sha256-XN/cWNUTZvhe7ni7tIeBpc9J0Gfe+ReEFsUwab/epO0="
   [mod."github.com/anaskhan96/soup"]
     version = "v1.2.5"
     hash = "sha256-t8yCyK2y7x2qaI/3Yw16q3zVFqu+3acLcPgTr1MIKWg="
@@ -35,8 +35,8 @@ schema = 3
     version = "v1.3.2"
     hash = "sha256-Nc9SkqJO/ecincVcUBFITy24TMmMGj5o0Q8EgdNhrEk="
   [mod."github.com/anthropics/anthropic-sdk-go"]
-    version = "v0.2.0-alpha.4"
-    hash = "sha256-8a85Hd4J7eaWvN+J6MImsapStbse5WDDjlODZk3PMzk="
+    version = "v0.2.0-alpha.11"
+    hash = "sha256-0wl62e6AVhDY3KkoYrfAHFtBrwNC4nzqrR55iyCJlwk="
   [mod."github.com/araddon/dateparse"]
     version = "v0.0.0-20210429162001-6b43995a97de"
     hash = "sha256-UuX84naeRGMsFOgIgRoBHG5sNy1CzBkWPKmd6VbLwFw="
@@ -86,8 +86,8 @@ schema = 3
     version = "v5.6.0"
     hash = "sha256-Hw+odNozpiixXqmsbahihdV+TBxpusm6/hDLngf7kUg="
   [mod."github.com/go-git/go-git/v5"]
-    version = "v5.12.0"
-    hash = "sha256-mD8EWOQ25FtKBWVSQhQ8V1Rr0tC/ySFZQ9GMDLRqwQU="
+    version = "v5.13.0"
+    hash = "sha256-S/Mh89tfcSvpE3dXDNW9gbLipmSilX7YGW3hC4GqFMw="
   [mod."github.com/go-logr/logr"]
     version = "v1.4.2"
     hash = "sha256-/W6qGilFlZNTb9Uq48xGZ4IbsVeSwJiAMLw4wiNYHLI="

@@ -192,6 +192,26 @@ func writeSSEResponse(w gin.ResponseWriter, response StreamResponse) error {
 	return nil
 }
 
+/*
+	 func detectFormat(content string) string {
+		if strings.HasPrefix(content, "graph TD") ||
+			strings.HasPrefix(content, "gantt") ||
+			strings.HasPrefix(content, "flowchart") ||
+			strings.HasPrefix(content, "sequenceDiagram") ||
+			strings.HasPrefix(content, "classDiagram") ||
+			strings.HasPrefix(content, "stateDiagram") {
+			return "mermaid"
+		}
+		if strings.Contains(content, "```") ||
+			strings.Contains(content, "#") ||
+			strings.Contains(content, "*") ||
+			strings.Contains(content, "_") ||
+			strings.Contains(content, "-") {
+			return "markdown"
+		}
+		return "plain"
+	}
+*/
 func detectFormat(content string) string {
 	if strings.HasPrefix(content, "graph TD") ||
 		strings.HasPrefix(content, "gantt") ||
@@ -201,12 +221,5 @@ func detectFormat(content string) string {
 		strings.HasPrefix(content, "stateDiagram") {
 		return "mermaid"
 	}
-	if strings.Contains(content, "```") ||
-		strings.Contains(content, "#") ||
-		strings.Contains(content, "*") ||
-		strings.Contains(content, "_") ||
-		strings.Contains(content, "-") {
-		return "markdown"
-	}
-	return "plain"
+	return "markdown"
 }

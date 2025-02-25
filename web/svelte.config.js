@@ -38,9 +38,6 @@ const mdsvexOptions = {
     backticks: true,
     dashes: true,
   },
-  layout: {
-    _: './src/lib/components/posts/PostLayout.svelte',
-  },
   highlight: {
     highlighter: async (code, lang) => {
       try {
@@ -72,15 +69,25 @@ const mdsvexOptions = {
 const config = {
   extensions: ['.svelte', '.md', '.svx'],
   kit: {
-    adapter: adapter(),
+    adapter: adapter({
+      // You can add adapter-specific options here
+      pages: 'build',
+      assets: 'build',
+      fallback: null,
+      precompress: false,
+      strict: true
+    }),
     prerender: {
       handleHttpError: ({ path, referrer, message }) => {
-        // ignore 404
+        // Log the error for debugging
+        console.warn(`HTTP error during prerendering: ${message}\nPath: ${path}\nReferrer: ${referrer}`);
+        
+        // ignore 404 for specific case
         if (path === '/not-found' && referrer === '/') {
-          return warn;
+          return;
         }
 
-        // otherwise fiail
+        // otherwise fail
         throw new Error(message);
       },
     },

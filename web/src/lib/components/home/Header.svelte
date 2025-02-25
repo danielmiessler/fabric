@@ -1,13 +1,18 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { Sun, Moon, Menu, X, Github } from 'lucide-svelte';
+  import { Sun, Moon, Menu, X, Github, FileText } from 'lucide-svelte';
   import { Avatar } from '@skeletonlabs/skeleton';
   import { fade } from 'svelte/transition';
   import { theme, cycleTheme, initTheme } from '$lib/store/theme-store';
-    // import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import Modal from '$lib/components/ui/modal/Modal.svelte';
+  import PatternList from '$lib/components/patterns/PatternList.svelte';
+  import HelpModal from '$lib/components/ui/help/HelpModal.svelte';
+  import { selectedPatternName } from '$lib/store/pattern-store';
 
   let isMenuOpen = false;
+  let showPatternModal = false;
+  let showHelpModal = false;
 
   function goToGithub() {
     window.open('https://github.com/danielmiessler/fabric', '_blank');
@@ -66,6 +71,15 @@
     </nav>
 
     <div class="flex items-center gap-2">
+      <button name="pattern-description"
+        on:click={() => showPatternModal = true}
+        class="inline-flex h-9 items-center justify-center rounded-full border bg-background px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground gap-2"
+        aria-label="Pattern Description"
+      >
+        <FileText class="h-4 w-4" />
+        <span>Pattern Description</span>
+      </button>
+
       <button name="github"
         on:click={goToGithub}
         class="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
@@ -86,6 +100,15 @@
           <Moon class="h-4 w-4" />
         {/if}
         <span class="sr-only">Toggle theme</span>
+      </button>
+
+      <button name="help"
+        on:click={() => showHelpModal = true}
+        class="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ml-3"
+        aria-label="Help"
+      >
+        <span class="text-xl font-bold text-white/90 hover:text-white">?</span>
+        <span class="sr-only">Help</span>
       </button>
 
       <!-- Mobile Menu Button -->
@@ -121,3 +144,25 @@
     </div>
   {/if}
 </header>
+
+<Modal
+  show={showPatternModal}
+  on:close={() => showPatternModal = false}
+>
+  <PatternList
+    on:close={() => showPatternModal = false}
+    on:select={(e) => {
+      selectedPatternName.set(e.detail);
+      showPatternModal = false;
+    }}
+  />
+</Modal>
+
+<Modal
+  show={showHelpModal}
+  on:close={() => showHelpModal = false}
+>
+  <HelpModal
+    on:close={() => showHelpModal = false}
+  />
+</Modal>
