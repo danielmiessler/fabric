@@ -13,6 +13,12 @@
   // import { obsidianSettings } from '$lib/store/obsidian-store';
   import { languageStore } from '$lib/store/language-store';
   import { obsidianSettings, updateObsidianSettings } from '$lib/store/obsidian-store';
+  import { PdfConversionService } from '$lib/services/PdfConversionService';
+  
+  const pdfService = new PdfConversionService();
+  
+
+
 
   const chatService = new ChatService();
   let userInput = "";
@@ -22,7 +28,8 @@
   let uploadedFiles: string[] = [];
   let fileContents: string[] = [];
   let isProcessingFiles = false;
-
+  let isFileIndicatorVisible = false; // Add new variable
+  let fileButtonKey = false; // Add new key variable for FileButton
   function detectYouTubeURL(input: string): boolean {
     const youtubePattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)/i;
     const isYoutube = youtubePattern.test(input);
@@ -76,42 +83,161 @@
   }
 
   async function handleFileUpload(e: Event) {
-    if (!files || files.length === 0) return;
+  uploadedFiles = []; // Clear uploadedFiles at the beginning
+  if (!files || files.length === 0) return;
 
-    if (uploadedFiles.length >= 5 || (uploadedFiles.length + files.length) > 5) {
-      toastStore.trigger({
-        message: 'Maximum 5 files allowed',
-        background: 'variant-filled-error'
-      });
-      return;
-    }
-
-    isProcessingFiles = true;
-    try {
-      for (let i = 0; i < files.length && uploadedFiles.length < 5; i++) {
-        const file = files[i];
-        const content = await readFileContent(file);
-        fileContents.push(content);
-        uploadedFiles = [...uploadedFiles, file.name];
-      }
-    } catch (error) {
-      toastStore.trigger({
-        message: 'Error processing files: ' + (error as Error).message,
-        background: 'variant-filled-error'
-      });
-    } finally {
-      isProcessingFiles = false;
-    }
-  }
-
-  function readFileContent(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => resolve(e.target?.result as string);
-      reader.onerror = (e) => reject(new Error('Failed to read file'));
-      reader.readAsText(file);
+  if (uploadedFiles.length >= 5 || (uploadedFiles.length + files.length) > 5) {
+    toastStore.trigger({
+      message: 'Maximum 5 files allowed',
+      background: 'variant-filled-error'
     });
+    return;
   }
+
+  isProcessingFiles = true;
+  try {
+    // Add processing indicator to message store
+    messageStore.update(messages => [...messages, {
+      role: 'system',
+      content: 'Processing files...',
+      format: 'loading'
+    }]);
+
+    for (let i = 0; i < files.length && uploadedFiles.length < 5; i++) {
+      const file = files[i];
+      const content = await readFileContent(file);
+      fileContents.push(content);
+      uploadedFiles = [...uploadedFiles, file.name];
+      
+      // Update processing status per file
+      messageStore.update(messages => {
+        const newMessages = [...messages];
+        const lastMessage = newMessages[newMessages.length - 1];
+        if (lastMessage?.format === 'loading') {
+          lastMessage.content = `Processing ${file.name} (${file.type})...`;
+        }
+        return newMessages;
+      });
+    }
+
+    // Remove processing message on completion
+    messageStore.update(messages => 
+      messages.filter(m => m.format !== 'loading')
+    );
+
+  } catch (error) {
+    toastStore.trigger({
+      message: 'Error processing files: ' + (error as Error).message,
+      background: 'variant-filled-error'
+    });
+    
+    // Clean up processing message on error
+    messageStore.update(messages => 
+      messages.filter(m => m.format !== 'loading')
+    );
+  } finally {
+    isProcessingFiles = false;
+  }
+}
+
+
+  
+
+
+
+
+async function readFileContent(file: File): Promise<string> {
+  // Log initial file metadata
+  console.log('Reading file:', {
+    name: file.name,
+    type: file.type,
+    size: file.size,
+    lastModified: new Date(file.lastModified).toISOString()
+  });
+
+  // Handle PDF files
+  if (file.type === 'application/pdf') {
+    try {
+      // Start PDF processing
+      console.log('Starting PDF conversion process');
+      const markdown = await pdfService.convertToMarkdown(file);
+      
+      // Validate conversion result
+      console.log('PDF conversion completed:', {
+        resultLength: markdown.length,
+        preview: markdown.substring(0, 100)
+      });
+
+      // Ensure we have valid content
+      if (!markdown || markdown.trim().length === 0) {
+        throw new Error('PDF conversion returned empty content');
+      }
+
+
+      
+      // Add to fileContents for pattern processing
+      fileContents.push(markdown);
+
+      // Prepare enhanced prompt with system instructions
+      const enhancedPrompt = `${$systemPrompt}\nAnalyze and process the provided content according to these instructions.`;
+      
+      // Format final content with proper labeling
+      const finalContent = `${userInput}\n\nFile Contents (PDF):\n${markdown}`;
+      
+      // Process through pattern system
+      await sendMessage(finalContent, enhancedPrompt);
+
+      return markdown;
+
+    } catch (error) {
+  console.error('PDF Conversion error:', {
+    error,
+    fileName: file.name,
+    fileSize: file.size
+  });
+  
+  const errorMessage = error instanceof Error 
+    ? error.message
+    : 'Unknown error during PDF conversion';
+    
+  throw new Error(`Failed to convert PDF ${file.name}: ${errorMessage}`);
+}
+  }
+
+  // Handle text files
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = async (e) => {
+      const content = e.target?.result as string;
+      console.log('Text file processed:', {
+        fileName: file.name,
+        contentLength: content.length,
+        preview: content.substring(0, 100)
+      });
+      // resolve(content);
+      const enhancedPrompt = `${$systemPrompt}\nAnalyze and process the provided content according to these instructions.`;
+      const finalContent = `${userInput}\n\nFile Contents (Text):\n${content}`;
+      await sendMessage(finalContent, enhancedPrompt);
+      resolve(content);
+    };
+    
+    reader.onerror = (e) => {
+      console.error('FileReader error:', {
+        error: reader.error,
+        fileName: file.name
+      });
+      reject(new Error(`Failed to read ${file.name}: ${reader.error?.message}`));
+    };
+
+    // Start reading the file
+    reader.readAsText(file);
+  });
+}
+
+
+
+
 
   async function saveToObsidian(content: string) {
     if (!$obsidianSettings.saveToObsidian) {
@@ -251,31 +377,56 @@
       }
   }
 
-  async function handleSubmit() {
-    if (!userInput.trim()) return;
+  
 
-    try {
-      console.log('\n=== Submit Handler Start ===');
-      
-      if (isYouTubeURL) {
-        console.log('2a. Starting YouTube flow');
-        await processYouTubeURL(userInput);
-        return;
-      }
-      
-      const finalContent = fileContents.length > 0 
-        ? userInput + '\n\nFile Contents:\n' + fileContents.join('\n\n')
-        : userInput;
-        
-      await sendMessage(finalContent);
-      
-      userInput = "";
-      uploadedFiles = [];
-      fileContents = [];
-    } catch (error) {
-      console.error('Chat submission error:', error);
+
+async function handleSubmit() {
+  if (!userInput.trim()) return;
+
+  try {
+    console.log('\n=== Submit Handler Start ===');
+    
+    if (isYouTubeURL) {
+      console.log('2a. Starting YouTube flow');
+      await processYouTubeURL(userInput);
+      return;
     }
+    
+    const enhancedPrompt = fileContents.length > 0 
+      ? `${$systemPrompt}\nAnalyze and process the provided content according to these instructions.`
+      : $systemPrompt;
+    
+    // Hide raw content from display but keep it for processing
+    messageStore.update(messages => [...messages, {
+      role: 'system',
+      content: 'Processing content...',
+      format: 'loading'
+    }]);
+    
+    userInput = ""; // Reset userInput BEFORE sendMessage
+    uploadedFiles = []; // Reset uploadedFiles BEFORE sendMessage
+    fileContents = []; // Reset fileContents BEFORE sendMessage
+    fileButtonKey = !fileButtonKey; // Toggle key to force re-creation
+
+
+    const finalContent = fileContents.length > 0 
+      ? `${userInput}\n\nFile Contents (${uploadedFiles.map(f => f.endsWith('.pdf') ? 'PDF' : 'Text').join(', ')}):\n${fileContents.join('\n\n---\n\n')}`
+      : userInput;
+     
+      
+       
+
+    await sendMessage(finalContent, enhancedPrompt);
+    
+   
+    
+
+  
+  } catch (error) {
+    console.error('Chat submission error:', error);
   }
+}
+
 
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -300,11 +451,12 @@
     />
     <div class="absolute bottom-3 right-3 flex items-center gap-2">
       <div class="flex items-center gap-2">
-        {#if uploadedFiles.length > 0}
+        {#if isFileIndicatorVisible}
           <span class="text-xs text-white/70">
             {uploadedFiles.length} file{uploadedFiles.length > 1 ? 's' : ''} attached
           </span>
         {/if}
+      {#key fileButtonKey}
         <FileButton
           name="file-upload"
           button="btn-icon variant-ghost"
@@ -313,12 +465,10 @@
           disabled={isProcessingFiles || uploadedFiles.length >= 5}
           class="h-10 w-10 bg-primary-800/30 hover:bg-primary-800/50 rounded-full transition-colors"
         >
-          {#if uploadedFiles.length > 0}
-            <FileCheck class="w-5 h-5" />
-          {:else}
-            <Paperclip class="w-5 h-5" />
-          {/if}
+        <Paperclip class="w-5 h-5" /> 
+       
         </FileButton>
+      {/key}
         <Button
           type="button"
           variant="ghost"
