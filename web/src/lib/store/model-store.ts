@@ -1,4 +1,4 @@
-import { writable} from 'svelte/store';
+import { writable } from 'svelte/store';
 import { modelsApi } from '$lib/api/models';
 import { configApi } from '$lib/api/config';
 import type { VendorModel, ModelConfig } from '$lib/interfaces/model-interface';

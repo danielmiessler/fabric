@@ -17,7 +17,10 @@ export const POST: RequestHandler = async ({ request }) => {
     // Get the absolute path to the inbox directory
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
-    const inboxPath = join(__dirname, '..', '..', 'lib', 'content', 'inbox', filename);
+    // const inboxPath = join(__dirname, '..', 'myfiles', 'inbox', filename);
+    // New version using environment variables:
+    // const inboxPath = join(process.env.DATA_DIR || './web/myfiles', 'inbox', filename);
+    const inboxPath = join(__dirname, '..', '..', '..', 'myfiles', 'inbox', filename);
 
     await writeFile(inboxPath, content, 'utf-8');
 

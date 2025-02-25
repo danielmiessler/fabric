@@ -3,9 +3,8 @@ package azure
 import (
 	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
-	"strings"
-
 	goopenai "github.com/sashabaranov/go-openai"
+	"strings"
 )
 
 func NewClient() (ret *Client) {
@@ -31,8 +30,6 @@ func (oi *Client) configure() (err error) {
 }
 
 func (oi *Client) ListModels() (ret []string, err error) {
-	// Azure Open Client has models and deployments. We need to get the deployments to use them for chat
-	// There is no easy way to get the deployments from the API, so we need to ask the user to provide them
 	ret = oi.apiDeployments
 	return
 }

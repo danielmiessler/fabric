@@ -1,6 +1,8 @@
 import { writable, derived, get } from 'svelte/store';
-import type { ChatState, Message } from '$lib/interfaces/chat-interface';
+import type { ChatState, Message, StreamResponse } from '$lib/interfaces/chat-interface';
 import { ChatService, ChatError } from '$lib/services/ChatService';
+import { languageStore } from '$lib/store/language-store';
+import { selectedPatternName } from '$lib/store/pattern-store';
 
 // Initialize chat service
 const chatService = new ChatService();
@@ -67,54 +69,86 @@ export const revertLastMessage = () => {
   messageStore.update(messages => messages.slice(0, -1));
 };
 
-export async function sendMessage(userInput: string, systemPromptText?: string) {
-  try {
-    const $streaming = get(streamingStore);
-    if ($streaming) {
-      throw new ChatError('Message submission blocked - already streaming', 'STREAMING_BLOCKED');
-    }
 
-    streamingStore.set(true);
-    errorStore.set(null);
-
-    // Add user message
-    messageStore.update(messages => [...messages, { role: 'user', content: userInput }]);
-
-    const stream = await chatService.streamChat(userInput, systemPromptText);
-
-    await chatService.processStream(
-      stream,
-      (content) => {
-        messageStore.update(messages => {
-          const newMessages = [...messages];
-          const lastMessage = newMessages[newMessages.length - 1];
-
-          if (lastMessage?.role === 'assistant') {
-            lastMessage.content = content;
-          } else {
-            newMessages.push({
-              role: 'assistant',
-              content
-            });
-          }
-
-          return newMessages;
+  export async function sendMessage(content: string, systemPromptText?: string, isSystem: boolean = false) {
+    try {
+        console.log('\n=== Message Processing Start ===');
+        console.log('1. Initial state:', {
+            isSystem,
+            hasSystemPrompt: !!systemPromptText,
+            currentLanguage: get(languageStore),
+            pattern: get(selectedPatternName)
         });
-      },
-      (error) => {
-        handleError(error);
-      }
-    );
 
-    streamingStore.set(false);
-  } catch (error) {
-    if (error instanceof Error) {
-      handleError(error);
-    } else {
-      handleError(String(error));
+        const $streaming = get(streamingStore);
+        if ($streaming) {
+            throw new ChatError('Message submission blocked - already streaming', 'STREAMING_BLOCKED');
+        }
+
+        streamingStore.set(true);
+        errorStore.set(null);
+
+        // Add message
+        messageStore.update(messages => [...messages, {
+            role: isSystem ? 'system' : 'user',
+            content
+        }]);
+
+        console.log('2. Message added:', {
+            role: isSystem ? 'system' : 'user',
+            language: get(languageStore)
+        });
+
+        if (!isSystem) {
+            console.log('3. Preparing chat stream:', {
+                language: get(languageStore),
+                pattern: get(selectedPatternName),
+                hasSystemPrompt: !!systemPromptText
+            });
+
+            const stream = await chatService.streamChat(content, systemPromptText);
+            console.log('4. Stream created');
+
+            await chatService.processStream(
+                stream,
+                (content: string, response?: StreamResponse) => {
+                    messageStore.update(messages => {
+                        const newMessages = [...messages];
+                        const lastMessage = newMessages[newMessages.length - 1];
+
+                        if (lastMessage?.role === 'assistant') {
+                            lastMessage.content = content;
+                            lastMessage.format = response?.format;
+                            console.log('Message updated:', {
+                                role: 'assistant',
+                                format: lastMessage.format
+                            });
+                        } else {
+                            newMessages.push({
+                                role: 'assistant',
+                                content,
+                                format: response?.format
+                            });
+                        }
+
+                        return newMessages;
+                    });
+                },
+                (error) => {
+                    handleError(error);
+                }
+            );
+        }
+
+        streamingStore.set(false);
+    } catch (error) {
+        if (error instanceof Error) {
+            handleError(error);
+        } else {
+            handleError(String(error));
+        }
+        throw error;
     }
-    throw error;
-  }
 }
 
 // Re-export types for convenience
