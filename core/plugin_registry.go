@@ -3,6 +3,7 @@ package core
 import (
 	"bytes"
 	"fmt"
+	"github.com/danielmiessler/fabric/plugins/ai/exolab"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -55,7 +56,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		gemini.NewClient(),
 		//gemini_openai.NewClient(),
 		anthropic.NewClient(), siliconcloud.NewClient(),
-		openrouter.NewClient(), lmstudio.NewClient(), mistral.NewClient(), deepseek.NewClient())
+		openrouter.NewClient(), lmstudio.NewClient(), mistral.NewClient(), deepseek.NewClient(), exolab.NewClient())
 	_ = ret.Configure()
 
 	return
