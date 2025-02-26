@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins"
 	"io"
 	"log/slog"
+
+	"github.com/danielmiessler/fabric/plugins"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/samber/lo"

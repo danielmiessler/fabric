@@ -1,8 +1,9 @@
 package gemini
 
 import (
-	"github.com/google/generative-ai-go/genai"
 	"testing"
+
+	"github.com/google/generative-ai-go/genai"
 )
 
 // Test generated using Keploy

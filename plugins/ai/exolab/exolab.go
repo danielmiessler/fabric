@@ -1,9 +1,10 @@
 package exolab
 
 import (
+	"strings"
+
 	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
-	"strings"
 
 	goopenai "github.com/sashabaranov/go-openai"
 )

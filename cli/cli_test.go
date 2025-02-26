@@ -1,9 +1,10 @@
 package cli
 
 import (
-	"github.com/danielmiessler/fabric/core"
 	"os"
 	"testing"
+
+	"github.com/danielmiessler/fabric/core"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -1,9 +1,10 @@
 package common
 
 import (
+	"testing"
+
 	goopenai "github.com/sashabaranov/go-openai"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestNormalizeMessages(t *testing.T) {

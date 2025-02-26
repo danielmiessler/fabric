@@ -2,10 +2,11 @@ package restapi
 
 import (
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins/db"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
+
+	"github.com/danielmiessler/fabric/plugins/db"
+	"github.com/gin-gonic/gin"
 )
 
 // StorageHandler defines the handler for storage-related operations

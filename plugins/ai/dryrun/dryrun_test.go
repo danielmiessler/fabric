@@ -1,10 +1,11 @@
 package dryrun
 
 import (
-	"github.com/danielmiessler/fabric/common"
-	"github.com/sashabaranov/go-openai"
 	"reflect"
 	"testing"
+
+	"github.com/danielmiessler/fabric/common"
+	"github.com/sashabaranov/go-openai"
 )
 
 // Test generated using Keploy

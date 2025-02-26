@@ -25,9 +25,6 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Setup Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
       - name: Set up Git
         run: |
           git config user.name "github-actions[bot]"
@@ -63,21 +60,21 @@ jobs:
 
       - name: Update version.nix file
         run: |
-          echo "\"${{ env.new_version }}\"" > pkgs/fabric/version.nix
+          echo "\"${{ env.new_version }}\"" > nix/pkgs/fabric/version.nix
       
-      - name: Format source codes
+      - name: Format source code
         run: |
-          go fmt ./...
+          nix fmt
 
       - name: Update gomod2nix.toml file
         run: |
-          nix run .#gomod2nix
+          nix run .#gomod2nix -- --outdir nix/pkgs/fabric
 
       - name: Commit changes
         run: |
           git add version.go
-          git add pkgs/fabric/version.nix
-          git add gomod2nix.toml
+          git add nix/pkgs/fabric/version.nix
+          git add nix/pkgs/fabric/gomod2nix.toml
           git add .
           if ! git diff --staged --quiet; then
             git commit -m "Update version to ${{ env.new_tag }} and commit $commit_hash"

@@ -1,10 +1,11 @@
 package azure
 
 import (
+	"strings"
+
 	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
 	goopenai "github.com/sashabaranov/go-openai"
-	"strings"
 )
 
 func NewClient() (ret *Client) {
