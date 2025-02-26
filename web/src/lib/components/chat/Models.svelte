@@ -9,8 +9,9 @@
 </script>
 
 <div class="min-w-0">
-  <Select 
+  <Select
     bind:value={$modelConfig.model}
+    class="bg-primary-800/30 border-none hover:bg-primary-800/40 transition-colors"
   >
     <option value="">Default Model</option>
     {#each $availableModels as model (model.name)}

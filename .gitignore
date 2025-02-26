@@ -342,3 +342,8 @@ web/.svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
+web/myfiles/Obsidian_perso_not_share/
+ENV
+web/package-lock.json
+.gitignore_backup
+web/static/*.png

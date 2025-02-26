@@ -66,9 +66,9 @@
 ## Updates
 
 > [!NOTE]
-> November 8, 2024
+> February 24, 2025
 >
-> - **Multimodal Support**: You can now use `-a` (attachment) for Multimodal submissions to OpenAI models that support it. Example: `fabric -a https://path/to/image "Give me a description of this image."`
+> - Fabric now supports Sonnet 3.7! Update and use `-S` to select it as your default if you want, or just use the shortcut `-m claude-3-7-sonnet-latest`. Enjoy!
 
 ## What and why
 
