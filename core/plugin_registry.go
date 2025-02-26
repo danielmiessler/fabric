@@ -3,10 +3,11 @@ package core
 import (
 	"bytes"
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins/ai/exolab"
 	"os"
 	"path/filepath"
 	"strconv"
+
+	"github.com/danielmiessler/fabric/plugins/ai/exolab"
 
 	"github.com/samber/lo"
 

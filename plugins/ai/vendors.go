@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins"
 	"sync"
+
+	"github.com/danielmiessler/fabric/plugins"
 )
 
 func NewVendorsManager() *VendorsManager {

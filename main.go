@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/jessevdk/go-flags"
 	"os"
+
+	"github.com/jessevdk/go-flags"
 
 	"github.com/danielmiessler/fabric/cli"
 )
