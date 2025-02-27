@@ -48,8 +48,8 @@
             </section>
 
             <section>
-                <h3 class="text-base font-bold text-primary-300 mb-2">File Support</h3>
-                <p class="text-sm text-muted-foreground">You can attach files to your messages using the paperclip icon. The AI will analyze the content of text files.</p>
+                <h3 class="text-base font-bold text-primary-300 mb-2">Upload PDFs and other txt files</h3>
+                <p class="text-sm text-muted-foreground">Now accepts PDFs and other txt files as input using the paperclip icon. PDFs are converted to markdown automatically.</p>
             </section>
 
             <section>
