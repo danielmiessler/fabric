@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strconv"
 
+	"github.com/danielmiessler/fabric/plugins/ai/exolab"
+
 	"github.com/samber/lo"
 
 	"github.com/danielmiessler/fabric/common"
@@ -55,7 +57,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		gemini.NewClient(),
 		//gemini_openai.NewClient(),
 		anthropic.NewClient(), siliconcloud.NewClient(),
-		openrouter.NewClient(), lmstudio.NewClient(), mistral.NewClient(), deepseek.NewClient())
+		openrouter.NewClient(), lmstudio.NewClient(), mistral.NewClient(), deepseek.NewClient(), exolab.NewClient())
 	_ = ret.Configure()
 
 	return

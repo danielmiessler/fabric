@@ -90,7 +90,7 @@ func (h *ConfigHandler) UpdateConfig(c *gin.Context) {
 		LMStudioURL      string `json:"lm_studio_base_url"`
 	}
 
-	if err := c.BindJSON(&config); err != nil {
+	if err := c.ShouldBindJSON(&config); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

@@ -33,7 +33,7 @@
         let
           pkgs = nixpkgs.legacyPackages.${system};
         in
-        treefmt-nix.lib.evalModule pkgs ./treefmt.nix
+        treefmt-nix.lib.evalModule pkgs ./nix/treefmt.nix
       );
     in
     {
@@ -49,7 +49,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
           goEnv = gomod2nix.legacyPackages.${system}.mkGoEnv { pwd = ./.; };
         in
-        import ./shell.nix {
+        import ./nix/shell.nix {
           inherit pkgs goEnv;
           inherit (gomod2nix.legacyPackages.${system}) gomod2nix;
         }
@@ -62,7 +62,7 @@
         in
         {
           default = self.packages.${system}.fabric;
-          fabric = pkgs.callPackage ./pkgs/fabric {
+          fabric = pkgs.callPackage ./nix/pkgs/fabric {
             inherit (gomod2nix.legacyPackages.${system}) buildGoApplication;
           };
           inherit (gomod2nix.legacyPackages.${system}) gomod2nix;

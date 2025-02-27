@@ -2,10 +2,11 @@ package fsdb
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 func NewDb(dir string) (db *Db) {

@@ -2,6 +2,7 @@ package ai
 
 import (
 	"context"
+
 	"github.com/danielmiessler/fabric/plugins"
 	goopenai "github.com/sashabaranov/go-openai"
 

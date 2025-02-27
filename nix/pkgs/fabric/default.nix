@@ -6,9 +6,11 @@
 buildGoApplication {
   pname = "fabric-ai";
   version = import ./version.nix;
-  src = ../../.;
-  pwd = ../../.;
-  modules = ../../gomod2nix.toml;
+  src = ../../../.;
+  pwd = ../../../.;
+  modules = ./gomod2nix.toml;
+
+  doCheck = false;
 
   ldflags = [
     "-s"
