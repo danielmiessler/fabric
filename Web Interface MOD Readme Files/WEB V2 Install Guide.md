@@ -6,7 +6,7 @@ Until it is fully integrated in GO, here's a safe way to test Web V2.
 
 Clone the fabric repository to your desired location:
 
-```bash
+
 # For Mac (specific location)
 git clone https://github.com/danielmiessler/fabric.git ~/Documents/Github/fabric
 
@@ -55,6 +55,7 @@ REFER TO OFFICIAL FABRIC README.MD FILE FOR OTHER OPERATING SYSTEMS
 Step 5: Create Aliases for Patterns
 Add the following to your .zshrc or .bashrc file to create shorter commands:
 
+```bash
 # Define the base directory for Obsidian notes, 
 obsidian_base="/path/to/obsidian"
 
