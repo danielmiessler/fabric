@@ -111,10 +111,30 @@ fabric --serve
 Terminal 2: Start the Development Server
 npm run dev
 
-OPTIONAL: Create Start/Stop Scripts (Mac example)
+_____   ______   ______
+
+OPTIONAL: Create Start/Stop Scripts 
 You can create scripts to start/stop both servers at once.
 
-Start Script
+### For Mac Users
+When creating scripts on Mac using TextEdit:
+
+1. Open TextEdit
+2. **IMPORTANT:** Select "Format > Make Plain Text" from the menu BEFORE pasting any code
+3. Paste the script content, follow instructions below ((Mac example)).
+
+
+### For Windows Users
+When creating scripts on Windows:
+
+1. Use Notepad or a code editor like VS Code
+2. Paste the script content
+3. Save the file with the appropriate extension
+4. Ensure line endings are set to LF (not CRLF) for bash scripts
+
+ACTUAL SCRIPTS (Mac example)
+
+Start Script 
 1. Create a new file named start-fabric.command on your Desktop:
 
 #!/bin/bash
