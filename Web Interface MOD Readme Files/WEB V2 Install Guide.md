@@ -1,27 +1,20 @@
-# How to Install Fabric, Web Interface and PDF-to-Markdown
+# How to Install the Web Interface and PDF-to-Markdown
 
 Until it is fully integrated in GO, here's a safe way to test Web V2.
 
-## Step 1: Clone the Repository
-
-Clone the fabric repository to your desired location:
-
-
-# For Mac (specific location)
-git clone https://github.com/danielmiessler/fabric.git ~/Documents/Github/fabric
-
-# Or from any parent directory
-git clone https://github.com/danielmiessler/fabric.git
+Follow the instruction from the main README.md to install fabric
+eg clone and run go install github.com/danielmiessler/fabric@latest
 
 
-Step 2: Install GUI
+
+## Step 1: Install GUI
 Navigate to the web directory and install dependencies:
 
 cd web
 npm install
 npx svelte-kit sync
 
-Step 3: Install PDF-to-Markdown
+## Step 2: Install PDF-to-Markdown
 Install the PDF conversion components in the correct order:
 
 # Make sure you're in the fabric/web directory
@@ -35,7 +28,7 @@ npm install -D github:jzillmann/pdf-to-markdown#modularize
 
 No build step is required after installation.
 
-Step 4: Update Shell Configuration
+## Step 3: Update Shell Configuration if not already done from your fabric installation
 For Mac/Linux users:
 
 Add environment variables to your ~/.bashrc (Linux) or ~/.zshrc (Mac) file:
