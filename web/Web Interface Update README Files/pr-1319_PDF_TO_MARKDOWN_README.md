@@ -9,6 +9,9 @@ The PDF conversion module has been integrated in the svelte web browser interfac
 
 
 ## HOW TO INSTALL
+If you need to update the web component follow the instructions in "Web Interface MOD Readme Files/WEB V2 Install Guide.md".  
+
+Assuming your install is up to date and web svelte config complete, you can simply follow these steps to add Pdf-to-mardown. 
 
 # FROM FABRIC ROOT DIRECTORY
   cd .. web
