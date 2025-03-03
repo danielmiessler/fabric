@@ -19,6 +19,7 @@ require (
 	github.com/samber/lo v1.49.1
 	github.com/sashabaranov/go-openai v1.38.0
 	github.com/stretchr/testify v1.10.0
+	golang.org/x/term v0.29.0
 	golang.org/x/text v0.22.0
 	google.golang.org/api v0.223.0
 	gopkg.in/yaml.v2 v2.4.0
@@ -41,7 +42,6 @@ require (
 	github.com/bytedance/sonic/loader v0.2.3 // indirect
 	github.com/cloudflare/circl v1.6.0 // indirect
 	github.com/cloudwego/base64x v0.1.5 // indirect
-	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/cyphar/filepath-securejoin v0.4.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect

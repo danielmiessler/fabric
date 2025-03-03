@@ -32,15 +32,15 @@ func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCust
 		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(vendorName),
 		ConfigureCustom: configureCustom,
 	}
-	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
-	ret.ApiBaseURL.Value = defaultBaseUrl
+	ret.ApiUrl = ret.AddSetupQuestionCustom("API URL", true,
+		fmt.Sprintf("Enter your %v URL (as a reminder, it is usually %v')", vendorName, defaultBaseUrl))
 	return
 }
 
 // Client represents the LM Studio client.
 type Client struct {
 	*plugins.PluginBase
-	ApiBaseURL *plugins.SetupQuestion
+	ApiUrl     *plugins.SetupQuestion
 	HttpClient *http.Client
 }
 
@@ -50,14 +50,9 @@ func (c *Client) configure() error {
 	return nil
 }
 
-// Configure sets up the client configuration.
-func (c *Client) Configure() error {
-	return c.ConfigureCustom()
-}
-
 // ListModels returns a list of available models.
 func (c *Client) ListModels() ([]string, error) {
-	url := fmt.Sprintf("%s/models", c.ApiBaseURL.Value)
+	url := fmt.Sprintf("%s/models", c.ApiUrl.Value)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -92,13 +87,8 @@ func (c *Client) ListModels() ([]string, error) {
 	return models, nil
 }
 
-// // SendStream sends a stream of messages (not implemented for LM Studio).
-// func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
-// 	return fmt.Errorf("streaming is not currently supported for LM Studio")
-// }
-
-func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
-	url := fmt.Sprintf("%s/chat/completions", c.ApiBaseURL.Value)
+func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
+	url := fmt.Sprintf("%s/chat/completions", c.ApiUrl.Value)
 
 	payload := map[string]interface{}{
 		"messages": msgs,
@@ -106,85 +96,85 @@ func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common
 		"stream":   true, // Enable streaming
 	}
 
-	jsonPayload, err := json.Marshal(payload)
-	if err != nil {
-		return fmt.Errorf("failed to marshal payload: %w", err)
+	var jsonPayload []byte
+	if jsonPayload, err = json.Marshal(payload); err != nil {
+		err = fmt.Errorf("failed to marshal payload: %w", err)
+		return
 	}
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonPayload))
-	if err != nil {
-		return fmt.Errorf("failed to create request: %w", err)
+	var req *http.Request
+	if req, err = http.NewRequest("POST", url, bytes.NewBuffer(jsonPayload)); err != nil {
+		err = fmt.Errorf("failed to create request: %w", err)
+		return
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := c.HttpClient.Do(req)
-	if err != nil {
-		return fmt.Errorf("failed to send request: %w", err)
+	var resp *http.Response
+	if resp, err = c.HttpClient.Do(req); err != nil {
+		err = fmt.Errorf("failed to send request: %w", err)
+		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		err = fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		return
 	}
 
-	// Close channel when function exits
 	defer close(channel)
 
 	reader := bufio.NewReader(resp.Body)
 	for {
-		line, err := reader.ReadBytes('\n')
-		if err != nil {
+		var line []byte
+		if line, err = reader.ReadBytes('\n'); err != nil {
 			if err == io.EOF {
+				err = nil
 				break
 			}
-			return fmt.Errorf("error reading response: %w", err)
+			err = fmt.Errorf("error reading response: %w", err)
+			return
 		}
 
-		// Ignore empty lines
 		if len(line) == 0 {
 			continue
 		}
 
-		// Remove OpenAI-style prefix
 		if bytes.HasPrefix(line, []byte("data: ")) {
 			line = bytes.TrimPrefix(line, []byte("data: "))
 		}
 
-		// Handle [DONE] signal
 		if string(line) == "[DONE]" {
 			break
 		}
 
-		// Parse JSON response
 		var result map[string]interface{}
-		if err := json.Unmarshal(line, &result); err != nil {
+		if err = json.Unmarshal(line, &result); err != nil {
 			continue
 		}
 
-		// Extract content from streaming chunks
-		choices, ok := result["choices"].([]interface{})
-		if !ok || len(choices) == 0 {
+		var choices []interface{}
+		var ok bool
+		if choices, ok = result["choices"].([]interface{}); !ok || len(choices) == 0 {
 			continue
 		}
 
-		delta, ok := choices[0].(map[string]interface{})["delta"].(map[string]interface{})
-		if !ok {
+		var delta map[string]interface{}
+		if delta, ok = choices[0].(map[string]interface{})["delta"].(map[string]interface{}); !ok {
 			continue
 		}
 
-		content, _ := delta["content"].(string)
-
-		// Send data to channel
-		channel <- content
+		var content string
+		if content, _ = delta["content"].(string); content != "" {
+			channel <- content
+		}
 	}
 
-	return nil
+	return
 }
 
-// Send sends a single message and returns the response.
-func (c *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (string, error) {
-	url := fmt.Sprintf("%s/chat/completions", c.ApiBaseURL.Value)
+func (c *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (content string, err error) {
+	url := fmt.Sprintf("%s/chat/completions", c.ApiUrl.Value)
 
 	payload := map[string]interface{}{
 		"messages": msgs,
@@ -192,54 +182,61 @@ func (c *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessag
 		// Add other options from opts if supported by LM Studio
 	}
 
-	jsonPayload, err := json.Marshal(payload)
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal payload: %w", err)
+	var jsonPayload []byte
+	if jsonPayload, err = json.Marshal(payload); err != nil {
+		err = fmt.Errorf("failed to marshal payload: %w", err)
+		return
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonPayload))
-	if err != nil {
-		return "", fmt.Errorf("failed to create request: %w", err)
+	var req *http.Request
+	if req, err = http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonPayload)); err != nil {
+		err = fmt.Errorf("failed to create request: %w", err)
+		return
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := c.HttpClient.Do(req)
-	if err != nil {
-		return "", fmt.Errorf("failed to send request: %w", err)
+	var resp *http.Response
+	if resp, err = c.HttpClient.Do(req); err != nil {
+		err = fmt.Errorf("failed to send request: %w", err)
+		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		err = fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		return
 	}
 
 	var result map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return "", fmt.Errorf("failed to decode response: %w", err)
+	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		err = fmt.Errorf("failed to decode response: %w", err)
+		return
 	}
 
-	choices, ok := result["choices"].([]interface{})
-	if !ok || len(choices) == 0 {
-		return "", fmt.Errorf("invalid response format: missing or empty choices")
+	var choices []interface{}
+	var ok bool
+	if choices, ok = result["choices"].([]interface{}); !ok || len(choices) == 0 {
+		err = fmt.Errorf("invalid response format: missing or empty choices")
+		return
 	}
 
-	message, ok := choices[0].(map[string]interface{})["message"].(map[string]interface{})
-	if !ok {
-		return "", fmt.Errorf("invalid response format: missing message in first choice")
+	var message map[string]interface{}
+	if message, ok = choices[0].(map[string]interface{})["message"].(map[string]interface{}); !ok {
+		err = fmt.Errorf("invalid response format: missing message in first choice")
+		return
 	}
 
-	content, ok := message["content"].(string)
-	if !ok {
-		return "", fmt.Errorf("invalid response format: missing or non-string content in message")
+	if content, ok = message["content"].(string); !ok {
+		err = fmt.Errorf("invalid response format: missing or non-string content in message")
+		return
 	}
 
-	return content, nil
+	return
 }
 
-// Complete sends a completion request and returns the response.
-func (c *Client) Complete(ctx context.Context, prompt string, opts *common.ChatOptions) (string, error) {
-	url := fmt.Sprintf("%s/completions", c.ApiBaseURL.Value)
+func (c *Client) Complete(ctx context.Context, prompt string, opts *common.ChatOptions) (text string, err error) {
+	url := fmt.Sprintf("%s/completions", c.ApiUrl.Value)
 
 	payload := map[string]interface{}{
 		"prompt": prompt,
@@ -247,49 +244,55 @@ func (c *Client) Complete(ctx context.Context, prompt string, opts *common.ChatO
 		// Add other options from opts if supported by LM Studio
 	}
 
-	jsonPayload, err := json.Marshal(payload)
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal payload: %w", err)
+	var jsonPayload []byte
+	if jsonPayload, err = json.Marshal(payload); err != nil {
+		err = fmt.Errorf("failed to marshal payload: %w", err)
+		return
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonPayload))
-	if err != nil {
-		return "", fmt.Errorf("failed to create request: %w", err)
+	var req *http.Request
+	if req, err = http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonPayload)); err != nil {
+		err = fmt.Errorf("failed to create request: %w", err)
+		return
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := c.HttpClient.Do(req)
-	if err != nil {
-		return "", fmt.Errorf("failed to send request: %w", err)
+	var resp *http.Response
+	if resp, err = c.HttpClient.Do(req); err != nil {
+		err = fmt.Errorf("failed to send request: %w", err)
+		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		err = fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		return
 	}
 
 	var result map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return "", fmt.Errorf("failed to decode response: %w", err)
+	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		err = fmt.Errorf("failed to decode response: %w", err)
+		return
 	}
 
-	choices, ok := result["choices"].([]interface{})
-	if !ok || len(choices) == 0 {
-		return "", fmt.Errorf("invalid response format: missing or empty choices")
+	var choices []interface{}
+	var ok bool
+	if choices, ok = result["choices"].([]interface{}); !ok || len(choices) == 0 {
+		err = fmt.Errorf("invalid response format: missing or empty choices")
+		return
 	}
 
-	text, ok := choices[0].(map[string]interface{})["text"].(string)
-	if !ok {
-		return "", fmt.Errorf("invalid response format: missing or non-string text in first choice")
+	if text, ok = choices[0].(map[string]interface{})["text"].(string); !ok {
+		err = fmt.Errorf("invalid response format: missing or non-string text in first choice")
+		return
 	}
 
-	return text, nil
+	return
 }
 
-// GetEmbeddings returns embeddings for the given input.
-func (c *Client) GetEmbeddings(ctx context.Context, input string, opts *common.ChatOptions) ([]float64, error) {
-	url := fmt.Sprintf("%s/embeddings", c.ApiBaseURL.Value)
+func (c *Client) GetEmbeddings(ctx context.Context, input string, opts *common.ChatOptions) (embeddings []float64, err error) {
+	url := fmt.Sprintf("%s/embeddings", c.ApiUrl.Value)
 
 	payload := map[string]interface{}{
 		"input": input,
@@ -297,26 +300,30 @@ func (c *Client) GetEmbeddings(ctx context.Context, input string, opts *common.C
 		// Add other options from opts if supported by LM Studio
 	}
 
-	jsonPayload, err := json.Marshal(payload)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal payload: %w", err)
+	var jsonPayload []byte
+	if jsonPayload, err = json.Marshal(payload); err != nil {
+		err = fmt.Errorf("failed to marshal payload: %w", err)
+		return
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonPayload))
-	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %w", err)
+	var req *http.Request
+	if req, err = http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonPayload)); err != nil {
+		err = fmt.Errorf("failed to create request: %w", err)
+		return
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := c.HttpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to send request: %w", err)
+	var resp *http.Response
+	if resp, err = c.HttpClient.Do(req); err != nil {
+		err = fmt.Errorf("failed to send request: %w", err)
+		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		err = fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		return
 	}
 
 	var result struct {
@@ -325,34 +332,16 @@ func (c *Client) GetEmbeddings(ctx context.Context, input string, opts *common.C
 		} `json:"data"`
 	}
 
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, fmt.Errorf("failed to decode response: %w", err)
+	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		err = fmt.Errorf("failed to decode response: %w", err)
+		return
 	}
 
 	if len(result.Data) == 0 {
-		return nil, fmt.Errorf("no embeddings returned")
+		err = fmt.Errorf("no embeddings returned")
+		return
 	}
 
-	return result.Data[0].Embedding, nil
-}
-
-// GetName returns the name of the vendor.
-func (c *Client) GetName() string {
-	return c.Name
-}
-
-// IsConfigured checks if the client is configured.
-func (c *Client) IsConfigured() bool {
-	return c.ApiBaseURL != nil && c.ApiBaseURL.Value != ""
-}
-
-// Setup performs any necessary setup for the client.
-func (c *Client) Setup() error {
-	return c.Configure()
-}
-
-// SetupFillEnvFileContent fills the environment file content.
-func (c *Client) SetupFillEnvFileContent(buffer *bytes.Buffer) {
-	envName := fmt.Sprintf("%s_API_BASE_URL", c.EnvNamePrefix)
-	buffer.WriteString(fmt.Sprintf("%s=%s\n", envName, c.ApiBaseURL.Value))
+	embeddings = result.Data[0].Embedding
+	return
 }
