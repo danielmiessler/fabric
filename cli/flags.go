@@ -4,13 +4,14 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"golang.org/x/term"
 	"io"
 	"os"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
+
+	"golang.org/x/term"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/jessevdk/go-flags"

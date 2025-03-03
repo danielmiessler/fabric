@@ -55,9 +55,6 @@ schema = 3
   [mod."github.com/cloudwego/base64x"]
     version = "v0.1.5"
     hash = "sha256-MyUYTveN48DhnL8mwAgCRuMExLct98uzSPsmYlfaa4I="
-  [mod."github.com/cloudwego/iasm"]
-    version = "v0.2.0"
-    hash = "sha256-TzIP2N3HOesXrKACsRr/ShcoqttwPGZPckIepsTyHOA="
   [mod."github.com/cyphar/filepath-securejoin"]
     version = "v0.4.1"
     hash = "sha256-NOV6MfbkcQbfhNmfADQw2SJmZ6q1nw0wwg8Pm2tf2DM="
@@ -256,6 +253,9 @@ schema = 3
   [mod."golang.org/x/sys"]
     version = "v0.30.0"
     hash = "sha256-BuhWtwDkciVioc03rxty6G2vcZVnPX85lI7tgQOFVP8="
+  [mod."golang.org/x/term"]
+    version = "v0.29.0"
+    hash = "sha256-aIupP/iNJKzHPUt0F7SaXc3u17h8plEPyQeypO7ilW8="
   [mod."golang.org/x/text"]
     version = "v0.22.0"
     hash = "sha256-kUwLNFk9K/YuWmO5/u2IshrmhT2CCuk+mAShSlTTeZo="
