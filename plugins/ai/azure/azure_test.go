@@ -13,6 +13,9 @@ func TestNewClientInitialization(t *testing.T) {
 	if client.ApiDeployments == nil {
 		t.Errorf("Expected ApiDeployments to be initialized, got nil")
 	}
+	if client.ApiVersion == nil {
+		t.Errorf("Expected ApiVersion to be initialized, got nil")
+	}
 	if client.Client == nil {
 		t.Errorf("Expected Client to be initialized, got nil")
 	}
@@ -24,6 +27,7 @@ func TestClientConfigure(t *testing.T) {
 	client.ApiDeployments.Value = "deployment1,deployment2"
 	client.ApiKey.Value = "test-api-key"
 	client.ApiBaseURL.Value = "https://example.com"
+	client.ApiVersion.Value = "2021-01-01"
 
 	err := client.configure()
 	if err != nil {
@@ -42,6 +46,10 @@ func TestClientConfigure(t *testing.T) {
 
 	if client.ApiClient == nil {
 		t.Errorf("Expected ApiClient to be initialized, got nil")
+	}
+
+	if client.ApiClient.Config.APIVersion != "2021-01-01" {
+		t.Errorf("Expected API version to be '2021-01-01', got %s", client.ApiClient.Config.APIVersion)
 	}
 }
 
