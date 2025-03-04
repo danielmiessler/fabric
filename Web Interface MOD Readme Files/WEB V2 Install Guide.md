@@ -1,32 +1,27 @@
-# How to Install Fabric, Web Interface and PDF-to-Markdown
+# How to Install the Web Interface and PDF-to-Markdown
 
-Until it is fully integrated in GO, here's a safe way to test Web V2.
+If Fabric is already installed and you see fabric/web, go to step 3
 
-## Step 1: Clone the Repository
+If fabric is not installed, there are many ways to do so. Here's one approach that usually works well:
 
-Clone the fabric repository to your desired location:
-
-```bash
-# For Mac (specific location)
-git clone https://github.com/danielmiessler/fabric.git ~/Documents/Github/fabric
-
-# Or from any parent directory
+## Step 1: clone the repo
+In terminal, from the parent directory where you want to install fabric:
 git clone https://github.com/danielmiessler/fabric.git
 
+## Step 2 : Install Fabric
+cd fabric
+go install github.com/danielmiessler/fabric@latest
 
-Step 2: Install GUI
+## Step 3: Install GUI
 Navigate to the web directory and install dependencies:
 
 cd web
 npm install
 npx svelte-kit sync
 
-Step 3: Install PDF-to-Markdown
+## Step 4: Install PDF-to-Markdown
 Install the PDF conversion components in the correct order:
-
-# Make sure you're in the fabric/web directory
-cd fabric/web
-
+cd web
 # Install dependencies in this specific order
 npm install -D patch-package
 npm install -D pdfjs-dist@2.5.207
@@ -35,7 +30,7 @@ npm install -D github:jzillmann/pdf-to-markdown#modularize
 
 No build step is required after installation.
 
-Step 4: Update Shell Configuration
+## Step 5: Update Shell Configuration if not already done from your fabric installation
 For Mac/Linux users:
 
 Add environment variables to your ~/.bashrc (Linux) or ~/.zshrc (Mac) file:
@@ -55,6 +50,7 @@ REFER TO OFFICIAL FABRIC README.MD FILE FOR OTHER OPERATING SYSTEMS
 Step 5: Create Aliases for Patterns
 Add the following to your .zshrc or .bashrc file to create shorter commands:
 
+```bash
 # Define the base directory for Obsidian notes, 
 obsidian_base="/path/to/obsidian"
 

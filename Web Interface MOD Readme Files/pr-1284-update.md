@@ -1,21 +1,20 @@
-https://youtu.be/bhwtWXoMASA# Enhanced Pattern Selection, 
-Pattern Descriptions, New 
-Pattern TAG System, Language Support and other WEB UI Improvements  V3
-
-This Cummulative PR adds several Web UI and functionality improvements to make pattern selection more intuitive (pattern descriptions), ability to save favorite patterns, powerful multilingual capabilities, a Pattern TAG system, a help reference section, more robust Youtube processing and a variety of ui improvements. 
+This Cummulative PR adds several Web UI and functionality improvements to make pattern selection more intuitive with the addition of pattern descriptions, ability to save favorite patterns, a Pattern TAG system, powerful multilingual capabilities, PDF-to-markdown functionnalities, a help reference section, more robust Youtube processing and a variety of other ui improvements. 
 
 ## 🎥 Demo Video
-https://youtu.be/IhE8Iey8hSU
+https://youtu.be/bhwtWXoMASA
 
 
 
 ## 🌟 Key Features
 
 ### 1. Web UI and Pattern Selection Improvements
-- Enhanced pattern selection interface for better user experience
-- New pattern descriptions section accessible via modal
-- New pattern favorite list and pattern search functionnality
-- New Tag system for better pattern organization and filtering
+- Pattern Descriptions
+- Pattern Tags
+- Pattern Favourites
+- Pattern Search bar
+- PDF to markdown (pdf as pattern input)
+- Better handling of Youtube url
+- Multilingual Support
 - Web UI refinements for clearer interaction
 - Help section via modal  
 
@@ -56,6 +55,31 @@ The tag filtering system has been deeply integrated into the Pattern Selection i
    - Proper event dispatching between components
    - Maintained accessibility standards
    - Responsive design considerations
+
+
+5. **PDF to Markdown conversion functionality for the web interface**
+- Automatic detection and processing of PDF files in chat
+- Conversion to markdown format for LLM processing
+- Installation instructions from the pdf-to-markdown repository
+
+The PDF conversion module has been integrated in the svelte web browser interface. Once installed, it will automatically detect pdf files in the chat interface and convert them to markdown 
+
+
+## HOW TO INSTALL PDF-TO-MARKDOWN
+If you need to update the web component follow the instructions in "Web Interface MOD Readme Files/WEB V2 Install Guide.md".  
+
+Assuming your web install is up to date and web svelte config complete, you can simply follow these steps to add Pdf-to-mardown. 
+
+# FROM FABRIC ROOT DIRECTORY
+  cd .. web
+
+# Install in this sequence: 
+# Step 1
+npm install -D patch-package
+# Step 2
+npm install -D pdfjs-dist@2.5.207
+# Step 3
+npm install -D github:jzillmann/pdf-to-markdown#modularize
 
 These enhancements create a more intuitive and efficient pattern discovery experience, allowing users to quickly filter and find relevant patterns while maintaining a clean, modern interface.
 
