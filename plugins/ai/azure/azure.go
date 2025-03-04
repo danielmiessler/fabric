@@ -14,7 +14,7 @@ func NewClient() (ret *Client) {
 	ret.ApiDeployments = ret.AddSetupQuestionCustom("deployments", true,
 		"Enter your Azure deployments (comma separated)")
 	ret.ApiVersion = ret.AddSetupQuestionCustom("API Version", false,
-		"Enter the Azure API version (optional, default is latest)")
+		"Enter the Azure API version (optional)")
 
 	return
 }
