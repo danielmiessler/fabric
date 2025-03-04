@@ -196,3 +196,8 @@ chmod +x ~/Desktop/stop-fabric.command
 You can customize with icons by finding suitable .icns files, right-clicking each .command file, selecting "Get Info", and dragging your icon file onto the small icon in the top-left corner.
 
 Note: You might need to allow the scripts to execute in your security settings by going to System Preferences → Security & Privacy after trying to run them the first time.
+
+
+
+## 🎥 Demo Video
+https://youtu.be/XMzjgqvdltM
