@@ -59,7 +59,7 @@ func (o *YouTube) GetVideoOrPlaylistId(url string) (videoId string, playlistId s
 	}
 
 	// Video ID pattern
-	videoPattern := `(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:s(?:horts)\/)|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]*)`
+	videoPattern := `(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:live\/|[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:s(?:horts)\/)|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]*)`
 	videoRe := regexp.MustCompile(videoPattern)
 	videoMatch := videoRe.FindStringSubmatch(url)
 	if len(videoMatch) > 1 {
