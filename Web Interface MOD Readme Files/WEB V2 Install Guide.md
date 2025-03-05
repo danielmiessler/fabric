@@ -2,7 +2,9 @@
 
 If Fabric is already installed and you see fabric/web, go to step 3
 
-If fabric is not installed, there are many ways to do so. Here's one approach that usually works well:
+If fabric is not installed, ensure Go is installed https://go.dev/doc/install and node / npm for web https://nodejs.org/en/download.
+
+There are many ways to install fabric. Here's one approach that usually works well:
 
 ## Step 1: clone the repo
 In terminal, from the parent directory where you want to install fabric:
@@ -16,15 +18,20 @@ go install github.com/danielmiessler/fabric@latest
 Navigate to the web directory and install dependencies:
 
 cd web
+
 npm install
+
 npx svelte-kit sync
 
 ## Step 4: Install PDF-to-Markdown
 Install the PDF conversion components in the correct order:
 cd web
 # Install dependencies in this specific order
+
 npm install -D patch-package
+
 npm install -D pdfjs-dist@2.5.207
+
 npm install -D github:jzillmann/pdf-to-markdown#modularize
 
 
@@ -107,6 +114,10 @@ fabric --serve
 Terminal 2: Start the Development Server
 npm run dev
 
+
+If you get an ** ERROR **.
+It would be much appreciated that you copy /paste your error in your favorite LLM before opening a ticket, 90% of the time your llm will point you to the solution.
+
 _____   ______   ______
 
 OPTIONAL: Create Start/Stop Scripts 
@@ -185,3 +196,8 @@ chmod +x ~/Desktop/stop-fabric.command
 You can customize with icons by finding suitable .icns files, right-clicking each .command file, selecting "Get Info", and dragging your icon file onto the small icon in the top-left corner.
 
 Note: You might need to allow the scripts to execute in your security settings by going to System Preferences → Security & Privacy after trying to run them the first time.
+
+
+
+## 🎥 Demo Video
+https://youtu.be/XMzjgqvdltM
