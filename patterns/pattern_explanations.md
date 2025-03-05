@@ -207,3 +207,4 @@ Brief one-line summary from AI analysis of what each pattern does.
 203. **write_nuclei_template_rule**: Generates Nuclei YAML templates for detecting vulnerabilities using HTTP requests, matchers, extractors, and dynamic data extraction.
 204. **write_pull-request**: Drafts detailed pull request descriptions, explaining changes, providing reasoning, and identifying potential bugs from the git diff command output.
 205. **write_semgrep_rule**: Creates accurate and working Semgrep rules based on input, following syntax guidelines and specific language considerations.
+206. **youtubbe_summary**:  Create concise, timestamped Youtube video summaries that highlight key points.
