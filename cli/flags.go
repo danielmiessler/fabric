@@ -9,9 +9,6 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"time"
-
-	"golang.org/x/term"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/jessevdk/go-flags"
@@ -155,13 +152,15 @@ func Init() (ret *Flags, err error) {
 	}
 
 	// Handle stdin and messages
+	// Handle stdin and messages
+	info, _ := os.Stdin.Stat()
+	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
 	// Append positional arguments to the message (custom message)
 	if len(args) > 0 {
 		ret.Message = AppendMessage(ret.Message, args[len(args)-1])
 	}
 
-	pipedToStdin := !term.IsTerminal(int(os.Stdin.Fd()))
 	if pipedToStdin {
 		var pipedMessage string
 		if pipedMessage, err = readStdin(); err != nil {
@@ -234,24 +233,17 @@ func loadYAMLConfig(configPath string) (*Flags, error) {
 func readStdin() (ret string, err error) {
 	reader := bufio.NewReader(os.Stdin)
 	var sb strings.Builder
-	done := make(chan struct{})
-	go func() {
-		for {
-			line, readErr := reader.ReadString('\n')
-			if readErr != nil {
-				if errors.Is(readErr, io.EOF) {
-					sb.WriteString(strings.TrimSpace(line)) // Ensure last line is added
-				}
-				close(done)
-				return
+	for {
+		if line, readErr := reader.ReadString('\n'); readErr != nil {
+			if errors.Is(readErr, io.EOF) {
+				sb.WriteString(line)
+				break
 			}
+			err = fmt.Errorf("error reading piped message from stdin: %w", readErr)
+			return
+		} else {
 			sb.WriteString(line)
 		}
-	}()
-
-	select {
-	case <-done:
-	case <-time.After(2 * time.Second):
 	}
 	ret = sb.String()
 	return
