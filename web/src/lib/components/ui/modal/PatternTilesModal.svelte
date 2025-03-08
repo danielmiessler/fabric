@@ -94,7 +94,7 @@ $: filteredPatterns = $patterns
         <Input 
           bind:value={searchQuery}
           placeholder="Search patterns..." 
-          class="w-full min-w-[300px]"
+          class="w-full min-w-[300px] text-emerald-900"
         />
       </div>
       

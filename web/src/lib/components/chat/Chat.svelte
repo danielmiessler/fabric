@@ -14,18 +14,74 @@
   import { featureFlags } from "$lib/config/features";
   import { getDrawerStore } from '@skeletonlabs/skeleton';
   import { systemPrompt, selectedPatternName } from "$lib/store/pattern-store";
+  import { onMount } from "svelte";
 
   const drawerStore = getDrawerStore();
   function openDrawer() {
     drawerStore.open({});
   }
 
+  // Column width state (percentage values)
+  let leftColumnWidth = 50;
+  let rightColumnWidth = 50;
+  let isDragging = false;
+  
+  // Handle resize functionality
+  function startResize(e: MouseEvent | KeyboardEvent) {
+    isDragging = true;
+    e.preventDefault();
+    
+    // Add event listeners for drag and release
+    window.addEventListener('mousemove', handleResize);
+    window.addEventListener('mouseup', stopResize);
+  }
+  
+  // Handle keyboard events for accessibility
+  function handleKeyDown(e: KeyboardEvent) {
+    // Only respond to Enter or Space key
+    if (e.key === 'Enter' || e.key === ' ') {
+      startResize(e);
+    }
+  }
+  
+  function handleResize(e: MouseEvent) {
+    if (!isDragging) return;
+    
+    // Get container dimensions
+    const container = document.querySelector('.chat-container');
+    if (!container) return;
+    
+    const containerRect = container.getBoundingClientRect();
+    const containerWidth = containerRect.width;
+    
+    // Calculate percentage based on mouse position
+    const percentage = ((e.clientX - containerRect.left) / containerWidth) * 100;
+    
+    // Apply constraints (left: 25-50%, right: 50-75%)
+    leftColumnWidth = Math.min(Math.max(percentage, 25), 50);
+    rightColumnWidth = 100 - leftColumnWidth;
+  }
+  
+  function stopResize() {
+    isDragging = false;
+    window.removeEventListener('mousemove', handleResize);
+    window.removeEventListener('mouseup', stopResize);
+  }
+
+  // Clean up event listeners when component is destroyed
+  onMount(() => {
+    return () => {
+      window.removeEventListener('mousemove', handleResize);
+      window.removeEventListener('mouseup', stopResize);
+    };
+  });
+
   $: showObsidian = $featureFlags.enableObsidianIntegration;
 </script>
 
-<div class="flex gap-0 p-2 w-full h-screen">
+<div class="chat-container flex gap-0 p-2 w-full h-screen">
   <!-- Left Column -->
-  <aside class="w-[50%] flex flex-col gap-2 pr-2">
+  <aside class="flex flex-col gap-2 pr-2" style="width: {leftColumnWidth}%">
     <!-- Dropdowns Group -->
     <div class="bg-background/5 p-2 rounded-lg">
       <div class="rounded-lg bg-background/10">
@@ -56,8 +112,17 @@
     </div>
   </aside>
 
+  <!-- Resize Handle -->
+  <button 
+    class="resize-handle" 
+    on:mousedown={startResize}
+    on:keydown={handleKeyDown}
+    type="button"
+    aria-label="Resize chat panels"
+  ></button>
+
   <!-- Right Column -->
-  <div class="flex flex-col w-[50%] gap-2">
+  <div class="flex flex-col gap-2" style="width: {rightColumnWidth}%">
     <!-- Header with Obsidian Settings -->
     <div class="flex items-center justify-between px-2 py-1">
       <div class="flex items-center gap-2">
@@ -102,8 +167,41 @@
 <NoteDrawer />
 
 <style>
-  .loading-message {
-    animation: flash 1.5s ease-in-out infinite;
+  .resize-handle {
+    width: 6px;
+    margin: 0 -3px;
+    height: 100%;
+    cursor: col-resize;
+    position: relative;
+    z-index: 10;
+    transition: background-color 0.2s;
+  }
+
+  .resize-handle::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: 2px;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.2s, width 0.2s;
+  }
+
+  .resize-handle:hover::after,
+  .resize-handle:focus::after {
+    background-color: rgba(255, 255, 255, 0.3);
+    width: 4px;
+  }
+
+  .resize-handle:focus {
+    outline: none;
+  }
+
+  .resize-handle:focus-visible::after {
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 4px;
   }
 
   @keyframes flash {
