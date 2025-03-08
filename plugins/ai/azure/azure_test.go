@@ -48,8 +48,8 @@ func TestClientConfigure(t *testing.T) {
 		t.Errorf("Expected ApiClient to be initialized, got nil")
 	}
 
-	if client.ApiClient.Config.APIVersion != "2021-01-01" {
-		t.Errorf("Expected API version to be '2021-01-01', got %s", client.ApiClient.Config.APIVersion)
+	if client.ApiVersion.Value != "2021-01-01" {
+		t.Errorf("Expected API version to be '2021-01-01', got %s", client.ApiVersion.Value)
 	}
 }
 
