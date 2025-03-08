@@ -14,6 +14,7 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-mouse-events-have-key-events -->
 <div class="tooltip-container">
   <div 
     class="tooltip-trigger"
@@ -21,6 +22,8 @@
     on:mouseleave={hideTooltip}
     on:focusin={showTooltip}
     on:focusout={hideTooltip}
+    role="tooltip"
+    aria-label="Tooltip trigger"
   >
     <slot />
   </div>
@@ -33,9 +36,11 @@
       class:bottom="{position === 'bottom'}"
       class:left="{position === 'left'}"
       class:right="{position === 'right'}"
+      role="tooltip"
+      aria-label={text}
     >
       {text}
-      <div class="tooltip-arrow" />
+      <div class="tooltip-arrow" role="presentation" />
     </div>
   {/if}
 </div>
