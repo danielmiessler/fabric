@@ -7,11 +7,13 @@
   import { onMount } from 'svelte';
   import Modal from '$lib/components/ui/modal/Modal.svelte';
   import PatternList from '$lib/components/patterns/PatternList.svelte';
+  import PatternTilesModal from '$lib/components/ui/modal/PatternTilesModal.svelte';
   import HelpModal from '$lib/components/ui/help/HelpModal.svelte';
   import { selectedPatternName } from '$lib/store/pattern-store';
 
   let isMenuOpen = false;
   let showPatternModal = false;
+  let showPatternTilesModal = false;
   let showHelpModal = false;
 
   function goToGithub() {
@@ -70,15 +72,33 @@
       </ul>
     </nav>
 
-    <div class="flex items-center gap-2">
-      <button name="pattern-description"
-        on:click={() => showPatternModal = true}
-        class="inline-flex h-9 items-center justify-center rounded-full border bg-background px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground gap-2"
-        aria-label="Pattern Description"
-      >
-        <FileText class="h-4 w-4" />
-        <span>Pattern Description</span>
-      </button>
+    <div class="flex items-center gap-4">
+      <!-- Pattern Buttons Group -->
+      <div class="flex items-center gap-3 mr-4">
+        <!-- Pattern Tiles Button -->
+        <button name="pattern-tiles"
+          on:click={() => showPatternTilesModal = true}
+          class="inline-flex h-10 items-center justify-center rounded-full border bg-background px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground gap-2"
+          aria-label="Pattern Tiles"
+        >
+          <FileText class="h-4 w-4" />
+          <span>Pattern Tiles</span>
+        </button>
+        
+        <!-- Or text -->
+        <span class="text-sm text-foreground/60 mx-1">or</span>
+        
+        <!-- Pattern List Button -->
+        <button name="pattern-list"
+          on:click={() => showPatternModal = true}
+          class="inline-flex h-10 items-center justify-center rounded-full border bg-background px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground gap-2"
+          aria-label="Pattern List"
+        >
+          <FileText class="h-4 w-4" />
+          <span>Pattern List</span>
+        </button>
+      </div>
+
 
       <button name="github"
         on:click={goToGithub}
@@ -164,5 +184,18 @@
 >
   <HelpModal
     on:close={() => showHelpModal = false}
+  />
+</Modal>
+
+<Modal
+  show={showPatternTilesModal}
+  on:close={() => showPatternTilesModal = false}
+>
+  <PatternTilesModal
+    on:close={() => showPatternTilesModal = false}
+    on:select={(e) => {
+      selectedPatternName.set(e.detail);
+      showPatternTilesModal = false;
+    }}
   />
 </Modal>

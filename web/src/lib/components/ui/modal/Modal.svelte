@@ -9,15 +9,23 @@
   export let show = false;
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions a11y-no-static-element-interactions -->
 {#if show}
 <div
 class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 mt-2"
 on:click={() => dispatch('close')}
+on:keydown={(e) => e.key === 'Escape' && dispatch('close')}
+role="dialog"
+aria-modal="true"
+aria-label="Modal dialog"
+tabindex="-1"
 transition:fade={{ duration: 200 }}
 >
 <div
 class="relative"
 on:click|stopPropagation
+role="document"
+aria-label="Modal content"
 transition:scale={{ duration: 200 }}
 >
 <slot />

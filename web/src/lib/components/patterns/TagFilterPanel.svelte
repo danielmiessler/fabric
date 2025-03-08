@@ -7,16 +7,9 @@
     }>();
 
     export let patterns: Pattern[];
+    export let hideToggleButton = false; // New prop to hide the toggle button when used in modal
     let selectedTags: string[] = [];
     let isExpanded = false;
-
-    // Add console log to see what tags we're getting
-    $: console.log('Available tags:', Array.from(new Set(patterns.flatMap(p => p.tags))));
-
-     // Add these debug logs
-     $: console.log('Patterns received:', patterns);
-    $: console.log('Tags extracted:', patterns.map(p => p.tags));
-    $: console.log('Panel expanded:', isExpanded);
 
     function toggleTag(tag: string) {
         selectedTags = selectedTags.includes(tag)
@@ -36,15 +29,16 @@
     }
 </script>
 
-<div class="tag-panel {isExpanded ? 'expanded' : ''}" style="z-index: 50">
+<div class="tag-panel {isExpanded ? 'expanded' : ''} {hideToggleButton ? 'embedded' : ''}" style="z-index: 50">
+    {#if !hideToggleButton}
     <div class="panel-header">
         <button class="close-btn" on:click={togglePanel}>
             {isExpanded ? 'Close Filter Tags ◀' : 'Open Filter Tags ▶'}
         </button>
-        
     </div>
+    {/if}
     
-    <div class="panel-content">
+    <div class="panel-content {hideToggleButton ? 'always-visible' : ''}">
         <div class="reset-container">
             <button 
                 class="reset-btn"
@@ -56,7 +50,7 @@
                 Reset All Tags
             </button>
         </div>
-        {#each Array.from(new Set(patterns.flatMap(p => p.tags))).sort() as tag}
+        {#each Array.from(new Set(patterns.flatMap(p => p.tags || []))).sort() as tag}
             <button 
                 class="tag-brick {selectedTags.includes(tag) ? 'selected' : ''}"
                 on:click={() => toggleTag(tag)}
@@ -67,6 +61,7 @@
     </div>
 </div>
 <style>
+   /* Default positioning for standalone mode */
    .tag-panel {
     position: fixed;  /* Change to fixed positioning */
     left: calc(50% + 300px); /* Position starts after modal's right edge */
@@ -76,19 +71,37 @@
     transition: left 0.3s ease;
 }
 
+/* When embedded in another component, use relative positioning */
+.tag-panel.embedded {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    height: 100%;
+}
+
 .tag-panel.expanded {
     left: calc(50% + 360px); /* Final position just to the right of modal */
 }
 
-
-    .panel-content {
+.panel-content {
     display: none;
     padding: 12px;
     flex-wrap: wrap;
     gap: 6px;
     max-height: 80vh;
     overflow-y: auto;
-    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Adjust max-height when embedded */
+.embedded .panel-content {
+    max-height: 100%;
+}
+
+/* When used in modal, always show content */
+.panel-content.always-visible {
+    display: flex;
 }
 
 .tag-brick {
@@ -101,7 +114,6 @@
     text-overflow: ellipsis;
     overflow: hidden;
 }
-
 
 .reset-container {
     width: 100%;
@@ -124,29 +136,9 @@
     background: rgba(255,255,255,0.1);
 }
 
-
-
-    .expanded .panel-content {
-        display: flex;
-    }
-
-
-   /*  .toggle-btn {
-    position: absolute;
-    left: -30px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 8px;
-    background: var(--primary-800);
-    border-radius: 4px 0 0 4px;
-    cursor: pointer;
+.expanded .panel-content {
     display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.9rem;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.2); 
-} */
-
+}
 
 .panel-header {
     padding: 8px;
@@ -178,17 +170,11 @@
     margin-left: -50px;
 }
 
-
-
-
 .close-btn:hover {
     background: rgba(255,255,255,0.1);
 }
 
-   
-
-    .tag-brick.selected {
-        background: var(--primary-300);
-    }
+.tag-brick.selected {
+    background: var(--primary-300);
+}
 </style>
-
