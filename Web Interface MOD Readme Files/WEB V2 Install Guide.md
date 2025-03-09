@@ -58,8 +58,18 @@ Step 5: Create Aliases for Patterns
 Add the following to your .zshrc or .bashrc file to create shorter commands:
 
 ```bash
-# Define the base directory for Obsidian notes, 
-obsidian_base="/path/to/obsidian"
+
+# The following three lines of code are path examples, replace with your actual path.
+
+# Add fabric to PATH
+export PATH="/Users/USERNAME/Documents/fabric:$PATH"
+
+# Define the base directory for Obsidian notes
+obsidian_base="/Users/USERNAME/Documents/fabric/web/myfiles/Fabric_obsidian"
+
+# Define the patterns directory
+patterns_dir="/Users/USERNAME/Documents/fabric/patterns"
+
 
 # Loop through all files in the ~/.config/fabric/patterns directory
 
@@ -117,6 +127,8 @@ npm run dev
 
 If you get an ** ERROR **.
 It would be much appreciated that you copy /paste your error in your favorite LLM before opening a ticket, 90% of the time your llm will point you to the solution.
+
+Also if you modify patterns, descriptions or tags in  Pattern_Descriptions/pattern_descriptions.json, make sure to copy the file over in  web/static/data/pattern_descriptions.json  
 
 _____   ______   ______
 
