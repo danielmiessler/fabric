@@ -3,6 +3,9 @@ This Cummulative PR adds several Web UI and functionality improvements to make p
 ## 🎥 Demo Video
 https://youtu.be/bhwtWXoMASA
 
+updated to include latest enhancement: Pattern tiles search (last min.)
+https://youtu.be/fcVitd4Kb98
+
 
 
 ## 🌟 Key Features
