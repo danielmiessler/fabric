@@ -9,8 +9,6 @@ import (
 	"github.com/danielmiessler/fabric/cli"
 )
 
-var version string
-
 func main() {
 	err := cli.Cli(version)
 	if err != nil && !flags.WroteHelp(err) {
