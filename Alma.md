@@ -1,3 +1,5 @@
+# SPQA Policy and State for Alma Security
+
 ## Document Purpose
 
 This document captures the SPQA policy and State for Alma Security, a security startup out of Redwood City, Ca.
@@ -22,7 +24,7 @@ The mission of Alma Security is to ensure businesses can continuously authentica
 
 ## Company Goals (G1 means goal 1, G2 is goal 2, etc. Treat each item (goal/kpi/etc) as half as important as the one before it.)
 
-NOTE: Some goals are things like project rollouts which serve the higher goals. In that case they shouldn't always be considered so much lower priority because one is serving the other.
+NOTE: Some goals are things like project rollout which serve the higher goals. In that case they shouldn't always be considered so much lower priority because one is serving the other.
 
 ## Company Goals
 
@@ -37,7 +39,7 @@ NOTE: Some goals are things like project rollouts which serve the higher goals. 
 
 ## Company KPIs
 
-- K1: Current marketshare percentage
+- K1: Current market share percentage
 - K2: Number of active customers
 - K3: Current churn percentage
 - K4: Launched_in_Europe (yes/no)
@@ -45,22 +47,22 @@ NOTE: Some goals are things like project rollouts which serve the higher goals. 
 
 -----------------------------------------------------------------------------------------------------------------------
 
-## Security Team Mission 
+## Security Team Mission
 
 - SM1: Protect Alma Security's customers and intellectual property from security and privacy incidents.
 
 ## Security Team Goals
 
-- SG1: Secure all customer data -- especially biometric -- from security and privacy incidents. 
+- SG1: Secure all customer data -- especially biometric -- from security and privacy incidents.
 - SG2: Protect Alma Security's intellectual property from being captured by unauthorized parties.
 - SG3: Reach a time to detect malicious behavior of less than 4 minutes by January 2025
 - SG4: Ensure the public trusts our product, because it's an authentication product we can't survive if people don't trust us.
-- SG5: Reach a time to remediate critical vulnerabilties on crown jewel systems of less than 16 hours by August 2025
-- SG6: Reach a time to remediate critical vulnerabilties on all systems of less than 3 days by August 2025
+- SG5: Reach a time to remediate critical vulnerabilities on crown jewel systems of less than 16 hours by August 2025
+- SG6: Reach a time to remediate critical vulnerabilities on all systems of less than 3 days by August 2025
 - SG5: Reach a time to remediate critical vulnerabilities on crown jewel systems of less than 16 hours by August 2025
 - SG6: Reach a time to remediate critical vulnerabilities on all systems of less than 3 days by August 2025
 - SG7: Complete audit of Apple Passkey integration by February 2025
-- SG8: Complete remediation of Apple Passkey vulns by February 2025
+- SG8: Complete remediation of Apple Passkey vulnerabilities by February 2025
 
 ## Security Team KPIs (How we measure the team)
 
@@ -72,7 +74,7 @@ NOTE: Some goals are things like project rollouts which serve the higher goals. 
 
 ## Risk Register (The things we're most worried about)
 
-- R1: Our infrastructure security team is understaffed by 50% after 5 key people left 
+- R1: Our infrastructure security team is understaffed by 50% after 5 key people left
 - R2: We are not currently monitoring our external perimeter for attack surface related vulnerabilities like open ports, listening applications, unknown hosts, unknown subdomains pointing to these things, etc. We only do scans once every couple of months and we don't really have anyone to look at the results
 - R3: It takes us multiple days to investigate potential malicious behavior on our systems.
 - R4: We lack a full list of our assets, including externally facing hosts, S3 buckets, etc., which make up our attack surface
@@ -92,7 +94,7 @@ So our risk register looks like this:
 2. Our perimeter is not being monitored for attack surface related vulnerabilities
 3. It takes us too long to detect and start investigating malicious behavior on our systems
 4. We do not have a full list of our assets, which makes it difficult to know what we need to protect
-5. We have a low public trust score due to the events of 2022 
+5. We have a low public trust score due to the events of 2022
 
 ### Strategies
 
@@ -136,14 +138,14 @@ $INSERT GRAPHS OF KPI PROGRESS OVER TIME HERE$
 - alma.amazon-domain.com is our primary S3 bucket that contains everything, but it's not public readable or listable
 - We have a root account for our AWS account that doesn't yet have 2FA on it, but we're working on fixing that within a few weeks (but it's been open for a few months)
 - We also use Postgres for all our databases.
-- Developers have root access to the all kubernetes nodes via SSH on port 45,001 using a shared developer key issued during laptop provisioning. 
+- Developers have root access to the all kubernetes nodes via SSH on port 45,001 using a shared developer key issued during laptop provisioning.
 - We're a kubernetes shop and do everything through AWS
-- We're logging most stuff to Cloudtrail and we kind of use guarduty, but we don't have a 24/7 team to monitor alerts and logs. We should add that to our list of challenges next time we update our overarll policy
+- We're logging most stuff to Cloudtrail and we kind of use Amazon Guarduty, but we don't have a 24/7 team to monitor alerts and logs. We should add that to our list of challenges next time we update our overall policy
 - We also have a Windows infrastructure because some key personnel came from Microsoft. The DC is hosted in our head office which is in Redwood City, and anyone who works in that office (most of the 300 employees) uses that to log in when they start work. The domain is ALMA.
-- There's a domain-joined fileserver running Windows 2012 that most people use to upload new ideas and plans for new products. It uses Windows authentication from the domain. 
-- We use a palo alto firewall with 2fa using windows authenticator tied to SSO.
+- There's a domain-joined fileserver running Windows 2012 that most people use to upload new ideas and plans for new products. It uses Windows authentication from the domain.
+- We use a Palo Alto Networks firewall with 2fa using windows authenticator tied to SSO.
 - The name of the AI system doing all this context creation using SPQA is Alma, which is also the name of the company.
-- We use Workday for HR stuff. Slack for realtime communications. Outlook 365 as a service. Sentinel One on the workstations and laptops. Servers in AWS are mostly Amazon Linux 2 with a few Ubuntu boxes that are a few years old. 
+- We use Workday for HR stuff. Slack for realtime communications. Outlook 365 as a service. Sentinel One on the workstations and laptops. Servers in AWS are mostly Amazon Linux 2 with a few Ubuntu boxes that are a few years old.
 - We also primarily use Postgres for all of our systems.
 
 ## Team
@@ -160,19 +162,19 @@ PROJECT NAME | PROJECT DESCRIPTION | PROJECT PRIORITY | PROJECT MEMBERS | START 
 
 WAF Install | Install a WAF in front of our main web app | Critical | Nadia Khan | 2024-01-01 - Ongoing | In Progress | $112K one-time, $9K/month
 
-Multi-Factor Authentication (MFA) Rollout | Implement MFA across all internal and external systems | Critical | Chris Magaan | 2024-01-15 | 2024-05-01 | Planned | $80K one-time, $5K/month 
+Multi-Factor Authentication (MFA) Rollout | Implement MFA across all internal and external systems | Critical | Chris Magann | 2024-01-15 | 2024-05-01 | Planned | $80K one-time, $5K/month
 
-Procure and Implement ASM | Implement continuous monitoring for attack surface vulnerabilities | High | Tigan Wang | 2024-02-15 | 2024-06-15 | Not Started | $75K one-time, $6K/month 
+Procure and Implement ASM | Implement continuous monitoring for attack surface vulnerabilities | High | Tigan Wang | 2024-02-15 | 2024-06-15 | Not Started | $75K one-time, $6K/month
 
-Data Encryption Upgrade | Upgrade encryption protocols for all sensitive data | Medium | Nadia Khan | 2024-04-01 | 2024-08-01 | Planned | $95K one-time 
+Data Encryption Upgrade | Upgrade encryption protocols for all sensitive data | Medium | Nadia Khan | 2024-04-01 | 2024-08-01 | Planned | $95K one-time
 
-Incident Response Enhancement | Develop and implement a 24/7 incident response team | High | Nadia Khan | 2024-03-01 | 2024-07-01 | In Progress | $150K one-time, $10K/month 
+Incident Response Enhancement | Develop and implement a 24/7 incident response team | High | Nadia Khan | 2024-03-01 | 2024-07-01 | In Progress | $150K one-time, $10K/month
 
-Cloud Security Optimization | Optimize AWS cloud security configurations and practices | Medium | Tigan Wang | 2024-02-01 | 2024-06-01 | In Progress | $100K one-time, $8K/month 
+Cloud Security Optimization | Optimize AWS cloud security configurations and practices | Medium | Tigan Wang | 2024-02-01 | 2024-06-01 | In Progress | $100K one-time, $8K/month
 
-S3 Bucket Security | Review and secure all S3 buckets to prevent data breaches | High | Chris Magaan | 2024-01-10 | 2024-04-10 | In Progress | $70K one-time, $5K/month
+S3 Bucket Security | Review and secure all S3 buckets to prevent data breaches | High | Chris Magann | 2024-01-10 | 2024-04-10 | In Progress | $70K one-time, $5K/month
 
-SQL Injection Mitigation | Implement measures to eliminate SQL injection vulnerabilities | High | Tigan Wang | 2024-01-20 | 2024-05-20 | Not Started | $60K one-time 
+SQL Injection Mitigation | Implement measures to eliminate SQL injection vulnerabilities | High | Tigan Wang | 2024-01-20 | 2024-05-20 | Not Started | $60K one-time
 
 ## SECURITY POSTURE (To be referenced for compliance questions and security questionnaires)
 
@@ -286,7 +288,9 @@ First draft of the incident response plan created, but not tested.
 June 2019
 
 Enforced MFA for Google Workspace admin accounts; standard user
+
 ## CURRENT STATE (KPIs, Metrics, Project Activity Updates, etc.)
+
 - October 2022: Current time to detect malicious behavior is 81 hours
 - October 2022: Current time to start investigating malicious behavior is 82 hours
 - October 2022: Current time to remediate critical vulnerabilities on crown jewel systems is 21 days
@@ -308,7 +312,7 @@ Enforced MFA for Google Workspace admin accounts; standard user
 - January 2024: Current time to start investigating malicious behavior is 14 hours
 - January 2024: Current time to remediate critical vulnerabilities on crown jewel systems is 8 days
 - January 2024: Current time to remediate critical vulnerabilities on all systems is 12 days
-- March 2024: We're now remediating crits on crown jewels in less than 6 days
-- April 2024: We're now remediating all criticals within 11 days
-- July 2024: Criticals are now being fixed in 9 days
+- March 2024: We're now remediating critical vulnerabilities on crown jewels in less than 6 days
+- April 2024: We're now remediating all critical vulnerabilities within 11 days
+- July 2024: critical vulnerabilities are now being fixed in 9 days
 - On August 5 we got remediation of critical vulnerabilities down to 7 days
