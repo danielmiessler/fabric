@@ -347,3 +347,6 @@ ENV
 web/package-lock.json
 .gitignore_backup
 web/static/*.png
+
+# Local VSCode project settings
+.vscode/
