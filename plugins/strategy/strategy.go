@@ -156,14 +156,9 @@ func getStrategyDir() (ret string, err error) {
 		ret = filepath.Join(".", "strategies")
 		return
 	}
-
 	strategiesDir := filepath.Join(homeDir, ".config", "fabric", "strategies")
 
-	// Check if directory exists, if not use local strategies directory
-	if _, err := os.Stat(strategiesDir); os.IsNotExist(err) {
-		strategiesDir = filepath.Join(".", "strategies")
-	}
-
+	// Return error if the directory does not exist
 	if _, err := os.Stat(strategiesDir); os.IsNotExist(err) {
 		return "", err
 	}
