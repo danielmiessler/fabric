@@ -582,9 +582,9 @@ The `web/src/lib/content` directory includes starter `.obsidian/` and `templates
 
 ### Installing
 
-The GUI can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run the development server to start the app.
+The GUI can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run the development server to start the app.
 
-_You will need to run fabric in a separate terminal with the `fabric --serve` command._
+_You will need to run fabric in a separate terminal with the `fabric --serve` command._
 
 **From the fabric project `web/` directory:**
 
@@ -604,7 +604,10 @@ To run the Streamlit user interface:
 
 ```bash
 # Install required dependencies
-pip install streamlit pandas matplotlib seaborn numpy python-dotenv
+pip install -r requirements.txt
+
+# Or manually install dependencies
+pip install streamlit pandas matplotlib seaborn numpy python-dotenv pyperclip
 
 # Run the Streamlit app
 streamlit run streamlit.py
@@ -616,6 +619,14 @@ The Streamlit UI provides a user-friendly interface for:
 - Managing pattern outputs
 - Creating and editing patterns
 - Analyzing pattern results
+
+#### Clipboard Support
+
+The Streamlit UI supports clipboard operations across different platforms:
+
+- **macOS**: Uses `pbcopy` and `pbpaste` (built-in)
+- **Windows**: Uses `pyperclip` library (install with `pip install pyperclip`)
+- **Linux**: Uses `xclip` (install with `sudo apt-get install xclip` or equivalent for your distro)
 
 ## Meta
 
