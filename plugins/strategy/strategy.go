@@ -27,7 +27,7 @@ func NewStrategiesManager() (sm *StrategiesManager) {
 	}
 	sm.PluginBase = &plugins.PluginBase{
 		Name:             label,
-		SetupDescription: "Strategies - Downloads Prompting Strategies (like chain of thought) [optional]",
+		SetupDescription: "Strategies - Downloads Prompting Strategies (like chain of thought) [required]",
 		EnvNamePrefix:    plugins.BuildEnvVariablePrefix(label),
 		ConfigureCustom:  sm.configure,
 	}
