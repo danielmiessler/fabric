@@ -108,7 +108,8 @@ func (sm *StrategiesManager) Setup() (err error) {
 
 // PopulateDB downloads strategies from the internet and populates the strategies folder
 func (sm *StrategiesManager) PopulateDB() (err error) {
-	fmt.Printf("Downloading strategies and Populating %s...\n", sm.DefaultFolder.Value)
+	stageDir, _ := getStrategyDir()
+	fmt.Printf("Downloading strategies and Populating %s...\n", stageDir)
 	fmt.Println()
 	if err = sm.gitCloneAndCopy(); err != nil {
 		return
@@ -156,14 +157,7 @@ func getStrategyDir() (ret string, err error) {
 		ret = filepath.Join(".", "strategies")
 		return
 	}
-	strategiesDir := filepath.Join(homeDir, ".config", "fabric", "strategies")
-
-	// Return error if the directory does not exist
-	if _, err := os.Stat(strategiesDir); os.IsNotExist(err) {
-		return "", err
-	}
-	ret = strategiesDir
-	return
+	return filepath.Join(homeDir, ".config", "fabric", "strategies"), nil
 }
 
 // LoadStrategy loads a strategy from the given name
