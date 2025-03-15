@@ -199,7 +199,7 @@ func LoadStrategy(filename string) (*Strategy, error) {
 // ListStrategies prints available strategies
 func (sm *StrategiesManager) ListStrategies() error {
 	if len(sm.Strategies) == 0 {
-		return fmt.Errorf("no strategies found. Please run 'fabric setup' to download strategies")
+		return fmt.Errorf("no strategies found. Please run 'fabric --setup' to download strategies")
 	}
 	fmt.Print("Available Strategies:\n\n")
 
