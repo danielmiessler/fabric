@@ -156,6 +156,11 @@ func Cli(version string) (err error) {
 		return
 	}
 
+	if currentFlags.ListStrategies {
+		err = registry.Strategies.ListStrategies()
+		return
+	}
+
 	// if the interactive flag is set, run the interactive function
 	// if currentFlags.Interactive {
 	// 	interactive.Interactive()
@@ -166,7 +171,7 @@ func Cli(version string) (err error) {
 	var messageTools string
 
 	if currentFlags.YouTube != "" {
-		if registry.YouTube.IsConfigured() == false {
+		if !registry.YouTube.IsConfigured() {
 			err = fmt.Errorf("YouTube is not configured, please run the setup procedure")
 			return
 		}
@@ -241,7 +246,7 @@ func Cli(version string) (err error) {
 	}
 
 	var chatter *core.Chatter
-	if chatter, err = registry.GetChatter(currentFlags.Model, currentFlags.ModelContextLength, currentFlags.Stream, currentFlags.DryRun); err != nil {
+	if chatter, err = registry.GetChatter(currentFlags.Model, currentFlags.ModelContextLength, currentFlags.Strategy, currentFlags.Stream, currentFlags.DryRun); err != nil {
 		return
 	}
 
