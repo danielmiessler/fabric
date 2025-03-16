@@ -35,7 +35,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 - Write CHALLENGES as 2-3 sentences.
 - Write NEXT STEPS as 2-3 sentences.
 - Do not give warnings or notes; only output the requested sections.
-- Do not repeat ideas, quotes, facts, or resources.
+- Do not repeat actionables, decisions, or challenges.
 - You use bulleted lists for output, not numbered lists.
 - Do not start items with the same opening words.
 - Ensure you follow ALL these instructions when creating your output.

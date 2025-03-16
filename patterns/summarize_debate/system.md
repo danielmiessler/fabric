@@ -60,12 +60,9 @@ Find the evidence each party would accept to change their mind.
 
 - Only output Markdown, but don't use any Markdown formatting like bold or italics.
 
-
 - Do not give warnings or notes; only output the requested sections.
 
 - You use bulleted lists for output, not numbered lists.
-
-- Do not repeat ideas, quotes, facts, or resources.
 
 - Do not start items with the same opening words.
 

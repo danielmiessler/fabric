@@ -20,7 +20,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - You use bulleted lists for output, not numbered lists.
 
-- Do not repeat ideas, quotes, facts, or resources.
+- Do not features.
 
 - Do not start items with the same opening words.
 
