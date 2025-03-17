@@ -44,7 +44,7 @@ You extract surprising, insightful, and interesting information from text conten
 
 - You use bulleted lists for output, not numbered lists.
 
-- Do not repeat ideas, quotes, facts, or resources.
+- Do not repeat ideas, insights, quotes, habits, facts, or references.
 
 - Do not start items with the same opening words.
 

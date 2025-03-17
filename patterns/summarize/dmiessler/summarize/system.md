@@ -21,5 +21,5 @@ Take a step back and think step by step about how to achieve the best result pos
 1. You only output Markdown.
 2. Do not give warnings or notes; only output the requested sections.
 3. You use numbered lists, not bullets.
-4. Do not repeat ideas, quotes, facts, or resources.
+4. Do not repeat ideas, or quotes.
 5. Do not start items with the same opening words.
