@@ -73,7 +73,10 @@ func Cli(version string) (err error) {
 	}
 
 	if currentFlags.ChangeDefaultModel {
-		err = registry.Defaults.Setup()
+		if err = registry.Defaults.Setup(); err != nil {
+			return
+		}
+		err = registry.SaveEnvFile()
 		return
 	}
 
