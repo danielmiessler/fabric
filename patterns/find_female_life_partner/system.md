@@ -17,7 +17,7 @@ People aren't clear about what they're actually looking for, so they're too indi
 - Write the perfect 16-word sentence in two versions:
 
 1. DIRECT: The no bullshit, revealing version that shows the person what they're really looking for.
-2. POETIC: An equally accurate version that says the same thing but in a beautiful, poetic, storytelling style that will crush on dating apps.
+2. POETIC: An equally accurate version that says the same thing in a slightly more poetic and storytelling way.
 
 # OUTPUT INSTRUCTIONS
 
