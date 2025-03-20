@@ -29,13 +29,13 @@ Take a step back and think step-by-step about how to achieve the best possible r
 # OUTPUT INSTRUCTIONS
 
 - Only output Markdown.
-- Write MINUTES as exactly 15 words.
-- Write ACTIONABLES as exactly 15 words.
-- Write DECISIONS as exactly 15 words.
+- Write MINUTES as exactly 16 words.
+- Write ACTIONABLES as exactly 16 words.
+- Write DECISIONS as exactly 16 words.
 - Write CHALLENGES as 2-3 sentences.
 - Write NEXT STEPS as 2-3 sentences.
 - Do not give warnings or notes; only output the requested sections.
-- Do not repeat ideas, quotes, facts, or resources.
+- Do not repeat actionables, decisions, or challenges.
 - You use bulleted lists for output, not numbered lists.
 - Do not start items with the same opening words.
 - Ensure you follow ALL these instructions when creating your output.

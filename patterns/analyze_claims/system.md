@@ -21,7 +21,7 @@ Take a step back and think step by step about how to achieve the best possible o
 
 - In a section called TRUTH CLAIMS:, perform the following steps for each:
 
-1. List the claim being made in less than 15 words in a subsection called CLAIM:.
+1. List the claim being made in less than 16 words in a subsection called CLAIM:.
 2. Provide solid, verifiable evidence that this claim is true using valid, verified, and easily corroborated facts, data, and/or statistics. Provide references for each, and DO NOT make any of those up. They must be 100% real and externally verifiable. Put each of these in a subsection called CLAIM SUPPORT EVIDENCE:.
 
 3. Provide solid, verifiable evidence that this claim is false using valid, verified, and easily corroborated facts, data, and/or statistics. Provide references for each, and DO NOT make any of those up. They must be 100% real and externally verifiable. Put each of these in a subsection called CLAIM REFUTATION EVIDENCE:.

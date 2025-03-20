@@ -7,6 +7,9 @@ import (
 	"path/filepath"
 	"strconv"
 
+	"github.com/danielmiessler/fabric/plugins/ai/exolab"
+	"github.com/danielmiessler/fabric/plugins/strategy"
+
 	"github.com/samber/lo"
 
 	"github.com/danielmiessler/fabric/common"
@@ -14,9 +17,12 @@ import (
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
 	"github.com/danielmiessler/fabric/plugins/ai/azure"
+	"github.com/danielmiessler/fabric/plugins/ai/deepseek"
 	"github.com/danielmiessler/fabric/plugins/ai/dryrun"
 	"github.com/danielmiessler/fabric/plugins/ai/gemini"
 	"github.com/danielmiessler/fabric/plugins/ai/groq"
+	"github.com/danielmiessler/fabric/plugins/ai/litellm"
+	"github.com/danielmiessler/fabric/plugins/ai/lmstudio"
 	"github.com/danielmiessler/fabric/plugins/ai/mistral"
 	"github.com/danielmiessler/fabric/plugins/ai/ollama"
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
@@ -39,6 +45,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		YouTube:        youtube.NewYouTube(),
 		Language:       lang.NewLanguage(),
 		Jina:           jina.NewClient(),
+		Strategies:     strategy.NewStrategiesManager(),
 	}
 
 	var homedir string
@@ -49,11 +56,22 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 
 	ret.Defaults = tools.NeeDefaults(ret.GetModels)
 
-	ret.VendorsAll.AddVendors(openai.NewClient(), ollama.NewClient(), azure.NewClient(), groq.NewClient(),
+	ret.VendorsAll.AddVendors(
+		openai.NewClient(),
+		ollama.NewClient(),
+		azure.NewClient(),
+		groq.NewClient(),
 		gemini.NewClient(),
 		//gemini_openai.NewClient(),
-		anthropic.NewClient(), siliconcloud.NewClient(),
-		openrouter.NewClient(), mistral.NewClient())
+		anthropic.NewClient(),
+		siliconcloud.NewClient(),
+		openrouter.NewClient(),
+		lmstudio.NewClient(),
+		mistral.NewClient(),
+		deepseek.NewClient(),
+		exolab.NewClient(),
+		litellm.NewClient(),
+	)
 	_ = ret.Configure()
 
 	return
@@ -70,6 +88,7 @@ type PluginRegistry struct {
 	Language           *lang.Language
 	Jina               *jina.Client
 	TemplateExtensions *template.ExtensionManager
+	Strategies         *strategy.StrategiesManager
 }
 
 func (o *PluginRegistry) SaveEnvFile() (err error) {
@@ -78,6 +97,7 @@ func (o *PluginRegistry) SaveEnvFile() (err error) {
 
 	o.Defaults.Settings.FillEnvFileContent(&envFileContent)
 	o.PatternsLoader.SetupFillEnvFileContent(&envFileContent)
+	o.Strategies.SetupFillEnvFileContent(&envFileContent)
 
 	for _, vendor := range o.VendorManager.Vendors {
 		vendor.SetupFillEnvFileContent(&envFileContent)
@@ -93,7 +113,7 @@ func (o *PluginRegistry) SaveEnvFile() (err error) {
 
 func (o *PluginRegistry) Setup() (err error) {
 	setupQuestion := plugins.NewSetupQuestion("Enter the number of the plugin to setup")
-	groupsPlugins := common.NewGroupsItemsSelector[plugins.Plugin]("Available plugins (please configure all required plugins):",
+	groupsPlugins := common.NewGroupsItemsSelector("Available plugins (please configure all required plugins):",
 		func(plugin plugins.Plugin) string {
 			var configuredLabel string
 			if plugin.IsConfigured() {
@@ -109,7 +129,7 @@ func (o *PluginRegistry) Setup() (err error) {
 			return vendor
 		})...)
 
-	groupsPlugins.AddGroupItems("Tools", o.Defaults, o.PatternsLoader, o.YouTube, o.Language, o.Jina)
+	groupsPlugins.AddGroupItems("Tools", o.Defaults, o.PatternsLoader, o.YouTube, o.Language, o.Jina, o.Strategies)
 
 	for {
 		groupsPlugins.Print()
@@ -190,7 +210,7 @@ func (o *PluginRegistry) Configure() (err error) {
 	return
 }
 
-func (o *PluginRegistry) GetChatter(model string, modelContextLength int, stream bool, dryRun bool) (ret *Chatter, err error) {
+func (o *PluginRegistry) GetChatter(model string, modelContextLength int, strategy string, stream bool, dryRun bool) (ret *Chatter, err error) {
 	ret = &Chatter{
 		db:     o.Db,
 		Stream: stream,
@@ -242,5 +262,6 @@ func (o *PluginRegistry) GetChatter(model string, modelContextLength int, stream
 			model, defaultModel, defaultVendor, errMsg)
 		return
 	}
+	ret.strategy = strategy
 	return
 }

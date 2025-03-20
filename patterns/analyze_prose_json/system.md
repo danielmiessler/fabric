@@ -69,7 +69,7 @@ Common examples that meet this criteria:
 "D - Stale" -- Significant use of cliche and/or weak language.
 "F - Weak" -- Overwhelming language weakness and/or use of cliche.
 
-6. Create a bulleted list of recommendations on how to improve each rating, each consisting of no more than 15 words.
+6. Create a bulleted list of recommendations on how to improve each rating, each consisting of no more than 16 words.
 
 7. Give an overall rating that's the lowest rating of 3, 4, and 5. So if they were B, C, and A, the overall-rating would be "C".
 

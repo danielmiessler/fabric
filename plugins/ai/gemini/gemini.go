@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/danielmiessler/fabric/plugins"
 	goopenai "github.com/sashabaranov/go-openai"
-	"strings"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/google/generative-ai-go/genai"

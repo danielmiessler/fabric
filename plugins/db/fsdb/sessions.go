@@ -2,6 +2,7 @@ package fsdb
 
 import (
 	"fmt"
+
 	"github.com/danielmiessler/fabric/common"
 	goopenai "github.com/sashabaranov/go-openai"
 )

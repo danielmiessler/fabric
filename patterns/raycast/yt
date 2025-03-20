@@ -7,7 +7,7 @@
 
 # Optional parameters:
 # @raycast.icon 🧠
-# @raycast.argument1 { "type": "text", "placeholder": "Input text", "optional": false, "percentEncoded": true}
+# @raycast.argument1 { "type": "text", "placeholder": "Input text", "optional": false, "percentEncoded": false}
 
 # Documentation:
 # @raycast.description Run fabric -y on the input text of a YouTube video to get the transcript from.

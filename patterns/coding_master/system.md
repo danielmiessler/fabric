@@ -24,15 +24,15 @@ Your code here
 **OUTPUT INSTRUCTIONS**
 Only output Markdown.
 
-Write the IDEAS bullets as exactly 15 words.
+Write the IDEAS bullets as exactly 16 words.
 
-Write the RECOMMENDATIONS bullets as exactly 15 words.
+Write the RECOMMENDATIONS bullets as exactly 16 words.
 
-Write the HABITS bullets as exactly 15 words.
+Write the HABITS bullets as exactly 16 words.
 
-Write the FACTS bullets as exactly 15 words.
+Write the FACTS bullets as exactly 16 words.
 
-Write the INSIGHTS bullets as exactly 15 words.
+Write the INSIGHTS bullets as exactly 16 words.
 
 Extract at least 25 IDEAS from the content.
 
@@ -44,7 +44,7 @@ Do not give warnings or notes; only output the requested sections.
 
 You use bulleted lists for output, not numbered lists.
 
-Do not repeat ideas, quotes, facts, or resources.
+Do not repeat ideas, habits, facts, or insights.
 
 Do not start items with the same opening words.
 

@@ -59,7 +59,7 @@ func (o *YouTube) GetVideoOrPlaylistId(url string) (videoId string, playlistId s
 	}
 
 	// Video ID pattern
-	videoPattern := `(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:s(?:horts)\/)|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]*)`
+	videoPattern := `(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:live\/|[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:s(?:horts)\/)|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]*)`
 	videoRe := regexp.MustCompile(videoPattern)
 	videoMatch := videoRe.FindStringSubmatch(url)
 	if len(videoMatch) > 1 {
@@ -111,6 +111,45 @@ func (o *YouTube) GrabTranscript(videoId string, language string) (ret string, e
 		ret = textBuilder.String()
 	}
 	return
+}
+
+func (o *YouTube) GrabTranscriptWithTimestamps(videoId string, language string) (ret string, err error) {
+	var transcript string
+	if transcript, err = o.GrabTranscriptBase(videoId, language); err != nil {
+		err = fmt.Errorf("transcript not available. (%v)", err)
+		return
+	}
+
+	// Parse the XML transcript
+	doc := soup.HTMLParse(transcript)
+	// Extract the text content from the <text> tags
+	textTags := doc.FindAll("text")
+	var textBuilder strings.Builder
+	for _, textTag := range textTags {
+		// Extract the start and duration attributes
+		start := textTag.Attrs()["start"]
+		dur := textTag.Attrs()["dur"]
+		end := fmt.Sprintf("%f", parseFloat(start)+parseFloat(dur))
+		// Format the timestamps
+		startFormatted := formatTimestamp(parseFloat(start))
+		endFormatted := formatTimestamp(parseFloat(end))
+		text := strings.ReplaceAll(textTag.Text(), "&#39;", "'")
+		textBuilder.WriteString(fmt.Sprintf("[%s - %s] %s\n", startFormatted, endFormatted, text))
+	}
+	ret = textBuilder.String()
+	return
+}
+
+func parseFloat(s string) float64 {
+	f, _ := strconv.ParseFloat(s, 64)
+	return f
+}
+
+func formatTimestamp(seconds float64) string {
+	hours := int(seconds) / 3600
+	minutes := (int(seconds) % 3600) / 60
+	secs := int(seconds) % 60
+	return fmt.Sprintf("%02d:%02d:%02d", hours, minutes, secs)
 }
 
 func (o *YouTube) GrabTranscriptBase(videoId string, language string) (ret string, err error) {
@@ -238,6 +277,13 @@ func (o *YouTube) Grab(url string, options *Options) (ret *VideoInfo, err error)
 
 	ret = &VideoInfo{}
 
+	if options.Metadata {
+		if ret.Metadata, err = o.GrabMetadata(videoId); err != nil {
+			err = fmt.Errorf("error getting video metadata: %v", err)
+			return
+		}
+	}
+
 	if options.Duration {
 		if ret.Duration, err = o.GrabDuration(videoId); err != nil {
 			err = fmt.Errorf("error parsing video duration: %v", err)
@@ -258,6 +304,13 @@ func (o *YouTube) Grab(url string, options *Options) (ret *VideoInfo, err error)
 			return
 		}
 	}
+
+	if options.TranscriptWithTimestamps {
+		if ret.Transcript, err = o.GrabTranscriptWithTimestamps(videoId, "en"); err != nil {
+			return
+		}
+	}
+
 	return
 }
 
@@ -365,24 +418,76 @@ type VideoMeta struct {
 }
 
 type Options struct {
-	Duration   bool
-	Transcript bool
-	Comments   bool
-	Lang       string
+	Duration                 bool
+	Transcript               bool
+	TranscriptWithTimestamps bool
+	Comments                 bool
+	Lang                     string
+	Metadata                 bool
 }
 
 type VideoInfo struct {
-	Transcript string   `json:"transcript"`
-	Duration   int      `json:"duration"`
-	Comments   []string `json:"comments"`
+	Transcript string         `json:"transcript"`
+	Duration   int            `json:"duration"`
+	Comments   []string       `json:"comments"`
+	Metadata   *VideoMetadata `json:"metadata,omitempty"`
+}
+
+type VideoMetadata struct {
+	Id           string   `json:"id"`
+	Title        string   `json:"title"`
+	Description  string   `json:"description"`
+	PublishedAt  string   `json:"publishedAt"`
+	ChannelId    string   `json:"channelId"`
+	ChannelTitle string   `json:"channelTitle"`
+	CategoryId   string   `json:"categoryId"`
+	Tags         []string `json:"tags"`
+	ViewCount    uint64   `json:"viewCount"`
+	LikeCount    uint64   `json:"likeCount"`
+}
+
+func (o *YouTube) GrabMetadata(videoId string) (metadata *VideoMetadata, err error) {
+	if err = o.initService(); err != nil {
+		return
+	}
+
+	call := o.service.Videos.List([]string{"snippet", "statistics"}).Id(videoId)
+	var response *youtube.VideoListResponse
+	if response, err = call.Do(); err != nil {
+		return nil, fmt.Errorf("error getting video metadata: %v", err)
+	}
+
+	if len(response.Items) == 0 {
+		return nil, fmt.Errorf("no video found with ID: %s", videoId)
+	}
+
+	video := response.Items[0]
+	viewCount := video.Statistics.ViewCount
+	likeCount := video.Statistics.LikeCount
+
+	metadata = &VideoMetadata{
+		Id:           video.Id,
+		Title:        video.Snippet.Title,
+		Description:  video.Snippet.Description,
+		PublishedAt:  video.Snippet.PublishedAt,
+		ChannelId:    video.Snippet.ChannelId,
+		ChannelTitle: video.Snippet.ChannelTitle,
+		CategoryId:   video.Snippet.CategoryId,
+		Tags:         video.Snippet.Tags,
+		ViewCount:    viewCount,
+		LikeCount:    likeCount,
+	}
+	return
 }
 
 func (o *YouTube) GrabByFlags() (ret *VideoInfo, err error) {
 	options := &Options{}
 	flag.BoolVar(&options.Duration, "duration", false, "Output only the duration")
 	flag.BoolVar(&options.Transcript, "transcript", false, "Output only the transcript")
+	flag.BoolVar(&options.TranscriptWithTimestamps, "transcriptWithTimestamps", false, "Output only the transcript with timestamps")
 	flag.BoolVar(&options.Comments, "comments", false, "Output the comments on the video")
 	flag.StringVar(&options.Lang, "lang", "en", "Language for the transcript (default: English)")
+	flag.BoolVar(&options.Metadata, "metadata", false, "Output video metadata")
 	flag.Parse()
 
 	if flag.NArg() == 0 {

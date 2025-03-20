@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins"
 	"sync"
+
+	"github.com/danielmiessler/fabric/plugins"
 )
 
 func NewVendorsManager() *VendorsManager {
@@ -93,7 +94,6 @@ func (o *VendorsManager) readModels() (err error) {
 	for result := range resultsChan {
 		if result.err != nil {
 			fmt.Println(result.vendorName, result.err)
-			cancel() // Cancel remaining goroutines if needed
 		} else {
 			o.Models.AddGroupItems(result.vendorName, result.models...)
 		}

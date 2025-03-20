@@ -8,7 +8,7 @@ Take the input given and extract the concise, practical recommendations for how 
 
 # OUTPUT INSTRUCTIONS
 
-- Output a bulleted list of up to 3 algorithm update recommendations, each of no more than 15 words.
+- Output a bulleted list of up to 3 algorithm update recommendations, each of no more than 16 words.
 
 # OUTPUT EXAMPLE
 

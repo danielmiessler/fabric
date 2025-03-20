@@ -10,64 +10,67 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/danielmiessler/fabric/common"
 	"github.com/jessevdk/go-flags"
 	goopenai "github.com/sashabaranov/go-openai"
 	"golang.org/x/text/language"
 	"gopkg.in/yaml.v2"
-
-	"github.com/danielmiessler/fabric/common"
 )
 
 // Flags create flags struct. the users flags go into this, this will be passed to the chat struct in cli
 type Flags struct {
-	Pattern            string            `short:"p" long:"pattern" yaml:"pattern" description:"Choose a pattern from the available patterns" default:""`
-	PatternVariables   map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=#role:expert -v=#points:30"`
-	Context            string            `short:"C" long:"context" description:"Choose a context from the available contexts" default:""`
-	Session            string            `long:"session" description:"Choose a session from the available sessions"`
-	Attachments        []string          `short:"a" long:"attachment" description:"Attachment path or URL (e.g. for OpenAI image recognition messages)"`
-	Setup              bool              `short:"S" long:"setup" description:"Run setup for all reconfigurable parts of fabric"`
-	Temperature        float64           `short:"t" long:"temperature" yaml:"temperature" description:"Set temperature" default:"0.7"`
-	TopP               float64           `short:"T" long:"topp" yaml:"topp" description:"Set top P" default:"0.9"`
-	Stream             bool              `short:"s" long:"stream" yaml:"stream" description:"Stream"`
-	PresencePenalty    float64           `short:"P" long:"presencepenalty" yaml:"presencepenalty" description:"Set presence penalty" default:"0.0"`
-	Raw                bool              `short:"r" long:"raw" yaml:"raw" description:"Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns."`
-	FrequencyPenalty   float64           `short:"F" long:"frequencypenalty" yaml:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
-	ListPatterns       bool              `short:"l" long:"listpatterns" description:"List all patterns"`
-	ListAllModels      bool              `short:"L" long:"listmodels" description:"List all available models"`
-	ListAllContexts    bool              `short:"x" long:"listcontexts" description:"List all contexts"`
-	ListAllSessions    bool              `short:"X" long:"listsessions" description:"List all sessions"`
-	UpdatePatterns     bool              `short:"U" long:"updatepatterns" description:"Update patterns"`
-	Message            string            `hidden:"true" description:"Messages to send to chat"`
-	Copy               bool              `short:"c" long:"copy" description:"Copy to clipboard"`
-	Model              string            `short:"m" long:"model" yaml:"model" description:"Choose model"`
-	ModelContextLength int               `long:"modelContextLength" yaml:"modelContextLength" description:"Model context length (only affects ollama)"`
-	Output             string            `short:"o" long:"output" description:"Output to file" default:""`
-	OutputSession      bool              `long:"output-session" description:"Output the entire session (also a temporary one) to the output file"`
-	LatestPatterns     string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
-	ChangeDefaultModel bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
-	YouTube            string            `short:"y" long:"youtube" description:"YouTube video or play list \"URL\" to grab transcript, comments from it and send to chat or print it put to the console and store it in the output file"`
-	YouTubePlaylist    bool              `long:"playlist" description:"Prefer playlist over video if both ids are present in the URL"`
-	YouTubeTranscript  bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat (it used per default)."`
-	YouTubeComments    bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
-	Language           string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
-	ScrapeURL          string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
-	ScrapeQuestion     string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
-	Seed               int               `short:"e" long:"seed" yaml:"seed" description:"Seed to be used for LMM generation"`
-	WipeContext        string            `short:"w" long:"wipecontext" description:"Wipe context"`
-	WipeSession        string            `short:"W" long:"wipesession" description:"Wipe session"`
-	PrintContext       string            `long:"printcontext" description:"Print context"`
-	PrintSession       string            `long:"printsession" description:"Print session"`
-	HtmlReadability    bool              `long:"readability" description:"Convert HTML input into a clean, readable view"`
-	InputHasVars       bool              `long:"input-has-vars" description:"Apply variables to user input"`
-	DryRun             bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
-	Serve              bool              `long:"serve" description:"Serve the Fabric Rest API"`
-	ServeOllama        bool              `long:"serveOllama" description:"Serve the Fabric Rest API with ollama endpoints"`
-	ServeAddress       string            `long:"address" description:"The address to bind the REST API" default:":8080"`
-	Config             string            `long:"config" description:"Path to YAML config file"`
-	Version            bool              `long:"version" description:"Print current version"`
-	ListExtensions     bool              `long:"listextensions" description:"List all registered extensions"`
-	AddExtension       string            `long:"addextension" description:"Register a new extension from config file path"`
-	RemoveExtension    string            `long:"rmextension" description:"Remove a registered extension by name"`
+	Pattern                         string            `short:"p" long:"pattern" yaml:"pattern" description:"Choose a pattern from the available patterns" default:""`
+	PatternVariables                map[string]string `short:"v" long:"variable" description:"Values for pattern variables, e.g. -v=#role:expert -v=#points:30"`
+	Context                         string            `short:"C" long:"context" description:"Choose a context from the available contexts" default:""`
+	Session                         string            `long:"session" description:"Choose a session from the available sessions"`
+	Attachments                     []string          `short:"a" long:"attachment" description:"Attachment path or URL (e.g. for OpenAI image recognition messages)"`
+	Setup                           bool              `short:"S" long:"setup" description:"Run setup for all reconfigurable parts of fabric"`
+	Temperature                     float64           `short:"t" long:"temperature" yaml:"temperature" description:"Set temperature" default:"0.7"`
+	TopP                            float64           `short:"T" long:"topp" yaml:"topp" description:"Set top P" default:"0.9"`
+	Stream                          bool              `short:"s" long:"stream" yaml:"stream" description:"Stream"`
+	PresencePenalty                 float64           `short:"P" long:"presencepenalty" yaml:"presencepenalty" description:"Set presence penalty" default:"0.0"`
+	Raw                             bool              `short:"r" long:"raw" yaml:"raw" description:"Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns."`
+	FrequencyPenalty                float64           `short:"F" long:"frequencypenalty" yaml:"frequencypenalty" description:"Set frequency penalty" default:"0.0"`
+	ListPatterns                    bool              `short:"l" long:"listpatterns" description:"List all patterns"`
+	ListAllModels                   bool              `short:"L" long:"listmodels" description:"List all available models"`
+	ListAllContexts                 bool              `short:"x" long:"listcontexts" description:"List all contexts"`
+	ListAllSessions                 bool              `short:"X" long:"listsessions" description:"List all sessions"`
+	UpdatePatterns                  bool              `short:"U" long:"updatepatterns" description:"Update patterns"`
+	Message                         string            `hidden:"true" description:"Messages to send to chat"`
+	Copy                            bool              `short:"c" long:"copy" description:"Copy to clipboard"`
+	Model                           string            `short:"m" long:"model" yaml:"model" description:"Choose model"`
+	ModelContextLength              int               `long:"modelContextLength" yaml:"modelContextLength" description:"Model context length (only affects ollama)"`
+	Output                          string            `short:"o" long:"output" description:"Output to file" default:""`
+	OutputSession                   bool              `long:"output-session" description:"Output the entire session (also a temporary one) to the output file"`
+	LatestPatterns                  string            `short:"n" long:"latest" description:"Number of latest patterns to list" default:"0"`
+	ChangeDefaultModel              bool              `short:"d" long:"changeDefaultModel" description:"Change default model"`
+	YouTube                         string            `short:"y" long:"youtube" description:"YouTube video or play list \"URL\" to grab transcript, comments from it and send to chat or print it put to the console and store it in the output file"`
+	YouTubePlaylist                 bool              `long:"playlist" description:"Prefer playlist over video if both ids are present in the URL"`
+	YouTubeTranscript               bool              `long:"transcript" description:"Grab transcript from YouTube video and send to chat (it is used per default)."`
+	YouTubeTranscriptWithTimestamps bool              `long:"transcript-with-timestamps" description:"Grab transcript from YouTube video with timestamps and send to chat"`
+	YouTubeComments                 bool              `long:"comments" description:"Grab comments from YouTube video and send to chat"`
+	YouTubeMetadata                 bool              `long:"metadata" description:"Output video metadata"`
+	Language                        string            `short:"g" long:"language" description:"Specify the Language Code for the chat, e.g. -g=en -g=zh" default:""`
+	ScrapeURL                       string            `short:"u" long:"scrape_url" description:"Scrape website URL to markdown using Jina AI"`
+	ScrapeQuestion                  string            `short:"q" long:"scrape_question" description:"Search question using Jina AI"`
+	Seed                            int               `short:"e" long:"seed" yaml:"seed" description:"Seed to be used for LMM generation"`
+	WipeContext                     string            `short:"w" long:"wipecontext" description:"Wipe context"`
+	WipeSession                     string            `short:"W" long:"wipesession" description:"Wipe session"`
+	PrintContext                    string            `long:"printcontext" description:"Print context"`
+	PrintSession                    string            `long:"printsession" description:"Print session"`
+	HtmlReadability                 bool              `long:"readability" description:"Convert HTML input into a clean, readable view"`
+	InputHasVars                    bool              `long:"input-has-vars" description:"Apply variables to user input"`
+	DryRun                          bool              `long:"dry-run" description:"Show what would be sent to the model without actually sending it"`
+	Serve                           bool              `long:"serve" description:"Serve the Fabric Rest API"`
+	ServeOllama                     bool              `long:"serveOllama" description:"Serve the Fabric Rest API with ollama endpoints"`
+	ServeAddress                    string            `long:"address" description:"The address to bind the REST API" default:":8080"`
+	Config                          string            `long:"config" description:"Path to YAML config file"`
+	Version                         bool              `long:"version" description:"Print current version"`
+	ListExtensions                  bool              `long:"listextensions" description:"List all registered extensions"`
+	AddExtension                    string            `long:"addextension" description:"Register a new extension from config file path"`
+	RemoveExtension                 string            `long:"rmextension" description:"Remove a registered extension by name"`
+	Strategy                        string            `long:"strategy" description:"Choose a strategy from the available strategies" default:""`
+	ListStrategies                  bool              `long:"liststrategies" description:"List all strategies"`
 }
 
 var debug = false
@@ -113,14 +116,14 @@ func Init() (ret *Flags, err error) {
 	parser := flags.NewParser(ret, flags.Default)
 	var args []string
 	if args, err = parser.Parse(); err != nil {
-		return nil, err
+		return
 	}
 
 	// If config specified, load and apply YAML for unused flags
 	if ret.Config != "" {
-		yamlFlags, err := loadYAMLConfig(ret.Config)
-		if err != nil {
-			return nil, err
+		var yamlFlags *Flags
+		if yamlFlags, err = loadYAMLConfig(ret.Config); err != nil {
+			return
 		}
 
 		// Apply YAML values where CLI flags weren't used
@@ -151,6 +154,7 @@ func Init() (ret *Flags, err error) {
 	}
 
 	// Handle stdin and messages
+	// Handle stdin and messages
 	info, _ := os.Stdin.Stat()
 	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
@@ -166,8 +170,7 @@ func Init() (ret *Flags, err error) {
 		}
 		ret.Message = AppendMessage(ret.Message, pipedMessage)
 	}
-
-	return ret, nil
+	return
 }
 
 func assignWithConversion(targetField, sourceField reflect.Value) error {
@@ -233,17 +236,19 @@ func readStdin() (ret string, err error) {
 	reader := bufio.NewReader(os.Stdin)
 	var sb strings.Builder
 	for {
-		line, err := reader.ReadString('\n')
-		if err != nil {
-			if errors.Is(err, io.EOF) {
+		if line, readErr := reader.ReadString('\n'); readErr != nil {
+			if errors.Is(readErr, io.EOF) {
 				sb.WriteString(line)
 				break
 			}
-			return "", fmt.Errorf("error reading piped message from stdin: %w", err)
+			err = fmt.Errorf("error reading piped message from stdin: %w", readErr)
+			return
+		} else {
+			sb.WriteString(line)
 		}
-		sb.WriteString(line)
 	}
-	return sb.String(), nil
+	ret = sb.String()
+	return
 }
 
 func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
@@ -264,13 +269,14 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 		ContextName:      o.Context,
 		SessionName:      o.Session,
 		PatternName:      o.Pattern,
+		StrategyName:     o.Strategy,
 		PatternVariables: o.PatternVariables,
 		InputHasVars:     o.InputHasVars,
 		Meta:             Meta,
 	}
 
 	var message *goopenai.ChatCompletionMessage
-	if o.Attachments == nil || len(o.Attachments) == 0 {
+	if len(o.Attachments) == 0 {
 		if o.Message != "" {
 			message = &goopenai.ChatCompletionMessage{
 				Role:    goopenai.ChatMessageRoleUser,

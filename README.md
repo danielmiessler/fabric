@@ -34,13 +34,18 @@
 - [`fabric`](#fabric)
   - [Navigation](#navigation)
   - [Updates](#updates)
-  - [Intro videos](#intro-videos)
   - [What and why](#what-and-why)
+  - [Intro videos](#intro-videos)
   - [Philosophy](#philosophy)
     - [Breaking problems into components](#breaking-problems-into-components)
     - [Too many prompts](#too-many-prompts)
   - [Installation](#installation)
     - [Get Latest Release Binaries](#get-latest-release-binaries)
+      - [Windows:](#windows)
+      - [MacOS (arm64):](#macos-arm64)
+      - [MacOS (amd64):](#macos-amd64)
+      - [Linux (amd64):](#linux-amd64)
+      - [Linux (arm64):](#linux-arm64)
     - [From Source](#from-source)
     - [Environment Variables](#environment-variables)
     - [Setup](#setup)
@@ -52,12 +57,15 @@
   - [Our approach to prompting](#our-approach-to-prompting)
   - [Examples](#examples)
   - [Just use the Patterns](#just-use-the-patterns)
+    - [Prompt Strategies](#prompt-strategies)
   - [Custom Patterns](#custom-patterns)
   - [Helper Apps](#helper-apps)
     - [`to_pdf`](#to_pdf)
     - [`to_pdf` Installation](#to_pdf-installation)
   - [pbpaste](#pbpaste)
-  - [Web Interface](#Web_Interface)
+  - [Web Interface](#web-interface)
+    - [Installing](#installing)
+    - [Streamlit UI](#streamlit-ui)
   - [Meta](#meta)
     - [Primary contributors](#primary-contributors)
 
@@ -66,9 +74,9 @@
 ## Updates
 
 > [!NOTE]
-> November 8, 2024
+> February 24, 2025
 >
-> - **Multimodal Support**: You can now use `-a` (attachment) for Multimodal submissions to OpenAI models that support it. Example: `fabric -a https://path/to/image "Give me a description of this image."`
+> - Fabric now supports Sonnet 3.7! Update and use `-S` to select it as your default if you want, or just use the shortcut `-m claude-3-7-sonnet-latest`. Enjoy!
 
 ## What and why
 
@@ -126,22 +134,20 @@ To install Fabric, you can use the latest release binaries or install it from th
 
 ### Get Latest Release Binaries
 
-```bash
-# Windows:
-curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-windows-amd64.exe > fabric.exe && fabric.exe --version
+#### Windows:
+`https://github.com/danielmiessler/fabric/releases/latest/download/fabric-windows-amd64.exe`
 
-# MacOS (arm64):
-curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 > fabric && chmod +x fabric && ./fabric --version
+#### MacOS (arm64):
+`curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 > fabric && chmod +x fabric && ./fabric --version`
 
-# MacOS (amd64):
-curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 > fabric && chmod +x fabric && ./fabric --version
+#### MacOS (amd64):
+`curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 > fabric && chmod +x fabric && ./fabric --version`
 
-# Linux (amd64):
-curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 > fabric && chmod +x fabric && ./fabric --version
+#### Linux (amd64):
+`curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 > fabric && chmod +x fabric && ./fabric --version`
 
-# Linux (arm64):
-curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-arm64 > fabric && chmod +x fabric && ./fabric --version
-```
+#### Linux (arm64):
+`curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-arm64 > fabric && chmod +x fabric && ./fabric --version`
 
 ### From Source
 
@@ -206,12 +212,108 @@ for pattern_file in $HOME/.config/fabric/patterns/*; do
 done
 
 yt() {
+    if [ "$#" -eq 0 ] || [ "$#" -gt 2 ]; then
+        echo "Usage: yt [-t | --timestamps] youtube-link"
+        echo "Use the '-t' flag to get the transcript with timestamps."
+        return 1
+    fi
+
+    transcript_flag="--transcript"
+    if [ "$1" = "-t" ] || [ "$1" = "--timestamps" ]; then
+        transcript_flag="--transcript-with-timestamps"
+        shift
+    fi
     local video_link="$1"
-    fabric -y "$video_link" --transcript
+    fabric -y "$video_link" $transcript_flag
 }
 ```
 
-This also creates a `yt` alias that allows you to use `yt https://www.youtube.com/watch?v=4b0iet22VIk` to get your transcripts.
+You can add the below code for the equivalent aliases inside PowerShell by running `notepad $PROFILE` inside a PowerShell window:
+
+```powershell
+# Path to the patterns directory
+$patternsPath = Join-Path $HOME ".config/fabric/patterns"
+foreach ($patternDir in Get-ChildItem -Path $patternsPath -Directory) {
+    $patternName = $patternDir.Name
+
+    # Dynamically define a function for each pattern
+    $functionDefinition = @"
+function $patternName {
+    [CmdletBinding()]
+    param(
+        [Parameter(ValueFromPipeline = `$true)]
+        [string] `$InputObject,
+
+        [Parameter(ValueFromRemainingArguments = `$true)]
+        [String[]] `$patternArgs
+    )
+
+    begin {
+        # Initialize an array to collect pipeline input
+        `$collector = @()
+    }
+
+    process {
+        # Collect pipeline input objects
+        if (`$InputObject) {
+            `$collector += `$InputObject
+        }
+    }
+
+    end {
+        # Join all pipeline input into a single string, separated by newlines
+        `$pipelineContent = `$collector -join "`n"
+
+        # If there's pipeline input, include it in the call to fabric
+        if (`$pipelineContent) {
+            `$pipelineContent | fabric --pattern $patternName `$patternArgs
+        } else {
+            # No pipeline input; just call fabric with the additional args
+            fabric --pattern $patternName `$patternArgs
+        }
+    }
+}
+"@
+    # Add the function to the current session
+    Invoke-Expression $functionDefinition
+}
+
+# Define the 'yt' function as well
+function yt {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Alias("timestamps")]
+        [switch]$t,
+
+        [Parameter(Position = 0, ValueFromPipeline = $true)]
+        [string]$videoLink
+    )
+
+    begin {
+        $transcriptFlag = "--transcript"
+        if ($t) {
+            $transcriptFlag = "--transcript-with-timestamps"
+        }
+    }
+
+    process {
+        if (-not $videoLink) {
+            Write-Error "Usage: yt [-t | --timestamps] youtube-link"
+            return
+        }
+    }
+
+    end {
+        if ($videoLink) {
+            # Execute and allow output to flow through the pipeline
+            fabric -y $videoLink $transcriptFlag
+        }
+    }
+}
+```
+
+This also creates a `yt` alias that allows you to use `yt https://www.youtube.com/watch?v=4b0iet22VIk` to get transcripts, comments, and metadata.
 
 #### Save your files in markdown using aliases
 
@@ -247,11 +349,6 @@ for pattern_file in ~/.config/fabric/patterns/*; do
     }
     "
 done
-
-yt() {
-    local video_link="$1"
-    fabric -y "$video_link" --transcript
-}
 ```
 
 This will allow you to use the patterns as aliases like in the above for example `summarize` instead of `fabric --pattern summarize --stream`, however if you pass in an extra argument like this `summarize "my_article_title"` your output will be saved in the destination that you set in `obsidian_base="/path/to/obsidian"` in the following format `YYYY-MM-DD-my_article_title.md` where the date gets autogenerated for you.
@@ -297,47 +394,60 @@ Usage:
   fabric [OPTIONS]
 
 Application Options:
-  -p, --pattern=             Choose a pattern from the available patterns
-  -v, --variable=            Values for pattern variables, e.g. -v=#role:expert -v=#points:30"
-  -C, --context=             Choose a context from the available contexts
-      --session=             Choose a session from the available sessions
-  -a, --attachment=          Attachment path or URL (e.g. for OpenAI image recognition messages)
-  -S, --setup                Run setup for all reconfigurable parts of fabric
-  -t, --temperature=         Set temperature (default: 0.7)
-  -T, --topp=                Set top P (default: 0.9)
-  -s, --stream               Stream
-  -P, --presencepenalty=     Set presence penalty (default: 0.0)
-  -r, --raw                  Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns.
-  -F, --frequencypenalty=    Set frequency penalty (default: 0.0)
-  -l, --listpatterns         List all patterns
-  -L, --listmodels           List all available models
-  -x, --listcontexts         List all contexts
-  -X, --listsessions         List all sessions
-  -U, --updatepatterns       Update patterns
-  -c, --copy                 Copy to clipboard
-  -m, --model=               Choose model
-  -o, --output=              Output to file
-      --output-session       Output the entire session (also a temporary one) to the output file
-  -n, --latest=              Number of latest patterns to list (default: 0)
-  -d, --changeDefaultModel   Change default model
-  -y, --youtube=             YouTube video "URL" to grab transcript, comments from it and send to chat
-      --transcript           Grab transcript from YouTube video and send to chat (it used per default).
-      --comments             Grab comments from YouTube video and send to chat
-  -g, --language=            Specify the Language Code for the chat, e.g. -g=en -g=zh
-  -u, --scrape_url=          Scrape website URL to markdown using Jina AI
-  -q, --scrape_question=     Search question using Jina AI
-  -e, --seed=                Seed to be used for LMM generation
-  -w, --wipecontext=         Wipe context
-  -W, --wipesession=         Wipe session
-      --printcontext=        Print context
-      --printsession=        Print session
-      --readability          Convert HTML input into a clean, readable view
-      --serve                Initiate the API server
-      --dry-run              Show what would be sent to the model without actually sending it
-      --version              Print current version
+  -p, --pattern=                    Choose a pattern from the available patterns
+  -v, --variable=                   Values for pattern variables, e.g. -v=#role:expert -v=#points:30
+  -C, --context=                    Choose a context from the available contexts
+      --session=                    Choose a session from the available sessions
+  -a, --attachment=                 Attachment path or URL (e.g. for OpenAI image recognition messages)
+  -S, --setup                       Run setup for all reconfigurable parts of fabric
+  -t, --temperature=                Set temperature (default: 0.7)
+  -T, --topp=                       Set top P (default: 0.9)
+  -s, --stream                      Stream
+  -P, --presencepenalty=            Set presence penalty (default: 0.0)
+  -r, --raw                         Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns.
+  -F, --frequencypenalty=           Set frequency penalty (default: 0.0)
+  -l, --listpatterns                List all patterns
+  -L, --listmodels                  List all available models
+  -x, --listcontexts                List all contexts
+  -X, --listsessions                List all sessions
+  -U, --updatepatterns              Update patterns
+  -c, --copy                        Copy to clipboard
+  -m, --model=                      Choose model
+      --modelContextLength=         Model context length (only affects ollama)
+  -o, --output=                     Output to file
+      --output-session              Output the entire session (also a temporary one) to the output file
+  -n, --latest=                     Number of latest patterns to list (default: 0)
+  -d, --changeDefaultModel          Change default model
+  -y, --youtube=                    YouTube video or play list "URL" to grab transcript, comments from it and send to chat or print it put to the console and store it in the output file
+      --playlist                    Prefer playlist over video if both ids are present in the URL
+      --transcript                  Grab transcript from YouTube video and send to chat (it is used per default).
+      --transcript-with-timestamps  Grab transcript from YouTube video with timestamps and send to chat
+      --comments                    Grab comments from YouTube video and send to chat
+      --metadata                    Output video metadata
+  -g, --language=                   Specify the Language Code for the chat, e.g. -g=en -g=zh
+  -u, --scrape_url=                 Scrape website URL to markdown using Jina AI
+  -q, --scrape_question=            Search question using Jina AI
+  -e, --seed=                       Seed to be used for LMM generation
+  -w, --wipecontext=                Wipe context
+  -W, --wipesession=                Wipe session
+      --printcontext=               Print context
+      --printsession=               Print session
+      --readability                 Convert HTML input into a clean, readable view
+      --input-has-vars              Apply variables to user input
+      --dry-run                     Show what would be sent to the model without actually sending it
+      --serve                       Serve the Fabric Rest API
+      --serveOllama                 Serve the Fabric Rest API with ollama endpoints
+      --address=                    The address to bind the REST API (default: :8080)
+      --config=                     Path to YAML config file
+      --version                     Print current version
+      --listextensions              List all registered extensions
+      --addextension=               Register a new extension from config file path
+      --rmextension=                Remove a registered extension by name
+      --strategy=                   Choose a strategy from the available strategies
+      --liststrategies              List all strategies
 
 Help Options:
-  -h, --help                 Show this help message
+  -h, --help                        Show this help message
 
 ```
 
@@ -383,7 +493,15 @@ pbpaste | fabric --stream --pattern analyze_claims
 fabric -y "https://youtube.com/watch?v=uXs-zPc63kM" --stream --pattern extract_wisdom
 ```
 
-4. Create patterns- you must create a .md file with the pattern and save it to ~/.config/fabric/patterns/[yourpatternname].
+
+4. Create patterns- you must create a .md file with the pattern and save it to `~/.config/fabric/patterns/[yourpatternname]`.
+
+
+5. Run a `analyze_claims` pattern on a website. Fabric uses Jina AI to scrape the URL into markdown format before sending it to the model.
+
+```bash
+fabric -u https://github.com/danielmiessler/fabric/ -p analyze_claims
+```
 
 ## Just use the Patterns
 
@@ -400,6 +518,21 @@ You can use any of the Patterns you see there in any AI application that you hav
 
 The wisdom of crowds for the win.
 
+### Prompt Strategies
+
+Fabric also implements prompt strategies like "Chain of Thought" or "Chain of Draft" which can
+be used in addition to the basic patterns.
+
+See the [Thinking Faster by Writing Less](https://arxiv.org/pdf/2502.18600) paper and
+the [Thought Generation section of Learn Prompting](https://learnprompting.org/docs/advanced/thought_generation/introduction) for examples of prompt strategies.
+
+Each strategy is available as a small `json` file in the [`/strategies`](https://github.com/danielmiessler/fabric/tree/main/strategies) directory.
+
+The prompt modification of the strategy is applied to the system prompt and passed on to the
+LLM in the chat session.
+
+Use `fabric -S` and select the option to install the strategies in your `~/.config/fabric` directory.
+
 ## Custom Patterns
 
 You may want to use Fabric to create your own custom Patterns—but not share them with others. No problem!
@@ -414,7 +547,6 @@ When you're ready to use them, copy them into:
 
 You can then use them like any other Patterns, but they won't be public unless you explicitly submit them as Pull Requests to the Fabric project. So don't worry—they're private to you.
 
-This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
 
 ## Helper Apps
 
@@ -473,17 +605,19 @@ alias pbpaste='xclip -selection clipboard -o'
 
 ## Web Interface
 
-Fabric now includes a built-in web interface that provides a GUI alternative to the command-line interface and an out-of-the-box website for those who want to get started with web development or blogging.  
-You can use this app as a GUI interface for Fabric, a ready to go blog-site, or a website template for your own projects.  
+Fabric now includes a built-in web interface that provides a GUI alternative to the command-line interface and an out-of-the-box website for those who want to get started with web development or blogging.
+You can use this app as a GUI interface for Fabric, a ready to go blog-site, or a website template for your own projects.
 
-The `web/src/lib/content` directory includes starter `.obsidian/` and `templates/` directories,  allowing you to open up the `web/src/lib/content/` directory as an [Obsidian.md](https://obsidian.md) vault. You can place your posts in the posts directory when you're ready to publish. 
+The `web/src/lib/content` directory includes starter `.obsidian/` and `templates/` directories, allowing you to open up the `web/src/lib/content/` directory as an [Obsidian.md](https://obsidian.md) vault. You can place your posts in the posts directory when you're ready to publish.
+
 ### Installing
 
-The GUI can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run the development server to start the app. 
+The GUI can be installed by navigating to the `web` directory and using `npm install`, `pnpm install`, or your favorite package manager. Then simply run the development server to start the app.
 
-_You will need to run fabric in a separate terminal with the `fabric --serve` command._ 
+_You will need to run fabric in a separate terminal with the `fabric --serve` command._
 
 **From the fabric project `web/` directory:**
+
 ```shell
 npm run dev
 
@@ -491,7 +625,7 @@ npm run dev
 
 pnpm run dev
 
-## or your equivalent 
+## or your equivalent
 ```
 
 ### Streamlit UI
@@ -500,17 +634,30 @@ To run the Streamlit user interface:
 
 ```bash
 # Install required dependencies
-pip install streamlit pandas matplotlib seaborn numpy python-dotenv
+pip install -r requirements.txt
+
+# Or manually install dependencies
+pip install streamlit pandas matplotlib seaborn numpy python-dotenv pyperclip
 
 # Run the Streamlit app
 streamlit run streamlit.py
 ```
 
 The Streamlit UI provides a user-friendly interface for:
+
 - Running and chaining patterns
 - Managing pattern outputs
 - Creating and editing patterns
 - Analyzing pattern results
+
+#### Clipboard Support
+
+The Streamlit UI supports clipboard operations across different platforms:
+
+- **macOS**: Uses `pbcopy` and `pbpaste` (built-in)
+- **Windows**: Uses `pyperclip` library (install with `pip install pyperclip`)
+- **Linux**: Uses `xclip` (install with `sudo apt-get install xclip` or equivalent for your distro)
+
 ## Meta
 
 > [!NOTE]

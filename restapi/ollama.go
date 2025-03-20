@@ -5,13 +5,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/danielmiessler/fabric/core"
-	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/danielmiessler/fabric/core"
+	"github.com/gin-gonic/gin"
 )
 
 type OllamaModel struct {

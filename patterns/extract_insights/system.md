@@ -18,7 +18,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Output the INSIGHTS section only.
 
-- Each bullet should be 15 words in length.
+- Each bullet should be 16 words in length.
 
 - Do not give warnings or notes; only output the requested sections.
 

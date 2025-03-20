@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/danielmiessler/fabric/plugins"
 	"io"
 	"log/slog"
+
+	"github.com/danielmiessler/fabric/plugins"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/samber/lo"
@@ -18,6 +19,16 @@ func NewClient() (ret *Client) {
 }
 
 func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCustom func() error) (ret *Client) {
+	ret = NewClientCompatibleNoSetupQuestions(vendorName, configureCustom)
+
+	ret.ApiKey = ret.AddSetupQuestion("API Key", true)
+	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
+	ret.ApiBaseURL.Value = defaultBaseUrl
+
+	return
+}
+
+func NewClientCompatibleNoSetupQuestions(vendorName string, configureCustom func() error) (ret *Client) {
 	ret = &Client{}
 
 	if configureCustom == nil {
@@ -29,10 +40,6 @@ func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCust
 		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(vendorName),
 		ConfigureCustom: configureCustom,
 	}
-
-	ret.ApiKey = ret.AddSetupQuestion("API Key", true)
-	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
-	ret.ApiBaseURL.Value = defaultBaseUrl
 
 	return
 }

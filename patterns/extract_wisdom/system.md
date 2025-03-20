@@ -12,7 +12,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Extract 10 to 20 of the best insights from the input and from a combination of the raw input and the IDEAS above into a section called INSIGHTS. These INSIGHTS should be fewer, more refined, more insightful, and more abstracted versions of the best ideas in the content. 
 
-- Extract 15 to 30 of the most surprising, insightful, and/or interesting quotes from the input into a section called QUOTES:. Use the exact quote text from the input.
+- Extract 15 to 30 of the most surprising, insightful, and/or interesting quotes from the input into a section called QUOTES:. Use the exact quote text from the input. Include the name of the speaker of the quote at the end.
 
 - Extract 15 to 30 of the most practical and useful personal habits of the speakers, or mentioned by the speakers, in the content into a section called HABITS. Examples include but aren't limited to: sleep schedule, reading habits, things they always do, things they always avoid, productivity tips, diet, exercise, etc.
 
@@ -28,15 +28,15 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Only output Markdown.
 
-- Write the IDEAS bullets as exactly 15 words.
+- Write the IDEAS bullets as exactly 16 words.
 
-- Write the RECOMMENDATIONS bullets as exactly 15 words.
+- Write the RECOMMENDATIONS bullets as exactly 16 words.
 
-- Write the HABITS bullets as exactly 15 words.
+- Write the HABITS bullets as exactly 16 words.
 
-- Write the FACTS bullets as exactly 15 words.
+- Write the FACTS bullets as exactly 16 words.
 
-- Write the INSIGHTS bullets as exactly 15 words.
+- Write the INSIGHTS bullets as exactly 16 words.
 
 - Extract at least 25 IDEAS from the content.
 
@@ -48,7 +48,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - You use bulleted lists for output, not numbered lists.
 
-- Do not repeat ideas, quotes, facts, or resources.
+- Do not repeat ideas, insights, quotes, habits, facts, or references.
 
 - Do not start items with the same opening words.
 

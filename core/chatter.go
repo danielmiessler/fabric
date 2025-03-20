@@ -10,6 +10,7 @@ import (
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
+	"github.com/danielmiessler/fabric/plugins/strategy"
 	"github.com/danielmiessler/fabric/plugins/template"
 )
 
@@ -24,6 +25,7 @@ type Chatter struct {
 	model              string
 	modelContextLength int
 	vendor             ai.Vendor
+	strategy           string
 }
 
 func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *fsdb.Session, err error) {
@@ -35,6 +37,9 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	if len(vendorMessages) == 0 {
 		if session.Name != "" {
 			err = o.db.Sessions.SaveSession(session)
+			if err != nil {
+				return
+			}
 		}
 		err = fmt.Errorf("no messages provided")
 		return
@@ -131,7 +136,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	var patternContent string
 	if request.PatternName != "" {
 		pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, request.Message.Content)
-		// pattrn will now contain user input, and all variables will be resolved, or errored
+		// pattern will now contain user input, and all variables will be resolved, or errored
 
 		if err != nil {
 			return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
@@ -140,6 +145,19 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	systemMessage := strings.TrimSpace(contextContent) + strings.TrimSpace(patternContent)
+
+	// Apply strategy if specified
+	if request.StrategyName != "" {
+		strategy, err := strategy.LoadStrategy(request.StrategyName)
+		if err != nil {
+			return nil, fmt.Errorf("could not load strategy %s: %v", request.StrategyName, err)
+		}
+		if strategy != nil && strategy.Prompt != "" {
+			// prepend the strategy prompt to the system message
+			systemMessage = fmt.Sprintf("%s\n%s", strategy.Prompt, systemMessage)
+		}
+	}
+
 	if request.Language != "" {
 		systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, request.Language)
 	}

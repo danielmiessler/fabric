@@ -10,7 +10,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Extract a list of all exploited vulnerabilities. Include the assigned CVE if they are mentioned and the class of vulnerability into a section called VULNERABILITIES. 
 
-- Extract a timeline of the attacks demonstrated. Structure it in a chronological list with the steps as sub-lists. Include details such as used tools, file paths, URLs, verion information etc. The section is called TIMELINE.
+- Extract a timeline of the attacks demonstrated. Structure it in a chronological list with the steps as sub-lists. Include details such as used tools, file paths, URLs, version information etc. The section is called TIMELINE.
 
 - Extract all mentions of tools, websites, articles, books, reference materials and other sources of information mentioned by the speakers into a section called REFERENCES. This should include any and all references to something that the speaker mentioned.
 
@@ -24,7 +24,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - You use bulleted lists for output, not numbered lists.
 
-- Do not repeat ideas, quotes, facts, or resources.
+- Do not repeat vulnerabilities, or references.
 
 - Do not start items with the same opening words.
 

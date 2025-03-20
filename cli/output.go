@@ -2,8 +2,9 @@ package cli
 
 import (
 	"fmt"
-	"github.com/atotto/clipboard"
 	"os"
+
+	"github.com/atotto/clipboard"
 )
 
 func CopyToClipboard(message string) (err error) {

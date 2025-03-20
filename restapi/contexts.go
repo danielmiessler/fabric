@@ -14,6 +14,6 @@ type ContextsHandler struct {
 // NewContextsHandler creates a new ContextsHandler
 func NewContextsHandler(r *gin.Engine, contexts *fsdb.ContextsEntity) (ret *ContextsHandler) {
 	ret = &ContextsHandler{
-		StorageHandler: NewStorageHandler[fsdb.Context](r, "contexts", contexts), contexts: contexts}
+		StorageHandler: NewStorageHandler(r, "contexts", contexts), contexts: contexts}
 	return
 }

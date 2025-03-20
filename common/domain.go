@@ -13,6 +13,7 @@ type ChatRequest struct {
 	Language         string
 	Meta             string
 	InputHasVars     bool
+	StrategyName     string
 }
 
 type ChatOptions struct {
