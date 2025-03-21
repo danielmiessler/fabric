@@ -42,10 +42,13 @@
   - [Installation](#installation)
     - [Get Latest Release Binaries](#get-latest-release-binaries)
       - [Windows:](#windows)
-      - [MacOS (arm64):](#macos-arm64)
-      - [MacOS (amd64):](#macos-amd64)
+      - [macOS (arm64):](#macos-arm64)
+      - [macOS (amd64):](#macos-amd64)
       - [Linux (amd64):](#linux-amd64)
       - [Linux (arm64):](#linux-arm64)
+    - [Using package managers](#using-package-managers)
+      - [macOS (Homebrew):](#macos-homebrew)
+      - [Arch Linux (AUR):](#arch-linux-aur)
     - [From Source](#from-source)
     - [Environment Variables](#environment-variables)
     - [Setup](#setup)
@@ -137,10 +140,10 @@ To install Fabric, you can use the latest release binaries or install it from th
 #### Windows:
 `https://github.com/danielmiessler/fabric/releases/latest/download/fabric-windows-amd64.exe`
 
-#### MacOS (arm64):
+#### macOS (arm64):
 `curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 > fabric && chmod +x fabric && ./fabric --version`
 
-#### MacOS (amd64):
+#### macOS (amd64):
 `curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 > fabric && chmod +x fabric && ./fabric --version`
 
 #### Linux (amd64):
@@ -148,6 +151,16 @@ To install Fabric, you can use the latest release binaries or install it from th
 
 #### Linux (arm64):
 `curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-arm64 > fabric && chmod +x fabric && ./fabric --version`
+
+### Using package managers
+
+**NOTE:** using methods below Fabric will be available as `fabric-ai`, so adjust your scripts / aliases accordingly:
+
+#### macOS (Homebrew):
+`brew install fabric-ai`
+
+#### Arch Linux (AUR):
+`yay -S fabric-ai`
 
 ### From Source
 
