@@ -35,10 +35,13 @@
   $: if ($chatState.messages.length > 0) {
     const lastMessage = $chatState.messages[$chatState.messages.length - 1];
     isUserMessage = lastMessage.role === 'user';
-    if (isUserMessage) {
-      // Only auto-scroll on user messages
-      setTimeout(scrollToBottom, 100);
-    }
+    // Auto-scroll on both user messages and assistant messages
+    setTimeout(scrollToBottom, 100);
+  }
+
+  // Also watch for streaming state changes to ensure scrolling when streaming completes
+  $: if ($streamingStore === false) {
+    setTimeout(scrollToBottom, 100);
   }
 
   onMount(() => {

@@ -378,8 +378,6 @@ async function readFileContent(file: File): Promise<string> {
   }
 
   
-
-
 async function handleSubmit() {
   if (!userInput.trim()) return;
 
@@ -403,29 +401,28 @@ async function handleSubmit() {
       format: 'loading'
     }]);
     
-    userInput = ""; // Reset userInput BEFORE sendMessage
-    uploadedFiles = []; // Reset uploadedFiles BEFORE sendMessage
-    fileContents = []; // Reset fileContents BEFORE sendMessage
-    fileButtonKey = !fileButtonKey; // Toggle key to force re-creation
-
-
+    // Store the user input before clearing it
+    const inputText = userInput;
+    
+    // Construct finalContent BEFORE clearing userInput
     const finalContent = fileContents.length > 0 
-      ? `${userInput}\n\nFile Contents (${uploadedFiles.map(f => f.endsWith('.pdf') ? 'PDF' : 'Text').join(', ')}):\n${fileContents.join('\n\n---\n\n')}`
-      : userInput;
+      ? `${inputText}\n\nFile Contents (${uploadedFiles.map(f => f.endsWith('.pdf') ? 'PDF' : 'Text').join(', ')}):\n${fileContents.join('\n\n---\n\n')}`
+      : inputText;
+    
+    // Now clear the input fields
+    userInput = ""; 
+    uploadedFiles = []; 
+    fileContents = []; 
+    fileButtonKey = !fileButtonKey; 
      
-      
-       
-
     await sendMessage(finalContent, enhancedPrompt);
     
-   
-    
-
-  
   } catch (error) {
     console.error('Chat submission error:', error);
   }
 }
+
+ 
 
 
   function handleKeydown(event: KeyboardEvent) {
