@@ -41,14 +41,14 @@
     - [Too many prompts](#too-many-prompts)
   - [Installation](#installation)
     - [Get Latest Release Binaries](#get-latest-release-binaries)
-      - [Windows:](#windows)
-      - [macOS (arm64):](#macos-arm64)
-      - [macOS (amd64):](#macos-amd64)
-      - [Linux (amd64):](#linux-amd64)
-      - [Linux (arm64):](#linux-arm64)
+      - [Windows](#windows)
+      - [macOS (arm64)](#macos-arm64)
+      - [macOS (amd64)](#macos-amd64)
+      - [Linux (amd64)](#linux-amd64)
+      - [Linux (arm64)](#linux-arm64)
     - [Using package managers](#using-package-managers)
-      - [macOS (Homebrew):](#macos-homebrew)
-      - [Arch Linux (AUR):](#arch-linux-aur)
+      - [macOS (Homebrew)](#macos-homebrew)
+      - [Arch Linux (AUR)](#arch-linux-aur)
     - [From Source](#from-source)
     - [Environment Variables](#environment-variables)
     - [Setup](#setup)
@@ -69,6 +69,7 @@
   - [Web Interface](#web-interface)
     - [Installing](#installing)
     - [Streamlit UI](#streamlit-ui)
+      - [Clipboard Support](#clipboard-support)
   - [Meta](#meta)
     - [Primary contributors](#primary-contributors)
 
@@ -93,7 +94,7 @@ Fabric was created to address this by enabling everyone to granularly apply AI t
 
 ## Intro videos
 
-Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#Installation) below.
+Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#installation) below.
 
 - [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
 - [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
@@ -116,7 +117,7 @@ Our approach is to break problems into individual pieces (see below) and then ap
 
 Prompts are good for this, but the biggest challenge I faced in 2023——which still exists today—is **the sheer number of AI prompts out there**. We all have prompts that are useful, but it's hard to discover new ones, know if they are good or not, _and manage different versions of the ones we like_.
 
-One of <code>fabric</code>'s primary features is helping people collect and integrate prompts, which we call _Patterns_, into various parts of their lives.
+One of `fabric`'s primary features is helping people collect and integrate prompts, which we call _Patterns_, into various parts of their lives.
 
 Fabric has Patterns for all sorts of life and work activities, including:
 
@@ -137,29 +138,41 @@ To install Fabric, you can use the latest release binaries or install it from th
 
 ### Get Latest Release Binaries
 
-#### Windows:
+#### Windows
+
 `https://github.com/danielmiessler/fabric/releases/latest/download/fabric-windows-amd64.exe`
 
-#### macOS (arm64):
+#### macOS (arm64)
+
 `curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 > fabric && chmod +x fabric && ./fabric --version`
 
-#### macOS (amd64):
+#### macOS (amd64)
+
 `curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 > fabric && chmod +x fabric && ./fabric --version`
 
-#### Linux (amd64):
+#### Linux (amd64)
+
 `curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 > fabric && chmod +x fabric && ./fabric --version`
 
-#### Linux (arm64):
+#### Linux (arm64)
+
 `curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-arm64 > fabric && chmod +x fabric && ./fabric --version`
 
 ### Using package managers
 
-**NOTE:** using methods below Fabric will be available as `fabric-ai`, so adjust your scripts / aliases accordingly:
+**NOTE:** using Homebrew or the Arch Linux package managers makes `fabric` available as `fabric-ai`, so add
+the following alias to your shell startup files to account for this:
 
-#### macOS (Homebrew):
+```bash
+alias fabric='fabric-ai'
+```
+
+#### macOS (Homebrew)
+
 `brew install fabric-ai`
 
-#### Arch Linux (AUR):
+#### Arch Linux (AUR)
+
 `yay -S fabric-ai`
 
 ### From Source
@@ -330,7 +343,7 @@ This also creates a `yt` alias that allows you to use `yt https://www.youtube.co
 
 #### Save your files in markdown using aliases
 
-If in addition to the above aliases you would like to have the option to save the output to your favourite markdown note vault like Obsidian then instead of the above add the following to your `.zshrc` or `.bashrc` file:
+If in addition to the above aliases you would like to have the option to save the output to your favorite markdown note vault like Obsidian then instead of the above add the following to your `.zshrc` or `.bashrc` file:
 
 ```bash
 # Define the base directory for Obsidian notes
@@ -341,7 +354,7 @@ for pattern_file in ~/.config/fabric/patterns/*; do
     # Get the base name of the file (i.e., remove the directory path)
     pattern_name=$(basename "$pattern_file")
 
-    # Unalias any existing alias with the same name
+    # Remove any existing alias with the same name
     unalias "$pattern_name" 2>/dev/null
 
     # Define a function dynamically for each pattern
@@ -383,7 +396,7 @@ go install github.com/danielmiessler/fabric@latest
 fabric --setup
 ```
 
-Then [set your environmental variables](#environmental-variables) as shown above.
+Then [set your environmental variables](#environment-variables) as shown above.
 
 ### Upgrading
 
@@ -490,31 +503,29 @@ Now let's look at some things you can do with Fabric.
 
 1. Run the `summarize` Pattern based on input from `stdin`. In this case, the body of an article.
 
-```bash
-pbpaste | fabric --pattern summarize
-```
+    ```bash
+    pbpaste | fabric --pattern summarize
+    ```
 
 2. Run the `analyze_claims` Pattern with the `--stream` option to get immediate and streaming results.
 
-```bash
-pbpaste | fabric --stream --pattern analyze_claims
-```
+    ```bash
+    pbpaste | fabric --stream --pattern analyze_claims
+    ```
 
-3. Run the `extract_wisdom` Pattern with the `--stream` option to get immediate and streaming results from any Youtube video (much like in the original introduction video).
+3. Run the `extract_wisdom` Pattern with the `--stream` option to get immediate and streaming results from any      Youtube video (much like in the original introduction video).
 
-```bash
-fabric -y "https://youtube.com/watch?v=uXs-zPc63kM" --stream --pattern extract_wisdom
-```
-
+    ```bash
+    fabric -y "https://youtube.com/watch?v=uXs-zPc63kM" --stream --pattern extract_wisdom
+    ```
 
 4. Create patterns- you must create a .md file with the pattern and save it to `~/.config/fabric/patterns/[yourpatternname]`.
 
-
 5. Run a `analyze_claims` pattern on a website. Fabric uses Jina AI to scrape the URL into markdown format before sending it to the model.
 
-```bash
-fabric -u https://github.com/danielmiessler/fabric/ -p analyze_claims
-```
+    ```bash
+    fabric -u https://github.com/danielmiessler/fabric/ -p analyze_claims
+    ```
 
 ## Just use the Patterns
 
@@ -552,14 +563,9 @@ You may want to use Fabric to create your own custom Patterns—but not share th
 
 Just make a directory in `~/.config/custompatterns/` (or wherever) and put your `.md` files in there.
 
-When you're ready to use them, copy them into:
-
-```
-~/.config/fabric/patterns/
-```
+When you're ready to use them, copy them into `~/.config/fabric/patterns/`
 
 You can then use them like any other Patterns, but they won't be public unless you explicitly submit them as Pull Requests to the Fabric project. So don't worry—they're private to you.
-
 
 ## Helper Apps
 
