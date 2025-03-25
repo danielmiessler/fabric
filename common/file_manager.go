@@ -56,11 +56,23 @@ func ParseFileChanges(output string) ([]FileChange, error) {
 		return nil, fmt.Errorf("invalid FILE_CHANGES format: unbalanced brackets")
 	}
 
+	// Extract the JSON string and fix escape sequences
+	jsonStr := output[jsonStart:jsonEnd]
+
+	// Fix specific invalid escape sequences
+	// First try with the common \C issue
+	jsonStr = strings.Replace(jsonStr, `\C`, `\\C`, -1)
+
 	// Parse the JSON
 	var fileChanges []FileChange
-	err := json.Unmarshal([]byte(output[jsonStart:jsonEnd]), &fileChanges)
+	err := json.Unmarshal([]byte(jsonStr), &fileChanges)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse FILE_CHANGES JSON: %w", err)
+		// If still failing, try a more comprehensive fix
+		jsonStr = fixInvalidEscapes(jsonStr)
+		err = json.Unmarshal([]byte(jsonStr), &fileChanges)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse FILE_CHANGES JSON: %w", err)
+		}
 	}
 
 	// Validate file changes
@@ -87,6 +99,50 @@ func ParseFileChanges(output string) ([]FileChange, error) {
 	}
 
 	return fileChanges, nil
+}
+
+// fixInvalidEscapes replaces invalid escape sequences in JSON strings
+func fixInvalidEscapes(jsonStr string) string {
+	validEscapes := []byte{'b', 'f', 'n', 'r', 't', '\\', '/', '"', 'u'}
+
+	var result strings.Builder
+	inQuotes := false
+	i := 0
+
+	for i < len(jsonStr) {
+		ch := jsonStr[i]
+
+		// Track whether we're inside a JSON string
+		if ch == '"' && (i == 0 || jsonStr[i-1] != '\\') {
+			inQuotes = !inQuotes
+		}
+
+		// Check for escape sequences only inside strings
+		if inQuotes && ch == '\\' && i+1 < len(jsonStr) {
+			nextChar := jsonStr[i+1]
+			isValid := false
+
+			for _, validEscape := range validEscapes {
+				if nextChar == validEscape {
+					isValid = true
+					break
+				}
+			}
+
+			if !isValid {
+				// Invalid escape sequence - add an extra backslash
+				result.WriteByte('\\')
+				result.WriteByte('\\')
+				i++
+				continue
+			}
+		}
+
+		result.WriteByte(ch)
+		i++
+	}
+
+	return result.String()
 }
 
 // ApplyFileChanges applies the parsed file changes to the file system
