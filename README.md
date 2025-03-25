@@ -134,7 +134,7 @@ Fabric has Patterns for all sorts of life and work activities, including:
 
 ## Installation
 
-To install Fabric, you can use the latest release binaries or install it from the source.
+To install Fabric, you can use the latest release binaries or install it from the source. Simply go to your desired folder directory in the terminal and run the command associated with the apporpriate operating system. 
 
 ### Get Latest Release Binaries
 
@@ -214,7 +214,7 @@ Now run the following command
 
 ```bash
 # Run the setup to set up your directories and keys
-fabric --setup
+./fabric --setup
 ```
 
 If everything works you are good to go.
