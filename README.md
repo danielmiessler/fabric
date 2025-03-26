@@ -65,7 +65,7 @@
   - [Helper Apps](#helper-apps)
     - [`to_pdf`](#to_pdf)
     - [`to_pdf` Installation](#to_pdf-installation)
-    - [`fabric_code`](#fabric_code)
+    - [`code_helper`](#code_helper)
   - [pbpaste](#pbpaste)
   - [Web Interface](#web-interface)
     - [Installing](#installing)
@@ -600,9 +600,9 @@ go install github.com/danielmiessler/fabric/plugins/tools/to_pdf@latest
 
 Make sure you have a LaTeX distribution (like TeX Live or MiKTeX) installed on your system, as `to_pdf` requires `pdflatex` to be available in your system's PATH.
 
-### `fabric_code`
+### `code_helper`
 
-`fabric_code` is used in conjunction with the `create_coding_feature` pattern.
+`code_helper` is used in conjunction with the `create_coding_feature` pattern.
 It generates a `json` representation of a directory of code that can be fed into an AI model
 with instructions to create a new feature or edit the code in a specified way.
 
@@ -611,7 +611,7 @@ See [the Create Coding Feature Pattern README](./patterns/create_coding_feature/
 Install it first using:
 
 ```bash
-go install github.com/danielmiessler/fabric/plugins/tools/fabric_code@latest
+go install github.com/danielmiessler/fabric/plugins/tools/code_helper@latest
 ```
 
 ## pbpaste

@@ -67,20 +67,20 @@ func ParseIgnorePatterns(patterns string) []string {
 }
 
 func printUsage() {
-	fmt.Println(`fabric_code - Code project scanner for use with Fabric AI
+	fmt.Println(`code_helper - Code project scanner for use with Fabric AI
 
 Usage:
-  fabric_code [options] <directory> [instructions]
+  code_helper [options] <directory> [instructions]
 
 Examples:
   # Scan current directory with instructions
-  fabric_code . "Add input validation to all user inputs"
+  code_helper . "Add input validation to all user inputs"
 
   # Scan specific directory with depth limit
-  fabric_code -depth 4 ./my-project "Implement error handling"
+  code_helper -depth 4 ./my-project "Implement error handling"
 
   # Output to file instead of stdout
-  fabric_code -out project.json ./src "Fix security issues"
+  code_helper -out project.json ./src "Fix security issues"
 
 Options:`)
 	flag.PrintDefaults()
