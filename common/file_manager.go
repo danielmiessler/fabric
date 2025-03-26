@@ -120,6 +120,29 @@ func fixInvalidEscapes(jsonStr string) string {
 			inQuotes = !inQuotes
 		}
 
+		// Handle actual control characters inside string literals
+		if inQuotes {
+			// Convert literal control characters to proper JSON escape sequences
+			if ch == '\n' {
+				result.WriteString("\\n")
+				i++
+				continue
+			} else if ch == '\r' {
+				result.WriteString("\\r")
+				i++
+				continue
+			} else if ch == '\t' {
+				result.WriteString("\\t")
+				i++
+				continue
+			} else if ch < 32 {
+				// Handle other control characters
+				fmt.Fprintf(&result, "\\u%04x", ch)
+				i++
+				continue
+			}
+		}
+
 		// Check for escape sequences only inside strings
 		if inQuotes && ch == '\\' && i+1 < len(jsonStr) {
 			nextChar := jsonStr[i+1]
