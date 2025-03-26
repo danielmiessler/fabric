@@ -58,7 +58,7 @@ You have access to a powerful file management system with the following capabili
 - It is **not possible** to delete files
 
 ```plaintext
-FILE_CHANGES:
+__CREATE_CODING_FEATURE_FILE_CHANGES__
 [
     {
         "operation": "create",
@@ -97,9 +97,9 @@ FILE_CHANGES:
 ## Output Sections
 
 - Output a summary of the file changes
-- Output directory and file changes according to File Management Interface Instructions, in a section called `FILE_CHANGES:`
-- Be exact in the `FILE_CHANGES:` section, and do not deviate from the proposed JSON format.
-- **never** omit the `FILE_CHANGES:` section.
+- Output directory and file changes according to File Management Interface Instructions, in a json array marked by `__CREATE_CODING_FEATURE_FILE_CHANGES__`
+- Be exact in the `__CREATE_CODING_FEATURE_FILE_CHANGES__` section, and do not deviate from the proposed JSON format.
+- **never** omit the `__CREATE_CODING_FEATURE_FILE_CHANGES__` section.
 - If the proposed changes change how the project is built and installed, document these changes in the projects README.md
 - Implement build configurations changes if needed, prefer ninja if nothing already exists in the project, or is otherwise specified.
 - Document new dependencies according to best practices for the language used in the project.

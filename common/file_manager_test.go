@@ -14,46 +14,46 @@ func TestParseFileChanges(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "No FILE_CHANGES section",
+			name:    "No " + FileChangesMarker + " section",
 			input:   "This is a normal response with no file changes.",
 			want:    0,
 			wantErr: false,
 		},
 		{
-			name: "Valid FILE_CHANGES section",
+			name: "Valid " + FileChangesMarker + " section",
 			input: `Some text before.
-FILE_CHANGES:
+` + FileChangesMarker + `
 [
-    {
-        "operation": "create",
-        "path": "test.txt",
-        "content": "Hello, World!"
-    },
-    {
-        "operation": "update",
-        "path": "other.txt",
-        "content": "Updated content"
-    }
+	{
+		"operation": "create",
+		"path": "test.txt",
+		"content": "Hello, World!"
+	},
+	{
+		"operation": "update",
+		"path": "other.txt",
+		"content": "Updated content"
+	}
 ]
 Some text after.`,
 			want:    2,
 			wantErr: false,
 		},
 		{
-			name: "Invalid JSON in FILE_CHANGES",
+			name: "Invalid JSON in " + FileChangesMarker + " section",
 			input: `Some text before.
-FILE_CHANGES:
+` + FileChangesMarker + `
 [
-    {
-        "operation": "create",
-        "path": "test.txt",
-        "content": "Hello, World!"
-    },
-    {
-        "operation": "invalid",
-        "path": "other.txt"
-        "content": "Updated content"
-    }
+	{
+		"operation": "create",
+		"path": "test.txt",
+		"content": "Hello, World!"
+	},
+	{
+		"operation": "invalid",
+		"path": "other.txt"
+		"content": "Updated content"
+	}
 ]`,
 			want:    0,
 			wantErr: true,
@@ -61,13 +61,13 @@ FILE_CHANGES:
 		{
 			name: "Invalid operation",
 			input: `Some text before.
-FILE_CHANGES:
+` + FileChangesMarker + `
 [
-    {
-        "operation": "delete",
-        "path": "test.txt",
-        "content": ""
-    }
+	{
+		"operation": "delete",
+		"path": "test.txt",
+		"content": ""
+	}
 ]`,
 			want:    0,
 			wantErr: true,
@@ -75,13 +75,13 @@ FILE_CHANGES:
 		{
 			name: "Empty path",
 			input: `Some text before.
-FILE_CHANGES:
+` + FileChangesMarker + `
 [
-    {
-        "operation": "create",
-        "path": "",
-        "content": "Hello, World!"
-    }
+	{
+		"operation": "create",
+		"path": "",
+		"content": "Hello, World!"
+	}
 ]`,
 			want:    0,
 			wantErr: true,
@@ -89,13 +89,13 @@ FILE_CHANGES:
 		{
 			name: "Suspicious path with directory traversal",
 			input: `Some text before.
-FILE_CHANGES:
+` + FileChangesMarker + `
 [
-    {
-        "operation": "create",
-        "path": "../etc/passwd",
-        "content": "Hello, World!"
-    }
+	{
+		"operation": "create",
+		"path": "../etc/passwd",
+		"content": "Hello, World!"
+	}
 ]`,
 			want:    0,
 			wantErr: true,

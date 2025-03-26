@@ -8,6 +8,9 @@ import (
 	"strings"
 )
 
+// FileChangesMarker identifies the start of a file changes section in output
+const FileChangesMarker = "__CREATE_CODING_FEATURE_FILE_CHANGES__"
+
 const (
 	// MaxFileSize is the maximum size of a file that can be created (10MB)
 	MaxFileSize = 10 * 1024 * 1024
@@ -20,20 +23,19 @@ type FileChange struct {
 	Content   string `json:"content"`   // New file content
 }
 
-// ParseFileChanges extracts and parses the FILE_CHANGES section from LLM output
+// ParseFileChanges extracts and parses the file change marker section from LLM output
 func ParseFileChanges(output string) ([]FileChange, error) {
-	// Find the FILE_CHANGES: section marker
-	fileChangesStart := strings.Index(output, "FILE_CHANGES:")
+	fileChangesStart := strings.Index(output, FileChangesMarker)
 	if fileChangesStart == -1 {
 		return nil, nil // No file changes section found
 	}
 
 	// Extract the JSON part
-	jsonStart := fileChangesStart + len("FILE_CHANGES:")
-	// Find the first [ after the FILE_CHANGES: marker
+	jsonStart := fileChangesStart + len(FileChangesMarker)
+	// Find the first [ after the file changes marker
 	jsonArrayStart := strings.Index(output[jsonStart:], "[")
 	if jsonArrayStart == -1 {
-		return nil, fmt.Errorf("invalid FILE_CHANGES format: no JSON array found")
+		return nil, fmt.Errorf("invalid %s format: no JSON array found", FileChangesMarker)
 	}
 	jsonStart += jsonArrayStart
 
@@ -53,7 +55,7 @@ func ParseFileChanges(output string) ([]FileChange, error) {
 	}
 
 	if bracketCount != 0 {
-		return nil, fmt.Errorf("invalid FILE_CHANGES format: unbalanced brackets")
+		return nil, fmt.Errorf("invalid %s format: unbalanced brackets", FileChangesMarker)
 	}
 
 	// Extract the JSON string and fix escape sequences
@@ -71,7 +73,7 @@ func ParseFileChanges(output string) ([]FileChange, error) {
 		jsonStr = fixInvalidEscapes(jsonStr)
 		err = json.Unmarshal([]byte(jsonStr), &fileChanges)
 		if err != nil {
-			return nil, fmt.Errorf("failed to parse FILE_CHANGES JSON: %w", err)
+			return nil, fmt.Errorf("failed to parse %s JSON: %w", FileChangesMarker, err)
 		}
 	}
 
