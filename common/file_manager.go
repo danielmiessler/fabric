@@ -24,18 +24,19 @@ type FileChange struct {
 }
 
 // ParseFileChanges extracts and parses the file change marker section from LLM output
-func ParseFileChanges(output string) ([]FileChange, error) {
+func ParseFileChanges(output string) (changeSummary string, changes []FileChange, err error) {
 	fileChangesStart := strings.Index(output, FileChangesMarker)
 	if fileChangesStart == -1 {
-		return nil, nil // No file changes section found
+		return output, nil, nil // No file changes section found
 	}
+	changeSummary = output[:fileChangesStart] // Everything before the marker
 
 	// Extract the JSON part
 	jsonStart := fileChangesStart + len(FileChangesMarker)
 	// Find the first [ after the file changes marker
 	jsonArrayStart := strings.Index(output[jsonStart:], "[")
 	if jsonArrayStart == -1 {
-		return nil, fmt.Errorf("invalid %s format: no JSON array found", FileChangesMarker)
+		return output, nil, fmt.Errorf("invalid %s format: no JSON array found", FileChangesMarker)
 	}
 	jsonStart += jsonArrayStart
 
@@ -55,7 +56,7 @@ func ParseFileChanges(output string) ([]FileChange, error) {
 	}
 
 	if bracketCount != 0 {
-		return nil, fmt.Errorf("invalid %s format: unbalanced brackets", FileChangesMarker)
+		return output, nil, fmt.Errorf("invalid %s format: unbalanced brackets", FileChangesMarker)
 	}
 
 	// Extract the JSON string and fix escape sequences
@@ -67,13 +68,13 @@ func ParseFileChanges(output string) ([]FileChange, error) {
 
 	// Parse the JSON
 	var fileChanges []FileChange
-	err := json.Unmarshal([]byte(jsonStr), &fileChanges)
+	err = json.Unmarshal([]byte(jsonStr), &fileChanges)
 	if err != nil {
 		// If still failing, try a more comprehensive fix
 		jsonStr = fixInvalidEscapes(jsonStr)
 		err = json.Unmarshal([]byte(jsonStr), &fileChanges)
 		if err != nil {
-			return nil, fmt.Errorf("failed to parse %s JSON: %w", FileChangesMarker, err)
+			return changeSummary, nil, fmt.Errorf("failed to parse %s JSON: %w", FileChangesMarker, err)
 		}
 	}
 
@@ -81,26 +82,26 @@ func ParseFileChanges(output string) ([]FileChange, error) {
 	for i, change := range fileChanges {
 		// Validate operation
 		if change.Operation != "create" && change.Operation != "update" {
-			return nil, fmt.Errorf("invalid operation for file change %d: %s", i, change.Operation)
+			return changeSummary, nil, fmt.Errorf("invalid operation for file change %d: %s", i, change.Operation)
 		}
 
 		// Validate path
 		if change.Path == "" {
-			return nil, fmt.Errorf("empty path for file change %d", i)
+			return changeSummary, nil, fmt.Errorf("empty path for file change %d", i)
 		}
 
 		// Check for suspicious paths (directory traversal)
 		if strings.Contains(change.Path, "..") {
-			return nil, fmt.Errorf("suspicious path for file change %d: %s", i, change.Path)
+			return changeSummary, nil, fmt.Errorf("suspicious path for file change %d: %s", i, change.Path)
 		}
 
 		// Check file size
 		if len(change.Content) > MaxFileSize {
-			return nil, fmt.Errorf("file content too large for file change %d: %d bytes", i, len(change.Content))
+			return changeSummary, nil, fmt.Errorf("file content too large for file change %d: %d bytes", i, len(change.Content))
 		}
 	}
 
-	return fileChanges, nil
+	return changeSummary, fileChanges, nil
 }
 
 // fixInvalidEscapes replaces invalid escape sequences in JSON strings

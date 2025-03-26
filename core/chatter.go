@@ -85,17 +85,10 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	// Process file changes if using the create_coding_feature pattern
 	if request.PatternName == "create_coding_feature" {
 		// Look for file changes in the response
-		fileChanges, parseErr := common.ParseFileChanges(message)
+		summary, fileChanges, parseErr := common.ParseFileChanges(message)
 		if parseErr != nil {
 			fmt.Printf("Warning: Failed to parse file changes: %v\n", parseErr)
 		} else if len(fileChanges) > 0 {
-			// User confirmation
-			fmt.Println("\n--------------------------------------------")
-			fmt.Println("The AI has suggested the following file changes:")
-			for _, change := range fileChanges {
-				fmt.Printf("- %s: %s\n", change.Operation, change.Path)
-			}
-
 			// Get the project root - use the current directory
 			projectRoot, err := os.Getwd()
 			if err != nil {
@@ -106,11 +99,11 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 					fmt.Printf("Warning: Failed to apply file changes: %v\n", applyErr)
 				} else {
 					fmt.Println("Successfully applied file changes.")
-					fmt.Println("You can review the changes with 'git diff' if you're using git.")
+					fmt.Printf("You can review the changes with 'git diff' if you're using git.\n\n")
 				}
 			}
-			fmt.Println("--------------------------------------------")
 		}
+		message = summary
 	}
 
 	session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleAssistant, Content: message})
