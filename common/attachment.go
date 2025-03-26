@@ -6,7 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -29,7 +29,7 @@ func (a *Attachment) GetId() (ret string, err error) {
 			hash = fmt.Sprintf("%x", sha256.Sum256(a.Content))
 		} else if a.Path != nil {
 			var content []byte
-			if content, err = ioutil.ReadFile(*a.Path); err != nil {
+			if content, err = os.ReadFile(*a.Path); err != nil {
 				return
 			}
 			hash = fmt.Sprintf("%x", sha256.Sum256(content))
@@ -83,7 +83,7 @@ func (a *Attachment) ContentBytes() (ret []byte, err error) {
 		return
 	}
 	if a.Path != nil {
-		if ret, err = ioutil.ReadFile(*a.Path); err != nil {
+		if ret, err = os.ReadFile(*a.Path); err != nil {
 			return
 		}
 		return
@@ -94,7 +94,7 @@ func (a *Attachment) ContentBytes() (ret []byte, err error) {
 			return
 		}
 		defer resp.Body.Close()
-		if ret, err = ioutil.ReadAll(resp.Body); err != nil {
+		if ret, err = io.ReadAll(resp.Body); err != nil {
 			return
 		}
 		return
