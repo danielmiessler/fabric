@@ -15,7 +15,7 @@
 </p>
 
 [Updates](#updates) •
-[What and Why](#whatandwhy) •
+[What and Why](#what-and-why) •
 [Philosophy](#philosophy) •
 [Installation](#Installation) •
 [Usage](#Usage) •
