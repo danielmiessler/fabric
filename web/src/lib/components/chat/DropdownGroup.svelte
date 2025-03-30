@@ -12,7 +12,8 @@
     { code: 'es', name: 'Spanish' },
     { code: 'de', name: 'German' },
     { code: 'zh', name: 'Chinese' },
-    { code: 'ja', name: 'Japanese' }
+    { code: 'ja', name: 'Japanese' },
+    { code: 'it', name: 'Italian' }
   ];
 </script>
 
