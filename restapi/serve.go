@@ -13,7 +13,7 @@ func Serve(registry *core.PluginRegistry, address string, apiKey string) (err er
 	r.Use(gin.Recovery())
 
 	if apiKey != "" {
-	    r.Use(ApiKeyMiddleware(apiKey))
+		r.Use(ApiKeyMiddleware(apiKey))
 	}
 
 	// Register routes
