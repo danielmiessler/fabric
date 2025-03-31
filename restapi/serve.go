@@ -5,12 +5,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Serve(registry *core.PluginRegistry, address string) (err error) {
+func Serve(registry *core.PluginRegistry, address string, apiKey string) (err error) {
 	r := gin.New()
 
 	// Middleware
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+
+	if apiKey != "" {
+	    r.Use(ApiKeyMiddleware(apiKey))
+	}
 
 	// Register routes
 	fabricDb := registry.Db
