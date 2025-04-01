@@ -1,6 +1,8 @@
 package restapi
 
 import (
+	"log/slog"
+
 	"github.com/danielmiessler/fabric/core"
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +15,9 @@ func Serve(registry *core.PluginRegistry, address string, apiKey string) (err er
 	r.Use(gin.Recovery())
 
 	if apiKey != "" {
-		r.Use(ApiKeyMiddleware(apiKey))
+		r.Use(APIKeyMiddleware(apiKey))
+	} else {
+		slog.Warn("Starting REST API server without API key authentication. This may pose security risks.")
 	}
 
 	// Register routes

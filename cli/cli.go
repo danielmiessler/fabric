@@ -57,7 +57,7 @@ func Cli(version string) (err error) {
 
 	if currentFlags.Serve {
 		registry.ConfigureVendors()
-		err = restapi.Serve(registry, currentFlags.ServeAddress, currentFlags.ServeApiKey)
+		err = restapi.Serve(registry, currentFlags.ServeAddress, currentFlags.ServeAPIKey)
 		return
 	}
 
