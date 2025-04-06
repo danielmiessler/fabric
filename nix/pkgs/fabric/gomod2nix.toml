@@ -242,8 +242,8 @@ schema = 3
     version = "v0.35.0"
     hash = "sha256-XT1VU0+m1nZbhrMYXN2+eaKBlScfiT4bCBgXu4mfa1Q="
   [mod."golang.org/x/net"]
-    version = "v0.35.0"
-    hash = "sha256-kCLhhvzHQCvUqC8kGhgMbVLUROG4ZeZNVGOVVv6tSAE="
+    version = "v0.36.0"
+    hash = "sha256-2c9AvnizBMCaqKPzwF2IMlRfvjRNDFmxIYhrgZjhOm0="
   [mod."golang.org/x/oauth2"]
     version = "v0.27.0"
     hash = "sha256-TBKV2c/m0SgPqrJSE0ltJXfImrYPafNuziLN25jgsYY="
@@ -253,9 +253,6 @@ schema = 3
   [mod."golang.org/x/sys"]
     version = "v0.30.0"
     hash = "sha256-BuhWtwDkciVioc03rxty6G2vcZVnPX85lI7tgQOFVP8="
-  [mod."golang.org/x/term"]
-    version = "v0.29.0"
-    hash = "sha256-aIupP/iNJKzHPUt0F7SaXc3u17h8plEPyQeypO7ilW8="
   [mod."golang.org/x/text"]
     version = "v0.22.0"
     hash = "sha256-kUwLNFk9K/YuWmO5/u2IshrmhT2CCuk+mAShSlTTeZo="

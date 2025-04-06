@@ -175,7 +175,7 @@ END OUTPUT EXAMPLE
 
 - You use bulleted lists for output, not numbered lists.
 
-- Do not repeat ideas, quotes, facts, or resources.
+- Do not repeat insights.
 
 - Do not start items with the same opening words.
 

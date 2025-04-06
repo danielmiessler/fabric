@@ -18,7 +18,6 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Only output Markdown.
 - Do not give warnings or notes; only output the requested sections.
-- Do not repeat ideas, quotes, facts, or resources.
 - Do not start items with the same opening words.
 - Ensure you follow ALL these instructions when creating your output.
 

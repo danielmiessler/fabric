@@ -57,7 +57,7 @@ func Cli(version string) (err error) {
 
 	if currentFlags.Serve {
 		registry.ConfigureVendors()
-		err = restapi.Serve(registry, currentFlags.ServeAddress)
+		err = restapi.Serve(registry, currentFlags.ServeAddress, currentFlags.ServeAPIKey)
 		return
 	}
 
@@ -73,7 +73,10 @@ func Cli(version string) (err error) {
 	}
 
 	if currentFlags.ChangeDefaultModel {
-		err = registry.Defaults.Setup()
+		if err = registry.Defaults.Setup(); err != nil {
+			return
+		}
+		err = registry.SaveEnvFile()
 		return
 	}
 

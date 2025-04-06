@@ -1,6 +1,7 @@
 <script lang="ts">
   import Patterns from "./Patterns.svelte";
   import Models from "./Models.svelte";
+  import ModelConfig from "./ModelConfig.svelte";
   import { Select } from "$lib/components/ui/select";
   import { languageStore } from '$lib/store/language-store';
 
@@ -11,25 +12,34 @@
     { code: 'es', name: 'Spanish' },
     { code: 'de', name: 'German' },
     { code: 'zh', name: 'Chinese' },
-    { code: 'ja', name: 'Japanese' }
+    { code: 'ja', name: 'Japanese' },
+    { code: 'it', name: 'Italian' }
   ];
 </script>
 
-<div class="flex flex-col gap-3">
-  <div class="w-[50%]">
-    <Patterns />
+<div class="flex gap-4">
+  <!-- Left side - Dropdowns -->
+  <div class="w-[35%] flex flex-col gap-3">
+    <div>
+      <Patterns />
+    </div>
+    <div>
+      <Models />
+    </div>
+    <div>
+      <Select 
+        bind:value={$languageStore}
+        class="bg-primary-800/30 border-none hover:bg-primary-800/40 transition-colors"
+      >
+        {#each languages as lang}
+          <option value={lang.code}>{lang.name}</option>
+        {/each}
+      </Select>
+    </div>
   </div>
-  <div class="w-[50%]">
-    <Models />
-  </div>
-  <div class="w-[50%]">
-    <Select 
-      bind:value={$languageStore}
-      class="bg-primary-800/30 border-none hover:bg-primary-800/40 transition-colors"
-    >
-      {#each languages as lang}
-        <option value={lang.code}>{lang.name}</option>
-      {/each}
-    </Select>
+  
+  <!-- Right side - Model Config -->
+  <div class="w-[65%]">
+    <ModelConfig />
   </div>
 </div>
