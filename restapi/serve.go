@@ -28,6 +28,7 @@ func Serve(registry *core.PluginRegistry, address string, apiKey string) (err er
 	NewChatHandler(r, registry, fabricDb)
 	NewConfigHandler(r, fabricDb)
 	NewModelsHandler(r, registry.VendorManager)
+	NewStrategiesHandler(r)
 
 	// Start server
 	err = r.Run(address)
