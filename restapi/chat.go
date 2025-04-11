@@ -3,8 +3,11 @@ package restapi
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 
 	goopenai "github.com/sashabaranov/go-openai"
@@ -21,11 +24,12 @@ type ChatHandler struct {
 }
 
 type PromptRequest struct {
-	UserInput   string `json:"userInput"`
-	Vendor      string `json:"vendor"`
-	Model       string `json:"model"`
-	ContextName string `json:"contextName"`
-	PatternName string `json:"patternName"`
+	UserInput    string `json:"userInput"`
+	Vendor       string `json:"vendor"`
+	Model        string `json:"model"`
+	ContextName  string `json:"contextName"`
+	PatternName  string `json:"patternName"`
+	StrategyName string `json:"strategyName"` // Optional strategy name
 }
 
 type ChatRequest struct {
@@ -80,12 +84,24 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 			log.Printf("Processing prompt %d: Model=%s Pattern=%s Context=%s",
 				i+1, prompt.Model, prompt.PatternName, prompt.ContextName)
 
-			// Create chat channel for streaming
 			streamChan := make(chan string)
 
-			// Start chat processing in goroutine
 			go func(p PromptRequest) {
 				defer close(streamChan)
+
+				// Load and prepend strategy prompt if strategyName is set
+				if p.StrategyName != "" {
+					strategyFile := filepath.Join(os.Getenv("HOME"), ".config", "fabric", "strategies", p.StrategyName+".json")
+					data, err := ioutil.ReadFile(strategyFile)
+					if err == nil {
+						var s struct {
+							Prompt string `json:"prompt"`
+						}
+						if err := json.Unmarshal(data, &s); err == nil && s.Prompt != "" {
+							p.UserInput = s.Prompt + "\n" + p.UserInput
+						}
+					}
+				}
 
 				chatter, err := h.registry.GetChatter(p.Model, 2048, "", false, false)
 				if err != nil {
@@ -124,7 +140,6 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 					return
 				}
 
-				// Get the last message from the session
 				lastMsg := session.GetLastMessage()
 				if lastMsg != nil {
 					streamChan <- lastMsg.Content
@@ -134,37 +149,32 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 				}
 			}(prompt)
 
-			// Read from streamChan and write to client
 			for content := range streamChan {
 				select {
 				case <-clientGone:
 					return
 				default:
+					var response StreamResponse
 					if strings.HasPrefix(content, "Error:") {
-						response := StreamResponse{
+						response = StreamResponse{
 							Type:    "error",
 							Format:  "plain",
 							Content: content,
 						}
-						if err := writeSSEResponse(c.Writer, response); err != nil {
-							log.Printf("Error writing error response: %v", err)
-							return
-						}
 					} else {
-						response := StreamResponse{
+						response = StreamResponse{
 							Type:    "content",
 							Format:  detectFormat(content),
 							Content: content,
 						}
-						if err := writeSSEResponse(c.Writer, response); err != nil {
-							log.Printf("Error writing content response: %v", err)
-							return
-						}
+					}
+					if err := writeSSEResponse(c.Writer, response); err != nil {
+						log.Printf("Error writing response: %v", err)
+						return
 					}
 				}
 			}
 
-			// Signal completion of this prompt
 			completeResponse := StreamResponse{
 				Type:    "complete",
 				Format:  "plain",
@@ -192,26 +202,6 @@ func writeSSEResponse(w gin.ResponseWriter, response StreamResponse) error {
 	return nil
 }
 
-/*
-	 func detectFormat(content string) string {
-		if strings.HasPrefix(content, "graph TD") ||
-			strings.HasPrefix(content, "gantt") ||
-			strings.HasPrefix(content, "flowchart") ||
-			strings.HasPrefix(content, "sequenceDiagram") ||
-			strings.HasPrefix(content, "classDiagram") ||
-			strings.HasPrefix(content, "stateDiagram") {
-			return "mermaid"
-		}
-		if strings.Contains(content, "```") ||
-			strings.Contains(content, "#") ||
-			strings.Contains(content, "*") ||
-			strings.Contains(content, "_") ||
-			strings.Contains(content, "-") {
-			return "markdown"
-		}
-		return "plain"
-	}
-*/
 func detectFormat(content string) string {
 	if strings.HasPrefix(content, "graph TD") ||
 		strings.HasPrefix(content, "gantt") ||

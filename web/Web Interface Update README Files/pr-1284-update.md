@@ -35,6 +35,11 @@ https://youtu.be/fcVitd4Kb98
 
 The tag filtering system has been deeply integrated into the Pattern Selection interface through several UI enhancements:
 
+### 5. Strategy flags
+- strategies are fetch from .config/fabric/strategies for server processing
+- for gui, they are fetched from static/strategies 
+
+
 1. **Dual-Position Tag Panel**
    - Sliding panel positioned to the right of pattern modal
    - Dynamic toggle button that adapts position and text based on panel state

@@ -10,6 +10,7 @@ import { systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
 import { chatConfig } from '$lib/store/chat-config';
 import { messageStore } from '$lib/store/chat-store';
 import { languageStore } from '$lib/store/language-store';
+import { selectedStrategy } from '$lib/store/strategy-store';
 
 class LanguageValidator {
   constructor(private targetLanguage: string) {}
@@ -179,7 +180,8 @@ export class ChatService {
         userInput: finalUserInput,
         systemPrompt: finalSystemPrompt,
         model: config.model,
-        patternName: get(selectedPatternName)
+        patternName: get(selectedPatternName),
+        strategyName: get(selectedStrategy) // Add selected strategy to prompt
     };
 }
 

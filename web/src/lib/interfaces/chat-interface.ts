@@ -6,7 +6,8 @@ export interface ChatPrompt {
   userInput: string;
   systemPrompt: string;
   model: string;
-  patternName: string;
+  patternName?: string;
+  strategyName?: string; // Optional strategy name to prepend strategy prompt
 }
 
 export interface ChatConfig {
