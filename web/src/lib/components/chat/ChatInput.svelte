@@ -305,10 +305,11 @@ async function readFileContent(file: File): Promise<string> {
     }
   }
 
+  // Centralized language instruction logic in ChatService.ts; YouTube flow now passes plain transcript and system prompt
   async function processYouTubeURL(input: string) {
       console.log('\n=== YouTube Flow Start ===');
       const originalLanguage = get(languageStore);
-    
+
       try {
           // Add processing message first
           messageStore.update(messages => [...messages, {
@@ -316,16 +317,11 @@ async function readFileContent(file: File): Promise<string> {
               content: 'Processing YouTube video...',
               format: 'loading'
           }]);
-        
+
           // Get transcript but don't display it
           const { transcript } = await getTranscript(input);
-        
-          // Log system prompt BEFORE createChatRequest
-          console.log('System prompt BEFORE createChatRequest in YouTube flow:', $systemPrompt);
 
-          // Log system prompt BEFORE streamChat
-          console.log(`System prompt BEFORE streamChat in YouTube flow: ${$systemPrompt}`);
-
+          // Pass plain transcript and system prompt; ChatService will handle language instruction
           const stream = await chatService.streamChat(transcript, $systemPrompt);
           await chatService.processStream(
               stream,

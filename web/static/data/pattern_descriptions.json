@@ -1695,6 +1695,56 @@
       "patternName": "extract_wisdom_short",
       "description": "[Description pending]",
       "tags": []
+    },
+    {
+      "patternName": "analyze_bill",
+      "description": "[Description pending]",
+      "tags": []
+    },
+    {
+      "patternName": "analyze_bill_short",
+      "description": "[Description pending]",
+      "tags": []
+    },
+    {
+      "patternName": "create_coding_feature",
+      "description": "[Description pending]",
+      "tags": []
+    },
+    {
+      "patternName": "create_excalidraw_visualization",
+      "description": "[Description pending]",
+      "tags": []
+    },
+    {
+      "patternName": "create_flash_cards",
+      "description": "[Description pending]",
+      "tags": []
+    },
+    {
+      "patternName": "create_loe_document",
+      "description": "[Description pending]",
+      "tags": []
+    },
+    {
+      "patternName": "extract_domains",
+      "description": "[Description pending]",
+      "tags": []
+    },
+    {
+      "patternName": "extract_main_activities",
+      "description": "[Description pending]",
+      "tags": []
+    },
+    {
+      "patternName": "find_female_life_partner",
+      "description": "[Description pending]",
+      "tags": []
+    },
+    {
+      "patternName": "youtube_summary",
+      "description": "[Description pending]",
+      "tags": []
     }
   ]
 }

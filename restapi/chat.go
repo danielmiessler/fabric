@@ -34,6 +34,7 @@ type PromptRequest struct {
 
 type ChatRequest struct {
 	Prompts            []PromptRequest `json:"prompts"`
+	Language           string          `json:"language"` // Add Language field to bind from request
 	common.ChatOptions                 // Embed the ChatOptions from common package
 }
 
@@ -64,7 +65,8 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 		return
 	}
 
-	log.Printf("Received chat request with %d prompts", len(request.Prompts))
+	// Add log to check received language field
+	log.Printf("Received chat request - Language: '%s', Prompts: %d", request.Language, len(request.Prompts))
 
 	// Set headers for SSE
 	c.Writer.Header().Set("Content-Type", "text/readystream")
@@ -110,6 +112,7 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 					return
 				}
 
+				// Pass the language received in the initial request to the common.ChatRequest
 				chatReq := &common.ChatRequest{
 					Message: &goopenai.ChatCompletionMessage{
 						Role:    "user",
@@ -117,6 +120,7 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 					},
 					PatternName: p.PatternName,
 					ContextName: p.ContextName,
+					Language:    request.Language, // Pass the language field
 				}
 
 				opts := &common.ChatOptions{
