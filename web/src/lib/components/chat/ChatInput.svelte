@@ -447,21 +447,16 @@ async function readFileContent(file: File): Promise<string> {
               newMessages.splice(loadingIndex, 1);
             }
             
-            // Add or update the assistant message
-            const assistantIndex = newMessages.findIndex(m => m.role === 'assistant');
-            if (assistantIndex !== -1) {
-              newMessages[assistantIndex].content = content;
-              newMessages[assistantIndex].format = response?.format;
-            } else {
-              newMessages.push({
-                role: 'assistant',
-                content,
-                format: response?.format
-              });
-            }
+            // Always append a new assistant message
+            newMessages.push({
+              role: 'assistant',
+              content,
+              format: response?.format
+            });
             return newMessages;
           });
         },
+
         (error) => {
           // Make sure to remove loading message on error
           messageStore.update(messages => 
