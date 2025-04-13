@@ -61,16 +61,16 @@ export const POST: RequestHandler = async ({ request }) => {
       language: body.language
     });
 
-    // Ensure language instruction is present
-    if (body.prompts?.[0] && body.language && body.language !== 'en') {
-      const languageInstruction = `. Please use the language '${body.language}' for the output.`;
-      if (!body.prompts[0].userInput?.includes(languageInstruction)) {
-        body.prompts[0].userInput = (body.prompts[0].userInput || '') + languageInstruction;
-      }
-    }
+    // Removed redundant language instruction logic; Go backend handles this
+    // if (body.prompts?.[0] && body.language && body.language !== 'en') {
+    //   const languageInstruction = `. Please use the language '${body.language}' for the output.`;
+    //   if (!body.prompts[0].userInput?.includes(languageInstruction)) {
+    //     body.prompts[0].userInput = (body.prompts[0].userInput || '') + languageInstruction;
+    //   }
+    // }
 
     console.log('2. Language analysis:', {
-      input: body.prompts?.[0]?.userInput?.substring(0, 100),
+      input: body.prompts?.[0]?.userInput?.substring(0, 100), // Note: This input no longer has the instruction appended here
       hasLanguageInstruction: body.prompts?.[0]?.userInput?.includes('language'),
       containsFr: body.prompts?.[0]?.userInput?.includes('fr'),
       containsEn: body.prompts?.[0]?.userInput?.includes('en'),

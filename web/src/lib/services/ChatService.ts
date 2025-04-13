@@ -48,6 +48,8 @@ export class ChatService {
         promptCount: request.prompts?.length,
         messageCount: request.messages?.length
       });
+      // NEW: Log the full payload before sending to backend
+      console.log('Final ChatRequest payload:', JSON.stringify(request, null, 2));
 
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -193,10 +195,12 @@ export class ChatService {
   public async createChatRequest(userInput: string, systemPromptText?: string, isPattern: boolean = false): Promise<ChatRequest> {
     const prompt = this.createChatPrompt(userInput, systemPromptText);
     const config = get(chatConfig);
-    
+    const language = get(languageStore);
+
     return {
       prompts: [prompt],
       messages: [],
+      language: language, // Add language at the top level for backend compatibility
       ...config
     };
   }

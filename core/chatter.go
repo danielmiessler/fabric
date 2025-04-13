@@ -185,8 +185,10 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		}
 	}
 
-	if request.Language != "" {
-		systemMessage = fmt.Sprintf("%s. Please use the language '%s' for the output.", systemMessage, request.Language)
+	// Apply refined language instruction if specified
+	if request.Language != "" && request.Language != "en" {
+		// Refined instruction: Execute pattern using user input, then translate the entire response.
+		systemMessage = fmt.Sprintf("%s\n\nIMPORTANT: First, execute the instructions provided in this prompt using the user's input. Second, ensure your entire final response, including any section headers or titles generated as part of executing the instructions, is written ONLY in the %s language.", systemMessage, request.Language)
 	}
 
 	if raw {

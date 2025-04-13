@@ -1693,8 +1693,87 @@
     },
     {
       "patternName": "extract_wisdom_short",
+      "description": "Extract condensed  insightful ideas and recommendations focusing on life wisdom.",
+      "tags": [
+        "EXTRACT",
+        "WISDOM",
+        "SELF"
+      ]
+    },
+    {
+      "patternName": "analyze_bill",
+      "description": "Analyze a legislative bill and implications.",
+      "tags": [ 
+        "ANALYSIS",
+        "BILL"
+      ]
+    },
+    {
+      "patternName": "analyze_bill_short",
+      "description": "Consended - Analyze a legislative bill and implications.",
+      "tags": [ 
+        "ANALYSIS",
+        "BILL"
+      ]
+    },
+    {
+      "patternName": "create_coding_feature",
       "description": "[Description pending]",
-      "tags": []
+      "tags": [
+        "DEVELOPMENT"
+      ]
+    },
+    {
+      "patternName": "create_excalidraw_visualization",
+      "description": "Create visualizations using Excalidraw.",
+      "tags": [
+        "VISUALIZATION"
+      ]
+    },
+    {
+      "patternName": "create_flash_cards",
+      "description": "Generate flashcards for key concepts and definitions.",
+      "tags": [
+        "LEARNING"
+      ]
+    },
+    {
+      "patternName": "create_loe_document",
+      "description": "Create detailed Level of Effort (LOE) estimation documents.",
+      "tags": [
+        "DEVELOPMENT",
+        "BUSINESS"
+      ]
+    },
+    {
+      "patternName": "extract_domains",
+      "description": "Extract key content and source.",
+      "tags": [
+        "EXTRACT",
+        "ANALYSIS"
+      ]
+    },
+    {
+      "patternName": "extract_main_activities",
+      "description": "Extract and list main events from transcripts.",
+      "tags": [
+        "EXTRACT",
+        "ANALYSIS"
+      ]
+    },
+    {
+      "patternName": "find_female_life_partner",
+      "description": "Clarify and summarize partner criteria in direct language.",
+      "tags": [
+        "SELF"
+      ]
+    },
+    {
+      "patternName": "youtube_summary",
+      "description": "Summarize YouTube videos with key points and timestamps.",
+      "tags": [
+        "SUMMARIZE"
+      ]
     }
   ]
 }
