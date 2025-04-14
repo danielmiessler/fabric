@@ -1,5 +1,5 @@
 <div align="center">
-Project Sponsored by…
+Fabric is graciously supported by…
 
 [![Github Repo Tagline](https://github.com/user-attachments/assets/96ab3d81-9b13-4df4-ba09-75dee7a5c3d2)](https://warp.dev/fabric)
 
