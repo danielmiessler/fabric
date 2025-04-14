@@ -1,6 +1,7 @@
 <div align="center">
 
-[![Github Repo Image](https://github.com/user-attachments/assets/80ad33ee-8f72-4aab-a830-6289828b6c1e)
+[![Github Repo Image](![Github Repo Tagline](https://github.com/user-attachments/assets/485edb69-e26c-4de6-8c65-51e94866f430)
+)
 ](https://warp.dev/fabric)
 
 
