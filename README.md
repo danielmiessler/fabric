@@ -1,6 +1,7 @@
 <div align="center">
 
-![Uploading Github Repo Image.png…](https://warp.dev/fabric)
+[![Github Repo Image](https://github.com/user-attachments/assets/80ad33ee-8f72-4aab-a830-6289828b6c1e)
+](https://warp.dev/fabric)
 
 
 <img src="./images/fabric-logo-gif.gif" alt="fabriclogo" width="400" height="400"/>
