@@ -1,7 +1,7 @@
 <div align="center">
 
-![Github Repo Tagline](https://github.com/user-attachments/assets/485edb69-e26c-4de6-8c65-51e94866f430)
-(https://warp.dev/fabric)
+![Github Repo Tagline](https://warp.dev/fabric)
+
 
 
 <img src="./images/fabric-logo-gif.gif" alt="fabriclogo" width="400" height="400"/>
