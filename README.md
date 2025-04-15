@@ -716,6 +716,14 @@ The Streamlit UI supports clipboard operations across different platforms:
 <a href="https://github.com/sbehrens"><img src="https://avatars.githubusercontent.com/u/688589?v=4" title="Scott Behrens" width="50" height="50"></a>
 <a href="https://github.com/agu3rra"><img src="https://avatars.githubusercontent.com/u/10410523?v=4" title="Andre Guerra" width="50" height="50"></a>
 
+### Contributors
+
+<a href="https://github.com/danielmiessler/fabric/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=danielmiessler/fabric" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
+
 `fabric` was created by <a href="https://danielmiessler.com/subscribe" target="_blank">Daniel Miessler</a> in January of 2024.
 <br /><br />
 <a href="https://twitter.com/intent/user?screen_name=danielmiessler">![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/danielmiessler)</a>
