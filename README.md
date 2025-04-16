@@ -82,9 +82,9 @@ Fabric is graciously supported by…
 ## Updates
 
 > [!NOTE]
-> February 24, 2025
+> April 16, 2025
 >
-> - Fabric now supports Sonnet 3.7! Update and use `-S` to select it as your default if you want, or just use the shortcut `-m claude-3-7-sonnet-latest`. Enjoy!
+> - Fabric now supports Grok (from XAI)! Update and use `-S` to select it as your default if you want, or just use the shortcut `-m grok-3-beta`. Enjoy!
 
 ## What and why
 
