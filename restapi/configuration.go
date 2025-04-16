@@ -45,6 +45,7 @@ func (h *ConfigHandler) GetConfig(c *gin.Context) {
 			"openrouter": "",
 			"silicon":    "",
 			"deepseek":   "",
+			"grokai":     "",
 		})
 		return
 	}
@@ -65,6 +66,7 @@ func (h *ConfigHandler) GetConfig(c *gin.Context) {
 		"openrouter": os.Getenv("OPENROUTER_API_KEY"),
 		"silicon":    os.Getenv("SILICON_API_KEY"),
 		"deepseek":   os.Getenv("DEEPSEEK_API_KEY"),
+		"grokai":     os.Getenv("GROKAI_API_KEY"),
 		"lmstudio":   os.Getenv("LM_STUDIO_API_BASE_URL"),
 	}
 
@@ -87,6 +89,7 @@ func (h *ConfigHandler) UpdateConfig(c *gin.Context) {
 		OpenRouterApiKey string `json:"openrouter_api_key"`
 		SiliconApiKey    string `json:"silicon_api_key"`
 		DeepSeekApiKey   string `json:"deepseek_api_key"`
+		GrokaiApiKey     string `json:"grokai_api_key"`
 		LMStudioURL      string `json:"lm_studio_base_url"`
 	}
 
@@ -105,6 +108,7 @@ func (h *ConfigHandler) UpdateConfig(c *gin.Context) {
 		"OPENROUTER_API_KEY":     config.OpenRouterApiKey,
 		"SILICON_API_KEY":        config.SiliconApiKey,
 		"DEEPSEEK_API_KEY":       config.DeepSeekApiKey,
+		"GROKAI_API_KEY":         config.GrokaiApiKey,
 		"LM_STUDIO_API_BASE_URL": config.LMStudioURL,
 	}
 
