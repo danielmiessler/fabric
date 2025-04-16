@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/danielmiessler/fabric/plugins/ai/exolab"
+	"github.com/danielmiessler/fabric/plugins/ai/grokai"
 	"github.com/danielmiessler/fabric/plugins/strategy"
 
 	"github.com/samber/lo"
@@ -71,6 +72,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		deepseek.NewClient(),
 		exolab.NewClient(),
 		litellm.NewClient(),
+		grokai.NewClient(),
 	)
 	_ = ret.Configure()
 
