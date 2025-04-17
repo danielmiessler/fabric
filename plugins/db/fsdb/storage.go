@@ -67,7 +67,7 @@ func (o *StorageEntity) GetNames() (ret []string, err error) {
 }
 
 func (o *StorageEntity) Delete(name string) (err error) {
-	if err = os.Remove(o.BuildFilePathByName(name)); err != nil {
+	if err = os.RemoveAll(o.BuildFilePathByName(name)); err != nil {
 		err = fmt.Errorf("could not delete %s: %v", name, err)
 	}
 	return
