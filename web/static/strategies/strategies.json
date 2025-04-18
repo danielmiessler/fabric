@@ -1,4 +1,5 @@
 [
+  { "name": "aot", "description": "Atom-of-Thought (AoT)" },
   { "name": "cod", "description": "Chain-of-Draft (CoD)" },
   { "name": "cot", "description": "Chain-of-Thought (CoT) Prompting" },
   { "name": "ltm", "description": "Least-to-Most Prompting" },
