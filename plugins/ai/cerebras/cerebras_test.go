@@ -19,7 +19,7 @@ func TestNewClient_ConfiguredCorrectly(t *testing.T) {
 	if client.GetName() != "Cerebras" {
 		t.Errorf("Expected client name to be 'Cerebras', got '%s'", client.GetName())
 	}
-	
+
 	// Check if the ApiBaseURL is set correctly
 	if client.ApiBaseURL.Value != "https://api.cerebras.ai/v1" {
 		t.Errorf("Expected base URL to be 'https://api.cerebras.ai/v1', got '%s'", client.ApiBaseURL.Value)
