@@ -2,6 +2,8 @@ package common
 
 import (
 	"fmt"
+	"sort"
+	"strings"
 
 	"github.com/samber/lo"
 )
@@ -71,15 +73,31 @@ func (o *GroupsItemsSelector[I]) Print() {
 	fmt.Printf("\n%v:\n", o.SelectionLabel)
 
 	var currentItemIndex int
-	for _, groupItems := range o.GroupsItems {
+	// Create a copy of groups to sort
+	sortedGroupsItems := make([]*GroupItems[I], len(o.GroupsItems))
+	copy(sortedGroupsItems, o.GroupsItems)
+
+	// Sort groups alphabetically case-insensitive
+	sort.SliceStable(sortedGroupsItems, func(i, j int) bool {
+		return strings.ToLower(sortedGroupsItems[i].Group) < strings.ToLower(sortedGroupsItems[j].Group)
+	})
+
+	for _, groupItems := range sortedGroupsItems {
 		fmt.Println()
 		fmt.Printf("%s\n", groupItems.Group)
 		fmt.Println()
 
-		for _, item := range groupItems.Items {
+		// Create a copy of items to sort
+		sortedItems := make([]I, len(groupItems.Items))
+		copy(sortedItems, groupItems.Items)
+		// Sort items alphabetically case-insensitive
+		sort.SliceStable(sortedItems, func(i, j int) bool {
+			return strings.ToLower(o.GetItemKey(sortedItems[i])) < strings.ToLower(o.GetItemKey(sortedItems[j]))
+		})
+
+		for _, item := range sortedItems {
 			currentItemIndex++
 			fmt.Printf("\t[%d]\t%s\n", currentItemIndex, o.GetItemKey(item))
-
 		}
 	}
 }
