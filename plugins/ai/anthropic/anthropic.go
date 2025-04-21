@@ -52,18 +52,18 @@ type Client struct {
 	defaultRequiredUserMessage string
 	models                     []string
 
-	client *anthropic.Client
+	client anthropic.Client
 }
 
 func (an *Client) configure() (err error) {
 	if an.ApiBaseURL.Value != "" {
 		baseURL := an.ApiBaseURL.Value
 
-		if strings.Contains(baseURL, "-") && !strings.HasSuffix(baseURL, "/v1") {
-			if strings.HasSuffix(baseURL, "/") {
-				baseURL = strings.TrimSuffix(baseURL, "/")
-			}
-			baseURL = baseURL + "/v1"
+		// As of 2.0beta1, using v2 API endpoint.
+		// https://github.com/anthropics/anthropic-sdk-go/blob/main/CHANGELOG.md#020-beta1-2025-03-25
+		if strings.Contains(baseURL, "-") && !strings.HasSuffix(baseURL, "/v2") {
+			baseURL = strings.TrimSuffix(baseURL, "/")
+			baseURL = baseURL + "/v2"
 		}
 
 		an.client = anthropic.NewClient(
@@ -87,21 +87,19 @@ func (an *Client) SendStream(
 
 	ctx := context.Background()
 	stream := an.client.Messages.NewStreaming(ctx, anthropic.MessageNewParams{
-		Model:       anthropic.F(opts.Model),
-		MaxTokens:   anthropic.F(int64(an.maxTokens)),
-		TopP:        anthropic.F(opts.TopP),
-		Temperature: anthropic.F(opts.Temperature),
-		Messages:    anthropic.F(messages),
+		Model:       opts.Model,
+		MaxTokens:   int64(an.maxTokens),
+		TopP:        anthropic.Opt(opts.TopP),
+		Temperature: anthropic.Opt(opts.Temperature),
+		Messages:    messages,
 	})
 
 	for stream.Next() {
 		event := stream.Current()
 
-		switch delta := event.Delta.(type) {
-		case anthropic.ContentBlockDeltaEventDelta:
-			if delta.Text != "" {
-				channel <- delta.Text
-			}
+		// directly send any non-empty delta text
+		if event.Delta.Text != "" {
+			channel <- event.Delta.Text
 		}
 	}
 
@@ -117,11 +115,11 @@ func (an *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessa
 
 	var message *anthropic.Message
 	if message, err = an.client.Messages.New(ctx, anthropic.MessageNewParams{
-		Model:       anthropic.F(opts.Model),
-		MaxTokens:   anthropic.F(int64(an.maxTokens)),
-		TopP:        anthropic.F(opts.TopP),
-		Temperature: anthropic.F(opts.Temperature),
-		Messages:    anthropic.F(messages),
+		Model:       opts.Model,
+		MaxTokens:   int64(an.maxTokens),
+		TopP:        anthropic.Opt(opts.TopP),
+		Temperature: anthropic.Opt(opts.Temperature),
+		Messages:    messages,
 	}); err != nil {
 		return
 	}
