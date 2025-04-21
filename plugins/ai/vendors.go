@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"sort"
+	"strings"
 	"sync"
 
 	"github.com/danielmiessler/fabric/plugins"
@@ -95,6 +97,9 @@ func (o *VendorsManager) readModels() (err error) {
 		if result.err != nil {
 			fmt.Println(result.vendorName, result.err)
 		} else {
+			sort.Slice(result.models, func(i, j int) bool {
+				return strings.ToLower(result.models[i]) < strings.ToLower(result.models[j])
+			})
 			o.Models.AddGroupItems(result.vendorName, result.models...)
 		}
 	}
