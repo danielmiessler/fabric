@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +15,7 @@ import (
 type StrategyMeta struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
+	Prompt      string `json:"prompt"`
 }
 
 // NewStrategiesHandler registers the /strategies GET endpoint
@@ -41,16 +43,17 @@ func NewStrategiesHandler(r *gin.Engine) {
 			}
 
 			var s struct {
-				Name        string `json:"name"`
 				Description string `json:"description"`
+				Prompt      string `json:"prompt"`
 			}
 			if err := json.Unmarshal(data, &s); err != nil {
 				continue
 			}
 
 			strategies = append(strategies, StrategyMeta{
-				Name:        s.Name,
+				Name:        strings.TrimSuffix(file.Name(), ".json"),
 				Description: s.Description,
+				Prompt:      s.Prompt,
 			})
 		}
 
