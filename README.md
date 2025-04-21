@@ -76,6 +76,7 @@ Fabric is graciously supported by…
       - [Clipboard Support](#clipboard-support)
   - [Meta](#meta)
     - [Primary contributors](#primary-contributors)
+    - [Contributors](#contributors)
 
 <br />
 
@@ -475,6 +476,7 @@ Application Options:
       --rmextension=                Remove a registered extension by name
       --strategy=                   Choose a strategy from the available strategies
       --liststrategies              List all strategies
+      --listvendors                 List all vendors
 
 Help Options:
   -h, --help                        Show this help message

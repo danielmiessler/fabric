@@ -164,6 +164,11 @@ func Cli(version string) (err error) {
 		return
 	}
 
+	if currentFlags.ListVendors {
+		err = registry.ListVendors(os.Stdout)
+		return
+	}
+
 	// if the interactive flag is set, run the interactive function
 	// if currentFlags.Interactive {
 	// 	interactive.Interactive()
@@ -211,7 +216,9 @@ func Cli(version string) (err error) {
 			return
 		}
 
-		messageTools, err = processYoutubeVideo(currentFlags, registry, videoId)
+		if messageTools, err = processYoutubeVideo(currentFlags, registry, videoId); err != nil {
+			return
+		}
 		if !currentFlags.IsChatRequest() {
 			err = currentFlags.WriteOutput(messageTools)
 			return
