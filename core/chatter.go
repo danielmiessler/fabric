@@ -192,17 +192,19 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	if raw {
-		if request.Message != nil {
-			if systemMessage != "" {
-				request.Message.Content = systemMessage
-				// system contains pattern which contains user input
+		// In raw mode, combine system message (potentially with strategy) and user message into a single user message
+		if systemMessage != "" {
+			if request.Message != nil {
+				// Prepend system message to user content, ensuring user input is preserved
+				request.Message.Content = fmt.Sprintf("%s\n\n%s", systemMessage, request.Message.Content)
+				request.Message.Role = goopenai.ChatMessageRoleUser // Ensure role is User in raw mode
+			} else {
+				// If no user message, create one with the system content, marked as User role
+				request.Message = &goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleUser, Content: systemMessage}
 			}
-		} else {
-			if systemMessage != "" {
-				request.Message = &goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage}
-			}
-		}
+		} // else: no system message, user message (if any) remains unchanged
 	} else {
+		// Not raw mode, append system message separately if it exists
 		if systemMessage != "" {
 			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
 		}

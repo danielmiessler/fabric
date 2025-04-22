@@ -117,8 +117,12 @@ func (e *ExtensionExecutor) executeWithFile(cmd *exec.Cmd, ext *ExtensionDefinit
 	// Create context with timeout
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
+	// Store the original environment
+	originalEnv := cmd.Env
+	// Create a new command with context. This might reset Env, depending on the Go version.
 	cmd = exec.CommandContext(ctx, cmd.Path, cmd.Args[1:]...)
-	cmd.Env = cmd.Env
+	// Restore the environment variables explicitly
+	cmd.Env = originalEnv
 
 	fileConfig := ext.GetFileConfig()
 	if fileConfig == nil {
