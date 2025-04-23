@@ -47,7 +47,11 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          goEnv = gomod2nix.legacyPackages.${system}.mkGoEnv { pwd = ./.; };
+          goVersion = pkgs.go_1_24;
+          goEnv = gomod2nix.legacyPackages.${system}.mkGoEnv {
+            pwd = ./.;
+            go = goVersion;
+          };
         in
         import ./nix/shell.nix {
           inherit pkgs goEnv;
@@ -59,10 +63,12 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          goVersion = pkgs.go_1_24;
         in
         {
           default = self.packages.${system}.fabric;
           fabric = pkgs.callPackage ./nix/pkgs/fabric {
+            go = goVersion;
             inherit (gomod2nix.legacyPackages.${system}) buildGoApplication;
           };
           inherit (gomod2nix.legacyPackages.${system}) gomod2nix;

@@ -4,10 +4,13 @@
   goEnv,
 }:
 
+let
+  goVersion = pkgs.go_1_24;
+in
 {
   default = pkgs.mkShell {
     nativeBuildInputs = [
-      pkgs.go
+      goVersion
       pkgs.gopls
       pkgs.gotools
       pkgs.go-tools
