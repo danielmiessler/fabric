@@ -2,11 +2,9 @@
   pkgs,
   gomod2nix,
   goEnv,
+  goVersion
 }:
 
-let
-  goVersion = pkgs.go_1_24;
-in
 {
   default = pkgs.mkShell {
     nativeBuildInputs = [
