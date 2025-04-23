@@ -1,6 +1,7 @@
 {
   lib,
   buildGoApplication,
+  go,
 }:
 
 buildGoApplication {
@@ -16,6 +17,8 @@ buildGoApplication {
     "-s"
     "-w"
   ];
+
+  inherit go;
 
   meta = with lib; {
     description = "Fabric is an open-source framework for augmenting humans using AI. It provides a modular framework for solving specific problems using a crowdsourced set of AI prompts that can be used anywhere";

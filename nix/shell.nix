@@ -2,12 +2,13 @@
   pkgs,
   gomod2nix,
   goEnv,
+  goVersion,
 }:
 
 {
   default = pkgs.mkShell {
     nativeBuildInputs = [
-      pkgs.go
+      goVersion
       pkgs.gopls
       pkgs.gotools
       pkgs.go-tools

@@ -28,6 +28,8 @@
     let
       forAllSystems = nixpkgs.lib.genAttrs (import systems);
 
+      getGoVersion = system: nixpkgs.legacyPackages.${system}.go_1_24;
+
       treefmtEval = forAllSystems (
         system:
         let
@@ -47,10 +49,14 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          goEnv = gomod2nix.legacyPackages.${system}.mkGoEnv { pwd = ./.; };
+          goVersion = getGoVersion system;
+          goEnv = gomod2nix.legacyPackages.${system}.mkGoEnv {
+            pwd = ./.;
+            go = goVersion;
+          };
         in
         import ./nix/shell.nix {
-          inherit pkgs goEnv;
+          inherit pkgs goEnv goVersion;
           inherit (gomod2nix.legacyPackages.${system}) gomod2nix;
         }
       );
@@ -59,10 +65,12 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          goVersion = getGoVersion system;
         in
         {
           default = self.packages.${system}.fabric;
           fabric = pkgs.callPackage ./nix/pkgs/fabric {
+            go = goVersion;
             inherit (gomod2nix.legacyPackages.${system}) buildGoApplication;
           };
           inherit (gomod2nix.legacyPackages.${system}) gomod2nix;
