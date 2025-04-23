@@ -2,7 +2,7 @@
   pkgs,
   gomod2nix,
   goEnv,
-  goVersion
+  goVersion,
 }:
 
 {
