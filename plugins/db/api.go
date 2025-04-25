@@ -9,5 +9,5 @@ type Storage[T any] interface {
 	Rename(oldName, newName string) (err error)
 	Save(name string, content []byte) (err error)
 	Load(name string) (ret []byte, err error)
-	ListNames() (err error)
+	ListNames(shellCompleteList bool) (err error)
 }

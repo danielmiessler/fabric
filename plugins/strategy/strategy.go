@@ -197,12 +197,13 @@ func LoadStrategy(filename string) (*Strategy, error) {
 }
 
 // ListStrategies prints available strategies
-func (sm *StrategiesManager) ListStrategies() error {
+func (sm *StrategiesManager) ListStrategies(shellCompleteList bool) error {
 	if len(sm.Strategies) == 0 {
 		return fmt.Errorf("no strategies found. Please run 'fabric --setup' to download strategies")
 	}
-	fmt.Print("Available Strategies:\n\n")
-
+	if !shellCompleteList {
+		fmt.Print("Available Strategies:\n\n")
+	}
 	// Get all strategy names for sorting
 	names := []string{}
 	for name := range sm.Strategies {
@@ -224,7 +225,11 @@ func (sm *StrategiesManager) ListStrategies() error {
 	formatString := "%-" + fmt.Sprintf("%d", maxNameLength+2) + "s %s\n"
 	for _, name := range names {
 		strategy := sm.Strategies[name]
-		fmt.Printf(formatString, strategy.Name, strategy.Description)
+		if shellCompleteList {
+			fmt.Printf("%s\n", strategy.Name)
+		} else {
+			fmt.Printf(formatString, strategy.Name, strategy.Description)
+		}
 	}
 
 	return nil

@@ -59,6 +59,10 @@ Fabric is graciously supported by…
       - [Save your files in markdown using aliases](#save-your-files-in-markdown-using-aliases)
     - [Migration](#migration)
     - [Upgrading](#upgrading)
+    - [Shell Completions](#shell-completions)
+      - [Zsh Completion](#zsh-completion)
+      - [Bash Completion](#bash-completion)
+      - [Fish Completion](#fish-completion)
   - [Usage](#usage)
   - [Our approach to prompting](#our-approach-to-prompting)
   - [Examples](#examples)
@@ -411,6 +415,48 @@ The great thing about Go is that it's super easy to upgrade. Just run the same c
 go install github.com/danielmiessler/fabric@latest
 ```
 
+### Shell Completions
+
+Fabric provides shell completion scripts for Zsh, Bash, and Fish
+shells, making it easier to use the CLI by providing tab completion
+for commands and options.
+
+#### Zsh Completion
+
+To enable Zsh completion:
+
+```bash
+# Copy the completion file to a directory in your $fpath
+mkdir -p ~/.zsh/completions
+cp completions/_fabric ~/.zsh/completions/
+
+# Add the directory to fpath in your .zshrc before compinit
+echo 'fpath=(~/.zsh/completions $fpath)' >> ~/.zshrc
+echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
+```
+
+#### Bash Completion
+
+To enable Bash completion:
+
+```bash
+# Source the completion script in your .bashrc
+echo 'source /path/to/fabric/completions/fabric.bash' >> ~/.bashrc
+
+# Or copy to the system-wide bash completion directory
+sudo cp completions/fabric.bash /etc/bash_completion.d/
+```
+
+#### Fish Completion
+
+To enable Fish completion:
+
+```bash
+# Copy the completion file to the fish completions directory
+mkdir -p ~/.config/fish/completions
+cp completions/fabric.fish ~/.config/fish/completions/
+```
+
 ## Usage
 
 Once you have it all set up, here's how to use it.
@@ -419,7 +465,7 @@ Once you have it all set up, here's how to use it.
 fabric -h
 ```
 
-```bash
+```plaintext
 
 Usage:
   fabric [OPTIONS]
@@ -469,6 +515,7 @@ Application Options:
       --serve                       Serve the Fabric Rest API
       --serveOllama                 Serve the Fabric Rest API with ollama endpoints
       --address=                    The address to bind the REST API (default: :8080)
+      --api-key=                    API key used to secure server routes
       --config=                     Path to YAML config file
       --version                     Print current version
       --listextensions              List all registered extensions
@@ -477,6 +524,7 @@ Application Options:
       --strategy=                   Choose a strategy from the available strategies
       --liststrategies              List all strategies
       --listvendors                 List all vendors
+      --shell-complete-list         Output raw list without headers/formatting (for shell completion)
 
 Help Options:
   -h, --help                        Show this help message
