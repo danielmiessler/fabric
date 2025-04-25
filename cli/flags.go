@@ -73,6 +73,7 @@ type Flags struct {
 	Strategy                        string            `long:"strategy" description:"Choose a strategy from the available strategies" default:""`
 	ListStrategies                  bool              `long:"liststrategies" description:"List all strategies"`
 	ListVendors                     bool              `long:"listvendors" description:"List all vendors"`
+	ShellCompleteOutput             bool              `long:"shell-complete-list" description:"Output raw list without headers/formatting (for shell completion)"`
 }
 
 var debug = false

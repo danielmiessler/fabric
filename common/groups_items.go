@@ -69,35 +69,42 @@ func (o *GroupsItemsSelector[I]) GetGroupAndItemByItemNumber(number int) (group 
 	return
 }
 
-func (o *GroupsItemsSelector[I]) Print() {
-	fmt.Printf("\n%v:\n", o.SelectionLabel)
+func (o *GroupsItemsSelector[I]) Print(shellCompleteList bool) {
+	// Only print the section header if not in plain output mode
+	if !shellCompleteList {
+		fmt.Printf("\n%v:\n", o.SelectionLabel)
+	}
 
 	var currentItemIndex int
-	// Create a copy of groups to sort
+	// Copy and sort groups (case‑insensitive)
 	sortedGroupsItems := make([]*GroupItems[I], len(o.GroupsItems))
 	copy(sortedGroupsItems, o.GroupsItems)
-
-	// Sort groups alphabetically case-insensitive
 	sort.SliceStable(sortedGroupsItems, func(i, j int) bool {
 		return strings.ToLower(sortedGroupsItems[i].Group) < strings.ToLower(sortedGroupsItems[j].Group)
 	})
 
 	for _, groupItems := range sortedGroupsItems {
-		fmt.Println()
-		fmt.Printf("%s\n", groupItems.Group)
-		fmt.Println()
+		if !shellCompleteList {
+			fmt.Println()
+			fmt.Printf("%s\n\n", groupItems.Group)
+		}
 
-		// Create a copy of items to sort
+		// Copy and sort items (case‑insensitive)
 		sortedItems := make([]I, len(groupItems.Items))
 		copy(sortedItems, groupItems.Items)
-		// Sort items alphabetically case-insensitive
 		sort.SliceStable(sortedItems, func(i, j int) bool {
 			return strings.ToLower(o.GetItemKey(sortedItems[i])) < strings.ToLower(o.GetItemKey(sortedItems[j]))
 		})
 
 		for _, item := range sortedItems {
 			currentItemIndex++
-			fmt.Printf("\t[%d]\t%s\n", currentItemIndex, o.GetItemKey(item))
+			if shellCompleteList {
+				// plain mode: "index key"
+				fmt.Printf("%s\n", o.GetItemKey(item))
+			} else {
+				// formatted mode: "[index]    key"
+				fmt.Printf("\t[%d]\t%s\n", currentItemIndex, o.GetItemKey(item))
+			}
 		}
 	}
 }

@@ -152,7 +152,7 @@ func (o *PluginRegistry) Setup() (err error) {
 	groupsPlugins.AddGroupItems("Tools", o.Defaults, o.Jina, o.Language, o.PatternsLoader, o.Strategies, o.YouTube)
 
 	for {
-		groupsPlugins.Print()
+		groupsPlugins.Print(false)
 
 		if answerErr := setupQuestion.Ask("Plugin Number"); answerErr != nil {
 			break

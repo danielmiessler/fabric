@@ -47,7 +47,7 @@ func (o *Defaults) Setup() (err error) {
 		return
 	}
 
-	vendorsModels.Print()
+	vendorsModels.Print(false)
 
 	if err = o.Ask(o.Name); err != nil {
 		return
