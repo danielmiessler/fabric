@@ -1,4 +1,0 @@
-{
-    "description": "Chain-of-Thought (CoT) Prompting",
-    "prompt": "Think step by step to answer the question. Return the final answer in the required format."
-}
