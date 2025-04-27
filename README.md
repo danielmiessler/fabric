@@ -23,10 +23,11 @@ Fabricer integrates patterns from Fabric as tools in N8N, enabling customization
 
 ## Setup Instructions
 
-1. **Update Credentials**: Start by updating the N8N API credentials to ensure smooth operation.
-2. **Error Handling**: If you encounter errors like "write EPROTO F8212C9BC37F0000:error:0A00010B:SSL routines:ssl3_get_record:wrong version number", restart N8N from Docker. This issue arises due to N8N API limitations, which cap at 120 calls simultaneously.
-3. Start the last node to avoid any inconvenience
-4. update parameters as your preferences as tags or patterns about to use
+1. **How to start**: Import Fabricer workflow into your n8n workplace
+2. **Update Credentials**: Update API credentials to ensure smooth operation.
+3. **Update parameters**: As your preferences as tags or patterns about to use
+4. **start workflow** the last node to avoid any inconveniences
+5. **Error Handling**: If you encounter errors like "write EPROTO F8212C9BC37F0000:error:0A00010B:SSL routines:ssl3_get_record:wrong version number", restart N8N from Docker. This issue arises due to N8N API limitations, which cap at 120 calls simultaneously.
 
 ## Usage
 
