@@ -42,13 +42,43 @@ func (o *GroupsItemsSelector[I]) AddGroupItems(group string, items ...I) {
 	o.GroupsItems = append(o.GroupsItems, &GroupItems[I]{group, items})
 }
 
+// getSortedGroupsItems returns a new slice of GroupItems with both groups and their items
+// sorted alphabetically in a case-insensitive manner. The original GroupsItems are not modified.
+func (o *GroupsItemsSelector[I]) getSortedGroupsItems() []*GroupItems[I] {
+	// Copy and sort groups (case‑insensitive)
+	sortedGroupsItems := make([]*GroupItems[I], len(o.GroupsItems))
+	copy(sortedGroupsItems, o.GroupsItems)
+	sort.SliceStable(sortedGroupsItems, func(i, j int) bool {
+		return strings.ToLower(sortedGroupsItems[i].Group) < strings.ToLower(sortedGroupsItems[j].Group)
+	})
+
+	// For each group, sort its items
+	for i, groupItems := range sortedGroupsItems {
+		sortedItems := make([]I, len(groupItems.Items))
+		copy(sortedItems, groupItems.Items)
+		sort.SliceStable(sortedItems, func(i, j int) bool {
+			return strings.ToLower(o.GetItemKey(sortedItems[i])) < strings.ToLower(o.GetItemKey(sortedItems[j]))
+		})
+
+		// Create a new GroupItems with the sorted items
+		sortedGroupsItems[i] = &GroupItems[I]{
+			Group: groupItems.Group,
+			Items: sortedItems,
+		}
+	}
+
+	return sortedGroupsItems
+}
+
 func (o *GroupsItemsSelector[I]) GetGroupAndItemByItemNumber(number int) (group string, item I, err error) {
 	var currentItemNumber int
 	found := false
 
-	for _, groupItems := range o.GroupsItems {
-		if currentItemNumber+groupItems.Count() < number {
-			currentItemNumber += groupItems.Count()
+	sortedGroupsItems := o.getSortedGroupsItems()
+
+	for _, groupItems := range sortedGroupsItems {
+		if currentItemNumber+len(groupItems.Items) < number {
+			currentItemNumber += len(groupItems.Items)
 			continue
 		}
 
@@ -60,6 +90,10 @@ func (o *GroupsItemsSelector[I]) GetGroupAndItemByItemNumber(number int) (group 
 				found = true
 				break
 			}
+		}
+
+		if found {
+			break
 		}
 	}
 
@@ -76,12 +110,7 @@ func (o *GroupsItemsSelector[I]) Print(shellCompleteList bool) {
 	}
 
 	var currentItemIndex int
-	// Copy and sort groups (case‑insensitive)
-	sortedGroupsItems := make([]*GroupItems[I], len(o.GroupsItems))
-	copy(sortedGroupsItems, o.GroupsItems)
-	sort.SliceStable(sortedGroupsItems, func(i, j int) bool {
-		return strings.ToLower(sortedGroupsItems[i].Group) < strings.ToLower(sortedGroupsItems[j].Group)
-	})
+	sortedGroupsItems := o.getSortedGroupsItems()
 
 	for _, groupItems := range sortedGroupsItems {
 		if !shellCompleteList {
@@ -89,14 +118,7 @@ func (o *GroupsItemsSelector[I]) Print(shellCompleteList bool) {
 			fmt.Printf("%s\n\n", groupItems.Group)
 		}
 
-		// Copy and sort items (case‑insensitive)
-		sortedItems := make([]I, len(groupItems.Items))
-		copy(sortedItems, groupItems.Items)
-		sort.SliceStable(sortedItems, func(i, j int) bool {
-			return strings.ToLower(o.GetItemKey(sortedItems[i])) < strings.ToLower(o.GetItemKey(sortedItems[j]))
-		})
-
-		for _, item := range sortedItems {
+		for _, item := range groupItems.Items {
 			currentItemIndex++
 			if shellCompleteList {
 				// plain mode: "index key"
