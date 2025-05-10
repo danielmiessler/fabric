@@ -2,6 +2,7 @@
   lib,
   buildGoApplication,
   go,
+  installShellFiles,
 }:
 
 buildGoApplication {
@@ -19,6 +20,13 @@ buildGoApplication {
   ];
 
   inherit go;
+
+  nativeBuildInputs = [ installShellFiles ];
+  postInstall = ''
+    installShellCompletion --zsh ./completions/_fabric
+    installShellCompletion --bash ./completions/fabric.bash
+    installShellCompletion --fish ./completions/fabric.fish
+  '';
 
   meta = with lib; {
     description = "Fabric is an open-source framework for augmenting humans using AI. It provides a modular framework for solving specific problems using a crowdsourced set of AI prompts that can be used anywhere";
