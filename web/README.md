@@ -3,7 +3,7 @@
 
 This is a web app for Fabric. It was built using [Svelte](https://svelte.dev/), [SkeletonUI](https://skeleton.dev/), and [Mdsvex](https://mdsvex.pngwn.io/). 
 
-The goal of this app is to not only provide a user interface for Fabric, but also a out-of-the-box website for those who want to get started with web development, blogging, or to just have a web interface for fabric. You can use this app as a GUI interface for Fabric, a ready to go blog-site, or a website template for your own projects. 
+The goal of this app is to not only provide a user interface for Fabric, but also an out-of-the-box website for those who want to get started with web development, blogging, or to just have a web interface for fabric. You can use this app as a GUI interface for Fabric, a ready to go blog-site, or a website template for your own projects.
 
 ![Preview](/fabric-png.png)
 
@@ -17,7 +17,7 @@ When creating new posts make sure to include a date, description, tags, and alia
 
 You can include images, tags to other articles, code blocks, and more all within your markdown files. 
 
-### If you choose to use Obsidian along side ths app
+### If you choose to use Obsidian alongside this app
 
 You can design and order your vault however you like, though a `posts` folder should be kept in your vault to house any articles you'd like to post. 
 
