@@ -53,7 +53,7 @@ Pattern descriptions and tags are managed in pattern_descriptions.json:
 
 3. How to update Pattern short descriptions (one sentence). 
 
-You can update your descriptions in pattern_descriptions.json manually or using LLM assistance (prefered approach). 
+You can update your descriptions in pattern_descriptions.json manually or using LLM assistance (preferred approach). 
 
 Tell AI to look for "Description pending" entries in this file and write a short description based on the extract info in the pattern_extracts.json file. You can also ask your LLM to add tags for those newly added patterns, using other patterns tag assignments as example.    
 
