@@ -15,6 +15,8 @@ import (
 	"github.com/danielmiessler/fabric/plugins"
 )
 
+const defaultBaseUrl = "http://localhost:11434"
+
 func NewClient() (ret *Client) {
 	vendorName := "Ollama"
 	ret = &Client{}
@@ -26,7 +28,10 @@ func NewClient() (ret *Client) {
 	}
 
 	ret.ApiUrl = ret.AddSetupQuestionCustom("API URL", true,
-		"Enter your Ollama URL (as a reminder, it is usually http://localhost:1234/v1')")
+		"Enter your Ollama URL (as a reminder, it is usually http://localhost:11434')")
+	ret.ApiUrl.Value = defaultBaseUrl
+	ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", false)
+	ret.ApiKey.Value = ""
 
 	return
 }
@@ -34,9 +39,21 @@ func NewClient() (ret *Client) {
 type Client struct {
 	*plugins.PluginBase
 	ApiUrl *plugins.SetupQuestion
-
+	ApiKey *plugins.SetupQuestion
 	apiUrl *url.URL
 	client *ollamaapi.Client
+}
+
+type transport_sec struct {
+	underlyingTransport http.RoundTripper
+	ApiKey              *plugins.SetupQuestion
+}
+
+func (t *transport_sec) RoundTrip(req *http.Request) (*http.Response, error) {
+	if t.ApiKey.Value != "" {
+		req.Header.Add("Authorization", "Bearer "+t.ApiKey.Value)
+	}
+	return t.underlyingTransport.RoundTrip(req)
 }
 
 func (o *Client) configure() (err error) {
@@ -45,7 +62,7 @@ func (o *Client) configure() (err error) {
 		return
 	}
 
-	o.client = ollamaapi.NewClient(o.apiUrl, &http.Client{Timeout: 1200000 * time.Millisecond})
+	o.client = ollamaapi.NewClient(o.apiUrl, &http.Client{Timeout: 1200000 * time.Millisecond, Transport: &transport_sec{underlyingTransport: http.DefaultTransport, ApiKey: o.ApiKey}})
 	return
 }
 
