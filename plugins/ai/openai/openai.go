@@ -6,12 +6,11 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
-
-	"github.com/danielmiessler/fabric/plugins"
+	"strings"
 
 	"github.com/danielmiessler/fabric/common"
-	"github.com/samber/lo"
-	"github.com/sashabaranov/go-openai"
+	"github.com/danielmiessler/fabric/plugins"
+	goopenai "github.com/sashabaranov/go-openai"
 )
 
 func NewClient() (ret *Client) {
@@ -48,20 +47,20 @@ type Client struct {
 	*plugins.PluginBase
 	ApiKey     *plugins.SetupQuestion
 	ApiBaseURL *plugins.SetupQuestion
-	ApiClient  *openai.Client
+	ApiClient  *goopenai.Client
 }
 
 func (o *Client) configure() (ret error) {
-	config := openai.DefaultConfig(o.ApiKey.Value)
+	config := goopenai.DefaultConfig(o.ApiKey.Value)
 	if o.ApiBaseURL.Value != "" {
 		config.BaseURL = o.ApiBaseURL.Value
 	}
-	o.ApiClient = openai.NewClientWithConfig(config)
+	o.ApiClient = goopenai.NewClientWithConfig(config)
 	return
 }
 
 func (o *Client) ListModels() (ret []string, err error) {
-	var models openai.ModelsList
+	var models goopenai.ModelsList
 	if models, err = o.ApiClient.ListModels(context.Background()); err != nil {
 		return
 	}
@@ -74,12 +73,12 @@ func (o *Client) ListModels() (ret []string, err error) {
 }
 
 func (o *Client) SendStream(
-	msgs []*openai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
+	msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
 ) (err error) {
 	req := o.buildChatCompletionRequest(msgs, opts)
 	req.Stream = true
 
-	var stream *openai.ChatCompletionStream
+	var stream *goopenai.ChatCompletionStream
 	if stream, err = o.ApiClient.CreateChatCompletionStream(context.Background(), req); err != nil {
 		fmt.Printf("ChatCompletionStream error: %v\n", err)
 		return
@@ -88,7 +87,7 @@ func (o *Client) SendStream(
 	defer stream.Close()
 
 	for {
-		var response openai.ChatCompletionStreamResponse
+		var response goopenai.ChatCompletionStreamResponse
 		if response, err = stream.Recv(); err == nil {
 			if len(response.Choices) > 0 {
 				channel <- response.Choices[0].Delta.Content
@@ -110,10 +109,10 @@ func (o *Client) SendStream(
 	return
 }
 
-func (o *Client) Send(ctx context.Context, msgs []*openai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
 	req := o.buildChatCompletionRequest(msgs, opts)
 
-	var resp openai.ChatCompletionResponse
+	var resp goopenai.ChatCompletionResponse
 	if resp, err = o.ApiClient.CreateChatCompletion(ctx, req); err != nil {
 		return
 	}
@@ -125,35 +124,53 @@ func (o *Client) Send(ctx context.Context, msgs []*openai.ChatCompletionMessage,
 }
 
 func (o *Client) buildChatCompletionRequest(
-	msgs []*openai.ChatCompletionMessage, opts *common.ChatOptions,
-) (ret openai.ChatCompletionRequest) {
-	messages := lo.Map(msgs, func(message *openai.ChatCompletionMessage, _ int) openai.ChatCompletionMessage {
-		return *message
-	})
+	inputMsgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions,
+) (ret goopenai.ChatCompletionRequest) {
+
+	// Create a new slice for messages to be sent, converting from []*Msg to []Msg.
+	// This also serves as a mutable copy for provider-specific modifications.
+	messagesForRequest := make([]goopenai.ChatCompletionMessage, len(inputMsgs))
+	for i, msgPtr := range inputMsgs {
+		messagesForRequest[i] = *msgPtr // Dereference and copy
+	}
+
+	// Provider-specific modification for DeepSeek:
+	// DeepSeek requires the last message to be a user message.
+	// If fabric constructs a single system message (common when a pattern includes user input),
+	// we change its role to user for DeepSeek.
+	if strings.Contains(opts.Model, "deepseek") { // Heuristic to identify DeepSeek models
+		if len(messagesForRequest) == 1 && messagesForRequest[0].Role == goopenai.ChatMessageRoleSystem {
+			messagesForRequest[0].Role = goopenai.ChatMessageRoleUser
+		}
+		// Note: This handles the most common case arising from pattern usage.
+		// More complex scenarios where a multi-message sequence ends in 'system'
+		// are not currently expected from chatter.go's BuildSession logic for OpenAI providers
+		// but might require further rules if they arise.
+	}
 
 	if opts.Raw {
-		ret = openai.ChatCompletionRequest{
+		ret = goopenai.ChatCompletionRequest{
 			Model:    opts.Model,
-			Messages: messages,
+			Messages: messagesForRequest,
 		}
 	} else {
 		if opts.Seed == 0 {
-			ret = openai.ChatCompletionRequest{
+			ret = goopenai.ChatCompletionRequest{
 				Model:            opts.Model,
 				Temperature:      float32(opts.Temperature),
 				TopP:             float32(opts.TopP),
 				PresencePenalty:  float32(opts.PresencePenalty),
 				FrequencyPenalty: float32(opts.FrequencyPenalty),
-				Messages:         messages,
+				Messages:         messagesForRequest,
 			}
 		} else {
-			ret = openai.ChatCompletionRequest{
+			ret = goopenai.ChatCompletionRequest{
 				Model:            opts.Model,
 				Temperature:      float32(opts.Temperature),
 				TopP:             float32(opts.TopP),
 				PresencePenalty:  float32(opts.PresencePenalty),
 				FrequencyPenalty: float32(opts.FrequencyPenalty),
-				Messages:         messages,
+				Messages:         messagesForRequest,
 				Seed:             &opts.Seed,
 			}
 		}

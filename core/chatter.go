@@ -192,26 +192,31 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	if raw {
-		// In raw mode, combine system message (potentially with strategy) and user message into a single user message
+		// In raw mode, systemMessage is prepended to request.Message.Content
+		// and request.Message.Role is set to User.
 		if systemMessage != "" {
 			if request.Message != nil {
-				// Prepend system message to user content, ensuring user input is preserved
-				request.Message.Content = fmt.Sprintf("%s\n\n%s", systemMessage, request.Message.Content)
-				request.Message.Role = goopenai.ChatMessageRoleUser // Ensure role is User in raw mode
+				request.Message.Content = fmt.Sprintf("%s\\n\\n%s", systemMessage, request.Message.Content)
+				request.Message.Role = goopenai.ChatMessageRoleUser
 			} else {
-				// If no user message, create one with the system content, marked as User role
+				// If no user message originally, create one with the system content.
 				request.Message = &goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleUser, Content: systemMessage}
 			}
-		} // else: no system message, user message (if any) remains unchanged
-	} else {
-		// Not raw mode, append system message separately if it exists
+		}
+		// After this, if request.Message is not nil, it's the (potentially combined) message to be appended.
+		if request.Message != nil {
+			session.Append(request.Message)
+		}
+	} else { // Not raw mode
 		if systemMessage != "" {
 			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
 		}
-	}
-
-	if request.Message != nil {
-		session.Append(request.Message)
+		// If a pattern was used (request.PatternName != ""), its output (systemMessage)
+		// already incorporates the user input (request.Message.Content via GetApplyVariables).
+		// So, we only append the direct user message if NO pattern was used.
+		if request.PatternName == "" && request.Message != nil {
+			session.Append(request.Message)
+		}
 	}
 
 	if session.IsEmpty() {

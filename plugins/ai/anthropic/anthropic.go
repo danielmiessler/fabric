@@ -84,6 +84,11 @@ func (an *Client) SendStream(
 	msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
 ) (err error) {
 	messages := an.toMessages(msgs)
+	if len(messages) == 0 {
+		close(channel)
+		// No messages to send after normalization, consider this a non-error condition for streaming.
+		return nil
+	}
 
 	ctx := context.Background()
 	stream := an.client.Messages.NewStreaming(ctx, anthropic.MessageNewParams{
@@ -112,6 +117,10 @@ func (an *Client) SendStream(
 
 func (an *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
 	messages := an.toMessages(msgs)
+	if len(messages) == 0 {
+		// No messages to send after normalization, return empty string and no error.
+		return "", nil
+	}
 
 	var message *anthropic.Message
 	if message, err = an.client.Messages.New(ctx, anthropic.MessageNewParams{
@@ -123,22 +132,77 @@ func (an *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessa
 	}); err != nil {
 		return
 	}
+
+	if len(message.Content) == 0 {
+		// Model returned no content blocks.
+		return "", nil
+	}
 	ret = message.Content[0].Text
 	return
 }
 
 func (an *Client) toMessages(msgs []*goopenai.ChatCompletionMessage) (ret []anthropic.MessageParam) {
-	normalizedMessages := common.NormalizeMessages(msgs, an.defaultRequiredUserMessage)
+	// Custom normalization for Anthropic:
+	// - System messages become the first part of the first user message.
+	// - Messages must alternate user/assistant.
+	// - Skip empty messages.
 
-	for _, msg := range normalizedMessages {
-		var message anthropic.MessageParam
-		switch msg.Role {
-		case goopenai.ChatMessageRoleUser:
-			message = anthropic.NewUserMessage(anthropic.NewTextBlock(msg.Content))
-		default:
-			message = anthropic.NewAssistantMessage(anthropic.NewTextBlock(msg.Content))
+	var anthropicMessages []anthropic.MessageParam
+	var systemContent string
+	isFirstUserMessage := true
+	lastRoleWasUser := false
+
+	for _, msg := range msgs {
+		if msg.Content == "" {
+			continue // Skip empty messages
 		}
-		ret = append(ret, message)
+
+		switch msg.Role {
+		case goopenai.ChatMessageRoleSystem:
+			// Accumulate system content. It will be prepended to the first user message.
+			if systemContent != "" {
+				systemContent += "\\n" + msg.Content
+			} else {
+				systemContent = msg.Content
+			}
+		case goopenai.ChatMessageRoleUser:
+			userContent := msg.Content
+			if isFirstUserMessage && systemContent != "" {
+				userContent = systemContent + "\\n\\n" + userContent
+				isFirstUserMessage = false // System content now consumed
+			}
+			if lastRoleWasUser {
+				// Enforce alternation: add a minimal assistant message if two user messages are consecutive.
+				// This shouldn't happen with current chatter.go logic but is a safeguard.
+				anthropicMessages = append(anthropicMessages, anthropic.NewAssistantMessage(anthropic.NewTextBlock("Okay.")))
+			}
+			anthropicMessages = append(anthropicMessages, anthropic.NewUserMessage(anthropic.NewTextBlock(userContent)))
+			lastRoleWasUser = true
+		case goopenai.ChatMessageRoleAssistant:
+			// If the first message is an assistant message, and we have system content,
+			// prepend a user message with the system content.
+			if isFirstUserMessage && systemContent != "" {
+				anthropicMessages = append(anthropicMessages, anthropic.NewUserMessage(anthropic.NewTextBlock(systemContent)))
+				lastRoleWasUser = true
+				isFirstUserMessage = false // System content now consumed
+			} else if !lastRoleWasUser && len(anthropicMessages) > 0 {
+				// Enforce alternation: add a minimal user message if two assistant messages are consecutive
+				// or if an assistant message is first without prior system prompt handling.
+				anthropicMessages = append(anthropicMessages, anthropic.NewUserMessage(anthropic.NewTextBlock(an.defaultRequiredUserMessage)))
+				lastRoleWasUser = true
+			}
+			anthropicMessages = append(anthropicMessages, anthropic.NewAssistantMessage(anthropic.NewTextBlock(msg.Content)))
+			lastRoleWasUser = false
+		default:
+			// Other roles (like 'meta') are ignored for Anthropic's message structure.
+			continue
+		}
 	}
-	return
+
+	// If only system content was provided, create a user message with it.
+	if len(anthropicMessages) == 0 && systemContent != "" {
+		anthropicMessages = append(anthropicMessages, anthropic.NewUserMessage(anthropic.NewTextBlock(systemContent)))
+	}
+
+	return anthropicMessages
 }
