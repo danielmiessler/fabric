@@ -192,18 +192,22 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	if raw {
-		// In raw mode, systemMessage is prepended to request.Message.Content
-		// and request.Message.Role is set to User.
+		// In raw mode, we want to avoid duplicating the input that's already in the pattern
+		var finalContent string
 		if systemMessage != "" {
-			if request.Message != nil {
-				request.Message.Content = fmt.Sprintf("%s\\n\\n%s", systemMessage, request.Message.Content)
-				request.Message.Role = goopenai.ChatMessageRoleUser
+			// If we have a pattern, it already includes the user input
+			if request.PatternName != "" {
+				finalContent = systemMessage
 			} else {
-				// If no user message originally, create one with the system content.
-				request.Message = &goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleUser, Content: systemMessage}
+				// No pattern, combine system message with user input
+				finalContent = fmt.Sprintf("%s\n\n%s", systemMessage, request.Message.Content)
+			}
+			request.Message = &goopenai.ChatCompletionMessage{
+				Role:    goopenai.ChatMessageRoleUser,
+				Content: finalContent,
 			}
 		}
-		// After this, if request.Message is not nil, it's the (potentially combined) message to be appended.
+		// After this, if request.Message is not nil, append it
 		if request.Message != nil {
 			session.Append(request.Message)
 		}
