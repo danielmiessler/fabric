@@ -6,7 +6,7 @@ toolchain go1.24.2
 
 require (
 	github.com/anaskhan96/soup v1.2.5
-	github.com/anthropics/anthropic-sdk-go v0.2.0-beta.3
+	github.com/anthropics/anthropic-sdk-go v1.2.0
 	github.com/atotto/clipboard v0.1.4
 	github.com/gabriel-vasile/mimetype v1.4.9
 	github.com/gin-gonic/gin v1.10.0
