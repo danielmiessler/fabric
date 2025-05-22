@@ -138,3 +138,7 @@ func (o *Client) createChatRequest(msgs []*goopenai.ChatCompletionMessage, opts 
 	}
 	return
 }
+
+func (o *Client) NeedsRawMode(modelName string) bool {
+	return false
+}

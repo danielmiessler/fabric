@@ -14,4 +14,5 @@ type Vendor interface {
 	ListModels() ([]string, error)
 	SendStream([]*goopenai.ChatCompletionMessage, *common.ChatOptions, chan string) error
 	Send(context.Context, []*goopenai.ChatCompletionMessage, *common.ChatOptions) (string, error)
+	NeedsRawMode(modelName string) bool
 }

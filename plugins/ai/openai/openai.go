@@ -123,6 +123,10 @@ func (o *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessag
 	return
 }
 
+func (o *Client) NeedsRawMode(modelName string) bool {
+	return false
+}
+
 func (o *Client) buildChatCompletionRequest(
 	inputMsgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions,
 ) (ret goopenai.ChatCompletionRequest) {

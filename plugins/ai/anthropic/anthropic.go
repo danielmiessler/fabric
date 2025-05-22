@@ -205,3 +205,7 @@ func (an *Client) toMessages(msgs []*goopenai.ChatCompletionMessage) (ret []anth
 
 	return anthropicMessages
 }
+
+func (an *Client) NeedsRawMode(modelName string) bool {
+	return false
+}

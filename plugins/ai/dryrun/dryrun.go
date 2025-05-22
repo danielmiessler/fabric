@@ -90,3 +90,7 @@ func (c *Client) Setup() error {
 func (c *Client) SetupFillEnvFileContent(_ *bytes.Buffer) {
 	// No environment variables needed for dry run
 }
+
+func (c *Client) NeedsRawMode(modelName string) bool {
+	return false
+}
