@@ -20,8 +20,8 @@ Fabric is graciously supported by…
 [Updates](#updates) •
 [What and Why](#what-and-why) •
 [Philosophy](#philosophy) •
-[Installation](#Installation) •
-[Usage](#Usage) •
+[Installation](#installation) •
+[Usage](#usage) •
 [Examples](#examples) •
 [Just Use the Patterns](#just-use-the-patterns) •
 [Custom Patterns](#custom-patterns) •
@@ -87,9 +87,9 @@ Fabric is graciously supported by…
 ## Updates
 
 > [!NOTE]
-> April 16, 2025
+> May 22, 2025
 >
-> - Fabric now supports Grok (from XAI)! Update and use `-S` to select it as your default if you want, or just use the shortcut `-m grok-3-beta`. Enjoy!
+> - Fabric now supports Anthropic's Claude 4. Read the [blog post from Anthropic](https://www.anthropic.com/news/claude-4).
 
 ## What and why
 

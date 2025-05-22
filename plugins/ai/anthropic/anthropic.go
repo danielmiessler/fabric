@@ -31,13 +31,12 @@ func NewClient() (ret *Client) {
 	ret.maxTokens = 4096
 	ret.defaultRequiredUserMessage = "Hi"
 	ret.models = []string{
-		anthropic.ModelClaude3_7SonnetLatest, anthropic.ModelClaude3_7Sonnet20250219,
-		anthropic.ModelClaude3_5HaikuLatest, anthropic.ModelClaude3_5Haiku20241022,
-		anthropic.ModelClaude3_5SonnetLatest, anthropic.ModelClaude3_5Sonnet20241022,
-		anthropic.ModelClaude_3_5_Sonnet_20240620, anthropic.ModelClaude3OpusLatest,
-		anthropic.ModelClaude_3_Opus_20240229, anthropic.ModelClaude_3_Sonnet_20240229,
-		anthropic.ModelClaude_3_Haiku_20240307, anthropic.ModelClaude_2_1,
-		anthropic.ModelClaude_2_0,
+		string(anthropic.ModelClaude3_7SonnetLatest), string(anthropic.ModelClaude3_7Sonnet20250219),
+		string(anthropic.ModelClaude3_5HaikuLatest), string(anthropic.ModelClaude3_5Haiku20241022),
+		string(anthropic.ModelClaude3_5SonnetLatest), string(anthropic.ModelClaude3_5Sonnet20241022),
+		string(anthropic.ModelClaude_3_5_Sonnet_20240620), string(anthropic.ModelClaude3OpusLatest),
+		string(anthropic.ModelClaude_3_Opus_20240229), string(anthropic.ModelClaude_3_Haiku_20240307),
+		string(anthropic.ModelClaudeOpus4_20250514), string(anthropic.ModelClaudeSonnet4_20250514),
 	}
 
 	return
@@ -92,7 +91,7 @@ func (an *Client) SendStream(
 
 	ctx := context.Background()
 	stream := an.client.Messages.NewStreaming(ctx, anthropic.MessageNewParams{
-		Model:       opts.Model,
+		Model:       anthropic.Model(opts.Model),
 		MaxTokens:   int64(an.maxTokens),
 		TopP:        anthropic.Opt(opts.TopP),
 		Temperature: anthropic.Opt(opts.Temperature),
@@ -124,7 +123,7 @@ func (an *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessa
 
 	var message *anthropic.Message
 	if message, err = an.client.Messages.New(ctx, anthropic.MessageNewParams{
-		Model:       opts.Model,
+		Model:       anthropic.Model(opts.Model),
 		MaxTokens:   int64(an.maxTokens),
 		TopP:        anthropic.Opt(opts.TopP),
 		Temperature: anthropic.Opt(opts.Temperature),
