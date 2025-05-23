@@ -32,6 +32,13 @@ type Chatter struct {
 
 // Send processes a chat request and applies any file changes if using the create_coding_feature pattern
 func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *fsdb.Session, err error) {
+	modelToUse := opts.Model
+	if modelToUse == "" {
+		modelToUse = o.model // Default to the model set in the Chatter struct
+	}
+	if o.vendor.NeedsRawMode(modelToUse) {
+		opts.Raw = true
+	}
 	if session, err = o.BuildSession(request, opts.Raw); err != nil {
 		return
 	}

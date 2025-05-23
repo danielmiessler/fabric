@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	ollamaapi "github.com/ollama/ollama/api"
@@ -140,5 +141,14 @@ func (o *Client) createChatRequest(msgs []*goopenai.ChatCompletionMessage, opts 
 }
 
 func (o *Client) NeedsRawMode(modelName string) bool {
+	ollamaPrefixes := []string{
+		"llama3",
+		"llama2",
+	}
+	for _, prefix := range ollamaPrefixes {
+		if strings.HasPrefix(modelName, prefix) {
+			return true
+		}
+	}
 	return false
 }
