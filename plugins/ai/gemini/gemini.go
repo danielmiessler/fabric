@@ -143,6 +143,10 @@ func (o *Client) extractText(response *genai.GenerateContentResponse) (ret strin
 	return
 }
 
+func (o *Client) NeedsRawMode(modelName string) bool {
+	return false
+}
+
 func toMessages(msgs []*goopenai.ChatCompletionMessage) (systemInstruction *genai.Content, messages []genai.Part) {
 	if len(msgs) >= 2 {
 		systemInstruction = &genai.Content{

@@ -345,3 +345,7 @@ func (c *Client) GetEmbeddings(ctx context.Context, input string, opts *common.C
 	embeddings = result.Data[0].Embedding
 	return
 }
+
+func (c *Client) NeedsRawMode(modelName string) bool {
+	return false
+}
