@@ -41,3 +41,7 @@ func (oi *Client) ListModels() (ret []string, err error) {
 	ret = oi.apiDeployments
 	return
 }
+
+func (oi *Client) NeedsRawMode(modelName string) bool {
+	return false
+}
