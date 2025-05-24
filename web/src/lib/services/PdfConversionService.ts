@@ -1,17 +1,14 @@
-  import { createPipeline, transformers } from 'pdf-to-markdown-core/lib/src';
+import { createPipeline, transformers } from 'pdf-to-markdown-core/lib/src';
 import { PARSE_SCHEMA } from 'pdf-to-markdown-core/lib/src/PdfParser';
 import * as pdfjs from 'pdfjs-dist';
+import pdfConfig from './pdf-config';
 
 export class PdfConversionService {
   constructor() {
     if (typeof window !== 'undefined') {
       console.log('PDF.js version:', pdfjs.version);
-      const workerUrl = new URL(
-        'pdfjs-dist/build/pdf.worker.min.js',
-        import.meta.url
-      );
-      console.log('Worker URL:', workerUrl.href);
-      pdfjs.GlobalWorkerOptions.workerSrc = workerUrl.href;
+      // Initialize PDF.js configuration from the shared config
+      pdfConfig.initialize();
       console.log('Worker configuration complete');
     }
   }
