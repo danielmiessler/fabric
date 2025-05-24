@@ -15,11 +15,11 @@ export const POST: RequestHandler = async ({ request }) => {
         language: body.language,
         hasLanguageParam: true
       });
-      
+
       // Extract video ID
       const match = body.url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
       const videoId = match ? match[1] : null;
-      
+
       if (!videoId) {
         return json({ error: 'Invalid YouTube URL' }, { status: 400 });
       }
