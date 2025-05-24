@@ -2,6 +2,9 @@ import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
+// Get the Fabric base URL from environment variable with fallback
+const FABRIC_BASE_URL = process.env.FABRIC_BASE_URL || 'http://localhost:8080';
+
 export default defineConfig({
   plugins: [sveltekit(), purgeCss()],
   build: {
@@ -18,6 +21,10 @@ export default defineConfig({
     'process.browser': true,
     'process': {
       cwd: () => ('/')
+    },
+    // Inject Fabric configuration for client-side access
+    '__FABRIC_CONFIG__': {
+      FABRIC_BASE_URL: JSON.stringify(FABRIC_BASE_URL)
     }
   },
   resolve: {
@@ -31,11 +38,11 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: FABRIC_BASE_URL,
         changeOrigin: true,
         timeout: 30000,
         rewrite: (path) => path.replace(/^\/api/, ''),
-        configure: (proxy, options) => {
+        configure: (proxy, _options) => {
           proxy.on('error', (err, req, res) => {
             console.log('proxy error', err);
             res.writeHead(500, {
@@ -46,10 +53,10 @@ export default defineConfig({
         }
       },
       '^/(patterns|models|sessions)/names': {
-        target: 'http://localhost:8080',
+        target: FABRIC_BASE_URL,
         changeOrigin: true,
         timeout: 30000,
-        configure: (proxy, options) => {
+        configure: (proxy, _options) => {
           proxy.on('error', (err, req, res) => {
             console.log('proxy error', err);
             res.writeHead(500, {
