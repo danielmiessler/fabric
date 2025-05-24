@@ -7,11 +7,15 @@ const FABRIC_BASE_URL = process.env.FABRIC_BASE_URL || 'http://localhost:8080';
 
 export default defineConfig({
   plugins: [sveltekit(), purgeCss()],
-  build: {
-		commonjsOptions: {
-			transformMixedEsModules: true
-		}
-	},
+  optimizeDeps: {
+    include: ['pdfjs-dist'],
+    esbuildOptions: {
+      target: 'esnext',
+      supported: {
+        'top-level-await': true
+      }
+    }
+  },
   define: {
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV)
@@ -73,4 +77,16 @@ export default defineConfig({
       ignored: ['**/node_modules/**', '**/dist/**', '**/.git/**', '**/.svelte-kit/**']
     }
   },
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true
+    },
+    target: 'esnext',
+    minify: true,
+    rollupOptions: {
+      output: {
+        format: 'es'
+      }
+    }
+  }
 });
