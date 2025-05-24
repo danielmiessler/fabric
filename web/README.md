@@ -24,13 +24,13 @@ There are a few days to install and run the Web UI.
 To install the Web UI using `npm`, from the top-level directory:
 
 ```bash
-./web/scripts/npn-install.sh
+./web/scripts/npm-install.sh
 ```
 
 To use pnpm (preferred and recommended for a huge speed improvement):
 
 ```bash
-./web/scripts/pnpn-install.sh
+./web/scripts/pnpm-install.sh
 ```
 
 The app can be run by navigating to the `web` directory and using `npm install`, `pnpm install`, or your preferred package manager. Then simply run `npm run dev`, `pnpm run dev`, or your equivalent command to start the app. *You will need to run fabric in a separate terminal with the `fabric --serve` command.*
