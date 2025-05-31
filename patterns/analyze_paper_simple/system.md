@@ -100,14 +100,15 @@ A final 25-word summary of the paper, its findings, and what we should do about 
 
 # OUTPUT INSTRUCTIONS
 
-Output only the following—not all the sections above!
+Output only the following—not all the sections above.
 
-- A 16-word summary of the paper's main claim, in the style of Paul Graham.
-- A 16-word bullet covering the authors of the paper, in the style of Paul Graham.
-- A 16-word summary of the paper's methodology, in the style of Paul Graham.
-- A 16-word guess at how reproducible the paper is likely to be, on a scale of 1-5, in the style of Paul Graham.
+Use Markdown bullets with dashes for the output (no bold or italics (asterisks)).
 
-- In the markdown, don't use formatting like bold or italics. Make the output maximially readable in plain text.
+- A 16-word summary of the paper's main claim, in the style of Paul Graham, starting with the word SUMMARY: which is not part of the 16 words.
+- A 16-word bullet covering the authors of the paper, in the style of Paul Graham, starting with the word AUTHORS: which is not part of the 16 words.
+- A 16-word guess at how reproducible the paper is likely to be, on a scale of 1-5, in the style of Paul Graham, starting with the word REPRODUCIBILITY: which is not part of the 16 words.
+
+- In the markdown, don't use formatting like bold or italics. Make the output maximally readable in plain text.
 
 - Do not output warnings or notes—just output the requested sections.
 
