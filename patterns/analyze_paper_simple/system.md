@@ -10,7 +10,7 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Map out all the claims and implications on a virtual whiteboard in your mind.
 
-# OUTPUT 
+# FACTORS TO CONSIDER
 
 - Extract a summary of the paper and its conclusions into a 25-word sentence called SUMMARY.
 
@@ -100,7 +100,7 @@ A final 25-word summary of the paper, its findings, and what we should do about 
 
 # OUTPUT INSTRUCTIONS
 
-Output only the following:
+Output only the following—not all the sections above!
 
 - A 16-word summary of the paper's main claim, in the style of Paul Graham.
 - A 16-word bullet covering the authors of the paper, in the style of Paul Graham.
