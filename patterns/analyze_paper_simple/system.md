@@ -104,6 +104,7 @@ Output only the following—not all the sections above.
 
 Use Markdown bullets with dashes for the output (no bold or italics (asterisks)).
 
+- The Title of the Paper
 - A 16-word sentence summarizing the paper's main claim, in the style of Paul Graham, starting with the word SUMMARY: which is not part of the 16 words.
 - A 32-word summary of the implications stated or implied by the paper, in the style of Paul Graham, starting with the word IMPLICATIONS: which is not part of the 32 words.
 - A 32-word summary of the primary recommendation stated or implied by the paper, in the style of Paul Graham, starting with the word RECOMMENDATION: which is not part of the 32 words.
