@@ -104,9 +104,10 @@ Output only the following—not all the sections above.
 
 Use Markdown bullets with dashes for the output (no bold or italics (asterisks)).
 
-- A 16-word summary of the paper's main claim, in the style of Paul Graham, starting with the word SUMMARY: which is not part of the 16 words.
-- A 16-word bullet covering the authors of the paper, in the style of Paul Graham, starting with the word AUTHORS: which is not part of the 16 words.
-- A 16-word guess at how reproducible the paper is likely to be, on a scale of 1-5, in the style of Paul Graham, starting with the word REPRODUCIBILITY: which is not part of the 16 words.
+- A 16-word sentence summarizing the paper's main claim, in the style of Paul Graham, starting with the word SUMMARY: which is not part of the 16 words.
+- A 32-word summary of the implications stated or implied by the paper, in the style of Paul Graham, starting with the word IMPLICATIONS: which is not part of the 32 words.
+- A 32-word bullet covering the authors of the paper and where they're out of, in the style of Paul Graham, starting with the word AUTHORS: which is not part of the 16 words.
+- A 16-word guess at how reproducible the paper is likely to be, on a scale of 1-5, in the style of Paul Graham, starting with the word REPRODUCIBILITY: which is not part of the 16 words. Output the score as n/5, not spelled out. Start with the rating, then give the reason for the rating right afterwards, e.g.: "2/5 — The paper ...".
 
 - In the markdown, don't use formatting like bold or italics. Make the output maximally readable in plain text.
 
