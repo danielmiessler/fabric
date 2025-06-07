@@ -56,6 +56,10 @@ var ProviderMap = map[string]ProviderConfig{
 		Name:    "SiliconCloud",
 		BaseURL: "https://api.siliconflow.cn/v1",
 	},
+	"AIML": {
+		Name:    "AIML",
+		BaseURL: "https://api.aimlapi.com/v1",
+	},
 }
 
 // GetProviderByName returns the provider configuration for a given name with O(1) lookup
