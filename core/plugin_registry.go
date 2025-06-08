@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/danielmiessler/fabric/plugins/ai/exolab"
 	"github.com/danielmiessler/fabric/plugins/strategy"
@@ -230,7 +231,7 @@ func (o *PluginRegistry) Configure() (err error) {
 	return
 }
 
-func (o *PluginRegistry) GetChatter(model string, modelContextLength int, strategy string, stream bool, dryRun bool) (ret *Chatter, err error) {
+func (o *PluginRegistry) GetChatter(model string, modelContextLength int, strategy string, stream bool, dryRun bool, chatTimeout time.Duration) (ret *Chatter, err error) {
 	ret = &Chatter{
 		db:     o.Db,
 		Stream: stream,
@@ -282,6 +283,15 @@ func (o *PluginRegistry) GetChatter(model string, modelContextLength int, strate
 			model, defaultModel, defaultVendor, errMsg)
 		return
 	}
+
+
+	if ret.vendor.GetName() == "Ollama" {
+		if client, ok := ret.vendor.(*ollama.Client); ok {
+			client.ReconfigureHttpTimeout(chatTimeout)
+		}
+	}
+
+
 	ret.strategy = strategy
 	return
 }

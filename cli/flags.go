@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/jessevdk/go-flags"
@@ -74,6 +75,7 @@ type Flags struct {
 	ListStrategies                  bool              `long:"liststrategies" description:"List all strategies"`
 	ListVendors                     bool              `long:"listvendors" description:"List all vendors"`
 	ShellCompleteOutput             bool              `long:"shell-complete-list" description:"Output raw list without headers/formatting (for shell completion)"`
+	ChatTimeout                     time.Duration     `long:"chat-timeout" description:"Chat timeout (currently only affects Ollama requests) (e.g. 30s, 45m)" default:"20m"`
 }
 
 var debug = false
