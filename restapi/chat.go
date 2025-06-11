@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	goopenai "github.com/sashabaranov/go-openai"
 
@@ -105,7 +106,7 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 					}
 				}
 
-				chatter, err := h.registry.GetChatter(p.Model, 2048, "", false, false)
+				chatter, err := h.registry.GetChatter(p.Model, 2048, "", false, false, 20 * time.Minute)
 				if err != nil {
 					log.Printf("Error creating chatter: %v", err)
 					streamChan <- fmt.Sprintf("Error: %v", err)

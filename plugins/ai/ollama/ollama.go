@@ -18,9 +18,20 @@ import (
 
 const defaultBaseUrl = "http://localhost:11434"
 
+
+var debug = false
+
+func Debugf(format string, a ...interface{}) {
+	if debug {
+		fmt.Printf("DEBUG: "+format, a...)
+	}
+}
+
 func NewClient() (ret *Client) {
 	vendorName := "Ollama"
 	ret = &Client{}
+
+	ret.HttpTimeout = 20 * time.Minute;
 
 	ret.PluginBase = &plugins.PluginBase{
 		Name:            vendorName,
@@ -43,11 +54,25 @@ type Client struct {
 	ApiKey *plugins.SetupQuestion
 	apiUrl *url.URL
 	client *ollamaapi.Client
+	HttpTimeout time.Duration
 }
 
 type transport_sec struct {
 	underlyingTransport http.RoundTripper
 	ApiKey              *plugins.SetupQuestion
+}
+
+
+func (c *Client) ReconfigureHttpTimeout(t time.Duration) {
+	c.HttpTimeout = t
+	Debugf("Ollama ReconfigureHttpTimeout %s\n",c.HttpTimeout)
+
+	c.configure() // <-  re-configure client with new timeout (ouch!)
+	// NOTE: HttpTimeout must be set before the internal HTTP client is created.
+	// Since configure() runs early during plugin setup, we call it again after
+	// setting the timeout. This avoids modifying the shared NewClient() API.
+	// I refer to this as a "chat timeout" so it can be reused across modules in future,
+	// regardless of how it's sourced (e.g. internal event timer or external triggered callback).
 }
 
 func (t *transport_sec) RoundTrip(req *http.Request) (*http.Response, error) {
@@ -63,7 +88,11 @@ func (o *Client) configure() (err error) {
 		return
 	}
 
-	o.client = ollamaapi.NewClient(o.apiUrl, &http.Client{Timeout: 1200000 * time.Millisecond, Transport: &transport_sec{underlyingTransport: http.DefaultTransport, ApiKey: o.ApiKey}})
+	Debugf("Ollama configure %s\n",o.HttpTimeout)
+
+	o.client = ollamaapi.NewClient(o.apiUrl, &http.Client{
+		Timeout: o.HttpTimeout,
+		Transport: &transport_sec{underlyingTransport: http.DefaultTransport, ApiKey: o.ApiKey}})
 	return
 }
 
