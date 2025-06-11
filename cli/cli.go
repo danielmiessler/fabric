@@ -256,7 +256,8 @@ func Cli(version string) (err error) {
 	}
 
 	var chatter *core.Chatter
-	if chatter, err = registry.GetChatter(currentFlags.Model, currentFlags.ModelContextLength, currentFlags.Strategy, currentFlags.Stream, currentFlags.DryRun); err != nil {
+	if chatter, err = registry.GetChatter(currentFlags.Model, currentFlags.ModelContextLength,
+		currentFlags.Strategy, currentFlags.Stream, currentFlags.DryRun); err != nil {
 		return
 	}
 
