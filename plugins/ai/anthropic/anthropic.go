@@ -3,6 +3,7 @@ package anthropic
 import (
 	"context"
 	"fmt"
+	"github.com/samber/lo"
 	"strings"
 
 	"github.com/anthropics/anthropic-sdk-go"
@@ -163,11 +164,14 @@ func (an *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessa
 		return
 	}
 
-	if len(message.Content) == 0 {
-		// Model returned no content blocks.
+	texts := lo.FilterMap(message.Content, func(block anthropic.ContentBlockUnion, _ int) (ret string, ok bool) {
+		if ok = block.Type == "text" && block.Text != ""; ok {
+			ret = block.Text
+		}
 		return
-	}
-	ret = message.Content[0].Text
+	})
+	ret = strings.Join(texts, "")
+
 	return
 }
 
