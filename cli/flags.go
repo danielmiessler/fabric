@@ -76,7 +76,7 @@ type Flags struct {
 	ShellCompleteOutput             bool              `long:"shell-complete-list" description:"Output raw list without headers/formatting (for shell completion)"`
 }
 
-var debug = false
+var debug = true
 
 func Debugf(format string, a ...interface{}) {
 	if debug {
@@ -159,7 +159,7 @@ func Init() (ret *Flags, err error) {
 	// Handle stdin and messages
 	// Handle stdin and messages
 	info, _ := os.Stdin.Stat()
-	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
+	pipedToStdin := (info.Mode()&os.ModeCharDevice) == 0 && debug
 
 	// Append positional arguments to the message (custom message)
 	if len(args) > 0 {

@@ -27,6 +27,9 @@ func NewClient() (ret *Client) {
 	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
 	ret.ApiBaseURL.Value = defaultBaseUrl
 	ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", true)
+	ret.UseWebTool = ret.AddSetupQuestionBool("Web Search Tool Enabled", false)
+	ret.WebToolLocation = ret.AddSetupQuestionCustom("Web Search Tool Location", false,
+		"Enter your approximate timezone location for web search (e.g., 'America/Los_Angeles', see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).")
 
 	ret.maxTokens = 4096
 	ret.defaultRequiredUserMessage = "Hi"
@@ -44,8 +47,10 @@ func NewClient() (ret *Client) {
 
 type Client struct {
 	*plugins.PluginBase
-	ApiBaseURL *plugins.SetupQuestion
-	ApiKey     *plugins.SetupQuestion
+	ApiBaseURL      *plugins.SetupQuestion
+	ApiKey          *plugins.SetupQuestion
+	UseWebTool      *plugins.SetupQuestion
+	WebToolLocation *plugins.SetupQuestion
 
 	maxTokens                  int
 	defaultRequiredUserMessage string
@@ -86,17 +91,12 @@ func (an *Client) SendStream(
 	if len(messages) == 0 {
 		close(channel)
 		// No messages to send after normalization, consider this a non-error condition for streaming.
-		return nil
+		return
 	}
 
 	ctx := context.Background()
-	stream := an.client.Messages.NewStreaming(ctx, anthropic.MessageNewParams{
-		Model:       anthropic.Model(opts.Model),
-		MaxTokens:   int64(an.maxTokens),
-		TopP:        anthropic.Opt(opts.TopP),
-		Temperature: anthropic.Opt(opts.Temperature),
-		Messages:    messages,
-	})
+
+	stream := an.client.Messages.NewStreaming(ctx, an.buildMessageParams(messages, opts))
 
 	for stream.Next() {
 		event := stream.Current()
@@ -114,27 +114,58 @@ func (an *Client) SendStream(
 	return
 }
 
-func (an *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
-	messages := an.toMessages(msgs)
-	if len(messages) == 0 {
-		// No messages to send after normalization, return empty string and no error.
-		return "", nil
-	}
+func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *common.ChatOptions) (
+	params anthropic.MessageNewParams) {
 
-	var message *anthropic.Message
-	if message, err = an.client.Messages.New(ctx, anthropic.MessageNewParams{
+	params = anthropic.MessageNewParams{
 		Model:       anthropic.Model(opts.Model),
 		MaxTokens:   int64(an.maxTokens),
 		TopP:        anthropic.Opt(opts.TopP),
 		Temperature: anthropic.Opt(opts.Temperature),
-		Messages:    messages,
-	}); err != nil {
+		Messages:    msgs,
+	}
+
+	if plugins.ParseBoolElseFalse(an.UseWebTool.Value) {
+		// Build the web-search tool definition:
+		webTool := anthropic.WebSearchTool20250305Param{
+			Name:         "web_search",          // string literal instead of constant
+			Type:         "web_search_20250305", // string literal instead of constant
+			CacheControl: anthropic.NewCacheControlEphemeralParam(),
+			// Optional: restrict domains or max uses
+			// AllowedDomains: []string{"wikipedia.org", "openai.com"},
+			// MaxUses:        anthropic.Opt[int64](5),
+		}
+
+		if an.WebToolLocation.Value == "" {
+			webTool.UserLocation.Type = "approximate"
+			webTool.UserLocation.Timezone = anthropic.Opt(an.WebToolLocation.Value)
+		}
+
+		// Wrap it in the union:
+		params.Tools = []anthropic.ToolUnionParam{
+			{OfWebSearchTool20250305: &webTool},
+		}
+	}
+	return
+}
+
+func (an *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (
+	ret string, err error) {
+
+	messages := an.toMessages(msgs)
+	if len(messages) == 0 {
+		// No messages to send after normalization, return empty string and no error.
+		return
+	}
+
+	var message *anthropic.Message
+	if message, err = an.client.Messages.New(ctx, an.buildMessageParams(messages, opts)); err != nil {
 		return
 	}
 
 	if len(message.Content) == 0 {
 		// Model returned no content blocks.
-		return "", nil
+		return
 	}
 	ret = message.Content[0].Text
 	return
