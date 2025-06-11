@@ -42,10 +42,10 @@ func NewClient() (ret *Client) {
 
 type Client struct {
 	*plugins.PluginBase
-	ApiUrl *plugins.SetupQuestion
-	ApiKey *plugins.SetupQuestion
-	apiUrl *url.URL
-	client *ollamaapi.Client
+	ApiUrl         *plugins.SetupQuestion
+	ApiKey         *plugins.SetupQuestion
+	apiUrl         *url.URL
+	client         *ollamaapi.Client
 	ApiHttpTimeout *plugins.SetupQuestion
 }
 
