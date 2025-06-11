@@ -159,7 +159,7 @@ func Init() (ret *Flags, err error) {
 	// Handle stdin and messages
 	// Handle stdin and messages
 	info, _ := os.Stdin.Stat()
-	pipedToStdin := (info.Mode()&os.ModeCharDevice) == 0 && !debug
+	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
 
 	// Append positional arguments to the message (custom message)
 	if len(args) > 0 {

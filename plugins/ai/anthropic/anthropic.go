@@ -138,7 +138,7 @@ func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *common
 			// MaxUses:        anthropic.Opt[int64](5),
 		}
 
-		if an.WebToolLocation.Value == "" {
+		if an.WebToolLocation.Value != "" {
 			webTool.UserLocation.Type = "approximate"
 			webTool.UserLocation.Timezone = anthropic.Opt(an.WebToolLocation.Value)
 		}
