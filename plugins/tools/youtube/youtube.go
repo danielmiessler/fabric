@@ -1,7 +1,12 @@
 // Package youtube provides YouTube video transcript and comment extraction functionality.
-// This implementation relies on yt-dlp for reliable transcript extraction, which must be
-// installed separately. The old YouTube API scraping methods have been removed due to
-// YouTube's frequent changes and rate limiting.
+//
+// Requirements:
+// - yt-dlp: Required for transcript extraction (must be installed separately)
+// - YouTube API key: Optional, only needed for comments and metadata extraction
+//
+// The implementation uses yt-dlp for reliable transcript extraction and the YouTube API
+// for comments/metadata. Old YouTube scraping methods have been removed due to
+// frequent changes and rate limiting.
 package youtube
 
 import (
@@ -30,7 +35,7 @@ func NewYouTube() (ret *YouTube) {
 
 	ret.PluginBase = &plugins.PluginBase{
 		Name:             label,
-		SetupDescription: label + " - to grab video transcripts and comments",
+		SetupDescription: label + " - to grab video transcripts (via yt-dlp) and comments/metadata (via YouTube API)",
 		EnvNamePrefix:    plugins.BuildEnvVariablePrefix(label),
 	}
 
@@ -49,6 +54,10 @@ type YouTube struct {
 
 func (o *YouTube) initService() (err error) {
 	if o.service == nil {
+		if o.ApiKey.Value == "" {
+			err = fmt.Errorf("YouTube API key required for comments and metadata. Run 'fabric --setup' to configure")
+			return
+		}
 		o.normalizeRegex = regexp.MustCompile(`[^a-zA-Z0-9]+`)
 		ctx := context.Background()
 		o.service, err = youtube.NewService(ctx, option.WithAPIKey(o.ApiKey.Value))
@@ -57,10 +66,6 @@ func (o *YouTube) initService() (err error) {
 }
 
 func (o *YouTube) GetVideoOrPlaylistId(url string) (videoId string, playlistId string, err error) {
-	if err = o.initService(); err != nil {
-		return
-	}
-
 	// Video ID pattern
 	videoPattern := `(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:live\/|[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:s(?:horts)\/)|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]*)`
 	videoRe := regexp.MustCompile(videoPattern)
