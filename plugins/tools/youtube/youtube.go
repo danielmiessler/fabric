@@ -18,6 +18,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -118,8 +119,8 @@ func (o *YouTube) tryMethodYtDlp(videoId string, language string) (ret string, e
 		return
 	}
 
-	// Create a temporary directory for yt-dlp output
-	tempDir := "/tmp/fabric-youtube-" + videoId
+	// Create a temporary directory for yt-dlp output (cross-platform)
+	tempDir := filepath.Join(os.TempDir(), "fabric-youtube-"+videoId)
 	if err = os.MkdirAll(tempDir, 0755); err != nil {
 		err = fmt.Errorf("failed to create temp directory: %v", err)
 		return
@@ -128,6 +129,7 @@ func (o *YouTube) tryMethodYtDlp(videoId string, language string) (ret string, e
 
 	// Use yt-dlp to get transcript
 	videoURL := "https://www.youtube.com/watch?v=" + videoId
+	outputPath := filepath.Join(tempDir, "%(title)s.%(ext)s")
 	cmd := exec.Command("yt-dlp",
 		"--write-auto-subs",
 		"--sub-lang", language,
@@ -135,7 +137,7 @@ func (o *YouTube) tryMethodYtDlp(videoId string, language string) (ret string, e
 		"--sub-format", "vtt",
 		"--quiet",
 		"--no-warnings",
-		"-o", tempDir+"/%(title)s.%(ext)s",
+		"-o", outputPath,
 		videoURL)
 
 	var stderr bytes.Buffer
@@ -146,31 +148,10 @@ func (o *YouTube) tryMethodYtDlp(videoId string, language string) (ret string, e
 		return
 	}
 
-	// Find the VTT file in the temp directory
-	cmd2 := exec.Command("find", tempDir, "-name", "*."+language+".vtt", "-type", "f")
-	var findOut bytes.Buffer
-	cmd2.Stdout = &findOut
-
-	if err = cmd2.Run(); err != nil {
-		err = fmt.Errorf("failed to find VTT file: %v", err)
-		return
-	}
-
-	vttFiles := strings.Split(strings.TrimSpace(findOut.String()), "\n")
-	if len(vttFiles) == 0 || vttFiles[0] == "" {
-		// Try without language suffix
-		cmd3 := exec.Command("find", tempDir, "-name", "*.vtt", "-type", "f")
-		cmd3.Stdout = &findOut
-		findOut.Reset()
-		if err = cmd3.Run(); err != nil {
-			err = fmt.Errorf("no VTT files found")
-			return
-		}
-		vttFiles = strings.Split(strings.TrimSpace(findOut.String()), "\n")
-		if len(vttFiles) == 0 || vttFiles[0] == "" {
-			err = fmt.Errorf("no VTT files found in temp directory")
-			return
-		}
+	// Find VTT files using cross-platform approach
+	vttFiles, err := o.findVTTFiles(tempDir, language)
+	if err != nil {
+		return "", err
 	}
 
 	return o.readAndCleanVTTFile(vttFiles[0])
@@ -183,8 +164,8 @@ func (o *YouTube) tryMethodYtDlpWithTimestamps(videoId string, language string) 
 		return
 	}
 
-	// Create a temporary directory for yt-dlp output
-	tempDir := "/tmp/fabric-youtube-" + videoId
+	// Create a temporary directory for yt-dlp output (cross-platform)
+	tempDir := filepath.Join(os.TempDir(), "fabric-youtube-"+videoId)
 	if err = os.MkdirAll(tempDir, 0755); err != nil {
 		err = fmt.Errorf("failed to create temp directory: %v", err)
 		return
@@ -193,6 +174,7 @@ func (o *YouTube) tryMethodYtDlpWithTimestamps(videoId string, language string) 
 
 	// Use yt-dlp to get transcript
 	videoURL := "https://www.youtube.com/watch?v=" + videoId
+	outputPath := filepath.Join(tempDir, "%(title)s.%(ext)s")
 	cmd := exec.Command("yt-dlp",
 		"--write-auto-subs",
 		"--sub-lang", language,
@@ -200,7 +182,7 @@ func (o *YouTube) tryMethodYtDlpWithTimestamps(videoId string, language string) 
 		"--sub-format", "vtt",
 		"--quiet",
 		"--no-warnings",
-		"-o", tempDir+"/%(title)s.%(ext)s",
+		"-o", outputPath,
 		videoURL)
 
 	var stderr bytes.Buffer
@@ -211,31 +193,10 @@ func (o *YouTube) tryMethodYtDlpWithTimestamps(videoId string, language string) 
 		return
 	}
 
-	// Find the VTT file in the temp directory
-	cmd2 := exec.Command("find", tempDir, "-name", "*."+language+".vtt", "-type", "f")
-	var findOut bytes.Buffer
-	cmd2.Stdout = &findOut
-
-	if err = cmd2.Run(); err != nil {
-		err = fmt.Errorf("failed to find VTT file: %v", err)
-		return
-	}
-
-	vttFiles := strings.Split(strings.TrimSpace(findOut.String()), "\n")
-	if len(vttFiles) == 0 || vttFiles[0] == "" {
-		// Try without language suffix
-		cmd3 := exec.Command("find", tempDir, "-name", "*.vtt", "-type", "f")
-		cmd3.Stdout = &findOut
-		findOut.Reset()
-		if err = cmd3.Run(); err != nil {
-			err = fmt.Errorf("no VTT files found")
-			return
-		}
-		vttFiles = strings.Split(strings.TrimSpace(findOut.String()), "\n")
-		if len(vttFiles) == 0 || vttFiles[0] == "" {
-			err = fmt.Errorf("no VTT files found in temp directory")
-			return
-		}
+	// Find VTT files using cross-platform approach
+	vttFiles, err := o.findVTTFiles(tempDir, language)
+	if err != nil {
+		return "", err
 	}
 
 	return o.readAndFormatVTTWithTimestamps(vttFiles[0])
@@ -558,6 +519,41 @@ func (o *YouTube) FetchAndPrintPlaylist(playlistID string) (err error) {
 func (o *YouTube) normalizeFileName(name string) string {
 	return o.normalizeRegex.ReplaceAllString(name, "_")
 
+}
+
+// findVTTFiles searches for VTT files in a directory using cross-platform approach
+func (o *YouTube) findVTTFiles(dir, language string) ([]string, error) {
+	var vttFiles []string
+
+	// Walk through the directory to find VTT files
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() && strings.HasSuffix(strings.ToLower(path), ".vtt") {
+			vttFiles = append(vttFiles, path)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to walk directory: %v", err)
+	}
+
+	if len(vttFiles) == 0 {
+		return nil, fmt.Errorf("no VTT files found in directory")
+	}
+
+	// Prefer files with the specified language
+	for _, file := range vttFiles {
+		if strings.Contains(file, "."+language+".vtt") {
+			return []string{file}, nil
+		}
+	}
+
+	// Return the first VTT file found if no language-specific file exists
+	return []string{vttFiles[0]}, nil
 }
 
 type VideoMeta struct {
