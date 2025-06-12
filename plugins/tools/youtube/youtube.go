@@ -1,20 +1,29 @@
+// Package youtube provides YouTube video transcript and comment extraction functionality.
+//
+// Requirements:
+// - yt-dlp: Required for transcript extraction (must be installed separately)
+// - YouTube API key: Optional, only needed for comments and metadata extraction
+//
+// The implementation uses yt-dlp for reliable transcript extraction and the YouTube API
+// for comments/metadata. Old YouTube scraping methods have been removed due to
+// frequent changes and rate limiting.
 package youtube
 
 import (
+	"bytes"
 	"context"
 	"encoding/csv"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
-	"net/url"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/anaskhan96/soup"
 	"github.com/danielmiessler/fabric/plugins"
 	"google.golang.org/api/option"
 	"google.golang.org/api/youtube/v3"
@@ -27,7 +36,7 @@ func NewYouTube() (ret *YouTube) {
 
 	ret.PluginBase = &plugins.PluginBase{
 		Name:             label,
-		SetupDescription: label + " - to grab video transcripts and comments",
+		SetupDescription: label + " - to grab video transcripts (via yt-dlp) and comments/metadata (via YouTube API)",
 		EnvNamePrefix:    plugins.BuildEnvVariablePrefix(label),
 	}
 
@@ -46,6 +55,10 @@ type YouTube struct {
 
 func (o *YouTube) initService() (err error) {
 	if o.service == nil {
+		if o.ApiKey.Value == "" {
+			err = fmt.Errorf("YouTube API key required for comments and metadata. Run 'fabric --setup' to configure")
+			return
+		}
 		o.normalizeRegex = regexp.MustCompile(`[^a-zA-Z0-9]+`)
 		ctx := context.Background()
 		o.service, err = youtube.NewService(ctx, option.WithAPIKey(o.ApiKey.Value))
@@ -54,10 +67,6 @@ func (o *YouTube) initService() (err error) {
 }
 
 func (o *YouTube) GetVideoOrPlaylistId(url string) (videoId string, playlistId string, err error) {
-	if err = o.initService(); err != nil {
-		return
-	}
-
 	// Video ID pattern
 	videoPattern := `(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:live\/|[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:s(?:horts)\/)|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]*)`
 	videoRe := regexp.MustCompile(videoPattern)
@@ -94,110 +103,211 @@ func (o *YouTube) GrabTranscriptForUrl(url string, language string) (ret string,
 }
 
 func (o *YouTube) GrabTranscript(videoId string, language string) (ret string, err error) {
-	var transcript string
-	if transcript, err = o.GrabTranscriptBase(videoId, language); err != nil {
-		err = fmt.Errorf("transcript not available. (%v)", err)
-		return
-	}
-
-	// Parse the XML transcript
-	doc := soup.HTMLParse(transcript)
-	// Extract the text content from the <text> tags
-	textTags := doc.FindAll("text")
-	var textBuilder strings.Builder
-	for _, textTag := range textTags {
-		textBuilder.WriteString(strings.ReplaceAll(textTag.Text(), "&#39;", "'"))
-		textBuilder.WriteString(" ")
-		ret = textBuilder.String()
-	}
-	return
+	// Use yt-dlp for reliable transcript extraction
+	return o.tryMethodYtDlp(videoId, language)
 }
 
 func (o *YouTube) GrabTranscriptWithTimestamps(videoId string, language string) (ret string, err error) {
-	var transcript string
-	if transcript, err = o.GrabTranscriptBase(videoId, language); err != nil {
-		err = fmt.Errorf("transcript not available. (%v)", err)
+	// Use yt-dlp for reliable transcript extraction with timestamps
+	return o.tryMethodYtDlpWithTimestamps(videoId, language)
+}
+
+func (o *YouTube) tryMethodYtDlp(videoId string, language string) (ret string, err error) {
+	// Check if yt-dlp is available
+	if _, err = exec.LookPath("yt-dlp"); err != nil {
+		err = fmt.Errorf("yt-dlp not found in PATH. Please install yt-dlp to use YouTube transcript functionality")
 		return
 	}
 
-	// Parse the XML transcript
-	doc := soup.HTMLParse(transcript)
-	// Extract the text content from the <text> tags
-	textTags := doc.FindAll("text")
-	var textBuilder strings.Builder
-	for _, textTag := range textTags {
-		// Extract the start and duration attributes
-		start := textTag.Attrs()["start"]
-		dur := textTag.Attrs()["dur"]
-		end := fmt.Sprintf("%f", parseFloat(start)+parseFloat(dur))
-		// Format the timestamps
-		startFormatted := formatTimestamp(parseFloat(start))
-		endFormatted := formatTimestamp(parseFloat(end))
-		text := strings.ReplaceAll(textTag.Text(), "&#39;", "'")
-		textBuilder.WriteString(fmt.Sprintf("[%s - %s] %s\n", startFormatted, endFormatted, text))
+	// Create a temporary directory for yt-dlp output (cross-platform)
+	tempDir := filepath.Join(os.TempDir(), "fabric-youtube-"+videoId)
+	if err = os.MkdirAll(tempDir, 0755); err != nil {
+		err = fmt.Errorf("failed to create temp directory: %v", err)
+		return
 	}
-	ret = textBuilder.String()
+	defer os.RemoveAll(tempDir)
+
+	// Use yt-dlp to get transcript
+	videoURL := "https://www.youtube.com/watch?v=" + videoId
+	outputPath := filepath.Join(tempDir, "%(title)s.%(ext)s")
+	cmd := exec.Command("yt-dlp",
+		"--write-auto-subs",
+		"--sub-lang", language,
+		"--skip-download",
+		"--sub-format", "vtt",
+		"--quiet",
+		"--no-warnings",
+		"-o", outputPath,
+		videoURL)
+
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
+	if err = cmd.Run(); err != nil {
+		err = fmt.Errorf("yt-dlp failed: %v, stderr: %s", err, stderr.String())
+		return
+	}
+
+	// Find VTT files using cross-platform approach
+	vttFiles, err := o.findVTTFiles(tempDir, language)
+	if err != nil {
+		return "", err
+	}
+
+	return o.readAndCleanVTTFile(vttFiles[0])
+}
+
+func (o *YouTube) tryMethodYtDlpWithTimestamps(videoId string, language string) (ret string, err error) {
+	// Check if yt-dlp is available
+	if _, err = exec.LookPath("yt-dlp"); err != nil {
+		err = fmt.Errorf("yt-dlp not found in PATH. Please install yt-dlp to use YouTube transcript functionality")
+		return
+	}
+
+	// Create a temporary directory for yt-dlp output (cross-platform)
+	tempDir := filepath.Join(os.TempDir(), "fabric-youtube-"+videoId)
+	if err = os.MkdirAll(tempDir, 0755); err != nil {
+		err = fmt.Errorf("failed to create temp directory: %v", err)
+		return
+	}
+	defer os.RemoveAll(tempDir)
+
+	// Use yt-dlp to get transcript
+	videoURL := "https://www.youtube.com/watch?v=" + videoId
+	outputPath := filepath.Join(tempDir, "%(title)s.%(ext)s")
+	cmd := exec.Command("yt-dlp",
+		"--write-auto-subs",
+		"--sub-lang", language,
+		"--skip-download",
+		"--sub-format", "vtt",
+		"--quiet",
+		"--no-warnings",
+		"-o", outputPath,
+		videoURL)
+
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
+	if err = cmd.Run(); err != nil {
+		err = fmt.Errorf("yt-dlp failed: %v, stderr: %s", err, stderr.String())
+		return
+	}
+
+	// Find VTT files using cross-platform approach
+	vttFiles, err := o.findVTTFiles(tempDir, language)
+	if err != nil {
+		return "", err
+	}
+
+	return o.readAndFormatVTTWithTimestamps(vttFiles[0])
+}
+
+func (o *YouTube) readAndCleanVTTFile(filename string) (ret string, err error) {
+	var content []byte
+	if content, err = os.ReadFile(filename); err != nil {
+		return
+	}
+
+	// Convert VTT to plain text
+	lines := strings.Split(string(content), "\n")
+	var textBuilder strings.Builder
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		// Skip WEBVTT header, timestamps, and empty lines
+		if line == "" || line == "WEBVTT" || strings.Contains(line, "-->") ||
+			strings.HasPrefix(line, "NOTE") || strings.HasPrefix(line, "STYLE") ||
+			strings.HasPrefix(line, "Kind:") || strings.HasPrefix(line, "Language:") ||
+			isTimeStamp(line) {
+			continue
+		}
+		// Remove VTT formatting tags
+		line = removeVTTTags(line)
+		if line != "" {
+			textBuilder.WriteString(line)
+			textBuilder.WriteString(" ")
+		}
+	}
+
+	ret = strings.TrimSpace(textBuilder.String())
+	if ret == "" {
+		err = fmt.Errorf("no transcript content found in VTT file")
+	}
 	return
 }
 
-func parseFloat(s string) float64 {
-	f, _ := strconv.ParseFloat(s, 64)
-	return f
-}
-
-func formatTimestamp(seconds float64) string {
-	hours := int(seconds) / 3600
-	minutes := (int(seconds) % 3600) / 60
-	secs := int(seconds) % 60
-	return fmt.Sprintf("%02d:%02d:%02d", hours, minutes, secs)
-}
-
-func (o *YouTube) GrabTranscriptBase(videoId string, language string) (ret string, err error) {
-	if err = o.initService(); err != nil {
+func (o *YouTube) readAndFormatVTTWithTimestamps(filename string) (ret string, err error) {
+	var content []byte
+	if content, err = os.ReadFile(filename); err != nil {
 		return
 	}
 
-	watchUrl := "https://www.youtube.com/watch?v=" + videoId
-	var resp string
-	if resp, err = soup.Get(watchUrl); err != nil {
-		return
-	}
+	// Parse VTT and preserve timestamps
+	lines := strings.Split(string(content), "\n")
+	var textBuilder strings.Builder
+	var currentTimestamp string
 
-	doc := soup.HTMLParse(resp)
-	scriptTags := doc.FindAll("script")
-	for _, scriptTag := range scriptTags {
-		if strings.Contains(scriptTag.Text(), "captionTracks") {
-			regex := regexp.MustCompile(`"captionTracks":(\[.*?\])`)
-			match := regex.FindStringSubmatch(scriptTag.Text())
-			if len(match) > 1 {
-				var captionTracks []struct {
-					BaseURL string `json:"baseUrl"`
-				}
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
 
-				if err = json.Unmarshal([]byte(match[1]), &captionTracks); err != nil {
-					return
-				}
+		// Skip WEBVTT header and empty lines
+		if line == "" || line == "WEBVTT" || strings.HasPrefix(line, "NOTE") ||
+			strings.HasPrefix(line, "STYLE") || strings.HasPrefix(line, "Kind:") ||
+			strings.HasPrefix(line, "Language:") {
+			continue
+		}
 
-				if len(captionTracks) > 0 {
-					transcriptURL := captionTracks[0].BaseURL
-					for _, captionTrack := range captionTracks {
-						parsedUrl, error := url.Parse(captionTrack.BaseURL)
-						if error != nil {
-							err = fmt.Errorf("error parsing caption track")
-						}
-						parsedUrlParams, _ := url.ParseQuery(parsedUrl.RawQuery)
-						if parsedUrlParams["lang"][0] == language {
-							transcriptURL = captionTrack.BaseURL
-						}
-					}
-					ret, err = soup.Get(transcriptURL)
-					return
-				}
+		// Check if this line is a timestamp
+		if strings.Contains(line, "-->") {
+			// Extract start time for this segment
+			parts := strings.Split(line, " --> ")
+			if len(parts) >= 1 {
+				currentTimestamp = formatVTTTimestamp(parts[0])
+			}
+			continue
+		}
+
+		// Skip numeric sequence identifiers
+		if isTimeStamp(line) && !strings.Contains(line, ":") {
+			continue
+		}
+
+		// This should be transcript text
+		if line != "" {
+			// Remove VTT formatting tags
+			cleanText := removeVTTTags(line)
+			if cleanText != "" && currentTimestamp != "" {
+				textBuilder.WriteString(fmt.Sprintf("[%s] %s\n", currentTimestamp, cleanText))
 			}
 		}
 	}
-	err = fmt.Errorf("transcript not found")
+
+	ret = strings.TrimSpace(textBuilder.String())
+	if ret == "" {
+		err = fmt.Errorf("no transcript content found in VTT file")
+	}
 	return
+}
+
+func formatVTTTimestamp(vttTime string) string {
+	// VTT timestamps are in format "00:00:01.234" - convert to "00:00:01"
+	parts := strings.Split(vttTime, ".")
+	if len(parts) > 0 {
+		return parts[0]
+	}
+	return vttTime
+}
+
+func isTimeStamp(s string) bool {
+	// Match timestamps like "00:00:01.234" or just numbers
+	timestampRegex := regexp.MustCompile(`^\d+$|^\d{2}:\d{2}:\d{2}`)
+	return timestampRegex.MatchString(s)
+}
+
+func removeVTTTags(s string) string {
+	// Remove VTT tags like <c.colorE5E5E5>, </c>, etc.
+	tagRegex := regexp.MustCompile(`<[^>]*>`)
+	return tagRegex.ReplaceAllString(s, "")
 }
 
 func (o *YouTube) GrabComments(videoId string) (ret []string, err error) {
@@ -409,6 +519,41 @@ func (o *YouTube) FetchAndPrintPlaylist(playlistID string) (err error) {
 func (o *YouTube) normalizeFileName(name string) string {
 	return o.normalizeRegex.ReplaceAllString(name, "_")
 
+}
+
+// findVTTFiles searches for VTT files in a directory using cross-platform approach
+func (o *YouTube) findVTTFiles(dir, language string) ([]string, error) {
+	var vttFiles []string
+
+	// Walk through the directory to find VTT files
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() && strings.HasSuffix(strings.ToLower(path), ".vtt") {
+			vttFiles = append(vttFiles, path)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to walk directory: %v", err)
+	}
+
+	if len(vttFiles) == 0 {
+		return nil, fmt.Errorf("no VTT files found in directory")
+	}
+
+	// Prefer files with the specified language
+	for _, file := range vttFiles {
+		if strings.Contains(file, "."+language+".vtt") {
+			return []string{file}, nil
+		}
+	}
+
+	// Return the first VTT file found if no language-specific file exists
+	return []string{vttFiles[0]}, nil
 }
 
 type VideoMeta struct {

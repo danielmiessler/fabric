@@ -87,6 +87,12 @@ Fabric is graciously supported by…
 ## Updates
 
 > [!NOTE]
+>June 11, 2025
+>
+> - Fabric's YouTube transcription now needs `yt-dlp` to be installed. Make sure to install the latest
+>   version (2025.06.09 as of this note). The YouTube API key is only needed for comments (the `--comments` flag)
+>   and metadata extraction (the `--metadata` flag).
+>
 > May 22, 2025
 >
 > - Fabric now supports Anthropic's Claude 4. Read the [blog post from Anthropic](https://www.anthropic.com/news/claude-4).
