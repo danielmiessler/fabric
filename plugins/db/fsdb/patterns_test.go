@@ -144,3 +144,21 @@ func TestGetApplyVariables(t *testing.T) {
 		})
 	}
 }
+
+func TestPatternsEntity_Save(t *testing.T) {
+	entity, cleanup := setupTestPatternsEntity(t)
+	defer cleanup()
+
+	name := "new-pattern"
+	content := []byte("test pattern content")
+	require.NoError(t, entity.Save(name, content))
+
+	patternDir := filepath.Join(entity.Dir, name)
+	info, err := os.Stat(patternDir)
+	require.NoError(t, err)
+	assert.True(t, info.IsDir())
+
+	data, err := os.ReadFile(filepath.Join(patternDir, entity.SystemPatternFile))
+	require.NoError(t, err)
+	assert.Equal(t, content, data)
+}
