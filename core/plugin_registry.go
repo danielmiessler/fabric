@@ -20,6 +20,7 @@ import (
 	"github.com/danielmiessler/fabric/plugins/ai"
 	"github.com/danielmiessler/fabric/plugins/ai/anthropic"
 	"github.com/danielmiessler/fabric/plugins/ai/azure"
+	"github.com/danielmiessler/fabric/plugins/ai/bedrock"
 	"github.com/danielmiessler/fabric/plugins/ai/dryrun"
 	"github.com/danielmiessler/fabric/plugins/ai/gemini"
 	"github.com/danielmiessler/fabric/plugins/ai/lmstudio"
@@ -62,6 +63,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		openai.NewClient(),
 		ollama.NewClient(),
 		azure.NewClient(),
+		bedrock.NewClient(),
 		gemini.NewClient(),
 		anthropic.NewClient(),
 		lmstudio.NewClient(),
