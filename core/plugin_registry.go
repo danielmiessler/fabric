@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/danielmiessler/fabric/plugins/ai/bedrock"
 	"github.com/danielmiessler/fabric/plugins/ai/exolab"
 	"github.com/danielmiessler/fabric/plugins/strategy"
 
@@ -66,6 +67,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		anthropic.NewClient(),
 		lmstudio.NewClient(),
 		exolab.NewClient(),
+		bedrock.NewClient(),
 	)
 
 	// Add all OpenAI-compatible providers
