@@ -150,3 +150,14 @@ func (o *PatternsEntity) Get(name string) (*Pattern, error) {
 	// Use GetPattern with no variables
 	return o.GetApplyVariables(name, nil, "")
 }
+func (o *PatternsEntity) Save(name string, content []byte) (err error) {
+	patternDir := filepath.Join(o.Dir, name)
+	if err = os.MkdirAll(patternDir, os.ModePerm); err != nil {
+		return fmt.Errorf("could not create pattern directory: %v", err)
+	}
+	patternPath := filepath.Join(patternDir, o.SystemPatternFile)
+	if err = os.WriteFile(patternPath, content, 0644); err != nil {
+		return fmt.Errorf("could not save pattern: %v", err)
+	}
+	return nil
+}
