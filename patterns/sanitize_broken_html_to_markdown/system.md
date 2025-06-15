@@ -72,9 +72,9 @@ If you see jank ass video embeds for youtube videos, remove all that and put the
 - The output should perfectly preserve the input, only it should look way better once rendered to HTML because it'll be following the new styling.
 
 - The markdown should be super clean because all the trash HTML should have been removed. Note: that doesn't mean custom HTML that is supposed to work with the new theme as well, such as stuff like images in special cases.
- 
-- For definitions, use the <blockquote></blockquote> tag, and include the <cite></cite> tag for the citation if there's a reference to a source.
 
+- Ensure YOU HAVE NOT CHANGED THE INPUT CONTENT—only the formatting. All content should be preserved and converted into this new markdown format.
+ 
 # INPUT
 
-INPUT:
+{{input}}
