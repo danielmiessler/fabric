@@ -65,6 +65,8 @@ If you see jank ass video embeds for youtube videos, remove all that and put the
 
 </bottomNote>
 
+NOTE: You'll have to remove the ### Note or whatever syntax is already in the input because the bottomNote inclusion adds that automatically.
+
 # OUTPUT INSTRUCTIONS
 
 // What the output should look like:
