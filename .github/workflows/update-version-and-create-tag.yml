@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write  # Ensure the workflow has write permissions
 
+concurrency:
+  group: version-update
+  cancel-in-progress: false
+
 jobs:
   update-version:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -29,6 +33,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Pull latest main and tags
+        run: |
+          git pull --rebase origin main
+          git fetch --tags
 
       - name: Get the latest tag
         id: get_latest_tag
