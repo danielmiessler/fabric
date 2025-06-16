@@ -44,8 +44,8 @@ schema = 3
     version = "v0.1.4"
     hash = "sha256-ZZ7U5X0gWOu8zcjZcWbcpzGOGdycwq0TjTFh/eZHjXk="
   [mod."github.com/aws/aws-sdk-go-v2"]
-    version = "v1.36.3"
-    hash = "sha256-vPTkqBoyjitwpN8cgkjjJZkOJdQgqounK/5WgBcDcdM="
+    version = "v1.36.4"
+    hash = "sha256-Cpdphp8FQUbQlhAYvtPKDh1oZc84+/0bzLlx8CM1/BM="
   [mod."github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream"]
     version = "v1.6.10"
     hash = "sha256-9+ZMhWxtsm7ZtZCjBV5PZkOR5rt3bCOznuv45Iwf55c="
@@ -59,14 +59,17 @@ schema = 3
     version = "v1.16.11"
     hash = "sha256-uedtRd/SIcFJlYZg1jtJdIJViZq1Poks9/J2Bm9/Ehw="
   [mod."github.com/aws/aws-sdk-go-v2/internal/configsources"]
-    version = "v1.3.34"
-    hash = "sha256-PrqDvN7iVniP3+XnXdg3yLgUS3BeIB1Z6hi9/dQXdMs="
+    version = "v1.3.35"
+    hash = "sha256-AyQ+eJvyhahypIAqPScdkn44MYwBcr9iyrMC1BRSeZI="
   [mod."github.com/aws/aws-sdk-go-v2/internal/endpoints/v2"]
-    version = "v2.6.34"
-    hash = "sha256-GTxKcV6XujgDA08vXTiBpCCC+frj9b6pV6ACdXh9NGQ="
+    version = "v2.6.35"
+    hash = "sha256-c8K+Nk5XrFMWaaxVsyhKgyJBZhs3Hkhjr/dIDXWZfSQ="
   [mod."github.com/aws/aws-sdk-go-v2/internal/ini"]
     version = "v1.8.0"
     hash = "sha256-v76jTAr4rEgS5en49ikLh6nuvclN+VjpOPj83ZQ3sLo="
+  [mod."github.com/aws/aws-sdk-go-v2/service/bedrock"]
+    version = "v1.34.1"
+    hash = "sha256-OK7t+ieq4pviCnnhfSytANBF5Lwdz4KxjN10CC5pXyY="
   [mod."github.com/aws/aws-sdk-go-v2/service/bedrockruntime"]
     version = "v1.30.0"
     hash = "sha256-MsEQfbqIREtMikRFqBpLCqdAC4gfgPSNbk08k5OJTbo="
