@@ -15,6 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/middleware"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/bedrock"
 	"github.com/aws/aws-sdk-go-v2/service/bedrockruntime"
 	"github.com/aws/aws-sdk-go-v2/service/bedrockruntime/types"
 
@@ -24,7 +25,8 @@ import (
 // BedrockClient is a plugin to add support for Amazon Bedrock
 type BedrockClient struct {
 	*plugins.PluginBase
-	client *bedrockruntime.Client
+	runtimeClient      *bedrockruntime.Client
+	controlPlaneClient *bedrock.Client
 }
 
 // NewClient returns a new Bedrock plugin client
@@ -39,14 +41,16 @@ func NewClient() (ret *BedrockClient) {
 		fmt.Printf("Unable to load AWS Config: %s\n", err)
 	}
 
-	client := bedrockruntime.NewFromConfig(cfg)
+	runtimeClient := bedrockruntime.NewFromConfig(cfg)
+	controlPlaneClient := bedrock.NewFromConfig(cfg)
 
 	ret = &BedrockClient{
 		PluginBase: &plugins.PluginBase{
 			Name:          vendorName,
 			EnvNamePrefix: plugins.BuildEnvVariablePrefix(vendorName),
 		},
-		client: client,
+		runtimeClient:      runtimeClient,
+		controlPlaneClient: controlPlaneClient,
 	}
 
 	return
@@ -54,7 +58,32 @@ func NewClient() (ret *BedrockClient) {
 
 // ListModels lists the models available for use with the Bedrock plugin
 func (c *BedrockClient) ListModels() ([]string, error) {
-	return MODELS, nil
+	models := []string{}
+	ctx := context.TODO()
+
+	foundationModels, err := c.controlPlaneClient.ListFoundationModels(ctx, &bedrock.ListFoundationModelsInput{})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, model := range foundationModels.ModelSummaries {
+		models = append(models, *model.ModelId)
+	}
+
+	inferenceProfilesPaginator := bedrock.NewListInferenceProfilesPaginator(c.controlPlaneClient, &bedrock.ListInferenceProfilesInput{})
+
+	for inferenceProfilesPaginator.HasMorePages() {
+		inferenceProfiles, err := inferenceProfilesPaginator.NextPage(context.TODO())
+		if err != nil {
+			return nil, err
+		}
+
+		for _, profile := range inferenceProfiles.InferenceProfileSummaries {
+			models = append(models, *profile.InferenceProfileId)
+		}
+	}
+
+	return models, nil
 }
 
 // SendStream sends the messages to the the Bedrock ConverseStream API
@@ -70,7 +99,7 @@ func (c *BedrockClient) SendStream(msgs []*goopenai.ChatCompletionMessage, opts 
 			TopP:        aws.Float32(float32(opts.TopP))},
 	}
 
-	response, err := c.client.ConverseStream(context.TODO(), &converseInput)
+	response, err := c.runtimeClient.ConverseStream(context.TODO(), &converseInput)
 	if err != nil {
 		fmt.Printf("Error conversing with Bedrock: %s\n", err)
 		return
@@ -114,7 +143,7 @@ func (c *BedrockClient) Send(ctx context.Context, msgs []*goopenai.ChatCompletio
 		ModelId:  aws.String(opts.Model),
 		Messages: messages,
 	}
-	response, err := c.client.Converse(ctx, &converseInput)
+	response, err := c.runtimeClient.Converse(ctx, &converseInput)
 	if err != nil {
 		fmt.Printf("Error conversing with Bedrock: %s\n", err)
 		return "", err
@@ -156,153 +185,4 @@ func (c *BedrockClient) toMessages(inputMessages []*goopenai.ChatCompletionMessa
 	}
 
 	return
-}
-
-var MODELS = []string{
-	"amazon.nova-micro-v1:0",
-	"amazon.nova-lite-v1:0",
-	"amazon.nova-pro-v1:0",
-	"amazon.nova-premier-v1:0",
-
-	"amazon.titan-tg1-large",
-	"amazon.titan-text-premier-v1:0",
-
-	"amazon.titan-text-lite-v1",
-	"amazon.titan-text-express-v1",
-
-	"ai21.jamba-instruct-v1:0",
-	"ai21.jamba-1-5-large-v1:0",
-	"ai21.jamba-1-5-mini-v1:0",
-
-	"anthropic.claude-instant-v1",
-	"anthropic.claude-v2",
-	"anthropic.claude-v2:1",
-	"anthropic.claude-3-haiku-20240307-v1:0",
-	"anthropic.claude-3-sonnet-20240229-v1:0",
-	"anthropic.claude-3-opus-20240229-v1:0",
-	"anthropic.claude-3-5-haiku-20241022-v1:0",
-	"anthropic.claude-3-5-sonnet-20240620-v1:0",
-	"anthropic.claude-3-5-sonnet-20241022-v2:0",
-	"anthropic.claude-3-7-sonnet-20250219-v1:0",
-	"anthropic.claude-sonnet-4-20250514-v1:0",
-	"anthropic.claude-opus-4-20250514-v1:0",
-
-	"meta.llama3-8b-instruct-v1:0",
-	"meta.llama3-70b-instruct-v1:0",
-	"meta.llama3-1-8b-instruct-v1:0",
-	"meta.llama3-1-70b-instruct-v1:0",
-	"meta.llama3-2-11b-instruct-v1:0",
-	"meta.llama3-2-90b-instruct-v1:0",
-	"meta.llama3-2-1b-instruct-v1:0",
-	"meta.llama3-2-3b-instruct-v1:0",
-	"meta.llama3-3-70b-instruct-v1:0",
-	"meta.llama4-scout-17b-instruct-v1:0",
-	"meta.llama4-maverick-17b-instruct-v1:0",
-
-	"mistral.mistral-7b-instruct-v0:2",
-	"mistral.mixtral-8x7b-instruct-v0:1",
-	"mistral.mistral-small-2402-v1:0",
-	"mistral.mistral-large-2402-v1:0",
-	"mistral.pixtral-large-2502-v1:0",
-
-	// Cross Region Inferences Profiles
-	// https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html#inference-profiles-support-system
-	"us.amazon.nova-lite-v1:0",
-	"us.amazon.nova-lite-v1:0",
-	"us.amazon.nova-micro-v1:0",
-	"us.amazon.nova-micro-v1:0",
-	"us.amazon.nova-premier-v1:0",
-	"us.amazon.nova-premier-v1:0",
-	"us.amazon.nova-pro-v1:0",
-	"us.amazon.nova-pro-v1:0",
-	"us.anthropic.claude-3-5-haiku-20241022-v1:0",
-	"us.anthropic.claude-3-5-haiku-20241022-v1:0",
-	"us.anthropic.claude-3-5-sonnet-20240620-v1:0",
-	"us.anthropic.claude-3-5-sonnet-20240620-v1:0",
-	"us.anthropic.claude-3-5-sonnet-20241022-v2:0",
-	"us.anthropic.claude-3-5-sonnet-20241022-v2:0",
-	"us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-	"us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-	"us.anthropic.claude-3-haiku-20240307-v1:0",
-	"us.anthropic.claude-3-haiku-20240307-v1:0",
-	"us.anthropic.claude-3-opus-20240229-v1:0",
-	"us.anthropic.claude-3-opus-20240229-v1:0",
-	"us.anthropic.claude-3-sonnet-20240229-v1:0",
-	"us.anthropic.claude-3-sonnet-20240229-v1:0",
-	"us.anthropic.claude-opus-4-20250514-v1:0",
-	"us.anthropic.claude-opus-4-20250514-v1:0",
-	"us.anthropic.claude-sonnet-4-20250514-v1:0",
-	"us.anthropic.claude-sonnet-4-20250514-v1:0",
-	"us.deepseek.r1-v1:0",
-	"us.deepseek.r1-v1:0",
-	"us.meta.llama3-1-405b-instruct-v1:0",
-	"us.meta.llama3-1-405b-instruct-v1:0",
-	"us.meta.llama3-1-70b-instruct-v1:0",
-	"us.meta.llama3-1-70b-instruct-v1:0",
-	"us.meta.llama3-1-8b-instruct-v1:0",
-	"us.meta.llama3-1-8b-instruct-v1:0",
-	"us.meta.llama3-2-11b-instruct-v1:0",
-	"us.meta.llama3-2-11b-instruct-v1:0",
-	"us.meta.llama3-2-1b-instruct-v1:0",
-	"us.meta.llama3-2-1b-instruct-v1:0",
-	"us.meta.llama3-2-3b-instruct-v1:0",
-	"us.meta.llama3-2-3b-instruct-v1:0",
-	"us.meta.llama3-2-90b-instruct-v1:0",
-	"us.meta.llama3-2-90b-instruct-v1:0",
-	"us.meta.llama3-3-70b-instruct-v1:0",
-	"us.meta.llama3-3-70b-instruct-v1:0",
-	"us.meta.llama4-maverick-17b-instruct-v1:0",
-	"us.meta.llama4-maverick-17b-instruct-v1:0",
-	"us.meta.llama4-scout-17b-instruct-v1:0",
-	"us.meta.llama4-scout-17b-instruct-v1:0",
-	"us.mistral.pixtral-large-2502-v1:0",
-	"us.mistral.pixtral-large-2502-v1:0",
-	"us.writer.palmyra-x4-v1:0",
-	"us.writer.palmyra-x4-v1:0",
-	"us.writer.palmyra-x5-v1:0",
-	"us.writer.palmyra-x5-v1:0",
-	"us-gov.anthropic.claude-3-5-sonnet-20240620-v1:0",
-	"us-gov.anthropic.claude-3-5-sonnet-20240620-v1:0",
-	"us-gov.anthropic.claude-3-haiku-20240307-v1:0",
-	"us-gov.anthropic.claude-3-haiku-20240307-v1:0",
-	"eu.amazon.nova-lite-v1:0",
-	"eu.amazon.nova-lite-v1:0",
-	"eu.amazon.nova-micro-v1:0",
-	"eu.amazon.nova-micro-v1:0",
-	"eu.amazon.nova-pro-v1:0",
-	"eu.amazon.nova-pro-v1:0",
-	"eu.anthropic.claude-3-5-sonnet-20240620-v1:0",
-	"eu.anthropic.claude-3-5-sonnet-20240620-v1:0",
-	"eu.anthropic.claude-3-7-sonnet-20250219-v1:0",
-	"eu.anthropic.claude-3-7-sonnet-20250219-v1:0",
-	"eu.anthropic.claude-3-haiku-20240307-v1:0",
-	"eu.anthropic.claude-3-haiku-20240307-v1:0",
-	"eu.anthropic.claude-3-sonnet-20240229-v1:0",
-	"eu.anthropic.claude-3-sonnet-20240229-v1:0",
-	"eu.anthropic.claude-sonnet-4-20250514-v1:0",
-	"eu.anthropic.claude-sonnet-4-20250514-v1:0",
-	"eu.meta.llama3-2-1b-instruct-v1:0",
-	"eu.meta.llama3-2-1b-instruct-v1:0",
-	"eu.meta.llama3-2-3b-instruct-v1:0",
-	"eu.meta.llama3-2-3b-instruct-v1:0",
-	"eu.mistral.pixtral-large-2502-v1:0",
-	"eu.mistral.pixtral-large-2502-v1:0",
-	"apac.amazon.nova-lite-v1:0",
-	"apac.amazon.nova-lite-v1:0",
-	"apac.amazon.nova-micro-v1:0",
-	"apac.amazon.nova-micro-v1:0",
-	"apac.amazon.nova-pro-v1:0",
-	"apac.amazon.nova-pro-v1:0",
-	"apac.anthropic.claude-3-5-sonnet-20240620-v1:0",
-	"apac.anthropic.claude-3-5-sonnet-20240620-v1:0",
-	"apac.anthropic.claude-3-5-sonnet-20241022-v2:0",
-	"apac.anthropic.claude-3-5-sonnet-20241022-v2:0",
-	"apac.anthropic.claude-3-7-sonnet-20250219-v1:0",
-	"apac.anthropic.claude-3-7-sonnet-20250219-v1:0",
-	"apac.anthropic.claude-3-haiku-20240307-v1:0",
-	"apac.anthropic.claude-3-haiku-20240307-v1:0",
-	"apac.anthropic.claude-3-sonnet-20240229-v1:0",
-	"apac.anthropic.claude-3-sonnet-20240229-v1:0",
-	"apac.anthropic.claude-sonnet-4-20250514-v1:0",
-	"apac.anthropic.claude-sonnet-4-20250514-v1:0",
 }
