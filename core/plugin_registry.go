@@ -35,6 +35,30 @@ import (
 	"github.com/danielmiessler/fabric/plugins/tools/youtube"
 )
 
+// hasAWSCredentials checks if any AWS credentials are present either in the
+// environment variables or in the default/shared credentials file. It doesn't
+// attempt to verify the validity of the credentials, but simply ensures that a
+// potential authentication source exists so we can safely initialize the
+// Bedrock client without causing the AWS SDK to search for credentials.
+func hasAWSCredentials() bool {
+	if os.Getenv("AWS_ACCESS_KEY_ID") != "" && os.Getenv("AWS_SECRET_ACCESS_KEY") != "" {
+		return true
+	}
+
+	credFile := os.Getenv("AWS_SHARED_CREDENTIALS_FILE")
+	if credFile == "" {
+		if home, err := os.UserHomeDir(); err == nil {
+			credFile = filepath.Join(home, ".aws", "credentials")
+		}
+	}
+	if credFile != "" {
+		if _, err := os.Stat(credFile); err == nil {
+			return true
+		}
+	}
+	return false
+}
+
 func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 	ret = &PluginRegistry{
 		Db:             db,
@@ -67,8 +91,11 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		anthropic.NewClient(),
 		lmstudio.NewClient(),
 		exolab.NewClient(),
-		bedrock.NewClient(),
 	)
+
+	if hasAWSCredentials() {
+		vendors = append(vendors, bedrock.NewClient())
+	}
 
 	// Add all OpenAI-compatible providers
 	for providerName := range openai_compatible.ProviderMap {
