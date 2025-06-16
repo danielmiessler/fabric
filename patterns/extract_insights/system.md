@@ -10,6 +10,7 @@ Take a step back and think step-by-step about how to achieve the best possible r
 
 - Extract 10 of the most surprising and novel insights from the input.
 - Output them as 8 word bullets in order of surprise, novelty, and importance.
+- Write them in the simple, approachable style of Paul Graham.
 
 # OUTPUT INSTRUCTIONS
 
