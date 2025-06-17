@@ -32,6 +32,32 @@ Fabric is graciously supported by…
 
 </div>
 
+## What and why
+
+Since the start of modern AI in late 2022 we've seen an **_extraordinary_** number of AI applications for accomplishing tasks. 
+
+There are hundreds of websites, chatbots, mobile apps, and other interfaces for using all the differnet AI out there.
+
+It's powerful, but _it's not easy to integrate this functionality into our lives._
+
+<div align="center">
+<h4>In other words, AI doesn't have a capabilities problem—it has an <em>integration</em> problem.</h4>
+</div>
+
+**Fabric was created to address this by creating and organizating the fundamental units of AI—the prompts themselves!**
+
+Fabric organizes prompts by real-world task, allowing people to create, collect, and organize their most important AI solutions in a single place for use in theif favorite tools. And if you're command-line focused, you can use Fabric itself as the interface!
+
+## Intro videos
+
+Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#installation) below.
+
+- [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
+- [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
+- [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
+- [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
+
+
 ## Navigation
 
 - [`fabric`](#fabric)
@@ -102,25 +128,6 @@ Fabric is graciously supported by…
 >- Fabric's YouTube transcription now needs `yt-dlp` to be installed. Make sure to install the latest
 > version (2025.06.09 as of this note). The YouTube API key is only needed for comments (the `--comments` flag)
 > and metadata extraction (the `--metadata` flag).
-
-## What and why
-
-Since the start of 2023 and GenAI we've seen a massive number of AI applications for accomplishing tasks. It's powerful, but _it's not easy to integrate this functionality into our lives._
-
-<div align="center">
-<h4>In other words, AI doesn't have a capabilities problem—it has an <em>integration</em> problem.</h4>
-</div>
-
-Fabric was created to address this by enabling everyone to granularly apply AI to everyday challenges.
-
-## Intro videos
-
-Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current [install instructions](#installation) below.
-
-- [Network Chuck](https://www.youtube.com/watch?v=UbDyjIIGaxQ)
-- [David Bombal](https://www.youtube.com/watch?v=vF-MQmVxnCs)
-- [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
-- [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
 
 ## Philosophy
 
