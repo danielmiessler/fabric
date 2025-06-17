@@ -112,7 +112,9 @@ func (o *YouTube) GrabTranscriptWithTimestamps(videoId string, language string) 
 	return o.tryMethodYtDlpWithTimestamps(videoId, language)
 }
 
-func (o *YouTube) tryMethodYtDlp(videoId string, language string) (ret string, err error) {
+// tryMethodYtDlpInternal is a helper function to reduce duplication between
+// tryMethodYtDlp and tryMethodYtDlpWithTimestamps.
+func (o *YouTube) tryMethodYtDlpInternal(videoId string, language string, processVTTFileFunc func(filename string) (string, error)) (ret string, err error) {
 	// Check if yt-dlp is available
 	if _, err = exec.LookPath("yt-dlp"); err != nil {
 		err = fmt.Errorf("yt-dlp not found in PATH. Please install yt-dlp to use YouTube transcript functionality")
@@ -130,9 +132,13 @@ func (o *YouTube) tryMethodYtDlp(videoId string, language string) (ret string, e
 	// Use yt-dlp to get transcript
 	videoURL := "https://www.youtube.com/watch?v=" + videoId
 	outputPath := filepath.Join(tempDir, "%(title)s.%(ext)s")
+	lang_match := language
+	if len(language) > 2 {
+		lang_match = language[:2]
+	}
 	cmd := exec.Command("yt-dlp",
 		"--write-auto-subs",
-		"--sub-lang", language,
+		"--sub-lang", lang_match,
 		"--skip-download",
 		"--sub-format", "vtt",
 		"--quiet",
@@ -154,52 +160,15 @@ func (o *YouTube) tryMethodYtDlp(videoId string, language string) (ret string, e
 		return "", err
 	}
 
-	return o.readAndCleanVTTFile(vttFiles[0])
+	return processVTTFileFunc(vttFiles[0])
+}
+
+func (o *YouTube) tryMethodYtDlp(videoId string, language string) (ret string, err error) {
+	return o.tryMethodYtDlpInternal(videoId, language, o.readAndCleanVTTFile)
 }
 
 func (o *YouTube) tryMethodYtDlpWithTimestamps(videoId string, language string) (ret string, err error) {
-	// Check if yt-dlp is available
-	if _, err = exec.LookPath("yt-dlp"); err != nil {
-		err = fmt.Errorf("yt-dlp not found in PATH. Please install yt-dlp to use YouTube transcript functionality")
-		return
-	}
-
-	// Create a temporary directory for yt-dlp output (cross-platform)
-	tempDir := filepath.Join(os.TempDir(), "fabric-youtube-"+videoId)
-	if err = os.MkdirAll(tempDir, 0755); err != nil {
-		err = fmt.Errorf("failed to create temp directory: %v", err)
-		return
-	}
-	defer os.RemoveAll(tempDir)
-
-	// Use yt-dlp to get transcript
-	videoURL := "https://www.youtube.com/watch?v=" + videoId
-	outputPath := filepath.Join(tempDir, "%(title)s.%(ext)s")
-	cmd := exec.Command("yt-dlp",
-		"--write-auto-subs",
-		"--sub-lang", language,
-		"--skip-download",
-		"--sub-format", "vtt",
-		"--quiet",
-		"--no-warnings",
-		"-o", outputPath,
-		videoURL)
-
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-
-	if err = cmd.Run(); err != nil {
-		err = fmt.Errorf("yt-dlp failed: %v, stderr: %s", err, stderr.String())
-		return
-	}
-
-	// Find VTT files using cross-platform approach
-	vttFiles, err := o.findVTTFiles(tempDir, language)
-	if err != nil {
-		return "", err
-	}
-
-	return o.readAndFormatVTTWithTimestamps(vttFiles[0])
+	return o.tryMethodYtDlpInternal(videoId, language, o.readAndFormatVTTWithTimestamps)
 }
 
 func (o *YouTube) readAndCleanVTTFile(filename string) (ret string, err error) {
