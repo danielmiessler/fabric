@@ -238,6 +238,9 @@ schema = 3
   [mod."github.com/sergi/go-diff"]
     version = "v1.4.0"
     hash = "sha256-rs9NKpv/qcQEMRg7CmxGdP4HGuFdBxlpWf9LbA9wS4k="
+  [mod."github.com/sgaunet/perplexity-go/v2"]
+    version = "v2.8.0"
+    hash = "sha256-w1S14Jf4/6LFODREmmiJvPtkZh4Sor81Rr1PqC5pIak="
   [mod."github.com/skeema/knownhosts"]
     version = "v1.3.1"
     hash = "sha256-kjqQDzuncQNTuOYegqVZExwuOt/Z73m2ST7NZFEKixI="
