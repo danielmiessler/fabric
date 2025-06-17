@@ -34,19 +34,17 @@ Fabric is graciously supported by…
 
 ## What and why
 
-Since the start of modern AI in late 2022 we've seen an **_extraordinary_** number of AI applications for accomplishing tasks. 
+Since the start of modern AI in late 2022 we've seen an **_extraordinary_** number of AI applications for accomplishing tasks. There are thousands of websites, chatbots, mobile apps, and other interfaces for using all the differnet AI out there.
 
-There are hundreds of websites, chatbots, mobile apps, and other interfaces for using all the differnet AI out there.
+It's all really exciting and powerful, but _it's not easy to integrate this functionality into our lives._
 
-It's powerful, but _it's not easy to integrate this functionality into our lives._
-
-<div align="center">
+<p class="align center">
 <h4>In other words, AI doesn't have a capabilities problem—it has an <em>integration</em> problem.</h4>
-</div>
+</p>
 
 **Fabric was created to address this by creating and organizating the fundamental units of AI—the prompts themselves!**
 
-Fabric organizes prompts by real-world task, allowing people to create, collect, and organize their most important AI solutions in a single place for use in theif favorite tools. And if you're command-line focused, you can use Fabric itself as the interface!
+Fabric organizes prompts by real-world task, allowing people to create, collect, and organize their most important AI solutions in a single place for use in their favorite tools. And if you're command-line focused, you can use Fabric itself as the interface!
 
 ## Intro videos
 
