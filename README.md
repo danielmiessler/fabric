@@ -13,9 +13,11 @@ Fabric is graciously supported by…
 ![GitHub last commit](https://img.shields.io/github/last-commit/danielmiessler/fabric)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
+<div align="center">
 <p class="align center">
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
 </p>
+</div>
 
 [Updates](#updates) •
 [What and Why](#what-and-why) •
