@@ -12,6 +12,7 @@ import (
 
 	"github.com/danielmiessler/fabric/plugins/ai/bedrock"
 	"github.com/danielmiessler/fabric/plugins/ai/exolab"
+	"github.com/danielmiessler/fabric/plugins/ai/perplexity" // Added Perplexity plugin
 	"github.com/danielmiessler/fabric/plugins/strategy"
 
 	"github.com/samber/lo"
@@ -91,6 +92,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		anthropic.NewClient(),
 		lmstudio.NewClient(),
 		exolab.NewClient(),
+		perplexity.NewClient(), // Added Perplexity client
 	)
 
 	if hasAWSCredentials() {
