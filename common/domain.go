@@ -25,6 +25,7 @@ type ChatOptions struct {
 	Raw                bool
 	Seed               int
 	ModelContextLength int
+	MaxTokens          int
 }
 
 // NormalizeMessages remove empty messages and ensure messages order user-assist-user
