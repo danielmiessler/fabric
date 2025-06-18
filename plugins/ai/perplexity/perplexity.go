@@ -106,7 +106,18 @@ func (c *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessag
 		return "", fmt.Errorf("perplexity API request failed: %w", err) // Corrected capitalization
 	}
 
-	return resp.GetLastContent(), nil
+	content := resp.GetLastContent()
+
+	// Append citations if available
+	citations := resp.GetCitations()
+	if len(citations) > 0 {
+		content += "\n\n# CITATIONS\n\n"
+		for i, citation := range citations {
+			content += fmt.Sprintf("- [%d] %s\n", i+1, citation)
+		}
+	}
+
+	return content, nil
 }
 
 func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
@@ -169,7 +180,9 @@ func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common
 
 	go func() {
 		defer close(channel) // Ensure the output channel is closed when this goroutine finishes
+		var lastResponse *perplexity.CompletionResponse
 		for resp := range responseChan {
+			lastResponse = &resp
 			if len(resp.Choices) > 0 {
 				content := ""
 				// Corrected: Check Delta.Content and Message.Content directly for non-emptiness
@@ -181,6 +194,17 @@ func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common
 				}
 				if content != "" {
 					channel <- content
+				}
+			}
+		}
+
+		// Send citations at the end if available
+		if lastResponse != nil {
+			citations := lastResponse.GetCitations()
+			if len(citations) > 0 {
+				channel <- "\n\n# CITATIONS\n\n"
+				for i, citation := range citations {
+					channel <- fmt.Sprintf("- [%d] %s\n", i+1, citation)
 				}
 			}
 		}
