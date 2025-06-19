@@ -18,7 +18,7 @@ Take a deep breath and think step by step about how to best accomplish this goal
 
 - Extract the list of organizations the authors are associated, e.g., which university they're at, with in a section called AUTHOR ORGANIZATIONS.
 
-- Extract the most surprising and interesting paper findings into a 100 bullets of no more than 16 words per bullet into a section called FINDINGS.
+- Extract the most surprising and interesting paper findings into a 10 bullets of no more than 16 words per bullet into a section called FINDINGS.
 
 - Extract the overall structure and character of the study into a bulleted list of 16 words per bullet for the research in a section called STUDY OVERVIEW.
 
