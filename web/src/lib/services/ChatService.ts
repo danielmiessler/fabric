@@ -75,48 +75,46 @@ export class ChatService {
 
   private cleanPatternOutput(content: string): string {
     // Remove markdown fence if present
-    content = content.replace(/^```markdown\n/, '');
-    content = content.replace(/\n```$/, '');
+    let cleaned = content.replace(/^```markdown\n/, '');
+    cleaned = cleaned.replace(/\n```$/, '');
 
     // Existing cleaning
-    content = content.replace(/^# OUTPUT\s*\n/, '');
-    content = content.replace(/^\s*\n/, '');
-    content = content.replace(/\n\s*$/, '');
-    content = content.replace(/^#\s+([A-Z]+):/gm, '$1:');
-    content = content.replace(/^#\s+([A-Z]+)\s*$/gm, '$1');
-    content = content.trim();
-    content = content.replace(/\n{3,}/g, '\n\n');
-    return content;
+    cleaned = cleaned.replace(/^# OUTPUT\s*\n/, '');
+    cleaned = cleaned.replace(/^\s*\n/, '');
+    cleaned = cleaned.replace(/\n\s*$/, '');
+    cleaned = cleaned.replace(/^#\s+([A-Z]+):/gm, '$1:');
+    cleaned = cleaned.replace(/^#\s+([A-Z]+)\s*$/gm, '$1');
+    cleaned = cleaned.trim();
+    cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+    return cleaned;
   }
 
+  private createMessageStream(reader: ReadableStreamDefaultReader<Uint8Array>): ReadableStream<StreamResponse> {
+      let buffer = '';
+      const cleanPatternOutput = this.cleanPatternOutput.bind(this);
+      const language = get(languageStore);
+      const validator = new LanguageValidator(language);
 
+      const processResponse = (response: StreamResponse) => {
+          const pattern = get(selectedPatternName);
 
-      private createMessageStream(reader: ReadableStreamDefaultReader<Uint8Array>): ReadableStream<StreamResponse> {
-          let buffer = '';
-          const cleanPatternOutput = this.cleanPatternOutput.bind(this);
-          const language = get(languageStore);
-          const validator = new LanguageValidator(language);
+          if (pattern) {
+              response.content = cleanPatternOutput(response.content);
+              // Simplified format determination - always markdown unless mermaid
+              const isMermaid = [
+                  'graph TD', 'gantt', 'flowchart',
+                  'sequenceDiagram', 'classDiagram', 'stateDiagram'
+              ].some(starter => response.content.trim().startsWith(starter));
 
-          const processResponse = (response: StreamResponse) => {
-              const pattern = get(selectedPatternName);
+              response.format = isMermaid ? 'mermaid' : 'markdown';
+          }
 
-              if (pattern) {
-                  response.content = cleanPatternOutput(response.content);
-                  // Simplified format determination - always markdown unless mermaid
-                  const isMermaid = [
-                      'graph TD', 'gantt', 'flowchart',
-                      'sequenceDiagram', 'classDiagram', 'stateDiagram'
-                  ].some(starter => response.content.trim().startsWith(starter));
+          if (response.type === 'content') {
+              response.content = validator.enforceLanguage(response.content);
+          }
 
-                  response.format = isMermaid ? 'mermaid' : 'markdown';
-              }
-
-              if (response.type === 'content') {
-                  response.content = validator.enforceLanguage(response.content);
-              }
-
-              return response;
-          };
+          return response;
+      };
       return new ReadableStream({
           async start(controller) {
               try {
@@ -188,11 +186,6 @@ export class ChatService {
     };
 }
 
-
-
-
-
-
   public async createChatRequest(userInput: string, systemPromptText?: string, isPattern: boolean = false): Promise<ChatRequest> {
     const prompt = this.createChatPrompt(userInput, systemPromptText);
     const config = get(chatConfig);
@@ -243,8 +236,4 @@ export class ChatService {
 
     }
   }
-
-
-
-
 }
