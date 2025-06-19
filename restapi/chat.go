@@ -24,12 +24,13 @@ type ChatHandler struct {
 }
 
 type PromptRequest struct {
-	UserInput    string `json:"userInput"`
-	Vendor       string `json:"vendor"`
-	Model        string `json:"model"`
-	ContextName  string `json:"contextName"`
-	PatternName  string `json:"patternName"`
-	StrategyName string `json:"strategyName"` // Optional strategy name
+	UserInput    string            `json:"userInput"`
+	Vendor       string            `json:"vendor"`
+	Model        string            `json:"model"`
+	ContextName  string            `json:"contextName"`
+	PatternName  string            `json:"patternName"`
+	StrategyName string            `json:"strategyName"`        // Optional strategy name
+	Variables    map[string]string `json:"variables,omitempty"` // Pattern variables
 }
 
 type ChatRequest struct {
@@ -118,9 +119,10 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 						Role:    "user",
 						Content: p.UserInput,
 					},
-					PatternName: p.PatternName,
-					ContextName: p.ContextName,
-					Language:    request.Language, // Pass the language field
+					PatternName:      p.PatternName,
+					ContextName:      p.ContextName,
+					PatternVariables: p.Variables,      // Pass pattern variables
+					Language:         request.Language, // Pass the language field
 				}
 
 				opts := &common.ChatOptions{

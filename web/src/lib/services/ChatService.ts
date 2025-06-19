@@ -6,7 +6,7 @@ import type {
 } from '$lib/interfaces/chat-interface';
 import { get } from 'svelte/store';
 import { modelConfig } from '$lib/store/model-store';
-import { systemPrompt, selectedPatternName } from '$lib/store/pattern-store';
+import { systemPrompt, selectedPatternName, patternVariables } from '$lib/store/pattern-store';
 import { chatConfig } from '$lib/store/chat-config';
 import { messageStore } from '$lib/store/chat-store';
 import { languageStore } from '$lib/store/language-store';
@@ -77,7 +77,7 @@ export class ChatService {
     // Remove markdown fence if present
     content = content.replace(/^```markdown\n/, '');
     content = content.replace(/\n```$/, '');
-    
+
     // Existing cleaning
     content = content.replace(/^# OUTPUT\s*\n/, '');
     content = content.replace(/^\s*\n/, '');
@@ -88,33 +88,33 @@ export class ChatService {
     content = content.replace(/\n{3,}/g, '\n\n');
     return content;
   }
-  
-      
-      
+
+
+
       private createMessageStream(reader: ReadableStreamDefaultReader<Uint8Array>): ReadableStream<StreamResponse> {
           let buffer = '';
           const cleanPatternOutput = this.cleanPatternOutput.bind(this);
           const language = get(languageStore);
           const validator = new LanguageValidator(language);
-      
+
           const processResponse = (response: StreamResponse) => {
               const pattern = get(selectedPatternName);
-              
+
               if (pattern) {
                   response.content = cleanPatternOutput(response.content);
                   // Simplified format determination - always markdown unless mermaid
                   const isMermaid = [
-                      'graph TD', 'gantt', 'flowchart', 
+                      'graph TD', 'gantt', 'flowchart',
                       'sequenceDiagram', 'classDiagram', 'stateDiagram'
                   ].some(starter => response.content.trim().startsWith(starter));
-                  
+
                   response.format = isMermaid ? 'mermaid' : 'markdown';
               }
-      
+
               if (response.type === 'content') {
                   response.content = validator.enforceLanguage(response.content);
               }
-      
+
               return response;
           };
       return new ReadableStream({
@@ -162,18 +162,18 @@ export class ChatService {
           }
       });
   }
- 
+
   private createChatPrompt(userInput: string, systemPromptText?: string): ChatPrompt {
     const config = get(modelConfig);
     const language = get(languageStore);
-    
-    const languageInstruction = language !== 'en' 
+
+    const languageInstruction = language !== 'en'
         ? `You MUST respond in ${language} language. All output must be in ${language}. `
         // ? `You MUST respond in ${language} language. ALL output, including section headers, titles, and formatting, MUST be translated into ${language}.  It is CRITICAL that you translate ALL headers, such as SUMMARY, IDEAS, QUOTES, TAKEAWAYS, MAIN POINTS, etc., into ${language}. Maintain markdown formatting in the response. Do not output any English headers.`
         : '';
-    
+
     const finalSystemPrompt = languageInstruction + (systemPromptText ?? get(systemPrompt));
-    
+
     const finalUserInput = language !== 'en'
         ? `${userInput}\n\nIMPORTANT: Respond in ${language} language only.`
         : userInput;
@@ -183,13 +183,14 @@ export class ChatService {
         systemPrompt: finalSystemPrompt,
         model: config.model,
         patternName: get(selectedPatternName),
-        strategyName: get(selectedStrategy) // Add selected strategy to prompt
+        strategyName: get(selectedStrategy), // Add selected strategy to prompt
+        variables: get(patternVariables) // Add pattern variables
     };
 }
 
 
-  
-    
+
+
 
 
   public async createChatRequest(userInput: string, systemPromptText?: string, isPattern: boolean = false): Promise<ChatRequest> {
@@ -221,16 +222,16 @@ export class ChatService {
     onError: (error: Error) => void
   ): Promise<void> {
     const reader = stream.getReader();
-  
+
     try {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-  
+
         if (value.type === 'error') {
           throw new ChatError(value.content, 'STREAM_CONTENT_ERROR');
         }
-  
+
         if (value.type === 'content') {
           onContent(value.content, value);
         }
@@ -239,11 +240,11 @@ export class ChatService {
       onError(error instanceof ChatError ? error : new ChatError('Stream processing error', 'STREAM_ERROR', error));
     } finally {
       reader.releaseLock();
-      
+
     }
   }
-  
-  
-   
-    
+
+
+
+
 }
