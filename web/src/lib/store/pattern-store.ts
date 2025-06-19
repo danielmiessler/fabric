@@ -15,11 +15,11 @@ export const patterns = derived(
     return $allPatterns.filter(p => {
       // Keep all patterns if no language is selected
       if (!$language) return true;
-      
+
       // Check if pattern has a language prefix (e.g., en_, fr_)
       const match = p.Name.match(/^([a-z]{2})_/);
       if (!match) return true; // Keep patterns without language prefix
-      
+
       // Only filter out patterns that have a different language prefix
       const patternLang = match[1];
       return patternLang === $language;
@@ -29,6 +29,9 @@ export const patterns = derived(
 
 export const systemPrompt = writable<string>('');
 export const selectedPatternName = writable<string>('');
+
+// Pattern variables store
+export const patternVariables = writable<Record<string, string>>({});
 
 export const setSystemPrompt = (prompt: string) => {
   console.log('Setting system prompt:', prompt);
@@ -60,13 +63,13 @@ export const patternAPI = {
           const patternResponse = await fetch(`/api/patterns/${pattern}`);
           const patternData = await patternResponse.json();
           console.log(`Pattern ${pattern} content length:`, patternData.Pattern?.length || 0);
-          
+
           // Find matching description from JSON
           const desc = descriptions.find(d => d.patternName === pattern);
           if (!desc) {
             console.warn(`No description found for pattern: ${pattern}`);
           }
-          
+
           return {
             Name: pattern,
             Description: desc?.description || pattern.charAt(0).toUpperCase() + pattern.slice(1),
