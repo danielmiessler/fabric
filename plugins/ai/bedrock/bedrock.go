@@ -27,11 +27,14 @@ type BedrockClient struct {
 	*plugins.PluginBase
 	runtimeClient      *bedrockruntime.Client
 	controlPlaneClient *bedrock.Client
+
+	bedrockRegion *plugins.SetupQuestion
 }
 
 // NewClient returns a new Bedrock plugin client
 func NewClient() (ret *BedrockClient) {
 	vendorName := "Bedrock"
+	ret = &BedrockClient{}
 
 	ctx := context.TODO()
 	cfg, err := config.LoadDefaultConfig(ctx)
@@ -44,13 +47,39 @@ func NewClient() (ret *BedrockClient) {
 	runtimeClient := bedrockruntime.NewFromConfig(cfg)
 	controlPlaneClient := bedrock.NewFromConfig(cfg)
 
-	ret = &BedrockClient{
-		PluginBase: &plugins.PluginBase{
-			Name:          vendorName,
-			EnvNamePrefix: plugins.BuildEnvVariablePrefix(vendorName),
-		},
-		runtimeClient:      runtimeClient,
-		controlPlaneClient: controlPlaneClient,
+	ret.PluginBase = &plugins.PluginBase{
+		Name:            vendorName,
+		EnvNamePrefix:   plugins.BuildEnvVariablePrefix(vendorName),
+		ConfigureCustom: ret.configure,
+	}
+
+	ret.runtimeClient = runtimeClient
+	ret.controlPlaneClient = controlPlaneClient
+
+	if cfg.Region != "" {
+		ret.bedrockRegion.Value = cfg.Region
+	}
+
+	ret.bedrockRegion = ret.PluginBase.AddSetupQuestion("AWS Region", true)
+
+	return
+}
+
+func (c *BedrockClient) configure() (err error) {
+
+	if c.bedrockRegion.Value != "" {
+		// Load the AWS config with the specified region
+		ctx := context.TODO()
+
+		cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(c.bedrockRegion.Value))
+		if err != nil {
+			return fmt.Errorf("unable to load AWS Config: %w", err)
+		}
+
+		cfg.APIOptions = append(cfg.APIOptions, middleware.AddUserAgentKeyValue("aiosc", "fabric"))
+
+		c.runtimeClient = bedrockruntime.NewFromConfig(cfg)
+		c.controlPlaneClient = bedrock.NewFromConfig(cfg)
 	}
 
 	return
