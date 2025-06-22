@@ -58,6 +58,10 @@ func NewClient() (ret *BedrockClient) {
 
 	ret.bedrockRegion = ret.PluginBase.AddSetupQuestion("AWS Region", true)
 
+	if cfg.Region != "" {
+		ret.bedrockRegion.Value = cfg.Region
+	}
+
 	return
 }
 
