@@ -56,10 +56,6 @@ func NewClient() (ret *BedrockClient) {
 	ret.runtimeClient = runtimeClient
 	ret.controlPlaneClient = controlPlaneClient
 
-	if cfg.Region != "" {
-		ret.bedrockRegion.Value = cfg.Region
-	}
-
 	ret.bedrockRegion = ret.PluginBase.AddSetupQuestion("AWS Region", true)
 
 	return
