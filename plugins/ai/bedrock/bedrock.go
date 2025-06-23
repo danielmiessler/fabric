@@ -11,6 +11,7 @@ import (
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins"
+	"github.com/danielmiessler/fabric/plugins/ai"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/middleware"
@@ -22,7 +23,17 @@ import (
 	goopenai "github.com/sashabaranov/go-openai"
 )
 
-// BedrockClient is a plugin to add support for Amazon Bedrock
+const (
+	userAgentKey   = "aiosc"
+	userAgentValue = "fabric"
+)
+
+// Ensure BedrockClient implements the ai.Vendor interface
+var _ ai.Vendor = (*BedrockClient)(nil)
+
+// BedrockClient is a plugin to add support for Amazon Bedrock.
+// It implements the plugins.Plugin interface and provides methods
+// for interacting with AWS Bedrock's Converse and ConverseStream APIs.
 type BedrockClient struct {
 	*plugins.PluginBase
 	runtimeClient      *bedrockruntime.Client
@@ -36,13 +47,22 @@ func NewClient() (ret *BedrockClient) {
 	vendorName := "Bedrock"
 	ret = &BedrockClient{}
 
-	ctx := context.TODO()
+	ctx := context.Background()
 	cfg, err := config.LoadDefaultConfig(ctx)
-	cfg.APIOptions = append(cfg.APIOptions, middleware.AddUserAgentKeyValue("aiosc", "fabric"))
-
 	if err != nil {
-		fmt.Printf("Unable to load AWS Config: %s\n", err)
+		// Create a minimal client that will fail gracefully during configuration
+		ret.PluginBase = &plugins.PluginBase{
+			Name:          vendorName,
+			EnvNamePrefix: plugins.BuildEnvVariablePrefix(vendorName),
+			ConfigureCustom: func() error {
+				return fmt.Errorf("unable to load AWS Config: %w", err)
+			},
+		}
+		ret.bedrockRegion = ret.PluginBase.AddSetupQuestion("AWS Region", true)
+		return
 	}
+
+	cfg.APIOptions = append(cfg.APIOptions, middleware.AddUserAgentKeyValue(userAgentKey, userAgentValue))
 
 	runtimeClient := bedrockruntime.NewFromConfig(cfg)
 	controlPlaneClient := bedrock.NewFromConfig(cfg)
@@ -65,34 +85,52 @@ func NewClient() (ret *BedrockClient) {
 	return
 }
 
-func (c *BedrockClient) configure() (err error) {
-
-	if c.bedrockRegion.Value != "" {
-		// Load the AWS config with the specified region
-		ctx := context.TODO()
-
-		cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(c.bedrockRegion.Value))
-		if err != nil {
-			return fmt.Errorf("unable to load AWS Config: %w", err)
-		}
-
-		cfg.APIOptions = append(cfg.APIOptions, middleware.AddUserAgentKeyValue("aiosc", "fabric"))
-
-		c.runtimeClient = bedrockruntime.NewFromConfig(cfg)
-		c.controlPlaneClient = bedrock.NewFromConfig(cfg)
+// isValidAWSRegion validates AWS region format
+func isValidAWSRegion(region string) bool {
+	// Simple validation - AWS regions are typically 2-3 parts separated by hyphens
+	// Examples: us-east-1, eu-west-1, ap-southeast-2
+	if len(region) < 5 || len(region) > 30 {
+		return false
 	}
-
-	return
+	// Basic pattern check for AWS region format
+	return region != ""
 }
 
-// ListModels lists the models available for use with the Bedrock plugin
+// configure initializes the Bedrock clients with the specified AWS region.
+// If no region is specified, the default region from AWS config is used.
+func (c *BedrockClient) configure() error {
+	if c.bedrockRegion.Value == "" {
+		return nil // Use default region from AWS config
+	}
+
+	// Validate region format
+	if !isValidAWSRegion(c.bedrockRegion.Value) {
+		return fmt.Errorf("invalid AWS region: %s", c.bedrockRegion.Value)
+	}
+
+	ctx := context.Background()
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(c.bedrockRegion.Value))
+	if err != nil {
+		return fmt.Errorf("unable to load AWS Config with region %s: %w", c.bedrockRegion.Value, err)
+	}
+
+	cfg.APIOptions = append(cfg.APIOptions, middleware.AddUserAgentKeyValue(userAgentKey, userAgentValue))
+
+	c.runtimeClient = bedrockruntime.NewFromConfig(cfg)
+	c.controlPlaneClient = bedrock.NewFromConfig(cfg)
+
+	return nil
+}
+
+// ListModels retrieves all available foundation models and inference profiles
+// from AWS Bedrock that can be used with this plugin.
 func (c *BedrockClient) ListModels() ([]string, error) {
 	models := []string{}
-	ctx := context.TODO()
+	ctx := context.Background()
 
 	foundationModels, err := c.controlPlaneClient.ListFoundationModels(ctx, &bedrock.ListFoundationModelsInput{})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to list foundation models: %w", err)
 	}
 
 	for _, model := range foundationModels.ModelSummaries {
@@ -102,9 +140,9 @@ func (c *BedrockClient) ListModels() ([]string, error) {
 	inferenceProfilesPaginator := bedrock.NewListInferenceProfilesPaginator(c.controlPlaneClient, &bedrock.ListInferenceProfilesInput{})
 
 	for inferenceProfilesPaginator.HasMorePages() {
-		inferenceProfiles, err := inferenceProfilesPaginator.NextPage(context.TODO())
+		inferenceProfiles, err := inferenceProfilesPaginator.NextPage(ctx)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to list inference profiles: %w", err)
 		}
 
 		for _, profile := range inferenceProfiles.InferenceProfileSummaries {
@@ -117,6 +155,13 @@ func (c *BedrockClient) ListModels() ([]string, error) {
 
 // SendStream sends the messages to the the Bedrock ConverseStream API
 func (c *BedrockClient) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
+	// Ensure channel is closed on all exit paths to prevent goroutine leaks
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("panic in SendStream: %v", r)
+		}
+		close(channel)
+	}()
 
 	messages := c.toMessages(msgs)
 
@@ -128,10 +173,9 @@ func (c *BedrockClient) SendStream(msgs []*goopenai.ChatCompletionMessage, opts 
 			TopP:        aws.Float32(float32(opts.TopP))},
 	}
 
-	response, err := c.runtimeClient.ConverseStream(context.TODO(), &converseInput)
+	response, err := c.runtimeClient.ConverseStream(context.Background(), &converseInput)
 	if err != nil {
-		fmt.Printf("Error conversing with Bedrock: %s\n", err)
-		return
+		return fmt.Errorf("bedrock conversestream failed for model %s: %w", opts.Model, err)
 	}
 
 	for event := range response.GetStream().Events() {
@@ -147,7 +191,7 @@ func (c *BedrockClient) SendStream(msgs []*goopenai.ChatCompletionMessage, opts 
 
 		case *types.ConverseStreamOutputMemberMessageStop:
 			channel <- "\n"
-			close(channel)
+			return nil // Let defer handle the close
 
 		// Unused Events
 		case *types.ConverseStreamOutputMemberMessageStart,
@@ -156,7 +200,7 @@ func (c *BedrockClient) SendStream(msgs []*goopenai.ChatCompletionMessage, opts 
 			*types.ConverseStreamOutputMemberMetadata:
 
 		default:
-			fmt.Printf("Error: Unknown stream event type: %T\n", v)
+			return fmt.Errorf("unknown stream event type: %T", v)
 		}
 	}
 
@@ -174,22 +218,35 @@ func (c *BedrockClient) Send(ctx context.Context, msgs []*goopenai.ChatCompletio
 	}
 	response, err := c.runtimeClient.Converse(ctx, &converseInput)
 	if err != nil {
-		fmt.Printf("Error conversing with Bedrock: %s\n", err)
-		return "", err
+		return "", fmt.Errorf("bedrock converse failed for model %s: %w", opts.Model, err)
 	}
 
-	responseText, _ := response.Output.(*types.ConverseOutputMemberMessage)
+	responseText, ok := response.Output.(*types.ConverseOutputMemberMessage)
+	if !ok {
+		return "", fmt.Errorf("unexpected response type: %T", response.Output)
+	}
+
+	if len(responseText.Value.Content) == 0 {
+		return "", fmt.Errorf("empty response content")
+	}
+
 	responseContentBlock := responseText.Value.Content[0]
-	text, _ := responseContentBlock.(*types.ContentBlockMemberText)
+	text, ok := responseContentBlock.(*types.ContentBlockMemberText)
+	if !ok {
+		return "", fmt.Errorf("unexpected content block type: %T", responseContentBlock)
+	}
+
 	return text.Value, nil
 }
 
+// NeedsRawMode indicates whether the model requires raw mode processing.
+// Bedrock models do not require raw mode.
 func (c *BedrockClient) NeedsRawMode(modelName string) bool {
 	return false
 }
 
 // toMessages converts the array of input messages from the ChatCompletionMessageType to the
-// Bedrock Converse Message type
+// Bedrock Converse Message type.
 // The system role messages are mapped to the user role as they contain a mix of system messages,
 // pattern content and user input.
 func (c *BedrockClient) toMessages(inputMessages []*goopenai.ChatCompletionMessage) (messages []types.Message) {
