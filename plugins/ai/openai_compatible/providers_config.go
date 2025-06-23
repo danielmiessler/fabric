@@ -1,6 +1,9 @@
 package openai_compatible
 
 import (
+	"os"
+	"strings"
+
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
 )
 
@@ -24,29 +27,37 @@ func NewClient(providerConfig ProviderConfig) *Client {
 
 // ProviderMap is a map of provider name to ProviderConfig for O(1) lookup
 var ProviderMap = map[string]ProviderConfig{
-	"Mistral": {
-		Name:    "Mistral",
-		BaseURL: "https://api.mistral.ai/v1",
+	"AIML": {
+		Name:    "AIML",
+		BaseURL: "https://api.aimlapi.com/v1",
 	},
-	"LiteLLM": {
-		Name:    "LiteLLM",
-		BaseURL: "http://localhost:4000",
-	},
-	"Groq": {
-		Name:    "Groq",
-		BaseURL: "https://api.groq.com/openai/v1",
-	},
-	"GrokAI": {
-		Name:    "GrokAI",
-		BaseURL: "https://api.x.ai/v1",
+	"Cerebras": {
+		Name:    "Cerebras",
+		BaseURL: "https://api.cerebras.ai/v1",
 	},
 	"DeepSeek": {
 		Name:    "DeepSeek",
 		BaseURL: "https://api.deepseek.com",
 	},
-	"Cerebras": {
-		Name:    "Cerebras",
-		BaseURL: "https://api.cerebras.ai/v1",
+	"GrokAI": {
+		Name:    "GrokAI",
+		BaseURL: "https://api.x.ai/v1",
+	},
+	"Groq": {
+		Name:    "Groq",
+		BaseURL: "https://api.groq.com/openai/v1",
+	},
+	"Langdock": {
+		Name:    "Langdock",
+		BaseURL: "https://api.langdock.com/openai/{{REGION=us}}/v1",
+	},
+	"LiteLLM": {
+		Name:    "LiteLLM",
+		BaseURL: "http://localhost:4000",
+	},
+	"Mistral": {
+		Name:    "Mistral",
+		BaseURL: "https://api.mistral.ai/v1",
 	},
 	"OpenRouter": {
 		Name:    "OpenRouter",
@@ -56,15 +67,37 @@ var ProviderMap = map[string]ProviderConfig{
 		Name:    "SiliconCloud",
 		BaseURL: "https://api.siliconflow.cn/v1",
 	},
-	"AIML": {
-		Name:    "AIML",
-		BaseURL: "https://api.aimlapi.com/v1",
-	},
 }
 
 // GetProviderByName returns the provider configuration for a given name with O(1) lookup
 func GetProviderByName(name string) (ProviderConfig, bool) {
 	provider, found := ProviderMap[name]
+	if strings.Contains(provider.BaseURL, "{{") && strings.Contains(provider.BaseURL, "}}") {
+		// Extract the template variable and default value
+		start := strings.Index(provider.BaseURL, "{{")
+		end := strings.Index(provider.BaseURL, "}}") + 2
+		template := provider.BaseURL[start:end]
+
+		// Parse the template to get variable name and default value
+		inner := template[2 : len(template)-2] // Remove {{ and }}
+		parts := strings.Split(inner, "=")
+		if len(parts) == 2 {
+			varName := strings.TrimSpace(parts[0])
+			defaultValue := strings.TrimSpace(parts[1])
+
+			// Create environment variable name
+			envVarName := strings.ToUpper(provider.Name) + "_" + varName
+
+			// Get value from environment or use default
+			envValue := os.Getenv(envVarName)
+			if envValue == "" {
+				envValue = defaultValue
+			}
+
+			// Replace the template with the actual value
+			provider.BaseURL = strings.Replace(provider.BaseURL, template, envValue, 1)
+		}
+	}
 	return provider, found
 }
 
