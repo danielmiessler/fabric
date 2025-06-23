@@ -45,6 +45,7 @@ func hasAWSCredentials() bool {
 	if os.Getenv("AWS_PROFILE") != "" ||
 		os.Getenv("AWS_ROLE_SESSION_NAME") != "" ||
 		(os.Getenv("AWS_ACCESS_KEY_ID") != "" && os.Getenv("AWS_SECRET_ACCESS_KEY") != "") {
+
 		return true
 	}
 
