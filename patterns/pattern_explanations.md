@@ -212,8 +212,8 @@
 208. **transcribe_minutes**: Extracts (from meeting transcription) meeting minutes, identifying actionables, insightful ideas, decisions, challenges, and next steps in a structured format.
 209. **translate**: Translates sentences or documentation into the specified language code while maintaining the original formatting and tone.
 210. **tweet**: Provides a step-by-step guide on crafting engaging tweets with emojis, covering Twitter basics, account creation, features, and audience targeting.
-211. **write_essay**: Writes concise, clear essays in the style of Paul Graham, focusing on simplicity, clarity, and illumination of the provided topic.
-212. **write_essay_by_author**: Writes essays in the style of a specified author, embodying their unique voice, vocabulary, and approach.
+211. **write_essay**: Writes essays in the style of a specified author, embodying their unique voice, vocabulary, and approach. Uses `author_name` variable.
+212. **write_essay_pg**: Writes concise, clear essays in the style of Paul Graham, focusing on simplicity, clarity, and illumination of the provided topic.
 213. **write_hackerone_report**: Generates concise, clear, and reproducible bug bounty reports, detailing vulnerability impact, steps to reproduce, and exploit details for triagers.
 214. **write_latex**: Generates syntactically correct LaTeX code for a new.tex document, ensuring proper formatting and compatibility with pdflatex.
 215. **write_micro_essay**: Writes concise, clear, and illuminating essays on the given topic in the style of Paul Graham.

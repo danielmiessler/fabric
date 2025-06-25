@@ -986,8 +986,8 @@
       "tags": ["WRITING", "CONVERSION"]
     },
     {
-      "patternName": "write_essay",
-      "description": "Create essays with thesis statements and arguments.",
+      "patternName": "write_essay_pg",
+      "description": "Create essays with thesis statements and arguments in the style of Paul Graham.",
       "tags": ["WRITING", "RESEARCH", "LEARNING"]
     },
     {
@@ -1096,7 +1096,7 @@
       "tags": ["ANALYSIS", "BUSINESS"]
     },
     {
-      "patternName": "write_essay_by_author",
+      "patternName": "write_essay_pg",
       "description": "Write essays on given topics in the distinctive style of specified authors.",
       "tags": ["WRITING", "CREATIVITY"]
     }
