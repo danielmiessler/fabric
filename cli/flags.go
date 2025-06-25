@@ -279,14 +279,7 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 	}
 
 	var message *goopenai.ChatCompletionMessage
-	if len(o.Attachments) == 0 {
-		if o.Message != "" {
-			message = &goopenai.ChatCompletionMessage{
-				Role:    goopenai.ChatMessageRoleUser,
-				Content: strings.TrimSpace(o.Message),
-			}
-		}
-	} else {
+	if len(o.Attachments) > 0 {
 		message = &goopenai.ChatCompletionMessage{
 			Role: goopenai.ChatMessageRoleUser,
 		}
@@ -323,7 +316,13 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 				},
 			})
 		}
+	} else if o.Message != "" {
+		message = &goopenai.ChatCompletionMessage{
+			Role:    goopenai.ChatMessageRoleUser,
+			Content: strings.TrimSpace(o.Message),
+		}
 	}
+
 	ret.Message = message
 
 	if o.Language != "" {

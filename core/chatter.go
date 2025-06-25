@@ -227,6 +227,8 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		// So, we only append the direct user message if NO pattern was used.
 		if request.PatternName == "" && request.Message != nil {
 			session.Append(request.Message)
+		} else if request.Message != nil {
+			session.Append(request.Message)
 		}
 	}
 
