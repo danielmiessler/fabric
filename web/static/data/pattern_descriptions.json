@@ -1043,7 +1043,7 @@
     {
       "patternName": "create_excalidraw_visualization",
       "description": "Create visualizations using Excalidraw.",
-      "tags": ["VISUALIZATION"]
+      "tags": ["VISUALIZE"]
     },
     {
       "patternName": "create_flash_cards",
@@ -1096,8 +1096,8 @@
       "tags": ["ANALYSIS", "BUSINESS"]
     },
     {
-      "patternName": "write_essay_pg",
-      "description": "Write essays on given topics in the distinctive style of specified authors.",
+      "patternName": "write_essay",
+      "description": "Write essays on given topics in the distinctive style of specified authors. Uses {{author_name}} variable.",
       "tags": ["WRITING", "CREATIVITY"]
     }
   ]
