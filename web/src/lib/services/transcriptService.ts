@@ -1,5 +1,5 @@
-import { get } from 'svelte/store';
 import { languageStore } from '$lib/store/language-store';
+import { get } from 'svelte/store';
 
 export interface TranscriptResponse {
   transcript: string;
@@ -18,18 +18,18 @@ export async function getTranscript(url: string): Promise<TranscriptResponse> {
     console.log('\n=== YouTube Transcript Service Start ===');
     console.log('1. Request details:', {
       url,
-      endpoint: '/chat',
+      endpoint: '/youtube/transcript',
       method: 'POST',
       isYouTubeURL: url.includes('youtube.com') || url.includes('youtu.be'),
       originalLanguage
     });
 
-    const response = await fetch('/chat', {
+    const response = await fetch('/youtube/transcript', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         url,
         language: originalLanguage // Pass original language to server
       })

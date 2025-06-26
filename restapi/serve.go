@@ -26,6 +26,7 @@ func Serve(registry *core.PluginRegistry, address string, apiKey string) (err er
 	NewContextsHandler(r, fabricDb.Contexts)
 	NewSessionsHandler(r, fabricDb.Sessions)
 	NewChatHandler(r, registry, fabricDb)
+	NewYouTubeHandler(r, registry)
 	NewConfigHandler(r, fabricDb)
 	NewModelsHandler(r, registry.VendorManager)
 	NewStrategiesHandler(r)
