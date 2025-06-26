@@ -18,13 +18,13 @@ export async function getTranscript(url: string): Promise<TranscriptResponse> {
     console.log('\n=== YouTube Transcript Service Start ===');
     console.log('1. Request details:', {
       url,
-      endpoint: '/youtube/transcript',
+      endpoint: '/api/youtube/transcript',
       method: 'POST',
       isYouTubeURL: url.includes('youtube.com') || url.includes('youtu.be'),
       originalLanguage
     });
 
-    const response = await fetch('/youtube/transcript', {
+    const response = await fetch('/api/youtube/transcript', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
