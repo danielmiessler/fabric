@@ -164,6 +164,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	var patternContent string
+	inputUsed := false
 	if request.PatternName != "" {
 		pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, request.Message.Content)
 
@@ -171,6 +172,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 			return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
 		}
 		patternContent = pattern.Pattern
+		inputUsed = true
 	}
 
 	systemMessage := strings.TrimSpace(contextContent) + strings.TrimSpace(patternContent)
@@ -212,7 +214,9 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		if systemMessage != "" {
 			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
 		}
-		if request.Message != nil {
+		// If multi-part content, it is in the user message, and should be added.
+		// Otherwise, we should only add it if we have not already used it in the systemMessage.
+		if len(request.Message.MultiContent) > 0 || (request.Message != nil && !inputUsed) {
 			session.Append(request.Message)
 		}
 	}
