@@ -33,20 +33,20 @@ func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common
 		case goopenai.ChatMessageRoleAssistant:
 			output += fmt.Sprintf("Assistant:\n%s\n\n", msg.Content)
 		case goopenai.ChatMessageRoleUser:
-            if msg.MultiContent != nil {
-                output += "User:\n"
-                for _, part := range msg.MultiContent {
-                    output += fmt.Sprintf("  - Type: %s\n", part.Type)
-                    if part.Type == goopenai.ChatMessagePartTypeImageURL {
-                        output += fmt.Sprintf("    Image URL: %s\n", part.ImageURL.URL)
-                    } else {
-                        output += fmt.Sprintf("    Text: %s\n", part.Text)
-                    }
-                }
-                output += "\n"
-            } else {
-                output += fmt.Sprintf("User:\n%s\n\n", msg.Content)
-            }
+			if msg.MultiContent != nil {
+				output += "User:\n"
+				for _, part := range msg.MultiContent {
+					output += fmt.Sprintf("  - Type: %s\n", part.Type)
+					if part.Type == goopenai.ChatMessagePartTypeImageURL {
+						output += fmt.Sprintf("    Image URL: %s\n", part.ImageURL.URL)
+					} else {
+						output += fmt.Sprintf("    Text: %s\n", part.Text)
+					}
+				}
+				output += "\n"
+			} else {
+				output += fmt.Sprintf("User:\n%s\n\n", msg.Content)
+			}
 		default:
 			output += fmt.Sprintf("%s:\n%s\n\n", msg.Role, msg.Content)
 		}
