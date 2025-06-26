@@ -53,7 +53,7 @@ func (c *Client) formatMessages(msgs []*goopenai.ChatCompletionMessage) string {
 		case goopenai.ChatMessageRoleSystem:
 			builder.WriteString(fmt.Sprintf("System:\n%s\n\n", msg.Content))
 		case goopenai.ChatMessageRoleAssistant:
-			builder.WriteString(fmt.Sprintf("Assistant:\n%s\n\n", msg.Content))
+			builder.WriteString(c.formatMultiContentMessage(msg))
 		case goopenai.ChatMessageRoleUser:
 			builder.WriteString(c.formatMultiContentMessage(msg))
 		default:
