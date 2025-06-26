@@ -203,8 +203,9 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 				finalContent = fmt.Sprintf("%s\n\n%s", systemMessage, request.Message.Content)
 			}
 			request.Message = &goopenai.ChatCompletionMessage{
-				Role:    goopenai.ChatMessageRoleUser,
-				Content: finalContent,
+				Role:         goopenai.ChatMessageRoleUser,
+				Content:      finalContent,
+				MultiContent: request.Message.MultiContent,
 			}
 		}
 		if request.Message != nil {
