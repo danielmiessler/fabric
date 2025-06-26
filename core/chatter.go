@@ -202,10 +202,32 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 			} else {
 				finalContent = fmt.Sprintf("%s\n\n%s", systemMessage, request.Message.Content)
 			}
-			request.Message = &goopenai.ChatCompletionMessage{
-				Role:         goopenai.ChatMessageRoleUser,
-				Content:      finalContent,
-				MultiContent: request.Message.MultiContent,
+
+			// Handle MultiContent properly in raw mode
+			if len(request.Message.MultiContent) > 0 {
+				// When we have attachments, add the text as a text part in MultiContent
+				newMultiContent := []goopenai.ChatMessagePart{
+					{
+						Type: goopenai.ChatMessagePartTypeText,
+						Text: finalContent,
+					},
+				}
+				// Add existing non-text parts (like images)
+				for _, part := range request.Message.MultiContent {
+					if part.Type != goopenai.ChatMessagePartTypeText {
+						newMultiContent = append(newMultiContent, part)
+					}
+				}
+				request.Message = &goopenai.ChatCompletionMessage{
+					Role:         goopenai.ChatMessageRoleUser,
+					MultiContent: newMultiContent,
+				}
+			} else {
+				// No attachments, use regular Content field
+				request.Message = &goopenai.ChatCompletionMessage{
+					Role:    goopenai.ChatMessageRoleUser,
+					Content: finalContent,
+				}
 			}
 		}
 		if request.Message != nil {
