@@ -33,7 +33,20 @@ func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common
 		case goopenai.ChatMessageRoleAssistant:
 			output += fmt.Sprintf("Assistant:\n%s\n\n", msg.Content)
 		case goopenai.ChatMessageRoleUser:
-			output += fmt.Sprintf("User:\n%s\n\n", msg.Content)
+            if msg.MultiContent != nil {
+                output += "User:\n"
+                for _, part := range msg.MultiContent {
+                    output += fmt.Sprintf("  - Type: %s\n", part.Type)
+                    if part.Type == goopenai.ChatMessagePartTypeImageURL {
+                        output += fmt.Sprintf("    Image URL: %s\n", part.ImageURL.URL)
+                    } else {
+                        output += fmt.Sprintf("    Text: %s\n", part.Text)
+                    }
+                }
+                output += "\n"
+            } else {
+                output += fmt.Sprintf("User:\n%s\n\n", msg.Content)
+            }
 		default:
 			output += fmt.Sprintf("%s:\n%s\n\n", msg.Role, msg.Content)
 		}
@@ -64,7 +77,20 @@ func (c *Client) Send(_ context.Context, msgs []*goopenai.ChatCompletionMessage,
 		case goopenai.ChatMessageRoleAssistant:
 			fmt.Printf("Assistant:\n%s\n\n", msg.Content)
 		case goopenai.ChatMessageRoleUser:
-			fmt.Printf("User:\n%s\n\n", msg.Content)
+			if msg.MultiContent != nil {
+				fmt.Println("User:")
+				for _, part := range msg.MultiContent {
+					fmt.Printf("  - Type: %s\n", part.Type)
+					if part.Type == goopenai.ChatMessagePartTypeImageURL {
+						fmt.Printf("    Image URL: %s\n", part.ImageURL.URL)
+					} else {
+						fmt.Printf("    Text: %s\n", part.Text)
+					}
+				}
+				fmt.Println()
+			} else {
+				fmt.Printf("User:\n%s\n\n", msg.Content)
+			}
 		default:
 			fmt.Printf("%s:\n%s\n\n", msg.Role, msg.Content)
 		}
