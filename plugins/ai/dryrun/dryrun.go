@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"strings"
 
 	goopenai "github.com/sashabaranov/go-openai"
 
@@ -23,62 +24,77 @@ func (c *Client) ListModels() ([]string, error) {
 	return []string{"dry-run-model"}, nil
 }
 
-func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
-	output := "Dry run: Would send the following request:\n\n"
+func (c *Client) formatMultiContentMessage(msg *goopenai.ChatCompletionMessage) string {
+	var builder strings.Builder
+
+	if len(msg.MultiContent) > 0 {
+		builder.WriteString(fmt.Sprintf("%s:\n", msg.Role))
+		for _, part := range msg.MultiContent {
+			builder.WriteString(fmt.Sprintf("  - Type: %s\n", part.Type))
+			if part.Type == goopenai.ChatMessagePartTypeImageURL {
+				builder.WriteString(fmt.Sprintf("    Image URL: %s\n", part.ImageURL.URL))
+			} else {
+				builder.WriteString(fmt.Sprintf("    Text: %s\n", part.Text))
+			}
+		}
+		builder.WriteString("\n")
+	} else {
+		builder.WriteString(fmt.Sprintf("%s:\n%s\n\n", msg.Role, msg.Content))
+	}
+
+	return builder.String()
+}
+
+func (c *Client) formatMessages(msgs []*goopenai.ChatCompletionMessage) string {
+	var builder strings.Builder
 
 	for _, msg := range msgs {
 		switch msg.Role {
 		case goopenai.ChatMessageRoleSystem:
-			output += fmt.Sprintf("System:\n%s\n\n", msg.Content)
+			builder.WriteString(fmt.Sprintf("System:\n%s\n\n", msg.Content))
 		case goopenai.ChatMessageRoleAssistant:
-			output += fmt.Sprintf("Assistant:\n%s\n\n", msg.Content)
+			builder.WriteString(c.formatMultiContentMessage(msg))
 		case goopenai.ChatMessageRoleUser:
-			output += fmt.Sprintf("User:\n%s\n\n", msg.Content)
+			builder.WriteString(c.formatMultiContentMessage(msg))
 		default:
-			output += fmt.Sprintf("%s:\n%s\n\n", msg.Role, msg.Content)
+			builder.WriteString(fmt.Sprintf("%s:\n%s\n\n", msg.Role, msg.Content))
 		}
 	}
 
-	output += "Options:\n"
-	output += fmt.Sprintf("Model: %s\n", opts.Model)
-	output += fmt.Sprintf("Temperature: %f\n", opts.Temperature)
-	output += fmt.Sprintf("TopP: %f\n", opts.TopP)
-	output += fmt.Sprintf("PresencePenalty: %f\n", opts.PresencePenalty)
-	output += fmt.Sprintf("FrequencyPenalty: %f\n", opts.FrequencyPenalty)
+	return builder.String()
+}
+
+func (c *Client) formatOptions(opts *common.ChatOptions) string {
+	var builder strings.Builder
+
+	builder.WriteString("Options:\n")
+	builder.WriteString(fmt.Sprintf("Model: %s\n", opts.Model))
+	builder.WriteString(fmt.Sprintf("Temperature: %f\n", opts.Temperature))
+	builder.WriteString(fmt.Sprintf("TopP: %f\n", opts.TopP))
+	builder.WriteString(fmt.Sprintf("PresencePenalty: %f\n", opts.PresencePenalty))
+	builder.WriteString(fmt.Sprintf("FrequencyPenalty: %f\n", opts.FrequencyPenalty))
 	if opts.ModelContextLength != 0 {
-		output += fmt.Sprintf("ModelContextLength: %d\n", opts.ModelContextLength)
+		builder.WriteString(fmt.Sprintf("ModelContextLength: %d\n", opts.ModelContextLength))
 	}
 
-	channel <- output
+	return builder.String()
+}
+
+func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
+	var builder strings.Builder
+	builder.WriteString("Dry run: Would send the following request:\n\n")
+	builder.WriteString(c.formatMessages(msgs))
+	builder.WriteString(c.formatOptions(opts))
+
+	channel <- builder.String()
 	close(channel)
 	return nil
 }
 
 func (c *Client) Send(_ context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (string, error) {
 	fmt.Println("Dry run: Would send the following request:")
-
-	for _, msg := range msgs {
-		switch msg.Role {
-		case goopenai.ChatMessageRoleSystem:
-			fmt.Printf("System:\n%s\n\n", msg.Content)
-		case goopenai.ChatMessageRoleAssistant:
-			fmt.Printf("Assistant:\n%s\n\n", msg.Content)
-		case goopenai.ChatMessageRoleUser:
-			fmt.Printf("User:\n%s\n\n", msg.Content)
-		default:
-			fmt.Printf("%s:\n%s\n\n", msg.Role, msg.Content)
-		}
-	}
-
-	fmt.Println("Options:")
-	fmt.Printf("Model: %s\n", opts.Model)
-	fmt.Printf("Temperature: %f\n", opts.Temperature)
-	fmt.Printf("TopP: %f\n", opts.TopP)
-	fmt.Printf("PresencePenalty: %f\n", opts.PresencePenalty)
-	fmt.Printf("FrequencyPenalty: %f\n", opts.FrequencyPenalty)
-	if opts.ModelContextLength != 0 {
-		fmt.Printf("ModelContextLength: %d\n", opts.ModelContextLength)
-	}
+	fmt.Print(c.formatMessages(msgs))
+	fmt.Print(c.formatOptions(opts))
 
 	return "", nil
 }

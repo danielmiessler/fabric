@@ -30,11 +30,11 @@ type Chatter struct {
 	strategy           string
 }
 
-// Send processes a chat request and applies any file changes if using the create_coding_feature pattern
+// Send processes a chat request and applies file changes for create_coding_feature pattern
 func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *fsdb.Session, err error) {
 	modelToUse := opts.Model
 	if modelToUse == "" {
-		modelToUse = o.model // Default to the model set in the Chatter struct
+		modelToUse = o.model
 	}
 	if o.vendor.NeedsRawMode(modelToUse) {
 		opts.Raw = true
@@ -89,18 +89,15 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 		return
 	}
 
-	// Process file changes if using the create_coding_feature pattern
+	// Process file changes for create_coding_feature pattern
 	if request.PatternName == "create_coding_feature" {
-		// Look for file changes in the response
 		summary, fileChanges, parseErr := common.ParseFileChanges(message)
 		if parseErr != nil {
 			fmt.Printf("Warning: Failed to parse file changes: %v\n", parseErr)
 		} else if len(fileChanges) > 0 {
-			// Get the project root - use the current directory
 			projectRoot, err := os.Getwd()
 			if err != nil {
 				fmt.Printf("Warning: Failed to get current directory: %v\n", err)
-				// Continue without applying changes
 			} else {
 				if applyErr := common.ApplyFileChanges(projectRoot, fileChanges); applyErr != nil {
 					fmt.Printf("Warning: Failed to apply file changes: %v\n", applyErr)
@@ -122,7 +119,6 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 }
 
 func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *fsdb.Session, err error) {
-	// If a session name is provided, retrieve it from the database
 	if request.SessionName != "" {
 		var sess *fsdb.Session
 		if sess, err = o.db.Sessions.Get(request.SessionName); err != nil {
@@ -149,9 +145,9 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		contextContent = ctx.Content
 	}
 
-	// Process any template variables in the message content (user input)
+	// Process template variables in message content
 	// Double curly braces {{variable}} indicate template substitution
-	// Ensure we have a message before processing, other wise we'll get an error when we pass to pattern.go
+	// Ensure we have a message before processing
 	if request.Message == nil {
 		request.Message = &goopenai.ChatCompletionMessage{
 			Role:    goopenai.ChatMessageRoleUser,
@@ -168,19 +164,19 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	var patternContent string
+	inputUsed := false
 	if request.PatternName != "" {
 		pattern, err := o.db.Patterns.GetApplyVariables(request.PatternName, request.PatternVariables, request.Message.Content)
-		// pattern will now contain user input, and all variables will be resolved, or errored
 
 		if err != nil {
 			return nil, fmt.Errorf("could not get pattern %s: %v", request.PatternName, err)
 		}
 		patternContent = pattern.Pattern
+		inputUsed = true
 	}
 
 	systemMessage := strings.TrimSpace(contextContent) + strings.TrimSpace(patternContent)
 
-	// Apply strategy if specified
 	if request.StrategyName != "" {
 		strategy, err := strategy.LoadStrategy(request.StrategyName)
 		if err != nil {
@@ -199,33 +195,51 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	if raw {
-		// In raw mode, we want to avoid duplicating the input that's already in the pattern
 		var finalContent string
 		if systemMessage != "" {
-			// If we have a pattern, it already includes the user input
 			if request.PatternName != "" {
 				finalContent = systemMessage
 			} else {
-				// No pattern, combine system message with user input
 				finalContent = fmt.Sprintf("%s\n\n%s", systemMessage, request.Message.Content)
 			}
-			request.Message = &goopenai.ChatCompletionMessage{
-				Role:    goopenai.ChatMessageRoleUser,
-				Content: finalContent,
+
+			// Handle MultiContent properly in raw mode
+			if len(request.Message.MultiContent) > 0 {
+				// When we have attachments, add the text as a text part in MultiContent
+				newMultiContent := []goopenai.ChatMessagePart{
+					{
+						Type: goopenai.ChatMessagePartTypeText,
+						Text: finalContent,
+					},
+				}
+				// Add existing non-text parts (like images)
+				for _, part := range request.Message.MultiContent {
+					if part.Type != goopenai.ChatMessagePartTypeText {
+						newMultiContent = append(newMultiContent, part)
+					}
+				}
+				request.Message = &goopenai.ChatCompletionMessage{
+					Role:         goopenai.ChatMessageRoleUser,
+					MultiContent: newMultiContent,
+				}
+			} else {
+				// No attachments, use regular Content field
+				request.Message = &goopenai.ChatCompletionMessage{
+					Role:    goopenai.ChatMessageRoleUser,
+					Content: finalContent,
+				}
 			}
 		}
-		// After this, if request.Message is not nil, append it
 		if request.Message != nil {
 			session.Append(request.Message)
 		}
-	} else { // Not raw mode
+	} else {
 		if systemMessage != "" {
 			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
 		}
-		// If a pattern was used (request.PatternName != ""), its output (systemMessage)
-		// already incorporates the user input (request.Message.Content via GetApplyVariables).
-		// So, we only append the direct user message if NO pattern was used.
-		if request.PatternName == "" && request.Message != nil {
+		// If multi-part content, it is in the user message, and should be added.
+		// Otherwise, we should only add it if we have not already used it in the systemMessage.
+		if len(request.Message.MultiContent) > 0 || (request.Message != nil && !inputUsed) {
 			session.Append(request.Message)
 		}
 	}
