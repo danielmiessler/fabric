@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"slices"
 	"strings"
 
 	"github.com/danielmiessler/fabric/common"
@@ -129,12 +130,20 @@ func (o *Client) NeedsRawMode(modelName string) bool {
 		"o3",
 		"o4",
 	}
+	openAIModelsNeedingRaw := []string{
+		"gpt-4o-mini-search-preview",
+		"gpt-4o-mini-search-preview-2025-03-11",
+		"gpt-4o-search-preview",
+		"gpt-4o-search-preview-2025-03-11",
+		"o4-mini-deep-research",
+		"o4-mini-deep-research-2025-06-26",
+	}
 	for _, prefix := range openaiModelsPrefixes {
 		if strings.HasPrefix(modelName, prefix) {
 			return true
 		}
 	}
-	return false
+	return slices.Contains(openAIModelsNeedingRaw, modelName)
 }
 
 func (o *Client) buildChatCompletionRequest(
