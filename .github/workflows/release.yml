@@ -111,7 +111,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release view ${{ env.latest_tag }} || gh release create ${{ env.latest_tag }} --title "Release ${{ env.latest_tag }}" --notes "Automated release for ${{ env.latest_tag }}"
+          if ! gh release view ${{ env.latest_tag }} >/dev/null 2>&1; then
+            gh release create ${{ env.latest_tag }} --title "Release ${{ env.latest_tag }}" --notes "Automated release for ${{ env.latest_tag }}"
+          else
+            echo "Release ${{ env.latest_tag }} already exists."
+          fi
 
       - name: Upload release artifact
         if: matrix.os == 'windows-latest'
