@@ -28,9 +28,6 @@ schema = 3
   [mod."github.com/ProtonMail/go-crypto"]
     version = "v1.3.0"
     hash = "sha256-TUG+C4MyeWglOmiwiW2/NUVurFHXLgEPRd3X9uQ1NGI="
-  [mod."github.com/anaskhan96/soup"]
-    version = "v1.2.5"
-    hash = "sha256-t8yCyK2y7x2qaI/3Yw16q3zVFqu+3acLcPgTr1MIKWg="
   [mod."github.com/andybalholm/cascadia"]
     version = "v1.3.3"
     hash = "sha256-jv7ZshpSd7FZzKKN6hqlUgiR8C3y85zNIS/hq7g76Ho="
@@ -233,8 +230,8 @@ schema = 3
     version = "v1.50.0"
     hash = "sha256-KDFks82BKu39sGt0f972IyOkohV2U0r1YvsnlNLdugY="
   [mod."github.com/sashabaranov/go-openai"]
-    version = "v1.40.1"
-    hash = "sha256-GkToonIIF3GG+lwev1lJQ9rAAPJDjSaOkoXRC3OOlEA="
+    version = "v1.40.3"
+    hash = "sha256-Q2+la99lgKwcpgGHuf5p23gH5hmhYKp77YDUtbt35eo="
   [mod."github.com/sergi/go-diff"]
     version = "v1.4.0"
     hash = "sha256-rs9NKpv/qcQEMRg7CmxGdP4HGuFdBxlpWf9LbA9wS4k="
