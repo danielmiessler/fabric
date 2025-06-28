@@ -10,7 +10,7 @@ import (
 	"github.com/danielmiessler/fabric/plugins"
 	perplexity "github.com/sgaunet/perplexity-go/v2"
 
-	goopenai "github.com/sashabaranov/go-openai"
+	"github.com/danielmiessler/fabric/chat"
 )
 
 const (
@@ -61,7 +61,7 @@ func (c *Client) ListModels() ([]string, error) {
 	return models, nil
 }
 
-func (c *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (string, error) {
+func (c *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (string, error) {
 	if c.client == nil {
 		if err := c.Configure(); err != nil {
 			return "", fmt.Errorf("failed to configure Perplexity client: %w", err)
@@ -120,7 +120,7 @@ func (c *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessag
 	return content, nil
 }
 
-func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
+func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
 	if c.client == nil {
 		if err := c.Configure(); err != nil {
 			close(channel) // Ensure channel is closed on error

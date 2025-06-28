@@ -3,7 +3,7 @@ package fsdb
 import (
 	"testing"
 
-	goopenai "github.com/sashabaranov/go-openai"
+	"github.com/danielmiessler/fabric/chat"
 )
 
 func TestSessions_GetOrCreateSession(t *testing.T) {
@@ -27,7 +27,7 @@ func TestSessions_SaveSession(t *testing.T) {
 		StorageEntity: &StorageEntity{Dir: dir, FileExtension: ".json"},
 	}
 	sessionName := "testSession"
-	session := &Session{Name: sessionName, Messages: []*goopenai.ChatCompletionMessage{{Content: "message1"}}}
+	session := &Session{Name: sessionName, Messages: []*chat.ChatCompletionMessage{{Content: "message1"}}}
 	err := sessions.SaveSession(session)
 	if err != nil {
 		t.Fatalf("failed to save session: %v", err)

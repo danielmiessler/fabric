@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	goopenai "github.com/sashabaranov/go-openai"
+	"github.com/danielmiessler/fabric/chat"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins"
@@ -24,14 +24,14 @@ func (c *Client) ListModels() ([]string, error) {
 	return []string{"dry-run-model"}, nil
 }
 
-func (c *Client) formatMultiContentMessage(msg *goopenai.ChatCompletionMessage) string {
+func (c *Client) formatMultiContentMessage(msg *chat.ChatCompletionMessage) string {
 	var builder strings.Builder
 
 	if len(msg.MultiContent) > 0 {
 		builder.WriteString(fmt.Sprintf("%s:\n", msg.Role))
 		for _, part := range msg.MultiContent {
 			builder.WriteString(fmt.Sprintf("  - Type: %s\n", part.Type))
-			if part.Type == goopenai.ChatMessagePartTypeImageURL {
+			if part.Type == chat.ChatMessagePartTypeImageURL {
 				builder.WriteString(fmt.Sprintf("    Image URL: %s\n", part.ImageURL.URL))
 			} else {
 				builder.WriteString(fmt.Sprintf("    Text: %s\n", part.Text))
@@ -45,16 +45,16 @@ func (c *Client) formatMultiContentMessage(msg *goopenai.ChatCompletionMessage) 
 	return builder.String()
 }
 
-func (c *Client) formatMessages(msgs []*goopenai.ChatCompletionMessage) string {
+func (c *Client) formatMessages(msgs []*chat.ChatCompletionMessage) string {
 	var builder strings.Builder
 
 	for _, msg := range msgs {
 		switch msg.Role {
-		case goopenai.ChatMessageRoleSystem:
+		case chat.ChatMessageRoleSystem:
 			builder.WriteString(fmt.Sprintf("System:\n%s\n\n", msg.Content))
-		case goopenai.ChatMessageRoleAssistant:
+		case chat.ChatMessageRoleAssistant:
 			builder.WriteString(c.formatMultiContentMessage(msg))
-		case goopenai.ChatMessageRoleUser:
+		case chat.ChatMessageRoleUser:
 			builder.WriteString(c.formatMultiContentMessage(msg))
 		default:
 			builder.WriteString(fmt.Sprintf("%s:\n%s\n\n", msg.Role, msg.Content))
@@ -80,7 +80,7 @@ func (c *Client) formatOptions(opts *common.ChatOptions) string {
 	return builder.String()
 }
 
-func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
+func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
 	var builder strings.Builder
 	builder.WriteString("Dry run: Would send the following request:\n\n")
 	builder.WriteString(c.formatMessages(msgs))
@@ -91,7 +91,7 @@ func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common
 	return nil
 }
 
-func (c *Client) Send(_ context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (string, error) {
+func (c *Client) Send(_ context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (string, error) {
 	fmt.Println("Dry run: Would send the following request:")
 	fmt.Print(c.formatMessages(msgs))
 	fmt.Print(c.formatOptions(opts))

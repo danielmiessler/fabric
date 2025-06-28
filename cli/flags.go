@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/danielmiessler/fabric/chat"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/jessevdk/go-flags"
-	goopenai "github.com/sashabaranov/go-openai"
 	"golang.org/x/text/language"
 	"gopkg.in/yaml.v2"
 )
@@ -278,15 +278,15 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 		Meta:             Meta,
 	}
 
-	var message *goopenai.ChatCompletionMessage
+	var message *chat.ChatCompletionMessage
 	if len(o.Attachments) > 0 {
-		message = &goopenai.ChatCompletionMessage{
-			Role: goopenai.ChatMessageRoleUser,
+		message = &chat.ChatCompletionMessage{
+			Role: chat.ChatMessageRoleUser,
 		}
 
 		if o.Message != "" {
-			message.MultiContent = append(message.MultiContent, goopenai.ChatMessagePart{
-				Type: goopenai.ChatMessagePartTypeText,
+			message.MultiContent = append(message.MultiContent, chat.ChatMessagePart{
+				Type: chat.ChatMessagePartTypeText,
 				Text: strings.TrimSpace(o.Message),
 			})
 		}
@@ -309,16 +309,16 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 				dataURL := fmt.Sprintf("data:%s;base64,%s", mimeType, base64Image)
 				url = &dataURL
 			}
-			message.MultiContent = append(message.MultiContent, goopenai.ChatMessagePart{
-				Type: goopenai.ChatMessagePartTypeImageURL,
-				ImageURL: &goopenai.ChatMessageImageURL{
+			message.MultiContent = append(message.MultiContent, chat.ChatMessagePart{
+				Type: chat.ChatMessagePartTypeImageURL,
+				ImageURL: &chat.ChatMessageImageURL{
 					URL: *url,
 				},
 			})
 		}
 	} else if o.Message != "" {
-		message = &goopenai.ChatCompletionMessage{
-			Role:    goopenai.ChatMessageRoleUser,
+		message = &chat.ChatCompletionMessage{
+			Role:    chat.ChatMessageRoleUser,
 			Content: strings.TrimSpace(o.Message),
 		}
 	}

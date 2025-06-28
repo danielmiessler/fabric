@@ -229,9 +229,6 @@ schema = 3
   [mod."github.com/samber/lo"]
     version = "v1.50.0"
     hash = "sha256-KDFks82BKu39sGt0f972IyOkohV2U0r1YvsnlNLdugY="
-  [mod."github.com/sashabaranov/go-openai"]
-    version = "v1.40.3"
-    hash = "sha256-Q2+la99lgKwcpgGHuf5p23gH5hmhYKp77YDUtbt35eo="
   [mod."github.com/sergi/go-diff"]
     version = "v1.4.0"
     hash = "sha256-rs9NKpv/qcQEMRg7CmxGdP4HGuFdBxlpWf9LbA9wS4k="

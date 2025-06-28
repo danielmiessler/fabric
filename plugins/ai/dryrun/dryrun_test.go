@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/danielmiessler/fabric/chat"
 	"github.com/danielmiessler/fabric/common"
-	"github.com/sashabaranov/go-openai"
 )
 
 // Test generated using Keploy
@@ -33,7 +33,7 @@ func TestSetup_ReturnsNil(t *testing.T) {
 // Test generated using Keploy
 func TestSendStream_SendsMessages(t *testing.T) {
 	client := NewClient()
-	msgs := []*openai.ChatCompletionMessage{
+	msgs := []*chat.ChatCompletionMessage{
 		{Role: "user", Content: "Test message"},
 	}
 	opts := &common.ChatOptions{

@@ -20,7 +20,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/bedrockruntime"
 	"github.com/aws/aws-sdk-go-v2/service/bedrockruntime/types"
 
-	goopenai "github.com/sashabaranov/go-openai"
+	"github.com/danielmiessler/fabric/chat"
 )
 
 const (
@@ -154,7 +154,7 @@ func (c *BedrockClient) ListModels() ([]string, error) {
 }
 
 // SendStream sends the messages to the the Bedrock ConverseStream API
-func (c *BedrockClient) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
+func (c *BedrockClient) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
 	// Ensure channel is closed on all exit paths to prevent goroutine leaks
 	defer func() {
 		if r := recover(); r != nil {
@@ -208,7 +208,7 @@ func (c *BedrockClient) SendStream(msgs []*goopenai.ChatCompletionMessage, opts 
 }
 
 // Send sends the messages the Bedrock Converse API
-func (c *BedrockClient) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+func (c *BedrockClient) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
 
 	messages := c.toMessages(msgs)
 
@@ -249,12 +249,12 @@ func (c *BedrockClient) NeedsRawMode(modelName string) bool {
 // Bedrock Converse Message type.
 // The system role messages are mapped to the user role as they contain a mix of system messages,
 // pattern content and user input.
-func (c *BedrockClient) toMessages(inputMessages []*goopenai.ChatCompletionMessage) (messages []types.Message) {
+func (c *BedrockClient) toMessages(inputMessages []*chat.ChatCompletionMessage) (messages []types.Message) {
 	for _, msg := range inputMessages {
 		roles := map[string]types.ConversationRole{
-			goopenai.ChatMessageRoleUser:      types.ConversationRoleUser,
-			goopenai.ChatMessageRoleAssistant: types.ConversationRoleAssistant,
-			goopenai.ChatMessageRoleSystem:    types.ConversationRoleUser,
+			chat.ChatMessageRoleUser:      types.ConversationRoleUser,
+			chat.ChatMessageRoleAssistant: types.ConversationRoleAssistant,
+			chat.ChatMessageRoleSystem:    types.ConversationRoleUser,
 		}
 
 		role, ok := roles[msg.Role]

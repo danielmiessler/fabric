@@ -3,23 +3,23 @@ package common
 import (
 	"testing"
 
-	goopenai "github.com/sashabaranov/go-openai"
+	"github.com/danielmiessler/fabric/chat"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNormalizeMessages(t *testing.T) {
-	msgs := []*goopenai.ChatCompletionMessage{
-		{Role: goopenai.ChatMessageRoleUser, Content: "Hello"},
-		{Role: goopenai.ChatMessageRoleAssistant, Content: "Hi there!"},
-		{Role: goopenai.ChatMessageRoleUser, Content: ""},
-		{Role: goopenai.ChatMessageRoleUser, Content: ""},
-		{Role: goopenai.ChatMessageRoleUser, Content: "How are you?"},
+	msgs := []*chat.ChatCompletionMessage{
+		{Role: chat.ChatMessageRoleUser, Content: "Hello"},
+		{Role: chat.ChatMessageRoleAssistant, Content: "Hi there!"},
+		{Role: chat.ChatMessageRoleUser, Content: ""},
+		{Role: chat.ChatMessageRoleUser, Content: ""},
+		{Role: chat.ChatMessageRoleUser, Content: "How are you?"},
 	}
 
-	expected := []*goopenai.ChatCompletionMessage{
-		{Role: goopenai.ChatMessageRoleUser, Content: "Hello"},
-		{Role: goopenai.ChatMessageRoleAssistant, Content: "Hi there!"},
-		{Role: goopenai.ChatMessageRoleUser, Content: "How are you?"},
+	expected := []*chat.ChatCompletionMessage{
+		{Role: chat.ChatMessageRoleUser, Content: "Hello"},
+		{Role: chat.ChatMessageRoleAssistant, Content: "Hi there!"},
+		{Role: chat.ChatMessageRoleUser, Content: "How are you?"},
 	}
 
 	actual := NormalizeMessages(msgs, "default")
