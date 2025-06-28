@@ -12,6 +12,7 @@ Fabric is graciously supported by…
 ![GitHub top language](https://img.shields.io/github/languages/top/danielmiessler/fabric)
 ![GitHub last commit](https://img.shields.io/github/last-commit/danielmiessler/fabric)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/danielmiessler/fabric)
 
 <div align="center">
 <p class="align center">
@@ -36,7 +37,7 @@ Fabric is graciously supported by…
 
 ## What and why
 
-Since the start of modern AI in late 2022 we've seen an **_extraordinary_** number of AI applications for accomplishing tasks. There are thousands of websites, chatbots, mobile apps, and other interfaces for using all the different AI out there.
+Since the start of modern AI in late 2022 we've seen an **_extraordinary_** number of AI applications for accomplishing tasks. There are thousands of websites, chat-bots, mobile apps, and other interfaces for using all the different AI out there.
 
 It's all really exciting and powerful, but _it's not easy to integrate this functionality into our lives._
 
@@ -57,14 +58,13 @@ Keep in mind that many of these were recorded when Fabric was Python-based, so r
 - [My Own Intro to the Tool](https://www.youtube.com/watch?v=wPEyyigh10g)
 - [More Fabric YouTube Videos](https://www.youtube.com/results?search_query=fabric+ai)
 
-
 ## Navigation
 
 - [`fabric`](#fabric)
-  - [Navigation](#navigation)
-  - [Updates](#updates)
   - [What and why](#what-and-why)
   - [Intro videos](#intro-videos)
+  - [Navigation](#navigation)
+  - [Updates](#updates)
   - [Philosophy](#philosophy)
     - [Breaking problems into components](#breaking-problems-into-components)
     - [Too many prompts](#too-many-prompts)
@@ -116,7 +116,7 @@ Keep in mind that many of these were recorded when Fabric was Python-based, so r
 >
 >June 17, 2025
 >
->- Fabric now supports Perplexity AI. Configure it by using `fabric -S` to add your Perlexity AI API Key,
+>- Fabric now supports Perplexity AI. Configure it by using `fabric -S` to add your Perplexity AI API Key,
 >   and then try:
 >
 >   ```bash
@@ -762,7 +762,7 @@ The Streamlit UI supports clipboard operations across different platforms:
 
 - **macOS**: Uses `pbcopy` and `pbpaste` (built-in)
 - **Windows**: Uses `pyperclip` library (install with `pip install pyperclip`)
-- **Linux**: Uses `xclip` (install with `sudo apt-get install xclip` or equivalent for your distro)
+- **Linux**: Uses `xclip` (install with `sudo apt-get install xclip` or equivalent for your Linux distribution)
 
 ## Meta
 
@@ -780,15 +780,15 @@ The Streamlit UI supports clipboard operations across different platforms:
 
 ### Primary contributors
 
-<a href="https://github.com/danielmiessler"><img src="https://avatars.githubusercontent.com/u/50654?v=4" title="Daniel Miessler" width="50" height="50"></a>
-<a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/9218431?v=4" title="Jonathan Dunn" width="50" height="50"></a>
-<a href="https://github.com/sbehrens"><img src="https://avatars.githubusercontent.com/u/688589?v=4" title="Scott Behrens" width="50" height="50"></a>
-<a href="https://github.com/agu3rra"><img src="https://avatars.githubusercontent.com/u/10410523?v=4" title="Andre Guerra" width="50" height="50"></a>
+<a href="https://github.com/danielmiessler"><img src="https://avatars.githubusercontent.com/u/50654?v=4" title="Daniel Miessler" width="50" height="50" alt="Daniel Miessler"></a>
+<a href="https://github.com/xssdoctor"><img src="https://avatars.githubusercontent.com/u/9218431?v=4" title="Jonathan Dunn" width="50" height="50" alt="Jonathan Dunn"></a>
+<a href="https://github.com/sbehrens"><img src="https://avatars.githubusercontent.com/u/688589?v=4" title="Scott Behrens" width="50" height="50" alt="Scott Behrens"></a>
+<a href="https://github.com/agu3rra"><img src="https://avatars.githubusercontent.com/u/10410523?v=4" title="Andre Guerra" width="50" height="50" alt="Andre Guerra"></a>
 
 ### Contributors
 
 <a href="https://github.com/danielmiessler/fabric/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=danielmiessler/fabric" />
+  <img src="https://contrib.rocks/image?repo=danielmiessler/fabric" alt="contrib.rocks" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
