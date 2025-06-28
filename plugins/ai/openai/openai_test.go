@@ -3,18 +3,18 @@ package openai
 import (
 	"testing"
 
+	"github.com/danielmiessler/fabric/chat"
 	"github.com/danielmiessler/fabric/common"
-	"github.com/sashabaranov/go-openai"
-	goopenai "github.com/sashabaranov/go-openai"
+	openai "github.com/openai/openai-go"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestBuildChatCompletionRequestPinSeed(t *testing.T) {
 
-	var msgs []*goopenai.ChatCompletionMessage
+	var msgs []*chat.ChatCompletionMessage
 
 	for i := 0; i < 2; i++ {
-		msgs = append(msgs, &goopenai.ChatCompletionMessage{
+		msgs = append(msgs, &chat.ChatCompletionMessage{
 			Role:    "User",
 			Content: "My msg",
 		})
@@ -29,38 +29,22 @@ func TestBuildChatCompletionRequestPinSeed(t *testing.T) {
 		Seed:             1,
 	}
 
-	var expectedMessages []openai.ChatCompletionMessage
-
-	for i := 0; i < 2; i++ {
-		expectedMessages = append(expectedMessages,
-			openai.ChatCompletionMessage{
-				Role:    msgs[i].Role,
-				Content: msgs[i].Content,
-			},
-		)
-	}
-
-	var expectedRequest = goopenai.ChatCompletionRequest{
-		Model:            opts.Model,
-		Temperature:      float32(opts.Temperature),
-		TopP:             float32(opts.TopP),
-		PresencePenalty:  float32(opts.PresencePenalty),
-		FrequencyPenalty: float32(opts.FrequencyPenalty),
-		Messages:         expectedMessages,
-		Seed:             &opts.Seed,
-	}
-
 	var client = NewClient()
-	request := client.buildChatCompletionRequest(msgs, opts)
-	assert.Equal(t, expectedRequest, request)
+	request := client.buildChatCompletionParams(msgs, opts)
+	assert.Equal(t, openai.ChatModel(opts.Model), request.Model)
+	assert.Equal(t, openai.Float(opts.Temperature), request.Temperature)
+	assert.Equal(t, openai.Float(opts.TopP), request.TopP)
+	assert.Equal(t, openai.Float(opts.PresencePenalty), request.PresencePenalty)
+	assert.Equal(t, openai.Float(opts.FrequencyPenalty), request.FrequencyPenalty)
+	assert.Equal(t, openai.Int(int64(opts.Seed)), request.Seed)
 }
 
 func TestBuildChatCompletionRequestNilSeed(t *testing.T) {
 
-	var msgs []*goopenai.ChatCompletionMessage
+	var msgs []*chat.ChatCompletionMessage
 
 	for i := 0; i < 2; i++ {
-		msgs = append(msgs, &goopenai.ChatCompletionMessage{
+		msgs = append(msgs, &chat.ChatCompletionMessage{
 			Role:    "User",
 			Content: "My msg",
 		})
@@ -75,28 +59,12 @@ func TestBuildChatCompletionRequestNilSeed(t *testing.T) {
 		Seed:             0,
 	}
 
-	var expectedMessages []openai.ChatCompletionMessage
-
-	for i := 0; i < 2; i++ {
-		expectedMessages = append(expectedMessages,
-			openai.ChatCompletionMessage{
-				Role:    msgs[i].Role,
-				Content: msgs[i].Content,
-			},
-		)
-	}
-
-	var expectedRequest = goopenai.ChatCompletionRequest{
-		Model:            opts.Model,
-		Temperature:      float32(opts.Temperature),
-		TopP:             float32(opts.TopP),
-		PresencePenalty:  float32(opts.PresencePenalty),
-		FrequencyPenalty: float32(opts.FrequencyPenalty),
-		Messages:         expectedMessages,
-		Seed:             nil,
-	}
-
 	var client = NewClient()
-	request := client.buildChatCompletionRequest(msgs, opts)
-	assert.Equal(t, expectedRequest, request)
+	request := client.buildChatCompletionParams(msgs, opts)
+	assert.Equal(t, openai.ChatModel(opts.Model), request.Model)
+	assert.Equal(t, openai.Float(opts.Temperature), request.Temperature)
+	assert.Equal(t, openai.Float(opts.TopP), request.TopP)
+	assert.Equal(t, openai.Float(opts.PresencePenalty), request.PresencePenalty)
+	assert.Equal(t, openai.Float(opts.FrequencyPenalty), request.FrequencyPenalty)
+	assert.False(t, request.Seed.Valid())
 }

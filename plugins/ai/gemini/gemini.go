@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/danielmiessler/fabric/chat"
 	"github.com/danielmiessler/fabric/plugins"
-	goopenai "github.com/sashabaranov/go-openai"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/google/generative-ai-go/genai"
@@ -60,7 +60,7 @@ func (o *Client) ListModels() (ret []string, err error) {
 	return
 }
 
-func (o *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
 	systemInstruction, messages := toMessages(msgs)
 
 	var client *genai.Client
@@ -91,7 +91,7 @@ func (o *Client) buildModelNameFull(modelName string) string {
 	return fmt.Sprintf("%v%v", modelsNamePrefix, modelName)
 }
 
-func (o *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
+func (o *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
 	ctx := context.Background()
 	var client *genai.Client
 	if client, err = genai.NewClient(ctx, option.WithAPIKey(o.ApiKey.Value)); err != nil {
@@ -147,7 +147,7 @@ func (o *Client) NeedsRawMode(modelName string) bool {
 	return false
 }
 
-func toMessages(msgs []*goopenai.ChatCompletionMessage) (systemInstruction *genai.Content, messages []genai.Part) {
+func toMessages(msgs []*chat.ChatCompletionMessage) (systemInstruction *genai.Content, messages []genai.Part) {
 	if len(msgs) >= 2 {
 		systemInstruction = &genai.Content{
 			Parts: []genai.Part{

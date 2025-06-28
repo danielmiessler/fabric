@@ -2,16 +2,16 @@ package openai
 
 import (
 	"context"
-	"errors"
-	"fmt"
-	"io"
 	"log/slog"
 	"slices"
 	"strings"
 
+	"github.com/danielmiessler/fabric/chat"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins"
-	goopenai "github.com/sashabaranov/go-openai"
+	openai "github.com/openai/openai-go"
+	"github.com/openai/openai-go/option"
+	"github.com/openai/openai-go/packages/pagination"
 )
 
 func NewClient() (ret *Client) {
@@ -48,73 +48,53 @@ type Client struct {
 	*plugins.PluginBase
 	ApiKey     *plugins.SetupQuestion
 	ApiBaseURL *plugins.SetupQuestion
-	ApiClient  *goopenai.Client
+	ApiClient  *openai.Client
 }
 
 func (o *Client) configure() (ret error) {
-	config := goopenai.DefaultConfig(o.ApiKey.Value)
+	opts := []option.RequestOption{option.WithAPIKey(o.ApiKey.Value)}
 	if o.ApiBaseURL.Value != "" {
-		config.BaseURL = o.ApiBaseURL.Value
+		opts = append(opts, option.WithBaseURL(o.ApiBaseURL.Value))
 	}
-	o.ApiClient = goopenai.NewClientWithConfig(config)
+	client := openai.NewClient(opts...)
+	o.ApiClient = &client
 	return
 }
 
 func (o *Client) ListModels() (ret []string, err error) {
-	var models goopenai.ModelsList
-	if models, err = o.ApiClient.ListModels(context.Background()); err != nil {
+	var page *pagination.Page[openai.Model]
+	if page, err = o.ApiClient.Models.List(context.Background()); err != nil {
 		return
 	}
-
-	model := models.Models
-	for _, mod := range model {
+	for _, mod := range page.Data {
 		ret = append(ret, mod.ID)
 	}
 	return
 }
 
 func (o *Client) SendStream(
-	msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
+	msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
 ) (err error) {
-	req := o.buildChatCompletionRequest(msgs, opts)
-	req.Stream = true
-
-	var stream *goopenai.ChatCompletionStream
-	if stream, err = o.ApiClient.CreateChatCompletionStream(context.Background(), req); err != nil {
-		fmt.Printf("ChatCompletionStream error: %v\n", err)
-		return
-	}
-
-	defer stream.Close()
-
-	for {
-		var response goopenai.ChatCompletionStreamResponse
-		if response, err = stream.Recv(); err == nil {
-			if len(response.Choices) > 0 {
-				channel <- response.Choices[0].Delta.Content
-			} else {
-				channel <- "\n"
-				close(channel)
-				break
-			}
-		} else if errors.Is(err, io.EOF) {
-			channel <- "\n"
-			close(channel)
-			err = nil
-			break
-		} else if err != nil {
-			fmt.Printf("\nStream error: %v\n", err)
-			break
+	req := o.buildChatCompletionParams(msgs, opts)
+	stream := o.ApiClient.Chat.Completions.NewStreaming(context.Background(), req)
+	for stream.Next() {
+		chunk := stream.Current()
+		if len(chunk.Choices) > 0 {
+			channel <- chunk.Choices[0].Delta.Content
 		}
 	}
-	return
+	if stream.Err() == nil {
+		channel <- "\n"
+	}
+	close(channel)
+	return stream.Err()
 }
 
-func (o *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
-	req := o.buildChatCompletionRequest(msgs, opts)
+func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+	req := o.buildChatCompletionParams(msgs, opts)
 
-	var resp goopenai.ChatCompletionResponse
-	if resp, err = o.ApiClient.CreateChatCompletion(ctx, req); err != nil {
+	var resp *openai.ChatCompletion
+	if resp, err = o.ApiClient.Chat.Completions.New(ctx, req); err != nil {
 		return
 	}
 	if len(resp.Choices) > 0 {
@@ -146,57 +126,56 @@ func (o *Client) NeedsRawMode(modelName string) bool {
 	return slices.Contains(openAIModelsNeedingRaw, modelName)
 }
 
-func (o *Client) buildChatCompletionRequest(
-	inputMsgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions,
-) (ret goopenai.ChatCompletionRequest) {
+func (o *Client) buildChatCompletionParams(
+	inputMsgs []*chat.ChatCompletionMessage, opts *common.ChatOptions,
+) (ret openai.ChatCompletionNewParams) {
 
 	// Create a new slice for messages to be sent, converting from []*Msg to []Msg.
 	// This also serves as a mutable copy for provider-specific modifications.
-	messagesForRequest := make([]goopenai.ChatCompletionMessage, len(inputMsgs))
+	messagesForRequest := make([]openai.ChatCompletionMessageParamUnion, len(inputMsgs))
 	for i, msgPtr := range inputMsgs {
-		messagesForRequest[i] = *msgPtr // Dereference and copy
-	}
-
-	// Provider-specific modification for DeepSeek:
-	// DeepSeek requires the last message to be a user message.
-	// If fabric constructs a single system message (common when a pattern includes user input),
-	// we change its role to user for DeepSeek.
-	if strings.Contains(opts.Model, "deepseek") { // Heuristic to identify DeepSeek models
-		if len(messagesForRequest) == 1 && messagesForRequest[0].Role == goopenai.ChatMessageRoleSystem {
-			messagesForRequest[0].Role = goopenai.ChatMessageRoleUser
+		msg := *msgPtr // copy
+		// Provider-specific modification for DeepSeek:
+		if strings.Contains(opts.Model, "deepseek") && len(inputMsgs) == 1 && msg.Role == chat.ChatMessageRoleSystem {
+			msg.Role = chat.ChatMessageRoleUser
 		}
-		// Note: This handles the most common case arising from pattern usage.
-		// More complex scenarios where a multi-message sequence ends in 'system'
-		// are not currently expected from chatter.go's BuildSession logic for OpenAI providers
-		// but might require further rules if they arise.
+		messagesForRequest[i] = convertMessage(msg)
 	}
-
-	if opts.Raw {
-		ret = goopenai.ChatCompletionRequest{
-			Model:    opts.Model,
-			Messages: messagesForRequest,
-		}
-	} else {
-		if opts.Seed == 0 {
-			ret = goopenai.ChatCompletionRequest{
-				Model:            opts.Model,
-				Temperature:      float32(opts.Temperature),
-				TopP:             float32(opts.TopP),
-				PresencePenalty:  float32(opts.PresencePenalty),
-				FrequencyPenalty: float32(opts.FrequencyPenalty),
-				Messages:         messagesForRequest,
-			}
-		} else {
-			ret = goopenai.ChatCompletionRequest{
-				Model:            opts.Model,
-				Temperature:      float32(opts.Temperature),
-				TopP:             float32(opts.TopP),
-				PresencePenalty:  float32(opts.PresencePenalty),
-				FrequencyPenalty: float32(opts.FrequencyPenalty),
-				Messages:         messagesForRequest,
-				Seed:             &opts.Seed,
-			}
+	ret = openai.ChatCompletionNewParams{
+		Model:    openai.ChatModel(opts.Model),
+		Messages: messagesForRequest,
+	}
+	if !opts.Raw {
+		ret.Temperature = openai.Float(opts.Temperature)
+		ret.TopP = openai.Float(opts.TopP)
+		ret.PresencePenalty = openai.Float(opts.PresencePenalty)
+		ret.FrequencyPenalty = openai.Float(opts.FrequencyPenalty)
+		if opts.Seed != 0 {
+			ret.Seed = openai.Int(int64(opts.Seed))
 		}
 	}
 	return
+}
+
+func convertMessage(msg chat.ChatCompletionMessage) openai.ChatCompletionMessageParamUnion {
+	switch msg.Role {
+	case chat.ChatMessageRoleSystem:
+		return openai.SystemMessage(msg.Content)
+	case chat.ChatMessageRoleUser:
+		if len(msg.MultiContent) > 0 {
+			var parts []openai.ChatCompletionContentPartUnionParam
+			for _, p := range msg.MultiContent {
+				switch p.Type {
+				case chat.ChatMessagePartTypeText:
+					parts = append(parts, openai.TextContentPart(p.Text))
+				case chat.ChatMessagePartTypeImageURL:
+					parts = append(parts, openai.ImageContentPart(openai.ChatCompletionContentPartImageImageURLParam{URL: p.ImageURL.URL}))
+				}
+			}
+			return openai.UserMessage(parts)
+		}
+		return openai.UserMessage(msg.Content)
+	default:
+		return openai.AssistantMessage(msg.Content)
+	}
 }

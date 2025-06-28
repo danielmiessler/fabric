@@ -9,7 +9,7 @@ import (
 	"io"
 	"net/http"
 
-	goopenai "github.com/sashabaranov/go-openai"
+	"github.com/danielmiessler/fabric/chat"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins"
@@ -87,7 +87,7 @@ func (c *Client) ListModels() ([]string, error) {
 	return models, nil
 }
 
-func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
+func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
 	url := fmt.Sprintf("%s/chat/completions", c.ApiUrl.Value)
 
 	payload := map[string]interface{}{
@@ -173,7 +173,7 @@ func (c *Client) SendStream(msgs []*goopenai.ChatCompletionMessage, opts *common
 	return
 }
 
-func (c *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (content string, err error) {
+func (c *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (content string, err error) {
 	url := fmt.Sprintf("%s/chat/completions", c.ApiUrl.Value)
 
 	payload := map[string]interface{}{

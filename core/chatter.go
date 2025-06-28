@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	goopenai "github.com/sashabaranov/go-openai"
+	"github.com/danielmiessler/fabric/chat"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins/ai"
@@ -110,7 +110,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 		message = summary
 	}
 
-	session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleAssistant, Content: message})
+	session.Append(&chat.ChatCompletionMessage{Role: chat.ChatMessageRoleAssistant, Content: message})
 
 	if session.Name != "" {
 		err = o.db.Sessions.SaveSession(session)
@@ -131,7 +131,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	if request.Meta != "" {
-		session.Append(&goopenai.ChatCompletionMessage{Role: common.ChatMessageRoleMeta, Content: request.Meta})
+		session.Append(&chat.ChatCompletionMessage{Role: common.ChatMessageRoleMeta, Content: request.Meta})
 	}
 
 	// if a context name is provided, retrieve it from the database
@@ -149,8 +149,8 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	// Double curly braces {{variable}} indicate template substitution
 	// Ensure we have a message before processing
 	if request.Message == nil {
-		request.Message = &goopenai.ChatCompletionMessage{
-			Role:    goopenai.ChatMessageRoleUser,
+		request.Message = &chat.ChatCompletionMessage{
+			Role:    chat.ChatMessageRoleUser,
 			Content: " ",
 		}
 	}
@@ -206,26 +206,26 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 			// Handle MultiContent properly in raw mode
 			if len(request.Message.MultiContent) > 0 {
 				// When we have attachments, add the text as a text part in MultiContent
-				newMultiContent := []goopenai.ChatMessagePart{
+				newMultiContent := []chat.ChatMessagePart{
 					{
-						Type: goopenai.ChatMessagePartTypeText,
+						Type: chat.ChatMessagePartTypeText,
 						Text: finalContent,
 					},
 				}
 				// Add existing non-text parts (like images)
 				for _, part := range request.Message.MultiContent {
-					if part.Type != goopenai.ChatMessagePartTypeText {
+					if part.Type != chat.ChatMessagePartTypeText {
 						newMultiContent = append(newMultiContent, part)
 					}
 				}
-				request.Message = &goopenai.ChatCompletionMessage{
-					Role:         goopenai.ChatMessageRoleUser,
+				request.Message = &chat.ChatCompletionMessage{
+					Role:         chat.ChatMessageRoleUser,
 					MultiContent: newMultiContent,
 				}
 			} else {
 				// No attachments, use regular Content field
-				request.Message = &goopenai.ChatCompletionMessage{
-					Role:    goopenai.ChatMessageRoleUser,
+				request.Message = &chat.ChatCompletionMessage{
+					Role:    chat.ChatMessageRoleUser,
 					Content: finalContent,
 				}
 			}
@@ -235,7 +235,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 		}
 	} else {
 		if systemMessage != "" {
-			session.Append(&goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleSystem, Content: systemMessage})
+			session.Append(&chat.ChatCompletionMessage{Role: chat.ChatMessageRoleSystem, Content: systemMessage})
 		}
 		// If multi-part content, it is in the user message, and should be added.
 		// Otherwise, we should only add it if we have not already used it in the systemMessage.

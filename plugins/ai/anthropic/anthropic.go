@@ -9,9 +9,9 @@ import (
 
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
+	"github.com/danielmiessler/fabric/chat"
 	"github.com/danielmiessler/fabric/common"
 	"github.com/danielmiessler/fabric/plugins"
-	goopenai "github.com/sashabaranov/go-openai"
 )
 
 const defaultBaseUrl = "https://api.anthropic.com/"
@@ -87,7 +87,7 @@ func (an *Client) ListModels() (ret []string, err error) {
 }
 
 func (an *Client) SendStream(
-	msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
+	msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
 ) (err error) {
 	messages := an.toMessages(msgs)
 	if len(messages) == 0 {
@@ -151,7 +151,7 @@ func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *common
 	return
 }
 
-func (an *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessage, opts *common.ChatOptions) (
+func (an *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (
 	ret string, err error) {
 
 	messages := an.toMessages(msgs)
@@ -176,7 +176,7 @@ func (an *Client) Send(ctx context.Context, msgs []*goopenai.ChatCompletionMessa
 	return
 }
 
-func (an *Client) toMessages(msgs []*goopenai.ChatCompletionMessage) (ret []anthropic.MessageParam) {
+func (an *Client) toMessages(msgs []*chat.ChatCompletionMessage) (ret []anthropic.MessageParam) {
 	// Custom normalization for Anthropic:
 	// - System messages become the first part of the first user message.
 	// - Messages must alternate user/assistant.
@@ -193,14 +193,14 @@ func (an *Client) toMessages(msgs []*goopenai.ChatCompletionMessage) (ret []anth
 		}
 
 		switch msg.Role {
-		case goopenai.ChatMessageRoleSystem:
+		case chat.ChatMessageRoleSystem:
 			// Accumulate system content. It will be prepended to the first user message.
 			if systemContent != "" {
 				systemContent += "\\n" + msg.Content
 			} else {
 				systemContent = msg.Content
 			}
-		case goopenai.ChatMessageRoleUser:
+		case chat.ChatMessageRoleUser:
 			userContent := msg.Content
 			if isFirstUserMessage && systemContent != "" {
 				userContent = systemContent + "\\n\\n" + userContent
@@ -213,7 +213,7 @@ func (an *Client) toMessages(msgs []*goopenai.ChatCompletionMessage) (ret []anth
 			}
 			anthropicMessages = append(anthropicMessages, anthropic.NewUserMessage(anthropic.NewTextBlock(userContent)))
 			lastRoleWasUser = true
-		case goopenai.ChatMessageRoleAssistant:
+		case chat.ChatMessageRoleAssistant:
 			// If the first message is an assistant message, and we have system content,
 			// prepend a user message with the system content.
 			if isFirstUserMessage && systemContent != "" {

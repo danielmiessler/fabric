@@ -93,7 +93,7 @@ func TestSysPlugin(t *testing.T) {
 				if !filepath.IsAbs(got) {
 					return fmt.Errorf("expected absolute path, got %s", got)
 				}
-				if !strings.Contains(got, "home") && !strings.Contains(got, "Users") {
+				if !strings.Contains(got, "home") && !strings.Contains(got, "Users") && got != "/root" {
 					return fmt.Errorf("path %s doesn't look like a home directory", got)
 				}
 				return nil

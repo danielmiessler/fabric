@@ -5,7 +5,8 @@ import (
 
 	"github.com/danielmiessler/fabric/plugins"
 	"github.com/danielmiessler/fabric/plugins/ai/openai"
-	goopenai "github.com/sashabaranov/go-openai"
+	openaiapi "github.com/openai/openai-go"
+	"github.com/openai/openai-go/option"
 )
 
 func NewClient() (ret *Client) {
@@ -29,11 +30,15 @@ type Client struct {
 
 func (oi *Client) configure() (err error) {
 	oi.apiDeployments = strings.Split(oi.ApiDeployments.Value, ",")
-	config := goopenai.DefaultAzureConfig(oi.ApiKey.Value, oi.ApiBaseURL.Value)
-	if oi.ApiVersion.Value != "" {
-		config.APIVersion = oi.ApiVersion.Value
+	opts := []option.RequestOption{option.WithAPIKey(oi.ApiKey.Value)}
+	if oi.ApiBaseURL.Value != "" {
+		opts = append(opts, option.WithBaseURL(oi.ApiBaseURL.Value))
 	}
-	oi.ApiClient = goopenai.NewClientWithConfig(config)
+	if oi.ApiVersion.Value != "" {
+		opts = append(opts, option.WithQuery("api-version", oi.ApiVersion.Value))
+	}
+	client := openaiapi.NewClient(opts...)
+	oi.ApiClient = &client
 	return
 }
 

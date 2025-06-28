@@ -19,10 +19,10 @@ require (
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/joho/godotenv v1.5.1
 	github.com/ollama/ollama v0.9.0
+	github.com/openai/openai-go v1.8.2
 	github.com/otiai10/copy v1.14.1
 	github.com/pkg/errors v0.9.1
 	github.com/samber/lo v1.50.0
-	github.com/sashabaranov/go-openai v1.40.3
 	github.com/sgaunet/perplexity-go/v2 v2.8.0
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/text v0.26.0

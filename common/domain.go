@@ -1,6 +1,6 @@
 package common
 
-import goopenai "github.com/sashabaranov/go-openai"
+import "github.com/danielmiessler/fabric/chat"
 
 const ChatMessageRoleMeta = "meta"
 
@@ -9,7 +9,7 @@ type ChatRequest struct {
 	SessionName      string
 	PatternName      string
 	PatternVariables map[string]string
-	Message          *goopenai.ChatCompletionMessage
+	Message          *chat.ChatCompletionMessage
 	Language         string
 	Meta             string
 	InputHasVars     bool
@@ -29,7 +29,7 @@ type ChatOptions struct {
 }
 
 // NormalizeMessages remove empty messages and ensure messages order user-assist-user
-func NormalizeMessages(msgs []*goopenai.ChatCompletionMessage, defaultUserMessage string) (ret []*goopenai.ChatCompletionMessage) {
+func NormalizeMessages(msgs []*chat.ChatCompletionMessage, defaultUserMessage string) (ret []*chat.ChatCompletionMessage) {
 	// Iterate over messages to enforce the odd position rule for user messages
 	fullMessageIndex := 0
 	for _, message := range msgs {
@@ -39,8 +39,8 @@ func NormalizeMessages(msgs []*goopenai.ChatCompletionMessage, defaultUserMessag
 		}
 
 		// Ensure, that each odd position shall be a user message
-		if fullMessageIndex%2 == 0 && message.Role != goopenai.ChatMessageRoleUser {
-			ret = append(ret, &goopenai.ChatCompletionMessage{Role: goopenai.ChatMessageRoleUser, Content: defaultUserMessage})
+		if fullMessageIndex%2 == 0 && message.Role != chat.ChatMessageRoleUser {
+			ret = append(ret, &chat.ChatCompletionMessage{Role: chat.ChatMessageRoleUser, Content: defaultUserMessage})
 			fullMessageIndex++
 		}
 		ret = append(ret, message)

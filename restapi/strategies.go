@@ -2,7 +2,6 @@ package restapi
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -23,7 +22,7 @@ func NewStrategiesHandler(r *gin.Engine) {
 	r.GET("/strategies", func(c *gin.Context) {
 		strategiesDir := filepath.Join(os.Getenv("HOME"), ".config", "fabric", "strategies")
 
-		files, err := ioutil.ReadDir(strategiesDir)
+		files, err := os.ReadDir(strategiesDir)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read strategies directory"})
 			return
@@ -37,7 +36,7 @@ func NewStrategiesHandler(r *gin.Engine) {
 			}
 
 			fullPath := filepath.Join(strategiesDir, file.Name())
-			data, err := ioutil.ReadFile(fullPath)
+			data, err := os.ReadFile(fullPath)
 			if err != nil {
 				continue
 			}

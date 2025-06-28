@@ -103,7 +103,6 @@ func ServeOllama(registry *core.PluginRegistry, address string, version string) 
 	r.GET("/api/tags", typeConversion.ollamaTags)
 	r.GET("/api/version", func(c *gin.Context) {
 		c.Data(200, "application/json", []byte(fmt.Sprintf("{\"%s\"}", version)))
-		return
 	})
 	r.POST("/api/chat", typeConversion.ollamaChat)
 
@@ -262,15 +261,10 @@ func (f APIConvert) ollamaChat(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 			return
 		}
-		for _, bytein := range marshalled {
-			res = append(res, bytein)
-		}
-		for _, bytebreak := range []byte("\n") {
-			res = append(res, bytebreak)
-		}
+		res = append(res, marshalled...)
+		res = append(res, '\n')
 	}
 	c.Data(200, "application/json", res)
 
 	//c.JSON(200, forwardedResponse)
-	return
 }
