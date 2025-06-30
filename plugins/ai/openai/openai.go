@@ -17,7 +17,7 @@ import (
 )
 
 func NewClient() (ret *Client) {
-	return NewClientCompatible("OpenAI", "https://api.openai.com/v1", nil)
+	return NewClientCompatibleWithResponses("OpenAI", "https://api.openai.com/v1", true, nil)
 }
 
 func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCustom func() error) (ret *Client) {
