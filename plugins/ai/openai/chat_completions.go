@@ -88,16 +88,19 @@ func (o *Client) buildChatCompletionParams(
 
 // convertChatMessage converts fabric chat message to OpenAI chat completion message
 func (o *Client) convertChatMessage(msg chat.ChatCompletionMessage) openai.ChatCompletionMessageParamUnion {
-	// For now, simplify to text-only messages to get the basic functionality working
-	// Multi-content support can be added later if needed
-	switch msg.Role {
+	result := convertMessageCommon(msg)
+
+	// For Chat Completions API, we currently simplify to text-only messages
+	// Multi-content support can be added later when needed
+	// This maintains the existing behavior while using shared conversion logic
+	switch result.Role {
 	case chat.ChatMessageRoleSystem:
-		return openai.SystemMessage(msg.Content)
+		return openai.SystemMessage(result.Content)
 	case chat.ChatMessageRoleUser:
-		return openai.UserMessage(msg.Content)
+		return openai.UserMessage(result.Content)
 	case chat.ChatMessageRoleAssistant:
-		return openai.AssistantMessage(msg.Content)
+		return openai.AssistantMessage(result.Content)
 	default:
-		return openai.UserMessage(msg.Content)
+		return openai.UserMessage(result.Content)
 	}
 }

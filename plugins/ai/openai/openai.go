@@ -218,10 +218,12 @@ func (o *Client) buildResponseParams(
 }
 
 func convertMessage(msg chat.ChatCompletionMessage) responses.ResponseInputItemUnionParam {
-	role := responses.EasyInputMessageRole(msg.Role)
-	if len(msg.MultiContent) > 0 {
+	result := convertMessageCommon(msg)
+	role := responses.EasyInputMessageRole(result.Role)
+
+	if result.HasMultiContent {
 		var parts []responses.ResponseInputContentUnionParam
-		for _, p := range msg.MultiContent {
+		for _, p := range result.MultiContent {
 			switch p.Type {
 			case chat.ChatMessagePartTypeText:
 				parts = append(parts, responses.ResponseInputContentParamOfInputText(p.Text))
@@ -236,7 +238,7 @@ func convertMessage(msg chat.ChatCompletionMessage) responses.ResponseInputItemU
 		contentList := responses.ResponseInputMessageContentListParam(parts)
 		return responses.ResponseInputItemParamOfMessage(contentList, role)
 	}
-	return responses.ResponseInputItemParamOfMessage(msg.Content, role)
+	return responses.ResponseInputItemParamOfMessage(result.Content, role)
 }
 
 func (o *Client) extractText(resp *responses.Response) (ret string) {
