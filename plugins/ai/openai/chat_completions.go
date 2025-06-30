@@ -32,6 +32,8 @@ func (o *Client) sendChatCompletions(ctx context.Context, msgs []*chat.ChatCompl
 func (o *Client) sendStreamChatCompletions(
 	msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
 ) (err error) {
+	defer close(channel)
+
 	req := o.buildChatCompletionParams(msgs, opts)
 	stream := o.ApiClient.Chat.Completions.NewStreaming(context.Background(), req)
 	for stream.Next() {
@@ -43,7 +45,6 @@ func (o *Client) sendStreamChatCompletions(
 	if stream.Err() == nil {
 		channel <- "\n"
 	}
-	close(channel)
 	return stream.Err()
 }
 

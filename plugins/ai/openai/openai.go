@@ -99,6 +99,8 @@ func (o *Client) SendStream(
 func (o *Client) sendStreamResponses(
 	msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
 ) (err error) {
+	defer close(channel)
+
 	req := o.buildResponseParams(msgs, opts)
 	stream := o.ApiClient.Responses.NewStreaming(context.Background(), req)
 	for stream.Next() {
@@ -113,7 +115,6 @@ func (o *Client) sendStreamResponses(
 	if stream.Err() == nil {
 		channel <- "\n"
 	}
-	close(channel)
 	return stream.Err()
 }
 
