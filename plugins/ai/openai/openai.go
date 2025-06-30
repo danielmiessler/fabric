@@ -139,14 +139,6 @@ func (o *Client) sendResponses(ctx context.Context, msgs []*chat.ChatCompletionM
 
 // supportsResponsesAPI determines if the provider supports the new Responses API
 func (o *Client) supportsResponsesAPI() bool {
-	// For the main OpenAI client, check the base URL (backward compatibility)
-	if o.ApiBaseURL != nil {
-		baseURL := o.ApiBaseURL.Value
-		if baseURL == "" || baseURL == "https://api.openai.com/v1" {
-			return true
-		}
-	}
-	// For OpenAI-compatible providers, use the explicit flag
 	return o.ImplementsResponses
 }
 
@@ -161,8 +153,6 @@ func (o *Client) NeedsRawMode(modelName string) bool {
 		"gpt-4o-mini-search-preview-2025-03-11",
 		"gpt-4o-search-preview",
 		"gpt-4o-search-preview-2025-03-11",
-		"o4-mini-deep-research",
-		"o4-mini-deep-research-2025-06-26",
 	}
 	for _, prefix := range openaiModelsPrefixes {
 		if strings.HasPrefix(modelName, prefix) {
