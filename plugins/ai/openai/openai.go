@@ -30,6 +30,17 @@ func NewClientCompatible(vendorName string, defaultBaseUrl string, configureCust
 	return
 }
 
+func NewClientCompatibleWithResponses(vendorName string, defaultBaseUrl string, implementsResponses bool, configureCustom func() error) (ret *Client) {
+	ret = NewClientCompatibleNoSetupQuestions(vendorName, configureCustom)
+
+	ret.ApiKey = ret.AddSetupQuestion("API Key", true)
+	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
+	ret.ApiBaseURL.Value = defaultBaseUrl
+	ret.ImplementsResponses = implementsResponses
+
+	return
+}
+
 func NewClientCompatibleNoSetupQuestions(vendorName string, configureCustom func() error) (ret *Client) {
 	ret = &Client{}
 
@@ -48,9 +59,10 @@ func NewClientCompatibleNoSetupQuestions(vendorName string, configureCustom func
 
 type Client struct {
 	*plugins.PluginBase
-	ApiKey     *plugins.SetupQuestion
-	ApiBaseURL *plugins.SetupQuestion
-	ApiClient  *openai.Client
+	ApiKey              *plugins.SetupQuestion
+	ApiBaseURL          *plugins.SetupQuestion
+	ApiClient           *openai.Client
+	ImplementsResponses bool // Whether this provider supports the Responses API
 }
 
 func (o *Client) configure() (ret error) {
@@ -77,6 +89,16 @@ func (o *Client) ListModels() (ret []string, err error) {
 func (o *Client) SendStream(
 	msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
 ) (err error) {
+	// Use Responses API for OpenAI, Chat Completions API for other providers
+	if o.supportsResponsesAPI() {
+		return o.sendStreamResponses(msgs, opts, channel)
+	}
+	return o.sendStreamChatCompletions(msgs, opts, channel)
+}
+
+func (o *Client) sendStreamResponses(
+	msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
+) (err error) {
 	req := o.buildResponseParams(msgs, opts)
 	stream := o.ApiClient.Responses.NewStreaming(context.Background(), req)
 	for stream.Next() {
@@ -96,6 +118,14 @@ func (o *Client) SendStream(
 }
 
 func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+	// Use Responses API for OpenAI, Chat Completions API for other providers
+	if o.supportsResponsesAPI() {
+		return o.sendResponses(ctx, msgs, opts)
+	}
+	return o.sendChatCompletions(ctx, msgs, opts)
+}
+
+func (o *Client) sendResponses(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
 	req := o.buildResponseParams(msgs, opts)
 
 	var resp *responses.Response
@@ -104,6 +134,19 @@ func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, o
 	}
 	ret = o.extractText(resp)
 	return
+}
+
+// supportsResponsesAPI determines if the provider supports the new Responses API
+func (o *Client) supportsResponsesAPI() bool {
+	// For the main OpenAI client, check the base URL (backward compatibility)
+	if o.ApiBaseURL != nil {
+		baseURL := o.ApiBaseURL.Value
+		if baseURL == "" || baseURL == "https://api.openai.com/v1" {
+			return true
+		}
+	}
+	// For OpenAI-compatible providers, use the explicit flag
+	return o.ImplementsResponses
 }
 
 func (o *Client) NeedsRawMode(modelName string) bool {
@@ -153,6 +196,21 @@ func (o *Client) buildResponseParams(
 		ret.TopP = openai.Float(opts.TopP)
 		if opts.MaxTokens != 0 {
 			ret.MaxOutputTokens = openai.Int(int64(opts.MaxTokens))
+		}
+
+		// Add parameters not officially supported by Responses API as extra fields
+		extraFields := make(map[string]any)
+		if opts.PresencePenalty != 0 {
+			extraFields["presence_penalty"] = opts.PresencePenalty
+		}
+		if opts.FrequencyPenalty != 0 {
+			extraFields["frequency_penalty"] = opts.FrequencyPenalty
+		}
+		if opts.Seed != 0 {
+			extraFields["seed"] = opts.Seed
+		}
+		if len(extraFields) > 0 {
+			ret.SetExtraFields(extraFields)
 		}
 	}
 	return
