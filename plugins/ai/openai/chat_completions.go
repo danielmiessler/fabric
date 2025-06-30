@@ -90,13 +90,23 @@ func (o *Client) buildChatCompletionParams(
 func (o *Client) convertChatMessage(msg chat.ChatCompletionMessage) openai.ChatCompletionMessageParamUnion {
 	result := convertMessageCommon(msg)
 
-	// For Chat Completions API, we currently simplify to text-only messages
-	// Multi-content support can be added later when needed
-	// This maintains the existing behavior while using shared conversion logic
 	switch result.Role {
 	case chat.ChatMessageRoleSystem:
 		return openai.SystemMessage(result.Content)
 	case chat.ChatMessageRoleUser:
+		// Handle multi-content messages (text + images)
+		if result.HasMultiContent {
+			var parts []openai.ChatCompletionContentPartUnionParam
+			for _, p := range result.MultiContent {
+				switch p.Type {
+				case chat.ChatMessagePartTypeText:
+					parts = append(parts, openai.TextContentPart(p.Text))
+				case chat.ChatMessagePartTypeImageURL:
+					parts = append(parts, openai.ImageContentPart(openai.ChatCompletionContentPartImageImageURLParam{URL: p.ImageURL.URL}))
+				}
+			}
+			return openai.UserMessage(parts)
+		}
 		return openai.UserMessage(result.Content)
 	case chat.ChatMessageRoleAssistant:
 		return openai.AssistantMessage(result.Content)
