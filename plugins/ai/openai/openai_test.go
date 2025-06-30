@@ -6,10 +6,11 @@ import (
 	"github.com/danielmiessler/fabric/chat"
 	"github.com/danielmiessler/fabric/common"
 	openai "github.com/openai/openai-go"
+	"github.com/openai/openai-go/shared"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBuildChatCompletionRequestPinSeed(t *testing.T) {
+func TestBuildResponseRequestWithMaxTokens(t *testing.T) {
 
 	var msgs []*chat.ChatCompletionMessage
 
@@ -21,25 +22,21 @@ func TestBuildChatCompletionRequestPinSeed(t *testing.T) {
 	}
 
 	opts := &common.ChatOptions{
-		Temperature:      0.8,
-		TopP:             0.9,
-		PresencePenalty:  0.1,
-		FrequencyPenalty: 0.2,
-		Raw:              false,
-		Seed:             1,
+		Temperature: 0.8,
+		TopP:        0.9,
+		Raw:         false,
+		MaxTokens:   50,
 	}
 
 	var client = NewClient()
-	request := client.buildChatCompletionParams(msgs, opts)
-	assert.Equal(t, openai.ChatModel(opts.Model), request.Model)
+	request := client.buildResponseParams(msgs, opts)
+	assert.Equal(t, shared.ResponsesModel(opts.Model), request.Model)
 	assert.Equal(t, openai.Float(opts.Temperature), request.Temperature)
 	assert.Equal(t, openai.Float(opts.TopP), request.TopP)
-	assert.Equal(t, openai.Float(opts.PresencePenalty), request.PresencePenalty)
-	assert.Equal(t, openai.Float(opts.FrequencyPenalty), request.FrequencyPenalty)
-	assert.Equal(t, openai.Int(int64(opts.Seed)), request.Seed)
+	assert.Equal(t, openai.Int(int64(opts.MaxTokens)), request.MaxOutputTokens)
 }
 
-func TestBuildChatCompletionRequestNilSeed(t *testing.T) {
+func TestBuildResponseRequestNoMaxTokens(t *testing.T) {
 
 	var msgs []*chat.ChatCompletionMessage
 
@@ -51,20 +48,15 @@ func TestBuildChatCompletionRequestNilSeed(t *testing.T) {
 	}
 
 	opts := &common.ChatOptions{
-		Temperature:      0.8,
-		TopP:             0.9,
-		PresencePenalty:  0.1,
-		FrequencyPenalty: 0.2,
-		Raw:              false,
-		Seed:             0,
+		Temperature: 0.8,
+		TopP:        0.9,
+		Raw:         false,
 	}
 
 	var client = NewClient()
-	request := client.buildChatCompletionParams(msgs, opts)
-	assert.Equal(t, openai.ChatModel(opts.Model), request.Model)
+	request := client.buildResponseParams(msgs, opts)
+	assert.Equal(t, shared.ResponsesModel(opts.Model), request.Model)
 	assert.Equal(t, openai.Float(opts.Temperature), request.Temperature)
 	assert.Equal(t, openai.Float(opts.TopP), request.TopP)
-	assert.Equal(t, openai.Float(opts.PresencePenalty), request.PresencePenalty)
-	assert.Equal(t, openai.Float(opts.FrequencyPenalty), request.FrequencyPenalty)
-	assert.False(t, request.Seed.Valid())
+	assert.False(t, request.MaxOutputTokens.Valid())
 }
