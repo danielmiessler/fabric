@@ -2,7 +2,7 @@ name: Go Release
 
 on:
   repository_dispatch:
-    types: [ tag_created ]
+    types: [tag_created]
   push:
     tags:
       - "v*"
@@ -108,6 +108,7 @@ jobs:
           Add-Content -Path $env:GITHUB_ENV -Value "latest_tag=$latest_tag"
 
       - name: Create release if it doesn't exist
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
