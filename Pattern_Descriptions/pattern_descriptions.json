@@ -1710,7 +1710,7 @@
     },
     {
       "patternName": "analyze_bill_short",
-      "description": "Consended - Analyze a legislative bill and implications.",
+      "description": "Condensed - Analyze a legislative bill and implications.",
       "tags": [
         "ANALYSIS",
         "BILL"
@@ -1814,6 +1814,35 @@
       "tags": [
         "WRITING",
         "CREATIVITY"
+      ]
+    },
+    {
+      "patternName": "extract_alpha",
+      "description": "Extracts the most novel and surprising ideas (\"alpha\") from content, inspired by information theory.",
+      "tags": [
+        "EXTRACT",
+        "ANALYSIS",
+        "CR THINKING",
+        "WISDOM"
+      ]
+    },
+    {
+      "patternName": "extract_mcp_servers",
+      "description": "Analyzes content to identify and extract detailed information about Model Context Protocol (MCP) servers.",
+      "tags": [
+        "ANALYSIS",
+        "EXTRACT",
+        "DEVELOPMENT",
+        "AI"
+      ]
+    },
+    {
+      "patternName": "review_code",
+      "description": "Performs a comprehensive code review, providing detailed feedback on correctness, security, and performance.",
+      "tags": [
+        "DEVELOPMENT",
+        "REVIEW",
+        "SECURITY"
       ]
     }
   ]
