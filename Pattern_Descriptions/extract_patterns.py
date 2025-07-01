@@ -11,8 +11,14 @@ import shutil
 def load_existing_file(filepath):
     """Load existing JSON file or return default structure"""
     if os.path.exists(filepath):
-        with open(filepath, "r", encoding="utf-8") as f:
-            return json.load(f)
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            print(
+                f"Warning: Malformed JSON in {filepath}. Starting with an empty list."
+            )
+            return {"patterns": []}
     return {"patterns": []}
 
 
@@ -46,16 +52,13 @@ def extract_pattern_info():
     new_descriptions = []
 
     for dirname in sorted(os.listdir(patterns_dir)):
-        # Only log new pattern processing
-        if dirname not in existing_extract_names:
-            print(f"Processing new pattern: {dirname}")
-
         pattern_path = os.path.join(patterns_dir, dirname)
         system_md_path = os.path.join(pattern_path, "system.md")
-        print(f"Checking system.md at: {system_md_path}")
 
         if os.path.isdir(pattern_path) and os.path.exists(system_md_path):
-            print(f"Valid pattern directory found: {dirname}")
+            if dirname not in existing_extract_names:
+                print(f"Processing new pattern: {dirname}")
+
             try:
                 if dirname not in existing_extract_names:
                     print(f"Creating new extract for: {dirname}")
