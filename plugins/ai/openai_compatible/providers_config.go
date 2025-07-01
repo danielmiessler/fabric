@@ -9,8 +9,9 @@ import (
 
 // ProviderConfig defines the configuration for an OpenAI-compatible API provider
 type ProviderConfig struct {
-	Name    string
-	BaseURL string
+	Name                string
+	BaseURL             string
+	ImplementsResponses bool // Whether the provider supports OpenAI's new Responses API
 }
 
 // Client is the common structure for all OpenAI-compatible providers
@@ -21,51 +22,66 @@ type Client struct {
 // NewClient creates a new OpenAI-compatible client for the specified provider
 func NewClient(providerConfig ProviderConfig) *Client {
 	client := &Client{}
-	client.Client = openai.NewClientCompatible(providerConfig.Name, providerConfig.BaseURL, nil)
+	client.Client = openai.NewClientCompatibleWithResponses(
+		providerConfig.Name,
+		providerConfig.BaseURL,
+		providerConfig.ImplementsResponses,
+		nil,
+	)
 	return client
 }
 
 // ProviderMap is a map of provider name to ProviderConfig for O(1) lookup
 var ProviderMap = map[string]ProviderConfig{
 	"AIML": {
-		Name:    "AIML",
-		BaseURL: "https://api.aimlapi.com/v1",
+		Name:                "AIML",
+		BaseURL:             "https://api.aimlapi.com/v1",
+		ImplementsResponses: false,
 	},
 	"Cerebras": {
-		Name:    "Cerebras",
-		BaseURL: "https://api.cerebras.ai/v1",
+		Name:                "Cerebras",
+		BaseURL:             "https://api.cerebras.ai/v1",
+		ImplementsResponses: false,
 	},
 	"DeepSeek": {
-		Name:    "DeepSeek",
-		BaseURL: "https://api.deepseek.com",
+		Name:                "DeepSeek",
+		BaseURL:             "https://api.deepseek.com",
+		ImplementsResponses: false,
 	},
 	"GrokAI": {
-		Name:    "GrokAI",
-		BaseURL: "https://api.x.ai/v1",
+		Name:                "GrokAI",
+		BaseURL:             "https://api.x.ai/v1",
+		ImplementsResponses: false,
 	},
 	"Groq": {
-		Name:    "Groq",
-		BaseURL: "https://api.groq.com/openai/v1",
+		Name:                "Groq",
+		BaseURL:             "https://api.groq.com/openai/v1",
+		ImplementsResponses: false,
 	},
 	"Langdock": {
-		Name:    "Langdock",
-		BaseURL: "https://api.langdock.com/openai/{{REGION=us}}/v1",
+		Name:                "Langdock",
+		BaseURL:             "https://api.langdock.com/openai/{{REGION=us}}/v1",
+		ImplementsResponses: false,
 	},
 	"LiteLLM": {
-		Name:    "LiteLLM",
-		BaseURL: "http://localhost:4000",
+		Name:                "LiteLLM",
+		BaseURL:             "http://localhost:4000",
+		ImplementsResponses: false,
 	},
 	"Mistral": {
-		Name:    "Mistral",
-		BaseURL: "https://api.mistral.ai/v1",
+		Name:                "Mistral",
+		BaseURL:             "https://api.mistral.ai/v1",
+		ImplementsResponses: false,
 	},
 	"OpenRouter": {
-		Name:    "OpenRouter",
-		BaseURL: "https://openrouter.ai/api/v1",
+		Name:                "OpenRouter",
+		BaseURL:             "https://openrouter.ai/api/v1",
+		ImplementsResponses: false,
 	},
 	"SiliconCloud": {
-		Name:    "SiliconCloud",
-		BaseURL: "https://api.siliconflow.cn/v1",
+		Name:                "SiliconCloud",
+		BaseURL:             "https://api.siliconflow.cn/v1",
+		ImplementsResponses: false,
 	},
 }
 
