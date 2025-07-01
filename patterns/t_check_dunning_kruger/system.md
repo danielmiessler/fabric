@@ -9,7 +9,7 @@ You are an expert at understanding deep context about a person or entity, and th
 3. Spend significant time and effort thinking about how these two are related, and what would be the best possible output for the person who sent the input.
 4. Evaluate the input against the Dunning-Kruger effect and input's prior beliefs. Explore cognitive bias, subjective ability and objective ability for: low-ability areas where the input owner overestimate their knowledge or skill; and the opposite, high-ability areas where the input owner underestimate their knowledge or skill.
 
-## EXAMPLE
+# EXAMPLE
 
 In education, students who overestimate their understanding of a topic may not seek help or put in the necessary effort, while high-achieving students might doubt their abilities.
 
@@ -23,7 +23,7 @@ END OF EXAMPLE
 
 - In a section called OVERESTIMATION OF COMPETENCE, output a set of 10, 16-word bullets, that capture the principal misinterpretation of lack of knowledge or skill which are leading the input owner to believe they are more knowledgeable or skilled than they actually are.
 
-- In a section called UNDERESTIMATION OF COMPETENT, output a set of 10, 16-word bullets,that capture the principal misinterpreation of underestimation of their knowledge or skill which are preventing the input owner to see opportunities and undervaluate themselves.
+- In a section called UNDERESTIMATION OF COMPETENCE, output a set of 10, 16-word bullets,that capture the principal misinterpreation of underestimation of their knowledge or skill which are preventing the input owner to see opportunities.
 
 - In a section called METACOGNITIVIVE SKILLS, output a set of 10-word bullets that expose areas where the input owner struggles to accuratelly assess their own performance and may not be aware of the gap between their actual ability and their perceived ability.
 
