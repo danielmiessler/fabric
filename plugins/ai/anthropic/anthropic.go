@@ -126,12 +126,9 @@ func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *common
 	if opts.Search {
 		// Build the web-search tool definition:
 		webTool := anthropic.WebSearchTool20250305Param{
-			Name:         webSearchToolName, // string literal instead of constant
-			Type:         webSearchToolType, // string literal instead of constant
+			Name:         webSearchToolName,
+			Type:         webSearchToolType,
 			CacheControl: anthropic.NewCacheControlEphemeralParam(),
-			// Optional: restrict domains or max uses
-			// AllowedDomains: []string{"wikipedia.org", "openai.com"},
-			// MaxUses:        anthropic.Opt[int64](5),
 		}
 
 		if opts.SearchLocation != "" {
