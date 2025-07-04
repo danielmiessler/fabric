@@ -16,6 +16,7 @@ const defaultBaseUrl = "https://api.anthropic.com/"
 
 const webSearchToolName = "web_search"
 const webSearchToolType = "web_search_20250305"
+const sourcesHeader = "## Sources"
 
 func NewClient() (ret *Client) {
 	vendorName := "Anthropic"
@@ -183,12 +184,17 @@ func (an *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, 
 		}
 	}
 
-	ret = strings.Join(textParts, "")
+	var resultBuilder strings.Builder
+	resultBuilder.WriteString(strings.Join(textParts, ""))
 
 	// Append citations if any were found
 	if len(citations) > 0 {
-		ret += "\n\n## Sources\n\n" + strings.Join(citations, "\n")
+		resultBuilder.WriteString("\n\n")
+		resultBuilder.WriteString(sourcesHeader)
+		resultBuilder.WriteString("\n\n")
+		resultBuilder.WriteString(strings.Join(citations, "\n"))
 	}
+	ret = resultBuilder.String()
 
 	return
 }
