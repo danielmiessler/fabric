@@ -74,7 +74,7 @@ type Flags struct {
 	ListStrategies                  bool              `long:"liststrategies" description:"List all strategies"`
 	ListVendors                     bool              `long:"listvendors" description:"List all vendors"`
 	ShellCompleteOutput             bool              `long:"shell-complete-list" description:"Output raw list without headers/formatting (for shell completion)"`
-	Search                          bool              `long:"search" description:"Enable web search tool for supported models (Anthropic)"`
+	Search                          bool              `long:"search" description:"Enable web search tool for supported models (Anthropic, OpenAI)"`
 	SearchLocation                  string            `long:"search-location" description:"Set location for web search results (e.g., 'America/Los_Angeles')"`
 }
 
