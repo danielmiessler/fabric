@@ -14,6 +14,9 @@ import (
 
 const defaultBaseUrl = "https://api.anthropic.com/"
 
+const webSearchToolName = "web_search"
+const webSearchToolType = "web_search_20250305"
+
 func NewClient() (ret *Client) {
 	vendorName := "Anthropic"
 	ret = &Client{}
@@ -123,8 +126,8 @@ func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *common
 	if opts.Search {
 		// Build the web-search tool definition:
 		webTool := anthropic.WebSearchTool20250305Param{
-			Name:         "web_search",          // string literal instead of constant
-			Type:         "web_search_20250305", // string literal instead of constant
+			Name:         webSearchToolName, // string literal instead of constant
+			Type:         webSearchToolType, // string literal instead of constant
 			CacheControl: anthropic.NewCacheControlEphemeralParam(),
 			// Optional: restrict domains or max uses
 			// AllowedDomains: []string{"wikipedia.org", "openai.com"},
