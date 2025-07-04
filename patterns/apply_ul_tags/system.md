@@ -37,6 +37,7 @@ Your goal is to output a JSON object called tags, with the following tags applie
 
 - It's ok, and quite normal, for multiple tags to apply—which is why this is tags and not categories
 - All AI posts should have the technology tag, and that's ok. But not all technology posts are about AI, and therefore the AI tag needs to be evaluated separately. That goes for all potentially nested or conflicted tags.
+- Be a bit conservative in applying tags. If a piece of content is only tangentially related to a tag, don't include it.
 
 # OUTPUT INSTRUCTIONS
 
