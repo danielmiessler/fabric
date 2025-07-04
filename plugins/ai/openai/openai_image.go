@@ -13,13 +13,17 @@ import (
 	"github.com/openai/openai-go/responses"
 )
 
+// ImageGenerationResponseType is the type used for image generation calls in responses
+const ImageGenerationResponseType = "image_generation_call"
+const ImageGenerationToolType = "image_generation"
+
 // addImageGenerationTool adds the image generation tool to the request if needed
 func (o *Client) addImageGenerationTool(opts *common.ChatOptions, tools []responses.ToolUnionParam) []responses.ToolUnionParam {
 	// Check if the request seems to be asking for image generation
 	if o.shouldUseImageGeneration(opts) {
 		imageGenTool := responses.ToolUnionParam{
 			OfImageGeneration: &responses.ToolImageGenerationParam{
-				Type:         "image_generation",
+				Type:         ImageGenerationToolType,
 				Model:        "gpt-image-1",
 				OutputFormat: "png",
 				Quality:      "auto",
@@ -45,7 +49,7 @@ func (o *Client) extractAndSaveImages(resp *responses.Response, opts *common.Cha
 
 	// Extract image data from response
 	for _, item := range resp.Output {
-		if item.Type == "image_generation_call" {
+		if item.Type == ImageGenerationResponseType {
 			imageCall := item.AsImageGenerationCall()
 			if imageCall.Status == "completed" && imageCall.Result != "" {
 				// Decode base64 image data
