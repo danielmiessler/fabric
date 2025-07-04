@@ -74,6 +74,8 @@ type Flags struct {
 	ListStrategies                  bool              `long:"liststrategies" description:"List all strategies"`
 	ListVendors                     bool              `long:"listvendors" description:"List all vendors"`
 	ShellCompleteOutput             bool              `long:"shell-complete-list" description:"Output raw list without headers/formatting (for shell completion)"`
+	Search                          bool              `long:"search" description:"Enable web search tool for supported models (Anthropic)"`
+	SearchLocation                  string            `long:"search-location" description:"Set location for web search results (e.g., 'America/Los_Angeles')"`
 }
 
 var debug = false
@@ -263,6 +265,8 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 		Raw:                o.Raw,
 		Seed:               o.Seed,
 		ModelContextLength: o.ModelContextLength,
+		Search:             o.Search,
+		SearchLocation:     o.SearchLocation,
 	}
 	return
 }

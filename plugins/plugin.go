@@ -152,7 +152,6 @@ func (o *Setting) FillEnvFileContent(buffer *bytes.Buffer) {
 		}
 		buffer.WriteString("\n")
 	}
-	return
 }
 
 func ParseBoolElseFalse(val string) (ret bool) {
@@ -279,7 +278,6 @@ func (o Settings) FillEnvFileContent(buffer *bytes.Buffer) {
 	for _, setting := range o {
 		setting.FillEnvFileContent(buffer)
 	}
-	return
 }
 
 type SetupQuestions []*SetupQuestion
