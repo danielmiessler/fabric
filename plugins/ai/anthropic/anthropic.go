@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/samber/lo"
-
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
 	"github.com/danielmiessler/fabric/chat"
@@ -29,9 +27,6 @@ func NewClient() (ret *Client) {
 	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
 	ret.ApiBaseURL.Value = defaultBaseUrl
 	ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", true)
-	ret.UseWebTool = ret.AddSetupQuestionBool("Web Search Tool Enabled", false)
-	ret.WebToolLocation = ret.AddSetupQuestionCustom("Web Search Tool Location", false,
-		"Enter your approximate timezone location for web search (e.g., 'America/Los_Angeles', see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).")
 
 	ret.maxTokens = 4096
 	ret.defaultRequiredUserMessage = "Hi"
@@ -49,10 +44,8 @@ func NewClient() (ret *Client) {
 
 type Client struct {
 	*plugins.PluginBase
-	ApiBaseURL      *plugins.SetupQuestion
-	ApiKey          *plugins.SetupQuestion
-	UseWebTool      *plugins.SetupQuestion
-	WebToolLocation *plugins.SetupQuestion
+	ApiBaseURL *plugins.SetupQuestion
+	ApiKey     *plugins.SetupQuestion
 
 	maxTokens                  int
 	defaultRequiredUserMessage string
@@ -127,7 +120,7 @@ func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *common
 		Messages:    msgs,
 	}
 
-	if plugins.ParseBoolElseFalse(an.UseWebTool.Value) {
+	if opts.Search {
 		// Build the web-search tool definition:
 		webTool := anthropic.WebSearchTool20250305Param{
 			Name:         "web_search",          // string literal instead of constant
@@ -138,9 +131,9 @@ func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *common
 			// MaxUses:        anthropic.Opt[int64](5),
 		}
 
-		if an.WebToolLocation.Value != "" {
+		if opts.SearchLocation != "" {
 			webTool.UserLocation.Type = "approximate"
-			webTool.UserLocation.Timezone = anthropic.Opt(an.WebToolLocation.Value)
+			webTool.UserLocation.Timezone = anthropic.Opt(opts.SearchLocation)
 		}
 
 		// Wrap it in the union:
@@ -165,13 +158,37 @@ func (an *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, 
 		return
 	}
 
-	texts := lo.FilterMap(message.Content, func(block anthropic.ContentBlockUnion, _ int) (ret string, ok bool) {
-		if ok = block.Type == "text" && block.Text != ""; ok {
-			ret = block.Text
+	var textParts []string
+	var citations []string
+	citationMap := make(map[string]bool) // To avoid duplicate citations
+
+	for _, block := range message.Content {
+		if block.Type == "text" && block.Text != "" {
+			textParts = append(textParts, block.Text)
+
+			// Extract citations from this text block
+			for _, citation := range block.Citations {
+				if citation.Type == "web_search_result_location" {
+					citationKey := citation.URL + "|" + citation.Title
+					if !citationMap[citationKey] {
+						citationMap[citationKey] = true
+						citationText := fmt.Sprintf("- [%s](%s)", citation.Title, citation.URL)
+						if citation.CitedText != "" {
+							citationText += fmt.Sprintf(" - \"%s\"", citation.CitedText)
+						}
+						citations = append(citations, citationText)
+					}
+				}
+			}
 		}
-		return
-	})
-	ret = strings.Join(texts, "")
+	}
+
+	ret = strings.Join(textParts, "")
+
+	// Append citations if any were found
+	if len(citations) > 0 {
+		ret += "\n\n## Sources\n\n" + strings.Join(citations, "\n")
+	}
 
 	return
 }
