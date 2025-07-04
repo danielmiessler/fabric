@@ -28,6 +28,7 @@ type ChatOptions struct {
 	MaxTokens          int
 	Search             bool
 	SearchLocation     string
+	ImageFile          string
 }
 
 // NormalizeMessages remove empty messages and ensure messages order user-assist-user

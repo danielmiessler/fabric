@@ -76,6 +76,7 @@ type Flags struct {
 	ShellCompleteOutput             bool              `long:"shell-complete-list" description:"Output raw list without headers/formatting (for shell completion)"`
 	Search                          bool              `long:"search" description:"Enable web search tool for supported models (Anthropic, OpenAI)"`
 	SearchLocation                  string            `long:"search-location" description:"Set location for web search results (e.g., 'America/Los_Angeles')"`
+	ImageFile                       string            `long:"image-file" description:"Save generated image to specified file path (e.g., 'output.png')"`
 }
 
 var debug = false
@@ -267,6 +268,7 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
 		ModelContextLength: o.ModelContextLength,
 		Search:             o.Search,
 		SearchLocation:     o.SearchLocation,
+		ImageFile:          o.ImageFile,
 	}
 	return
 }

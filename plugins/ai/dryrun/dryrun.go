@@ -82,6 +82,9 @@ func (c *Client) formatOptions(opts *common.ChatOptions) string {
 			builder.WriteString(fmt.Sprintf("SearchLocation: %s\n", opts.SearchLocation))
 		}
 	}
+	if opts.ImageFile != "" {
+		builder.WriteString(fmt.Sprintf("ImageFile: %s\n", opts.ImageFile))
+	}
 
 	return builder.String()
 }
