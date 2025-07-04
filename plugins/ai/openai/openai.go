@@ -134,6 +134,12 @@ func (o *Client) sendResponses(ctx context.Context, msgs []*chat.ChatCompletionM
 	if resp, err = o.ApiClient.Responses.New(ctx, req); err != nil {
 		return
 	}
+
+	// Extract and save images if requested
+	if err = o.extractAndSaveImages(resp, opts); err != nil {
+		return
+	}
+
 	ret = o.extractText(resp)
 	return
 }
@@ -183,6 +189,9 @@ func (o *Client) buildResponseParams(
 		},
 	}
 
+	// Add tools if enabled
+	var tools []responses.ToolUnionParam
+
 	// Add web search tool if enabled
 	if opts.Search {
 		webSearchTool := responses.ToolParamOfWebSearchPreview("web_search_preview")
@@ -195,7 +204,14 @@ func (o *Client) buildResponseParams(
 			}
 		}
 
-		ret.Tools = []responses.ToolUnionParam{webSearchTool}
+		tools = append(tools, webSearchTool)
+	}
+
+	// Add image generation tool if needed
+	tools = o.addImageGenerationTool(opts, tools)
+
+	if len(tools) > 0 {
+		ret.Tools = tools
 	}
 
 	if !opts.Raw {

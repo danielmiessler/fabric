@@ -15,9 +15,7 @@ Fabric is graciously supported by…
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/danielmiessler/fabric)
 
 <div align="center">
-<p class="align center">
 <h4><code>fabric</code> is an open-source framework for augmenting humans using AI.</h4>
-</p>
 </div>
 
 [Updates](#updates) •
@@ -41,9 +39,9 @@ Since the start of modern AI in late 2022 we've seen an **_extraordinary_** numb
 
 It's all really exciting and powerful, but _it's not easy to integrate this functionality into our lives._
 
-<p class="align center">
+<div class="align center">
 <h4>In other words, AI doesn't have a capabilities problem—it has an <em>integration</em> problem.</h4>
-</p>
+</div>
 
 **Fabric was created to address this by creating and organizing the fundamental units of AI—the prompts themselves!**
 
@@ -120,6 +118,8 @@ Keep in mind that many of these were recorded when Fabric was Python-based, so r
 > - Web search is available for both Anthropic and OpenAI providers
 > - Previous plugin-level search configurations have been removed in favor of the new flag-based approach.
 > - If you used the previous approach, consider cleaning up your `~/.config/fabric/.env` file, removing the unused `ANTHROPIC_WEB_SEARCH_TOOL_ENABLED` and `ANTHROPIC_WEB_SEARCH_TOOL_LOCATION` variables.
+> - Fabric now supports image generation using the `--image-file` flag with OpenAI models
+> - Image generation works with both text prompts and input images (via `--attachment`) for image editing tasks
 >
 >
 >June 17, 2025
@@ -292,88 +292,88 @@ yt() {
 
 You can add the below code for the equivalent aliases inside PowerShell by running `notepad $PROFILE` inside a PowerShell window:
 
-```powershell
-# Path to the patterns directory
-$patternsPath = Join-Path $HOME ".config/fabric/patterns"
-foreach ($patternDir in Get-ChildItem -Path $patternsPath -Directory) {
-    $patternName = $patternDir.Name
+    ```powershell
+    # Path to the patterns directory
+    $patternsPath = Join-Path $HOME ".config/fabric/patterns"
+    foreach ($patternDir in Get-ChildItem -Path $patternsPath -Directory) {
+        $patternName = $patternDir.Name
 
-    # Dynamically define a function for each pattern
-    $functionDefinition = @"
-function $patternName {
-    [CmdletBinding()]
-    param(
-        [Parameter(ValueFromPipeline = `$true)]
-        [string] `$InputObject,
+        # Dynamically define a function for each pattern
+        $functionDefinition = @"
+    function $patternName {
+        [CmdletBinding()]
+        param(
+            [Parameter(ValueFromPipeline = `$true)]
+            [string] `$InputObject,
 
-        [Parameter(ValueFromRemainingArguments = `$true)]
-        [String[]] `$patternArgs
-    )
+            [Parameter(ValueFromRemainingArguments = `$true)]
+            [String[]] `$patternArgs
+        )
 
-    begin {
-        # Initialize an array to collect pipeline input
-        `$collector = @()
-    }
+        begin {
+            # Initialize an array to collect pipeline input
+            `$collector = @()
+        }
 
-    process {
-        # Collect pipeline input objects
-        if (`$InputObject) {
-            `$collector += `$InputObject
+        process {
+            # Collect pipeline input objects
+            if (`$InputObject) {
+                `$collector += `$InputObject
+            }
+        }
+
+        end {
+            # Join all pipeline input into a single string, separated by newlines
+            `$pipelineContent = `$collector -join "`n"
+
+            # If there's pipeline input, include it in the call to fabric
+            if (`$pipelineContent) {
+                `$pipelineContent | fabric --pattern $patternName `$patternArgs
+            } else {
+                # No pipeline input; just call fabric with the additional args
+                fabric --pattern $patternName `$patternArgs
+            }
         }
     }
-
-    end {
-        # Join all pipeline input into a single string, separated by newlines
-        `$pipelineContent = `$collector -join "`n"
-
-        # If there's pipeline input, include it in the call to fabric
-        if (`$pipelineContent) {
-            `$pipelineContent | fabric --pattern $patternName `$patternArgs
-        } else {
-            # No pipeline input; just call fabric with the additional args
-            fabric --pattern $patternName `$patternArgs
-        }
-    }
-}
-"@
-    # Add the function to the current session
-    Invoke-Expression $functionDefinition
-}
-
-# Define the 'yt' function as well
-function yt {
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [Alias("timestamps")]
-        [switch]$t,
-
-        [Parameter(Position = 0, ValueFromPipeline = $true)]
-        [string]$videoLink
-    )
-
-    begin {
-        $transcriptFlag = "--transcript"
-        if ($t) {
-            $transcriptFlag = "--transcript-with-timestamps"
-        }
+    "@
+        # Add the function to the current session
+        Invoke-Expression $functionDefinition
     }
 
-    process {
-        if (-not $videoLink) {
-            Write-Error "Usage: yt [-t | --timestamps] youtube-link"
-            return
-        }
-    }
+    # Define the 'yt' function as well
+    function yt {
+        [CmdletBinding()]
+        param(
+            [Parameter()]
+            [Alias("timestamps")]
+            [switch]$t,
 
-    end {
-        if ($videoLink) {
-            # Execute and allow output to flow through the pipeline
-            fabric -y $videoLink $transcriptFlag
+            [Parameter(Position = 0, ValueFromPipeline = $true)]
+            [string]$videoLink
+        )
+
+        begin {
+            $transcriptFlag = "--transcript"
+            if ($t) {
+                $transcriptFlag = "--transcript-with-timestamps"
+            }
+        }
+
+        process {
+            if (-not $videoLink) {
+                Write-Error "Usage: yt [-t | --timestamps] youtube-link"
+                return
+            }
+        }
+
+        end {
+            if ($videoLink) {
+                # Execute and allow output to flow through the pipeline
+                fabric -y $videoLink $transcriptFlag
+            }
         }
     }
-}
-```
+    ```
 
 This also creates a `yt` alias that allows you to use `yt https://www.youtube.com/watch?v=4b0iet22VIk` to get transcripts, comments, and metadata.
 
@@ -493,7 +493,6 @@ fabric -h
 ```
 
 ```plaintext
-
 Usage:
   fabric [OPTIONS]
 
@@ -508,7 +507,9 @@ Application Options:
   -T, --topp=                       Set top P (default: 0.9)
   -s, --stream                      Stream
   -P, --presencepenalty=            Set presence penalty (default: 0.0)
-  -r, --raw                         Use the defaults of the model without sending chat options (like temperature etc.) and use the user role instead of the system role for patterns.
+  -r, --raw                         Use the defaults of the model without sending chat options (like
+                                    temperature etc.) and use the user role instead of the system role for
+                                    patterns.
   -F, --frequencypenalty=           Set frequency penalty (default: 0.0)
   -l, --listpatterns                List all patterns
   -L, --listmodels                  List all available models
@@ -522,9 +523,12 @@ Application Options:
       --output-session              Output the entire session (also a temporary one) to the output file
   -n, --latest=                     Number of latest patterns to list (default: 0)
   -d, --changeDefaultModel          Change default model
-  -y, --youtube=                    YouTube video or play list "URL" to grab transcript, comments from it and send to chat or print it put to the console and store it in the output file
+  -y, --youtube=                    YouTube video or play list "URL" to grab transcript, comments from it
+                                    and send to chat or print it put to the console and store it in the
+                                    output file
       --playlist                    Prefer playlist over video if both ids are present in the URL
-      --transcript                  Grab transcript from YouTube video and send to chat (it is used per default).
+      --transcript                  Grab transcript from YouTube video and send to chat (it is used per
+                                    default).
       --transcript-with-timestamps  Grab transcript from YouTube video with timestamps and send to chat
       --comments                    Grab comments from YouTube video and send to chat
       --metadata                    Output video metadata
@@ -552,6 +556,9 @@ Application Options:
       --liststrategies              List all strategies
       --listvendors                 List all vendors
       --shell-complete-list         Output raw list without headers/formatting (for shell completion)
+      --search                      Enable web search tool for supported models (Anthropic, OpenAI)
+      --search-location=            Set location for web search results (e.g., 'America/Los_Angeles')
+      --image-file=                 Save generated image to specified file path (e.g., 'output.png')
 
 Help Options:
   -h, --help                        Show this help message

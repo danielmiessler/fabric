@@ -13,7 +13,7 @@ _fabric() {
   _get_comp_words_by_ref -n : cur prev words cword
 
   # Define all possible options/flags
-  local opts="--pattern -p --variable -v --context -C --session --attachment -a --setup -S --temperature -t --topp -T --stream -s --presencepenalty -P --raw -r --frequencypenalty -F --listpatterns -l --listmodels -L --listcontexts -x --listsessions -X --updatepatterns -U --copy -c --model -m --modelContextLength --output -o --output-session --latest -n --changeDefaultModel -d --youtube -y --playlist --transcript --transcript-with-timestamps --comments --metadata --language -g --scrape_url -u --scrape_question -q --seed -e --wipecontext -w --wipesession -W --printcontext --printsession --readability --input-has-vars --dry-run --serve --serveOllama --address --api-key --config --version --listextensions --addextension --rmextension --strategy --liststrategies --listvendors --shell-complete-list --help -h"
+  local opts="--pattern -p --variable -v --context -C --session --attachment -a --setup -S --temperature -t --topp -T --stream -s --presencepenalty -P --raw -r --frequencypenalty -F --listpatterns -l --listmodels -L --listcontexts -x --listsessions -X --updatepatterns -U --copy -c --model -m --modelContextLength --output -o --output-session --latest -n --changeDefaultModel -d --youtube -y --playlist --transcript --transcript-with-timestamps --comments --metadata --language -g --scrape_url -u --scrape_question -q --seed -e --wipecontext -w --wipesession -W --printcontext --printsession --readability --input-has-vars --dry-run --serve --serveOllama --address --api-key --config --search --search-location --image-file --version --listextensions --addextension --rmextension --strategy --liststrategies --listvendors --shell-complete-list --help -h"
 
   # Helper function for dynamic completions
   _fabric_get_list() {
@@ -63,12 +63,12 @@ _fabric() {
     return 0
     ;;
   # Options requiring file/directory paths
-  -a | --attachment | -o | --output | --config | --addextension)
+  -a | --attachment | -o | --output | --config | --addextension | --image-file)
     _filedir
     return 0
     ;;
   # Options requiring simple arguments (no specific completion logic here)
-  -v | --variable | -t | --temperature | -T | --topp | -P | --presencepenalty | -F | --frequencypenalty | --modelContextLength | -n | --latest | -y | --youtube | -g | --language | -u | --scrape_url | -q | --scrape_question | -e | --seed | --address | --api-key)
+  -v | --variable | -t | --temperature | -T | --topp | -P | --presencepenalty | -F | --frequencypenalty | --modelContextLength | -n | --latest | -y | --youtube | -g | --language | -u | --scrape_url | -q | --scrape_question | -e | --seed | --address | --api-key | --search-location)
     # No specific completion suggestions, user types the value
     return 0
     ;;
