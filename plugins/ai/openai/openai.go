@@ -2,6 +2,7 @@ package openai
 
 import (
 	"context"
+	"fmt"
 	"slices"
 	"strings"
 
@@ -182,6 +183,21 @@ func (o *Client) buildResponseParams(
 		},
 	}
 
+	// Add web search tool if enabled
+	if opts.Search {
+		webSearchTool := responses.ToolParamOfWebSearchPreview("web_search_preview")
+
+		// Add user location if provided
+		if opts.SearchLocation != "" {
+			webSearchTool.OfWebSearchPreview.UserLocation = responses.WebSearchToolUserLocationParam{
+				Type:     "approximate",
+				Timezone: openai.String(opts.SearchLocation),
+			}
+		}
+
+		ret.Tools = []responses.ToolUnionParam{webSearchTool}
+	}
+
 	if !opts.Raw {
 		ret.Temperature = openai.Float(opts.Temperature)
 		ret.TopP = openai.Float(opts.TopP)
@@ -232,15 +248,41 @@ func convertMessage(msg chat.ChatCompletionMessage) responses.ResponseInputItemU
 }
 
 func (o *Client) extractText(resp *responses.Response) (ret string) {
+	var textParts []string
+	var citations []string
+	citationMap := make(map[string]bool) // To avoid duplicate citations
+
 	for _, item := range resp.Output {
 		if item.Type == "message" {
 			for _, c := range item.Content {
 				if c.Type == "output_text" {
-					ret += c.AsOutputText().Text
+					outputText := c.AsOutputText()
+					textParts = append(textParts, outputText.Text)
+
+					// Extract citations from annotations
+					for _, annotation := range outputText.Annotations {
+						if annotation.Type == "url_citation" {
+							urlCitation := annotation.AsURLCitation()
+							citationKey := urlCitation.URL + "|" + urlCitation.Title
+							if !citationMap[citationKey] {
+								citationMap[citationKey] = true
+								citationText := fmt.Sprintf("- [%s](%s)", urlCitation.Title, urlCitation.URL)
+								citations = append(citations, citationText)
+							}
+						}
+					}
 				}
 			}
 			break
 		}
 	}
+
+	ret = strings.Join(textParts, "")
+
+	// Append citations if any were found
+	if len(citations) > 0 {
+		ret += "\n\n## Sources\n\n" + strings.Join(citations, "\n")
+	}
+
 	return
 }
