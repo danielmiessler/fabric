@@ -114,6 +114,14 @@ Keep in mind that many of these were recorded when Fabric was Python-based, so r
 
 > [!NOTE]
 >
+> July 4, 2025
+>
+> - Fabric now supports web search using the `--search` and `--search-location` flags
+> - Web search is available for both Anthropic and OpenAI providers
+> - Previous plugin-level search configurations have been removed in favor of the new flag-based approach.
+> - If you used the previous approach, consider cleaning up your `~/.config/fabric/.env` file, removing the unused `ANTHROPIC_WEB_SEARCH_TOOL_ENABLED` and `ANTHROPIC_WEB_SEARCH_TOOL_LOCATION` variables.
+>
+>
 >June 17, 2025
 >
 >- Fabric now supports Perplexity AI. Configure it by using `fabric -S` to add your Perplexity AI API Key,
