@@ -173,15 +173,7 @@ func (an *Client) configure() (err error) {
 	opts := []option.RequestOption{}
 
 	if an.ApiBaseURL.Value != "" {
-		baseURL := an.ApiBaseURL.Value
-
-		// API keys use v2 endpoint
-		// https://github.com/anthropics/anthropic-sdk-go/blob/main/CHANGELOG.md#020-beta1-2025-03-25
-		if strings.Contains(baseURL, "-") && !strings.HasSuffix(baseURL, "/v2") {
-			baseURL = strings.TrimSuffix(baseURL, "/")
-			baseURL = baseURL + "/v2"
-		}
-		opts = append(opts, option.WithBaseURL(baseURL))
+		opts = append(opts, option.WithBaseURL(an.ApiBaseURL.Value))
 	}
 
 	if plugins.ParseBoolElseFalse(an.UseOAuth.Value) {
