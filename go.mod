@@ -25,6 +25,7 @@ require (
 	github.com/samber/lo v1.50.0
 	github.com/sgaunet/perplexity-go/v2 v2.8.0
 	github.com/stretchr/testify v1.10.0
+	golang.org/x/oauth2 v0.30.0
 	golang.org/x/text v0.26.0
 	google.golang.org/api v0.236.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -108,7 +109,6 @@ require (
 	golang.org/x/arch v0.18.0 // indirect
 	golang.org/x/crypto v0.39.0 // indirect
 	golang.org/x/net v0.41.0 // indirect
-	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/sync v0.15.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/time v0.12.0 // indirect

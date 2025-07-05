@@ -3,6 +3,7 @@ package anthropic
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/anthropics/anthropic-sdk-go"
@@ -30,7 +31,12 @@ func NewClient() (ret *Client) {
 
 	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
 	ret.ApiBaseURL.Value = defaultBaseUrl
-	ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", true)
+	ret.UseOAuth = ret.AddSetupQuestionBool("Use OAuth login", false)
+	if plugins.ParseBoolElseFalse(ret.UseOAuth.Value) {
+		ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", false)
+	} else {
+		ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", true)
+	}
 
 	ret.maxTokens = 4096
 	ret.defaultRequiredUserMessage = "Hi"
@@ -50,6 +56,7 @@ type Client struct {
 	*plugins.PluginBase
 	ApiBaseURL *plugins.SetupQuestion
 	ApiKey     *plugins.SetupQuestion
+	UseOAuth   *plugins.SetupQuestion
 
 	maxTokens                  int
 	defaultRequiredUserMessage string
@@ -58,24 +65,50 @@ type Client struct {
 	client anthropic.Client
 }
 
-func (an *Client) configure() (err error) {
-	if an.ApiBaseURL.Value != "" {
-		baseURL := an.ApiBaseURL.Value
+func (an *Client) Setup() (err error) {
+	if err = an.PluginBase.Ask(an.Name); err != nil {
+		return
+	}
 
-		// As of 2.0beta1, using v2 API endpoint.
-		// https://github.com/anthropics/anthropic-sdk-go/blob/main/CHANGELOG.md#020-beta1-2025-03-25
-		if strings.Contains(baseURL, "-") && !strings.HasSuffix(baseURL, "/v2") {
-			baseURL = strings.TrimSuffix(baseURL, "/")
-			baseURL = baseURL + "/v2"
+	if plugins.ParseBoolElseFalse(an.UseOAuth.Value) {
+		// Check if we have a valid stored token
+		storage, err := common.NewOAuthStorage()
+		if err != nil {
+			return err
 		}
 
-		an.client = anthropic.NewClient(
-			option.WithAPIKey(an.ApiKey.Value),
-			option.WithBaseURL(baseURL),
-		)
-	} else {
-		an.client = anthropic.NewClient(option.WithAPIKey(an.ApiKey.Value))
+		if !storage.HasValidToken("claude", 5) {
+			// No valid token, run OAuth flow
+			if _, err = RunOAuthFlow(); err != nil {
+				return err
+			}
+		}
 	}
+
+	err = an.configure()
+	return
+}
+
+func (an *Client) configure() (err error) {
+	opts := []option.RequestOption{}
+
+	if an.ApiBaseURL.Value != "" {
+		opts = append(opts, option.WithBaseURL(an.ApiBaseURL.Value))
+	}
+
+	if plugins.ParseBoolElseFalse(an.UseOAuth.Value) {
+		// For OAuth, use Bearer token with custom headers
+		// Create custom HTTP client that adds OAuth Bearer token and beta header
+		baseTransport := &http.Transport{}
+		httpClient := &http.Client{
+			Transport: NewOAuthTransport(an, baseTransport),
+		}
+		opts = append(opts, option.WithHTTPClient(httpClient))
+	} else {
+		opts = append(opts, option.WithAPIKey(an.ApiKey.Value))
+	}
+
+	an.client = anthropic.NewClient(opts...)
 	return
 }
 
@@ -122,6 +155,17 @@ func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *common
 		TopP:        anthropic.Opt(opts.TopP),
 		Temperature: anthropic.Opt(opts.Temperature),
 		Messages:    msgs,
+	}
+
+	// Add Claude Code spoofing system message for OAuth authentication
+	if plugins.ParseBoolElseFalse(an.UseOAuth.Value) {
+		params.System = []anthropic.TextBlockParam{
+			{
+				Type: "text",
+				Text: "You are Claude Code, Anthropic's official CLI for Claude.",
+			},
+		}
+
 	}
 
 	if opts.Search {
@@ -207,6 +251,9 @@ func (an *Client) toMessages(msgs []*chat.ChatCompletionMessage) (ret []anthropi
 
 	var anthropicMessages []anthropic.MessageParam
 	var systemContent string
+
+	// Note: Claude Code spoofing is now handled in buildMessageParams
+
 	isFirstUserMessage := true
 	lastRoleWasUser := false
 
