@@ -289,6 +289,7 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions, err error) {
 	}
 
 	ret = &common.ChatOptions{
+		Model:              o.Model,
 		Temperature:        o.Temperature,
 		TopP:               o.TopP,
 		PresencePenalty:    o.PresencePenalty,
