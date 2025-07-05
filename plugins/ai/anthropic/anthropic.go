@@ -45,6 +45,11 @@ func NewClient() (ret *Client) {
 	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
 	ret.ApiBaseURL.Value = defaultBaseUrl
 	ret.UseOAuth = ret.AddSetupQuestionBool("Use OAuth login", false)
+	if plugins.ParseBoolElseFalse(ret.UseOAuth.Value) {
+		ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", false)
+	} else {
+		ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", true)
+	}
 	ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", false)
 
 	ret.maxTokens = 4096
