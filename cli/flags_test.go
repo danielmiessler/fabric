@@ -255,3 +255,181 @@ func TestBuildChatOptionsWithImageFileValidation(t *testing.T) {
 		assert.Contains(t, err.Error(), "image file already exists")
 	})
 }
+
+func TestValidateImageParameters(t *testing.T) {
+	t.Run("No image file and no parameters should pass", func(t *testing.T) {
+		err := validateImageParameters("", "", "", "", 0)
+		assert.NoError(t, err)
+	})
+
+	t.Run("Image parameters without image file should fail", func(t *testing.T) {
+		// Test each parameter individually
+		err := validateImageParameters("", "1024x1024", "", "", 0)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "image parameters")
+		assert.Contains(t, err.Error(), "can only be used with --image-file")
+
+		err = validateImageParameters("", "", "high", "", 0)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "image parameters")
+
+		err = validateImageParameters("", "", "", "transparent", 0)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "image parameters")
+
+		err = validateImageParameters("", "", "", "", 50)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "image parameters")
+
+		// Test multiple parameters
+		err = validateImageParameters("", "1024x1024", "high", "transparent", 50)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "image parameters")
+	})
+
+	t.Run("Valid size values should pass", func(t *testing.T) {
+		validSizes := []string{"1024x1024", "1536x1024", "1024x1536", "auto"}
+		for _, size := range validSizes {
+			err := validateImageParameters("/tmp/test.png", size, "", "", 0)
+			assert.NoError(t, err, "Size %s should be valid", size)
+		}
+	})
+
+	t.Run("Invalid size should fail", func(t *testing.T) {
+		err := validateImageParameters("/tmp/test.png", "invalid", "", "", 0)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "invalid image size")
+	})
+
+	t.Run("Valid quality values should pass", func(t *testing.T) {
+		validQualities := []string{"low", "medium", "high", "auto"}
+		for _, quality := range validQualities {
+			err := validateImageParameters("/tmp/test.png", "", quality, "", 0)
+			assert.NoError(t, err, "Quality %s should be valid", quality)
+		}
+	})
+
+	t.Run("Invalid quality should fail", func(t *testing.T) {
+		err := validateImageParameters("/tmp/test.png", "", "invalid", "", 0)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "invalid image quality")
+	})
+
+	t.Run("Valid background values should pass", func(t *testing.T) {
+		validBackgrounds := []string{"opaque", "transparent"}
+		for _, background := range validBackgrounds {
+			err := validateImageParameters("/tmp/test.png", "", "", background, 0)
+			assert.NoError(t, err, "Background %s should be valid", background)
+		}
+	})
+
+	t.Run("Invalid background should fail", func(t *testing.T) {
+		err := validateImageParameters("/tmp/test.png", "", "", "invalid", 0)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "invalid image background")
+	})
+
+	t.Run("Compression for JPEG should pass", func(t *testing.T) {
+		err := validateImageParameters("/tmp/test.jpg", "", "", "", 75)
+		assert.NoError(t, err)
+	})
+
+	t.Run("Compression for WebP should pass", func(t *testing.T) {
+		err := validateImageParameters("/tmp/test.webp", "", "", "", 50)
+		assert.NoError(t, err)
+	})
+
+	t.Run("Compression for PNG should fail", func(t *testing.T) {
+		err := validateImageParameters("/tmp/test.png", "", "", "", 75)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "image compression can only be used with JPEG and WebP formats")
+	})
+
+	t.Run("Invalid compression range should fail", func(t *testing.T) {
+		err := validateImageParameters("/tmp/test.jpg", "", "", "", 150)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "image compression must be between 0 and 100")
+
+		err = validateImageParameters("/tmp/test.jpg", "", "", "", -10)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "image compression must be between 0 and 100")
+	})
+
+	t.Run("Transparent background for PNG should pass", func(t *testing.T) {
+		err := validateImageParameters("/tmp/test.png", "", "", "transparent", 0)
+		assert.NoError(t, err)
+	})
+
+	t.Run("Transparent background for WebP should pass", func(t *testing.T) {
+		err := validateImageParameters("/tmp/test.webp", "", "", "transparent", 0)
+		assert.NoError(t, err)
+	})
+
+	t.Run("Transparent background for JPEG should fail", func(t *testing.T) {
+		err := validateImageParameters("/tmp/test.jpg", "", "", "transparent", 0)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "transparent background can only be used with PNG and WebP formats")
+	})
+}
+
+func TestBuildChatOptionsWithImageParameters(t *testing.T) {
+	t.Run("Valid image parameters should pass", func(t *testing.T) {
+		flags := &Flags{
+			ImageFile:        "/tmp/test.png",
+			ImageSize:        "1024x1024",
+			ImageQuality:     "high",
+			ImageBackground:  "transparent",
+			ImageCompression: 0, // Not set for PNG
+		}
+
+		options, err := flags.BuildChatOptions()
+		assert.NoError(t, err)
+		assert.NotNil(t, options)
+		assert.Equal(t, "/tmp/test.png", options.ImageFile)
+		assert.Equal(t, "1024x1024", options.ImageSize)
+		assert.Equal(t, "high", options.ImageQuality)
+		assert.Equal(t, "transparent", options.ImageBackground)
+		assert.Equal(t, 0, options.ImageCompression)
+	})
+
+	t.Run("Invalid image parameters should fail", func(t *testing.T) {
+		flags := &Flags{
+			ImageFile:       "/tmp/test.png",
+			ImageSize:       "invalid",
+			ImageQuality:    "high",
+			ImageBackground: "transparent",
+		}
+
+		options, err := flags.BuildChatOptions()
+		assert.Error(t, err)
+		assert.Nil(t, options)
+		assert.Contains(t, err.Error(), "invalid image size")
+	})
+
+	t.Run("JPEG with compression should pass", func(t *testing.T) {
+		flags := &Flags{
+			ImageFile:        "/tmp/test.jpg",
+			ImageSize:        "1536x1024",
+			ImageQuality:     "medium",
+			ImageBackground:  "opaque",
+			ImageCompression: 80,
+		}
+
+		options, err := flags.BuildChatOptions()
+		assert.NoError(t, err)
+		assert.NotNil(t, options)
+		assert.Equal(t, 80, options.ImageCompression)
+	})
+
+	t.Run("Image parameters without image file should fail in BuildChatOptions", func(t *testing.T) {
+		flags := &Flags{
+			ImageSize: "1024x1024", // Image parameter without ImageFile
+		}
+
+		options, err := flags.BuildChatOptions()
+		assert.Error(t, err)
+		assert.Nil(t, options)
+		assert.Contains(t, err.Error(), "image parameters")
+		assert.Contains(t, err.Error(), "can only be used with --image-file")
+	})
+}

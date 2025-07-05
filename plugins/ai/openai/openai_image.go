@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/danielmiessler/fabric/common"
+	"github.com/openai/openai-go/packages/param"
 	"github.com/openai/openai-go/responses"
 )
 
@@ -64,15 +65,36 @@ func (o *Client) addImageGenerationTool(opts *common.ChatOptions, tools []respon
 	// Check if the request seems to be asking for image generation
 	if o.shouldUseImageGeneration(opts) {
 		outputFormat := getOutputFormatFromExtension(opts.ImageFile)
+
+		// Build the image generation tool with user parameters
 		imageGenTool := responses.ToolUnionParam{
 			OfImageGeneration: &responses.ToolImageGenerationParam{
 				Type:         ImageGenerationToolType,
 				Model:        "gpt-image-1",
 				OutputFormat: outputFormat,
-				Quality:      "auto",
-				Size:         "auto",
 			},
 		}
+
+		// Set quality if specified by user (otherwise let OpenAI use default)
+		if opts.ImageQuality != "" {
+			imageGenTool.OfImageGeneration.Quality = opts.ImageQuality
+		}
+
+		// Set size if specified by user (otherwise let OpenAI use default)
+		if opts.ImageSize != "" {
+			imageGenTool.OfImageGeneration.Size = opts.ImageSize
+		}
+
+		// Set background if specified by user (otherwise let OpenAI use default)
+		if opts.ImageBackground != "" {
+			imageGenTool.OfImageGeneration.Background = opts.ImageBackground
+		}
+
+		// Set compression if specified by user (only for jpeg/webp)
+		if opts.ImageCompression != 0 {
+			imageGenTool.OfImageGeneration.OutputCompression = param.NewOpt(int64(opts.ImageCompression))
+		}
+
 		tools = append(tools, imageGenTool)
 	}
 	return tools

@@ -338,3 +338,107 @@ func TestModelValidationLogic(t *testing.T) {
 		assert.False(t, shouldFail, "Validation should not trigger when no image file is specified")
 	})
 }
+
+func TestAddImageGenerationToolWithUserParameters(t *testing.T) {
+	client := NewClient()
+
+	tests := []struct {
+		name     string
+		opts     *common.ChatOptions
+		expected map[string]interface{}
+	}{
+		{
+			name: "All parameters specified",
+			opts: &common.ChatOptions{
+				ImageFile:        "/tmp/test.png",
+				ImageSize:        "1536x1024",
+				ImageQuality:     "high",
+				ImageBackground:  "transparent",
+				ImageCompression: 0, // Not applicable for PNG
+			},
+			expected: map[string]interface{}{
+				"size":          "1536x1024",
+				"quality":       "high",
+				"background":    "transparent",
+				"output_format": "png",
+			},
+		},
+		{
+			name: "JPEG with compression",
+			opts: &common.ChatOptions{
+				ImageFile:        "/tmp/test.jpg",
+				ImageSize:        "1024x1024",
+				ImageQuality:     "medium",
+				ImageBackground:  "opaque",
+				ImageCompression: 75,
+			},
+			expected: map[string]interface{}{
+				"size":               "1024x1024",
+				"quality":            "medium",
+				"background":         "opaque",
+				"output_format":      "jpeg",
+				"output_compression": int64(75),
+			},
+		},
+		{
+			name: "Only some parameters specified",
+			opts: &common.ChatOptions{
+				ImageFile:    "/tmp/test.webp",
+				ImageQuality: "low",
+			},
+			expected: map[string]interface{}{
+				"quality":       "low",
+				"output_format": "webp",
+			},
+		},
+		{
+			name: "No parameters specified (defaults)",
+			opts: &common.ChatOptions{
+				ImageFile: "/tmp/test.png",
+			},
+			expected: map[string]interface{}{
+				"output_format": "png",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tools := client.addImageGenerationTool(tt.opts, []responses.ToolUnionParam{})
+
+			assert.Len(t, tools, 1)
+			assert.NotNil(t, tools[0].OfImageGeneration)
+
+			tool := tools[0].OfImageGeneration
+
+			// Check required fields
+			assert.Equal(t, "gpt-image-1", tool.Model)
+			assert.Equal(t, tt.expected["output_format"], tool.OutputFormat)
+
+			// Check optional fields
+			if expectedSize, ok := tt.expected["size"]; ok {
+				assert.Equal(t, expectedSize, tool.Size)
+			} else {
+				assert.Empty(t, tool.Size, "Size should not be set when not specified")
+			}
+
+			if expectedQuality, ok := tt.expected["quality"]; ok {
+				assert.Equal(t, expectedQuality, tool.Quality)
+			} else {
+				assert.Empty(t, tool.Quality, "Quality should not be set when not specified")
+			}
+
+			if expectedBackground, ok := tt.expected["background"]; ok {
+				assert.Equal(t, expectedBackground, tool.Background)
+			} else {
+				assert.Empty(t, tool.Background, "Background should not be set when not specified")
+			}
+
+			if expectedCompression, ok := tt.expected["output_compression"]; ok {
+				assert.Equal(t, expectedCompression, tool.OutputCompression.Value)
+			} else {
+				assert.Equal(t, int64(0), tool.OutputCompression.Value, "Compression should not be set when not specified")
+			}
+		})
+	}
+}

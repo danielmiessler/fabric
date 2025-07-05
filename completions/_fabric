@@ -99,6 +99,10 @@ _fabric() {
     '(--search)--search[Enable web search tool for supported models (Anthropic, OpenAI)]' \
     '(--search-location)--search-location[Set location for web search results]:location:' \
     '(--image-file)--image-file[Save generated image to specified file path]:image file:_files -g "*.png *.webp *.jpeg *.jpg"' \
+    '(--image-size)--image-size[Image dimensions]:size:(1024x1024 1536x1024 1024x1536 auto)' \
+    '(--image-quality)--image-quality[Image quality]:quality:(low medium high auto)' \
+    '(--image-compression)--image-compression[Compression level 0-100 for JPEG/WebP formats]:compression:' \
+    '(--image-background)--image-background[Background type]:background:(opaque transparent)' \
     '(--listextensions)--listextensions[List all registered extensions]' \
     '(--addextension)--addextension[Register a new extension from config file path]:config file:_files -g "*.yaml *.yml"' \
     '(--rmextension)--rmextension[Remove a registered extension by name]:extension:_fabric_extensions' \
