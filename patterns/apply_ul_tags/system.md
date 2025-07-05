@@ -25,6 +25,7 @@ Your goal is to output a JSON object called tags, with the following tags applie
 - **productivity** - Efficiency, time management, workflows
 - **writing** - Writing craft, process, tips
 - **creativity** - Creative process, artistic expression
+- **tutorial** - Technical or non-technical guides, how-tos
 
 # STEPS
 
