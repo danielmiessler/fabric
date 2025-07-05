@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/danielmiessler/fabric/common"
 	"github.com/openai/openai-go/responses"
@@ -17,15 +18,37 @@ import (
 const ImageGenerationResponseType = "image_generation_call"
 const ImageGenerationToolType = "image_generation"
 
+// getOutputFormatFromExtension determines the API output format based on file extension
+func getOutputFormatFromExtension(imagePath string) string {
+	if imagePath == "" {
+		return "png" // Default format
+	}
+
+	ext := strings.ToLower(filepath.Ext(imagePath))
+	switch ext {
+	case ".png":
+		return "png"
+	case ".webp":
+		return "webp"
+	case ".jpg":
+		return "jpeg"
+	case ".jpeg":
+		return "jpeg"
+	default:
+		return "png" // Default fallback
+	}
+}
+
 // addImageGenerationTool adds the image generation tool to the request if needed
 func (o *Client) addImageGenerationTool(opts *common.ChatOptions, tools []responses.ToolUnionParam) []responses.ToolUnionParam {
 	// Check if the request seems to be asking for image generation
 	if o.shouldUseImageGeneration(opts) {
+		outputFormat := getOutputFormatFromExtension(opts.ImageFile)
 		imageGenTool := responses.ToolUnionParam{
 			OfImageGeneration: &responses.ToolImageGenerationParam{
 				Type:         ImageGenerationToolType,
 				Model:        "gpt-image-1",
-				OutputFormat: "png",
+				OutputFormat: outputFormat,
 				Quality:      "auto",
 				Size:         "auto",
 			},

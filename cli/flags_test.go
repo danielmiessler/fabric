@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -64,7 +65,8 @@ func TestBuildChatOptions(t *testing.T) {
 		Raw:              false,
 		Seed:             1,
 	}
-	options := flags.BuildChatOptions()
+	options, err := flags.BuildChatOptions()
+	assert.NoError(t, err)
 	assert.Equal(t, expectedOptions, options)
 }
 
@@ -84,7 +86,8 @@ func TestBuildChatOptionsDefaultSeed(t *testing.T) {
 		Raw:              false,
 		Seed:             0,
 	}
-	options := flags.BuildChatOptions()
+	options, err := flags.BuildChatOptions()
+	assert.NoError(t, err)
 	assert.Equal(t, expectedOptions, options)
 }
 
@@ -162,5 +165,93 @@ model: 123  # should be string
 
 		_, err = Init()
 		assert.Error(t, err)
+	})
+}
+
+func TestValidateImageFile(t *testing.T) {
+	t.Run("Empty path should be valid", func(t *testing.T) {
+		err := validateImageFile("")
+		assert.NoError(t, err)
+	})
+
+	t.Run("Valid extensions should pass", func(t *testing.T) {
+		validExtensions := []string{".png", ".jpeg", ".jpg", ".webp"}
+		for _, ext := range validExtensions {
+			filename := "/tmp/test" + ext
+			err := validateImageFile(filename)
+			assert.NoError(t, err, "Extension %s should be valid", ext)
+		}
+	})
+
+	t.Run("Invalid extensions should fail", func(t *testing.T) {
+		invalidExtensions := []string{".gif", ".bmp", ".tiff", ".svg", ".txt", ""}
+		for _, ext := range invalidExtensions {
+			filename := "/tmp/test" + ext
+			err := validateImageFile(filename)
+			assert.Error(t, err, "Extension %s should be invalid", ext)
+			assert.Contains(t, err.Error(), "invalid image file extension")
+		}
+	})
+
+	t.Run("Existing file should fail", func(t *testing.T) {
+		// Create a temporary file
+		tempFile, err := os.CreateTemp("", "test*.png")
+		assert.NoError(t, err)
+		defer os.Remove(tempFile.Name())
+		tempFile.Close()
+
+		// Validation should fail because file exists
+		err = validateImageFile(tempFile.Name())
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "image file already exists")
+	})
+
+	t.Run("Non-existing file with valid extension should pass", func(t *testing.T) {
+		nonExistentFile := filepath.Join(os.TempDir(), "non_existent_file.png")
+		// Make sure the file doesn't exist
+		os.Remove(nonExistentFile)
+
+		err := validateImageFile(nonExistentFile)
+		assert.NoError(t, err)
+	})
+}
+
+func TestBuildChatOptionsWithImageFileValidation(t *testing.T) {
+	t.Run("Valid image file should pass", func(t *testing.T) {
+		flags := &Flags{
+			ImageFile: "/tmp/output.png",
+		}
+
+		options, err := flags.BuildChatOptions()
+		assert.NoError(t, err)
+		assert.Equal(t, "/tmp/output.png", options.ImageFile)
+	})
+
+	t.Run("Invalid extension should fail", func(t *testing.T) {
+		flags := &Flags{
+			ImageFile: "/tmp/output.gif",
+		}
+
+		options, err := flags.BuildChatOptions()
+		assert.Error(t, err)
+		assert.Nil(t, options)
+		assert.Contains(t, err.Error(), "invalid image file extension")
+	})
+
+	t.Run("Existing file should fail", func(t *testing.T) {
+		// Create a temporary file
+		tempFile, err := os.CreateTemp("", "existing*.png")
+		assert.NoError(t, err)
+		defer os.Remove(tempFile.Name())
+		tempFile.Close()
+
+		flags := &Flags{
+			ImageFile: tempFile.Name(),
+		}
+
+		options, err := flags.BuildChatOptions()
+		assert.Error(t, err)
+		assert.Nil(t, options)
+		assert.Contains(t, err.Error(), "image file already exists")
 	})
 }

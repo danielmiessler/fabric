@@ -270,7 +270,11 @@ func Cli(version string) (err error) {
 	if chatReq.Language == "" {
 		chatReq.Language = registry.Language.DefaultLanguage.Value
 	}
-	if session, err = chatter.Send(chatReq, currentFlags.BuildChatOptions()); err != nil {
+	var chatOptions *common.ChatOptions
+	if chatOptions, err = currentFlags.BuildChatOptions(); err != nil {
+		return
+	}
+	if session, err = chatter.Send(chatReq, chatOptions); err != nil {
 		return
 	}
 

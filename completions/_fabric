@@ -98,7 +98,7 @@ _fabric() {
     '(--version)--version[Print current version]' \
     '(--search)--search[Enable web search tool for supported models (Anthropic, OpenAI)]' \
     '(--search-location)--search-location[Set location for web search results]:location:' \
-    '(--image-file)--image-file[Save generated image to specified file path]:image file:_files -g "*.png *.jpg *.jpeg *.gif *.bmp"' \
+    '(--image-file)--image-file[Save generated image to specified file path]:image file:_files -g "*.png *.webp *.jpeg *.jpg"' \
     '(--listextensions)--listextensions[List all registered extensions]' \
     '(--addextension)--addextension[Register a new extension from config file path]:config file:_files -g "*.yaml *.yml"' \
     '(--rmextension)--rmextension[Remove a registered extension by name]:extension:_fabric_extensions' \
