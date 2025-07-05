@@ -164,21 +164,11 @@ func (an *Client) configure() (err error) {
 	if an.ApiBaseURL.Value != "" {
 		baseURL := an.ApiBaseURL.Value
 
-		// For OAuth, use v1 API endpoint as OAuth tokens are only valid for v1
-		// For API keys, use v2 API endpoint as per SDK 2.0beta1
-		if plugins.ParseBoolElseFalse(an.UseOAuth.Value) {
-			// OAuth requires v1 endpoint
-			if strings.Contains(baseURL, "-") && !strings.HasSuffix(baseURL, "/v1") {
-				baseURL = strings.TrimSuffix(baseURL, "/")
-				baseURL = baseURL + "/v1"
-			}
-		} else {
-			// API keys use v2 endpoint
-			// https://github.com/anthropics/anthropic-sdk-go/blob/main/CHANGELOG.md#020-beta1-2025-03-25
-			if strings.Contains(baseURL, "-") && !strings.HasSuffix(baseURL, "/v2") {
-				baseURL = strings.TrimSuffix(baseURL, "/")
-				baseURL = baseURL + "/v2"
-			}
+		// API keys use v2 endpoint
+		// https://github.com/anthropics/anthropic-sdk-go/blob/main/CHANGELOG.md#020-beta1-2025-03-25
+		if strings.Contains(baseURL, "-") && !strings.HasSuffix(baseURL, "/v2") {
+			baseURL = strings.TrimSuffix(baseURL, "/")
+			baseURL = baseURL + "/v2"
 		}
 		opts = append(opts, option.WithBaseURL(baseURL))
 	}
