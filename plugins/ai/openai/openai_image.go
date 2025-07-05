@@ -18,6 +18,26 @@ import (
 const ImageGenerationResponseType = "image_generation_call"
 const ImageGenerationToolType = "image_generation"
 
+// ImageGenerationSupportedModels lists all models that support image generation
+var ImageGenerationSupportedModels = []string{
+	"gpt-4o",
+	"gpt-4o-mini",
+	"gpt-4.1",
+	"gpt-4.1-mini",
+	"gpt-4.1-nano",
+	"o3",
+}
+
+// supportsImageGeneration checks if the given model supports the image_generation tool
+func supportsImageGeneration(model string) bool {
+	for _, supportedModel := range ImageGenerationSupportedModels {
+		if model == supportedModel {
+			return true
+		}
+	}
+	return false
+}
+
 // getOutputFormatFromExtension determines the API output format based on file extension
 func getOutputFormatFromExtension(imagePath string) string {
 	if imagePath == "" {

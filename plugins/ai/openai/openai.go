@@ -128,6 +128,11 @@ func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, o
 }
 
 func (o *Client) sendResponses(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+	// Validate model supports image generation if image file is specified
+	if opts.ImageFile != "" && !supportsImageGeneration(opts.Model) {
+		return "", fmt.Errorf("model '%s' does not support image generation. Supported models: %s", opts.Model, strings.Join(ImageGenerationSupportedModels, ", "))
+	}
+
 	req := o.buildResponseParams(msgs, opts)
 
 	var resp *responses.Response

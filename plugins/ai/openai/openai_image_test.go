@@ -1,6 +1,8 @@
 package openai
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/danielmiessler/fabric/chat"
@@ -217,4 +219,122 @@ func TestAddImageGenerationToolWithDynamicFormat(t *testing.T) {
 			assert.Equal(t, tt.expectedFormat, tools[0].OfImageGeneration.OutputFormat, "Output format should match file extension")
 		})
 	}
+}
+
+func TestSupportsImageGeneration(t *testing.T) {
+	tests := []struct {
+		name     string
+		model    string
+		expected bool
+	}{
+		{
+			name:     "gpt-4o supports image generation",
+			model:    "gpt-4o",
+			expected: true,
+		},
+		{
+			name:     "gpt-4o-mini supports image generation",
+			model:    "gpt-4o-mini",
+			expected: true,
+		},
+		{
+			name:     "gpt-4.1 supports image generation",
+			model:    "gpt-4.1",
+			expected: true,
+		},
+		{
+			name:     "gpt-4.1-mini supports image generation",
+			model:    "gpt-4.1-mini",
+			expected: true,
+		},
+		{
+			name:     "gpt-4.1-nano supports image generation",
+			model:    "gpt-4.1-nano",
+			expected: true,
+		},
+		{
+			name:     "o3 supports image generation",
+			model:    "o3",
+			expected: true,
+		},
+		{
+			name:     "o1 does not support image generation",
+			model:    "o1",
+			expected: false,
+		},
+		{
+			name:     "o1-mini does not support image generation",
+			model:    "o1-mini",
+			expected: false,
+		},
+		{
+			name:     "o3-mini does not support image generation",
+			model:    "o3-mini",
+			expected: false,
+		},
+		{
+			name:     "gpt-4 does not support image generation",
+			model:    "gpt-4",
+			expected: false,
+		},
+		{
+			name:     "gpt-3.5-turbo does not support image generation",
+			model:    "gpt-3.5-turbo",
+			expected: false,
+		},
+		{
+			name:     "empty model does not support image generation",
+			model:    "",
+			expected: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := supportsImageGeneration(tt.model)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+func TestModelValidationLogic(t *testing.T) {
+	t.Run("Unsupported model with image file should return validation error", func(t *testing.T) {
+		opts := &common.ChatOptions{
+			Model:     "o1-mini",
+			ImageFile: "/tmp/output.png",
+		}
+
+		// Test the validation logic directly
+		if opts.ImageFile != "" && !supportsImageGeneration(opts.Model) {
+			err := fmt.Errorf("model '%s' does not support image generation. Supported models: %s", opts.Model, strings.Join(ImageGenerationSupportedModels, ", "))
+
+			assert.Contains(t, err.Error(), "does not support image generation")
+			assert.Contains(t, err.Error(), "o1-mini")
+			assert.Contains(t, err.Error(), "Supported models:")
+		} else {
+			t.Error("Expected validation to trigger")
+		}
+	})
+
+	t.Run("Supported model with image file should not trigger validation", func(t *testing.T) {
+		opts := &common.ChatOptions{
+			Model:     "gpt-4o",
+			ImageFile: "/tmp/output.png",
+		}
+
+		// Test the validation logic directly
+		shouldFail := opts.ImageFile != "" && !supportsImageGeneration(opts.Model)
+		assert.False(t, shouldFail, "Validation should not trigger for supported model")
+	})
+
+	t.Run("Unsupported model without image file should not trigger validation", func(t *testing.T) {
+		opts := &common.ChatOptions{
+			Model:     "o1-mini",
+			ImageFile: "", // No image file
+		}
+
+		// Test the validation logic directly
+		shouldFail := opts.ImageFile != "" && !supportsImageGeneration(opts.Model)
+		assert.False(t, shouldFail, "Validation should not trigger when no image file is specified")
+	})
 }
