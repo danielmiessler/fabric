@@ -2,6 +2,7 @@ package openai
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/danielmiessler/fabric/chat"
@@ -305,8 +306,7 @@ func TestModelValidationLogic(t *testing.T) {
 
 		// Test the validation logic directly
 		if opts.ImageFile != "" && !supportsImageGeneration(opts.Model) {
-			supportedModels := []string{"gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano", "o3"}
-			err := fmt.Errorf("model '%s' does not support image generation. Supported models: %v", opts.Model, supportedModels)
+			err := fmt.Errorf("model '%s' does not support image generation. Supported models: %s", opts.Model, strings.Join(ImageGenerationSupportedModels, ", "))
 
 			assert.Contains(t, err.Error(), "does not support image generation")
 			assert.Contains(t, err.Error(), "o1-mini")
