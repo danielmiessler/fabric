@@ -29,6 +29,10 @@ type ChatOptions struct {
 	Search             bool
 	SearchLocation     string
 	ImageFile          string
+	ImageSize          string
+	ImageQuality       string
+	ImageCompression   int
+	ImageBackground    string
 }
 
 // NormalizeMessages remove empty messages and ensure messages order user-assist-user

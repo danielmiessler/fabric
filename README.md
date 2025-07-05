@@ -114,13 +114,11 @@ Keep in mind that many of these were recorded when Fabric was Python-based, so r
 >
 > July 4, 2025
 >
-> - Fabric now supports web search using the `--search` and `--search-location` flags
-> - Web search is available for both Anthropic and OpenAI providers
-> - Previous plugin-level search configurations have been removed in favor of the new flag-based approach.
-> - If you used the previous approach, consider cleaning up your `~/.config/fabric/.env` file, removing the unused `ANTHROPIC_WEB_SEARCH_TOOL_ENABLED` and `ANTHROPIC_WEB_SEARCH_TOOL_LOCATION` variables.
-> - Fabric now supports image generation using the `--image-file` flag with OpenAI models
-> - Image generation works with both text prompts and input images (via `--attachment`) for image editing tasks
->
+> - **Web Search**: Fabric now supports web search for Anthropic and OpenAI models using the `--search` and `--search-location` flags. This replaces the previous plugin-based search, so you may want to remove the old `ANTHROPIC_WEB_SEARCH_TOOL_*` variables from your `~/.config/fabric/.env` file.
+> - **Image Generation**: Fabric now has powerful image generation capabilities with OpenAI.
+>   - Generate images from text prompts and save them using `--image-file`.
+>   - Edit existing images by providing an input image with `--attachment`.
+>   - Control image `size`, `quality`, `compression`, and `background` with the new `--image-*` flags.
 >
 >June 17, 2025
 >
@@ -292,88 +290,88 @@ yt() {
 
 You can add the below code for the equivalent aliases inside PowerShell by running `notepad $PROFILE` inside a PowerShell window:
 
-    ```powershell
-    # Path to the patterns directory
-    $patternsPath = Join-Path $HOME ".config/fabric/patterns"
-    foreach ($patternDir in Get-ChildItem -Path $patternsPath -Directory) {
-        $patternName = $patternDir.Name
+```powershell
+# Path to the patterns directory
+$patternsPath = Join-Path $HOME ".config/fabric/patterns"
+foreach ($patternDir in Get-ChildItem -Path $patternsPath -Directory) {
+    $patternName = $patternDir.Name
 
-        # Dynamically define a function for each pattern
-        $functionDefinition = @"
-    function $patternName {
-        [CmdletBinding()]
-        param(
-            [Parameter(ValueFromPipeline = `$true)]
-            [string] `$InputObject,
+    # Dynamically define a function for each pattern
+    $functionDefinition = @"
+function $patternName {
+    [CmdletBinding()]
+    param(
+        [Parameter(ValueFromPipeline = `$true)]
+        [string] `$InputObject,
 
-            [Parameter(ValueFromRemainingArguments = `$true)]
-            [String[]] `$patternArgs
-        )
+        [Parameter(ValueFromRemainingArguments = `$true)]
+        [String[]] `$patternArgs
+    )
 
-        begin {
-            # Initialize an array to collect pipeline input
-            `$collector = @()
-        }
-
-        process {
-            # Collect pipeline input objects
-            if (`$InputObject) {
-                `$collector += `$InputObject
-            }
-        }
-
-        end {
-            # Join all pipeline input into a single string, separated by newlines
-            `$pipelineContent = `$collector -join "`n"
-
-            # If there's pipeline input, include it in the call to fabric
-            if (`$pipelineContent) {
-                `$pipelineContent | fabric --pattern $patternName `$patternArgs
-            } else {
-                # No pipeline input; just call fabric with the additional args
-                fabric --pattern $patternName `$patternArgs
-            }
-        }
-    }
-    "@
-        # Add the function to the current session
-        Invoke-Expression $functionDefinition
+    begin {
+        # Initialize an array to collect pipeline input
+        `$collector = @()
     }
 
-    # Define the 'yt' function as well
-    function yt {
-        [CmdletBinding()]
-        param(
-            [Parameter()]
-            [Alias("timestamps")]
-            [switch]$t,
-
-            [Parameter(Position = 0, ValueFromPipeline = $true)]
-            [string]$videoLink
-        )
-
-        begin {
-            $transcriptFlag = "--transcript"
-            if ($t) {
-                $transcriptFlag = "--transcript-with-timestamps"
-            }
-        }
-
-        process {
-            if (-not $videoLink) {
-                Write-Error "Usage: yt [-t | --timestamps] youtube-link"
-                return
-            }
-        }
-
-        end {
-            if ($videoLink) {
-                # Execute and allow output to flow through the pipeline
-                fabric -y $videoLink $transcriptFlag
-            }
+    process {
+        # Collect pipeline input objects
+        if (`$InputObject) {
+            `$collector += `$InputObject
         }
     }
-    ```
+
+    end {
+        # Join all pipeline input into a single string, separated by newlines
+        `$pipelineContent = `$collector -join "`n"
+
+        # If there's pipeline input, include it in the call to fabric
+        if (`$pipelineContent) {
+            `$pipelineContent | fabric --pattern $patternName `$patternArgs
+        } else {
+            # No pipeline input; just call fabric with the additional args
+            fabric --pattern $patternName `$patternArgs
+        }
+    }
+}
+"@
+    # Add the function to the current session
+    Invoke-Expression $functionDefinition
+}
+
+# Define the 'yt' function as well
+function yt {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Alias("timestamps")]
+        [switch]$t,
+
+        [Parameter(Position = 0, ValueFromPipeline = $true)]
+        [string]$videoLink
+    )
+
+    begin {
+        $transcriptFlag = "--transcript"
+        if ($t) {
+            $transcriptFlag = "--transcript-with-timestamps"
+        }
+    }
+
+    process {
+        if (-not $videoLink) {
+            Write-Error "Usage: yt [-t | --timestamps] youtube-link"
+            return
+        }
+    }
+
+    end {
+        if ($videoLink) {
+            # Execute and allow output to flow through the pipeline
+            fabric -y $videoLink $transcriptFlag
+        }
+    }
+}
+```
 
 This also creates a `yt` alias that allows you to use `yt https://www.youtube.com/watch?v=4b0iet22VIk` to get transcripts, comments, and metadata.
 
@@ -559,6 +557,11 @@ Application Options:
       --search                      Enable web search tool for supported models (Anthropic, OpenAI)
       --search-location=            Set location for web search results (e.g., 'America/Los_Angeles')
       --image-file=                 Save generated image to specified file path (e.g., 'output.png')
+      --image-size=                 Image dimensions: 1024x1024, 1536x1024, 1024x1536, auto (default: auto)
+      --image-quality=              Image quality: low, medium, high, auto (default: auto)
+      --image-compression=          Compression level 0-100 for JPEG/WebP formats (default: not set)
+      --image-background=           Background type: opaque, transparent (default: opaque, only for
+                                    PNG/WebP)
 
 Help Options:
   -h, --help                        Show this help message

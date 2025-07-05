@@ -78,6 +78,10 @@ type Flags struct {
 	Search                          bool              `long:"search" description:"Enable web search tool for supported models (Anthropic, OpenAI)"`
 	SearchLocation                  string            `long:"search-location" description:"Set location for web search results (e.g., 'America/Los_Angeles')"`
 	ImageFile                       string            `long:"image-file" description:"Save generated image to specified file path (e.g., 'output.png')"`
+	ImageSize                       string            `long:"image-size" description:"Image dimensions: 1024x1024, 1536x1024, 1024x1536, auto (default: auto)"`
+	ImageQuality                    string            `long:"image-quality" description:"Image quality: low, medium, high, auto (default: auto)"`
+	ImageCompression                int               `long:"image-compression" description:"Compression level 0-100 for JPEG/WebP formats (default: not set)"`
+	ImageBackground                 string            `long:"image-background" description:"Background type: opaque, transparent (default: opaque, only for PNG/WebP)"`
 }
 
 var debug = false
@@ -282,9 +286,92 @@ func validateImageFile(imagePath string) error {
 	return fmt.Errorf("invalid image file extension '%s'. Supported formats: .png, .jpeg, .jpg, .webp", ext)
 }
 
+// validateImageParameters validates image generation parameters
+func validateImageParameters(imagePath, size, quality, background string, compression int) error {
+	if imagePath == "" {
+		// Check if any image parameters are specified without --image-file
+		if size != "" || quality != "" || background != "" || compression != 0 {
+			return fmt.Errorf("image parameters (--image-size, --image-quality, --image-background, --image-compression) can only be used with --image-file")
+		}
+		return nil
+	}
+
+	// Validate size
+	if size != "" {
+		validSizes := []string{"1024x1024", "1536x1024", "1024x1536", "auto"}
+		valid := false
+		for _, validSize := range validSizes {
+			if size == validSize {
+				valid = true
+				break
+			}
+		}
+		if !valid {
+			return fmt.Errorf("invalid image size '%s'. Supported sizes: 1024x1024, 1536x1024, 1024x1536, auto", size)
+		}
+	}
+
+	// Validate quality
+	if quality != "" {
+		validQualities := []string{"low", "medium", "high", "auto"}
+		valid := false
+		for _, validQuality := range validQualities {
+			if quality == validQuality {
+				valid = true
+				break
+			}
+		}
+		if !valid {
+			return fmt.Errorf("invalid image quality '%s'. Supported qualities: low, medium, high, auto", quality)
+		}
+	}
+
+	// Validate background
+	if background != "" {
+		validBackgrounds := []string{"opaque", "transparent"}
+		valid := false
+		for _, validBackground := range validBackgrounds {
+			if background == validBackground {
+				valid = true
+				break
+			}
+		}
+		if !valid {
+			return fmt.Errorf("invalid image background '%s'. Supported backgrounds: opaque, transparent", background)
+		}
+	}
+
+	// Get file format for format-specific validations
+	ext := strings.ToLower(filepath.Ext(imagePath))
+
+	// Validate compression (only for jpeg/webp)
+	if compression != 0 { // 0 means not set
+		if ext != ".jpg" && ext != ".jpeg" && ext != ".webp" {
+			return fmt.Errorf("image compression can only be used with JPEG and WebP formats, not %s", ext)
+		}
+		if compression < 0 || compression > 100 {
+			return fmt.Errorf("image compression must be between 0 and 100, got %d", compression)
+		}
+	}
+
+	// Validate background transparency (only for png/webp)
+	if background == "transparent" {
+		if ext != ".png" && ext != ".webp" {
+			return fmt.Errorf("transparent background can only be used with PNG and WebP formats, not %s", ext)
+		}
+	}
+
+	return nil
+}
+
 func (o *Flags) BuildChatOptions() (ret *common.ChatOptions, err error) {
 	// Validate image file if specified
 	if err = validateImageFile(o.ImageFile); err != nil {
+		return nil, err
+	}
+
+	// Validate image parameters
+	if err = validateImageParameters(o.ImageFile, o.ImageSize, o.ImageQuality, o.ImageBackground, o.ImageCompression); err != nil {
 		return nil, err
 	}
 
@@ -300,6 +387,10 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions, err error) {
 		Search:             o.Search,
 		SearchLocation:     o.SearchLocation,
 		ImageFile:          o.ImageFile,
+		ImageSize:          o.ImageSize,
+		ImageQuality:       o.ImageQuality,
+		ImageCompression:   o.ImageCompression,
+		ImageBackground:    o.ImageBackground,
 	}
 	return
 }
