@@ -112,3 +112,109 @@ func TestBuildResponseParams_WithBothSearchAndImage(t *testing.T) {
 	assert.True(t, hasSearchTool, "Should have web search tool")
 	assert.True(t, hasImageTool, "Should have image generation tool")
 }
+
+func TestGetOutputFormatFromExtension(t *testing.T) {
+	tests := []struct {
+		name           string
+		imagePath      string
+		expectedFormat string
+	}{
+		{
+			name:           "PNG extension",
+			imagePath:      "/tmp/output.png",
+			expectedFormat: "png",
+		},
+		{
+			name:           "WEBP extension",
+			imagePath:      "/tmp/output.webp",
+			expectedFormat: "webp",
+		},
+		{
+			name:           "JPG extension",
+			imagePath:      "/tmp/output.jpg",
+			expectedFormat: "jpeg",
+		},
+		{
+			name:           "JPEG extension",
+			imagePath:      "/tmp/output.jpeg",
+			expectedFormat: "jpeg",
+		},
+		{
+			name:           "Uppercase PNG extension",
+			imagePath:      "/tmp/output.PNG",
+			expectedFormat: "png",
+		},
+		{
+			name:           "Mixed case JPEG extension",
+			imagePath:      "/tmp/output.JpEg",
+			expectedFormat: "jpeg",
+		},
+		{
+			name:           "Empty path",
+			imagePath:      "",
+			expectedFormat: "png",
+		},
+		{
+			name:           "No extension",
+			imagePath:      "/tmp/output",
+			expectedFormat: "png",
+		},
+		{
+			name:           "Unsupported extension",
+			imagePath:      "/tmp/output.gif",
+			expectedFormat: "png",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := getOutputFormatFromExtension(tt.imagePath)
+			assert.Equal(t, tt.expectedFormat, result)
+		})
+	}
+}
+
+func TestAddImageGenerationToolWithDynamicFormat(t *testing.T) {
+	client := NewClient()
+
+	tests := []struct {
+		name           string
+		imageFile      string
+		expectedFormat string
+	}{
+		{
+			name:           "PNG file",
+			imageFile:      "/tmp/output.png",
+			expectedFormat: "png",
+		},
+		{
+			name:           "WEBP file",
+			imageFile:      "/tmp/output.webp",
+			expectedFormat: "webp",
+		},
+		{
+			name:           "JPG file",
+			imageFile:      "/tmp/output.jpg",
+			expectedFormat: "jpeg",
+		},
+		{
+			name:           "JPEG file",
+			imageFile:      "/tmp/output.jpeg",
+			expectedFormat: "jpeg",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opts := &common.ChatOptions{
+				ImageFile: tt.imageFile,
+			}
+
+			tools := client.addImageGenerationTool(opts, []responses.ToolUnionParam{})
+
+			assert.Len(t, tools, 1, "Should have one tool")
+			assert.NotNil(t, tools[0].OfImageGeneration, "Should be image generation tool")
+			assert.Equal(t, tt.expectedFormat, tools[0].OfImageGeneration.OutputFormat, "Output format should match file extension")
+		})
+	}
+}

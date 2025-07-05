@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -14,7 +15,7 @@ import (
 	"github.com/danielmiessler/fabric/common"
 	"github.com/jessevdk/go-flags"
 	"golang.org/x/text/language"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 // Flags create flags struct. the users flags go into this, this will be passed to the chat struct in cli
@@ -257,7 +258,36 @@ func readStdin() (ret string, err error) {
 	return
 }
 
-func (o *Flags) BuildChatOptions() (ret *common.ChatOptions) {
+// validateImageFile validates the image file path and extension
+func validateImageFile(imagePath string) error {
+	if imagePath == "" {
+		return nil // No validation needed if no image file specified
+	}
+
+	// Check if file already exists
+	if _, err := os.Stat(imagePath); err == nil {
+		return fmt.Errorf("image file already exists: %s", imagePath)
+	}
+
+	// Check file extension
+	ext := strings.ToLower(filepath.Ext(imagePath))
+	validExtensions := []string{".png", ".jpeg", ".jpg", ".webp"}
+
+	for _, validExt := range validExtensions {
+		if ext == validExt {
+			return nil // Valid extension found
+		}
+	}
+
+	return fmt.Errorf("invalid image file extension '%s'. Supported formats: .png, .jpeg, .jpg, .webp", ext)
+}
+
+func (o *Flags) BuildChatOptions() (ret *common.ChatOptions, err error) {
+	// Validate image file if specified
+	if err = validateImageFile(o.ImageFile); err != nil {
+		return nil, err
+	}
+
 	ret = &common.ChatOptions{
 		Temperature:        o.Temperature,
 		TopP:               o.TopP,

@@ -61,7 +61,7 @@ complete -c fabric -l address -d "The address to bind the REST API (default: :80
 complete -c fabric -l api-key -d "API key used to secure server routes"
 complete -c fabric -l config -d "Path to YAML config file" -r -a "*.yaml *.yml"
 complete -c fabric -l search-location -d "Set location for web search results (e.g., 'America/Los_Angeles')"
-complete -c fabric -l image-file -d "Save generated image to specified file path (e.g., 'output.png')" -r -a "*.png *.jpg *.jpeg *.gif *.bmp"
+complete -c fabric -l image-file -d "Save generated image to specified file path (e.g., 'output.png')" -r -a "*.png *.webp *.jpeg *.jpg"
 complete -c fabric -l addextension -d "Register a new extension from config file path" -r -a "*.yaml *.yml"
 complete -c fabric -l rmextension -d "Remove a registered extension by name" -a "(__fabric_get_extensions)"
 complete -c fabric -l strategy -d "Choose a strategy from the available strategies" -a "(__fabric_get_strategies)"
