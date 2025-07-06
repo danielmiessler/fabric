@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/danielmiessler/fabric/common"
@@ -198,7 +199,30 @@ func (o *PatternsEntity) GetNames() (ret []string, err error) {
 		ret = append(ret, name)
 	}
 
+	// Sort the patterns alphabetically
+	sort.Strings(ret)
+
 	return ret, nil
+}
+
+// ListNames overrides StorageEntity.ListNames to use PatternsEntity.GetNames
+func (o *PatternsEntity) ListNames(shellCompleteList bool) (err error) {
+	var names []string
+	if names, err = o.GetNames(); err != nil {
+		return
+	}
+
+	if len(names) == 0 {
+		if !shellCompleteList {
+			fmt.Printf("\nNo %v\n", o.StorageEntity.Label)
+		}
+		return
+	}
+
+	for _, item := range names {
+		fmt.Printf("%s\n", item)
+	}
+	return
 }
 
 // Get required for Storage interface
