@@ -93,6 +93,9 @@ Keep in mind that many of these were recorded when Fabric was Python-based, so r
   - [Just use the Patterns](#just-use-the-patterns)
     - [Prompt Strategies](#prompt-strategies)
   - [Custom Patterns](#custom-patterns)
+    - [Setting Up Custom Patterns](#setting-up-custom-patterns)
+    - [Using Custom Patterns](#using-custom-patterns)
+    - [How It Works](#how-it-works)
   - [Helper Apps](#helper-apps)
     - [`to_pdf`](#to_pdf)
     - [`to_pdf` Installation](#to_pdf-installation)
@@ -652,11 +655,48 @@ Use `fabric -S` and select the option to install the strategies in your `~/.conf
 
 You may want to use Fabric to create your own custom Patterns—but not share them with others. No problem!
 
-Just make a directory in `~/.config/custompatterns/` (or wherever) and put your `.md` files in there.
+Fabric now supports a dedicated custom patterns directory that keeps your personal patterns separate from the built-in ones. This means your custom patterns won't be overwritten when you update Fabric's built-in patterns.
 
-When you're ready to use them, copy them into `~/.config/fabric/patterns/`
+### Setting Up Custom Patterns
 
-You can then use them like any other Patterns, but they won't be public unless you explicitly submit them as Pull Requests to the Fabric project. So don't worry—they're private to you.
+1. Run the Fabric setup:
+
+   ```bash
+   fabric --setup
+   ```
+
+2. Select the "Custom Patterns" option from the Tools menu and enter your desired directory path (e.g., `~/my-custom-patterns`)
+
+3. Fabric will automatically create the directory if it does not exist.
+
+### Using Custom Patterns
+
+1. Create your custom pattern directory structure:
+
+   ```bash
+   mkdir -p ~/my-custom-patterns/my-analyzer
+   ```
+
+2. Create your pattern file
+
+   ```bash
+   echo "You are an expert analyzer of ..." > ~/my-custom-patterns/my-analyzer/system.md
+   ```
+
+3. **Use your custom pattern:**
+
+   ```bash
+   fabric --pattern my-analyzer "analyze this text"
+   ```
+
+### How It Works
+
+- **Priority System**: Custom patterns take precedence over built-in patterns with the same name
+- **Seamless Integration**: Custom patterns appear in `fabric --listpatterns` alongside built-in ones
+- **Update Safe**: Your custom patterns are never affected by `fabric --updatepatterns`
+- **Private by Default**: Custom patterns remain private unless you explicitly share them
+
+Your custom patterns are completely private and won't be affected by Fabric updates!
 
 ## Helper Apps
 
