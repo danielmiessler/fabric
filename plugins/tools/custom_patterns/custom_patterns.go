@@ -1,6 +1,7 @@
 package custom_patterns
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -44,10 +45,12 @@ func (o *CustomPatterns) configure() error {
 			o.CustomPatternsDir.Value = absPath
 		}
 
-		// Create the directory if it doesn't exist
-		if err := os.MkdirAll(o.CustomPatternsDir.Value, 0755); err != nil {
-			// If we can't create it, clear the value to avoid errors
-			o.CustomPatternsDir.Value = ""
+		// Check if directory exists, create only if it doesn't
+		if _, err := os.Stat(o.CustomPatternsDir.Value); os.IsNotExist(err) {
+			if err := os.MkdirAll(o.CustomPatternsDir.Value, 0755); err != nil {
+				// Log the error but don't clear the value - let it persist in env file
+				fmt.Printf("Warning: Could not create custom patterns directory %s: %v\n", o.CustomPatternsDir.Value, err)
+			}
 		}
 	}
 
