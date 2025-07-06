@@ -162,3 +162,123 @@ func TestPatternsEntity_Save(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, content, data)
 }
+
+func TestPatternsEntity_CustomPatterns(t *testing.T) {
+	// Create main patterns directory
+	mainDir, err := os.MkdirTemp("", "test-main-patterns-*")
+	require.NoError(t, err)
+	defer os.RemoveAll(mainDir)
+
+	// Create custom patterns directory
+	customDir, err := os.MkdirTemp("", "test-custom-patterns-*")
+	require.NoError(t, err)
+	defer os.RemoveAll(customDir)
+
+	entity := &PatternsEntity{
+		StorageEntity: &StorageEntity{
+			Dir:       mainDir,
+			Label:     "patterns",
+			ItemIsDir: true,
+		},
+		SystemPatternFile: "system.md",
+		CustomPatternsDir: customDir,
+	}
+
+	// Create a pattern in main directory
+	createTestPattern(t, &PatternsEntity{
+		StorageEntity: &StorageEntity{
+			Dir:       mainDir,
+			Label:     "patterns",
+			ItemIsDir: true,
+		},
+		SystemPatternFile: "system.md",
+	}, "main-pattern", "Main pattern content")
+
+	// Create a pattern in custom directory
+	createTestPattern(t, &PatternsEntity{
+		StorageEntity: &StorageEntity{
+			Dir:       customDir,
+			Label:     "patterns",
+			ItemIsDir: true,
+		},
+		SystemPatternFile: "system.md",
+	}, "custom-pattern", "Custom pattern content")
+
+	// Create a pattern with same name in both directories (custom should override)
+	createTestPattern(t, &PatternsEntity{
+		StorageEntity: &StorageEntity{
+			Dir:       mainDir,
+			Label:     "patterns",
+			ItemIsDir: true,
+		},
+		SystemPatternFile: "system.md",
+	}, "shared-pattern", "Main shared pattern")
+
+	createTestPattern(t, &PatternsEntity{
+		StorageEntity: &StorageEntity{
+			Dir:       customDir,
+			Label:     "patterns",
+			ItemIsDir: true,
+		},
+		SystemPatternFile: "system.md",
+	}, "shared-pattern", "Custom shared pattern")
+
+	// Test GetNames includes both directories
+	names, err := entity.GetNames()
+	require.NoError(t, err)
+	assert.Contains(t, names, "main-pattern")
+	assert.Contains(t, names, "custom-pattern")
+	assert.Contains(t, names, "shared-pattern")
+
+	// Test that custom pattern overrides main pattern
+	pattern, err := entity.getFromDB("shared-pattern")
+	require.NoError(t, err)
+	assert.Equal(t, "Custom shared pattern", pattern.Pattern)
+
+	// Test that main pattern is accessible when not overridden
+	pattern, err = entity.getFromDB("main-pattern")
+	require.NoError(t, err)
+	assert.Equal(t, "Main pattern content", pattern.Pattern)
+
+	// Test that custom pattern is accessible
+	pattern, err = entity.getFromDB("custom-pattern")
+	require.NoError(t, err)
+	assert.Equal(t, "Custom pattern content", pattern.Pattern)
+}
+
+func TestPatternsEntity_CustomPatternsEmpty(t *testing.T) {
+	// Test behavior when custom patterns directory is empty or doesn't exist
+	mainDir, err := os.MkdirTemp("", "test-main-patterns-*")
+	require.NoError(t, err)
+	defer os.RemoveAll(mainDir)
+
+	entity := &PatternsEntity{
+		StorageEntity: &StorageEntity{
+			Dir:       mainDir,
+			Label:     "patterns",
+			ItemIsDir: true,
+		},
+		SystemPatternFile: "system.md",
+		CustomPatternsDir: "/nonexistent/directory",
+	}
+
+	// Create a pattern in main directory
+	createTestPattern(t, &PatternsEntity{
+		StorageEntity: &StorageEntity{
+			Dir:       mainDir,
+			Label:     "patterns",
+			ItemIsDir: true,
+		},
+		SystemPatternFile: "system.md",
+	}, "main-pattern", "Main pattern content")
+
+	// Test GetNames works even with nonexistent custom directory
+	names, err := entity.GetNames()
+	require.NoError(t, err)
+	assert.Contains(t, names, "main-pattern")
+
+	// Test that main pattern is accessible
+	pattern, err := entity.getFromDB("main-pattern")
+	require.NoError(t, err)
+	assert.Equal(t, "Main pattern content", pattern.Pattern)
+}

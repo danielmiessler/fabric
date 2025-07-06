@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -15,10 +16,22 @@ func NewDb(dir string) (db *Db) {
 
 	db.EnvFilePath = db.FilePath(".env")
 
+	// Check for custom patterns directory from environment variable
+	customPatternsDir := os.Getenv("CUSTOM_PATTERNS_DIRECTORY")
+	if customPatternsDir != "" {
+		// Expand home directory if needed
+		if strings.HasPrefix(customPatternsDir, "~/") {
+			if homeDir, err := os.UserHomeDir(); err == nil {
+				customPatternsDir = filepath.Join(homeDir, customPatternsDir[2:])
+			}
+		}
+	}
+
 	db.Patterns = &PatternsEntity{
 		StorageEntity:          &StorageEntity{Label: "Patterns", Dir: db.FilePath("patterns"), ItemIsDir: true},
 		SystemPatternFile:      "system.md",
 		UniquePatternsFilePath: db.FilePath("unique_patterns.txt"),
+		CustomPatternsDir:      customPatternsDir,
 	}
 
 	db.Sessions = &SessionsEntity{
