@@ -59,6 +59,8 @@ func (o *CustomPatterns) configure() error {
 
 // IsConfigured returns true if a custom patterns directory has been set
 func (o *CustomPatterns) IsConfigured() bool {
+	// First configure to load values from environment variables
+	o.Configure()
 	// Check if the plugin has been configured with a directory
 	return o.CustomPatternsDir.Value != ""
 }
