@@ -31,6 +31,7 @@ import (
 	"github.com/danielmiessler/fabric/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/plugins/template"
 	"github.com/danielmiessler/fabric/plugins/tools"
+	"github.com/danielmiessler/fabric/plugins/tools/custom_patterns"
 	"github.com/danielmiessler/fabric/plugins/tools/jina"
 	"github.com/danielmiessler/fabric/plugins/tools/lang"
 	"github.com/danielmiessler/fabric/plugins/tools/youtube"
@@ -69,6 +70,7 @@ func NewPluginRegistry(db *fsdb.Db) (ret *PluginRegistry, err error) {
 		VendorManager:  ai.NewVendorsManager(),
 		VendorsAll:     ai.NewVendorsManager(),
 		PatternsLoader: tools.NewPatternsLoader(db.Patterns),
+		CustomPatterns: custom_patterns.NewCustomPatterns(),
 		YouTube:        youtube.NewYouTube(),
 		Language:       lang.NewLanguage(),
 		Jina:           jina.NewClient(),
@@ -138,6 +140,7 @@ type PluginRegistry struct {
 	VendorsAll         *ai.VendorsManager
 	Defaults           *tools.Defaults
 	PatternsLoader     *tools.PatternsLoader
+	CustomPatterns     *custom_patterns.CustomPatterns
 	YouTube            *youtube.YouTube
 	Language           *lang.Language
 	Jina               *jina.Client
@@ -151,6 +154,7 @@ func (o *PluginRegistry) SaveEnvFile() (err error) {
 
 	o.Defaults.Settings.FillEnvFileContent(&envFileContent)
 	o.PatternsLoader.SetupFillEnvFileContent(&envFileContent)
+	o.CustomPatterns.SetupFillEnvFileContent(&envFileContent)
 	o.Strategies.SetupFillEnvFileContent(&envFileContent)
 
 	for _, vendor := range o.VendorManager.Vendors {
@@ -183,7 +187,7 @@ func (o *PluginRegistry) Setup() (err error) {
 			return vendor
 		})...)
 
-	groupsPlugins.AddGroupItems("Tools", o.Defaults, o.Jina, o.Language, o.PatternsLoader, o.Strategies, o.YouTube)
+	groupsPlugins.AddGroupItems("Tools", o.CustomPatterns, o.Defaults, o.Jina, o.Language, o.PatternsLoader, o.Strategies, o.YouTube)
 
 	for {
 		groupsPlugins.Print(false)

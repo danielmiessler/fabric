@@ -16,6 +16,7 @@ type PatternsEntity struct {
 	*StorageEntity
 	SystemPatternFile      string
 	UniquePatternsFilePath string
+	CustomPatternsDir      string
 }
 
 // Pattern represents a single pattern with its metadata
@@ -43,7 +44,7 @@ func (o *PatternsEntity) GetApplyVariables(
 		}
 
 		// Use the resolved absolute path to get the pattern
-		pattern, err = o.getFromFile(absPath)
+		pattern, _ = o.getFromFile(absPath)
 	} else {
 		// Otherwise, get the pattern from the database
 		pattern, err = o.getFromDB(source)
@@ -89,6 +90,19 @@ func (o *PatternsEntity) applyVariables(
 
 // retrieves a pattern from the database by name
 func (o *PatternsEntity) getFromDB(name string) (ret *Pattern, err error) {
+	// First check custom patterns directory if it exists
+	if o.CustomPatternsDir != "" {
+		customPatternPath := filepath.Join(o.CustomPatternsDir, name, o.SystemPatternFile)
+		if pattern, customErr := os.ReadFile(customPatternPath); customErr == nil {
+			ret = &Pattern{
+				Name:    name,
+				Pattern: string(pattern),
+			}
+			return ret, nil
+		}
+	}
+
+	// Fallback to main patterns directory
 	patternPath := filepath.Join(o.Dir, name, o.SystemPatternFile)
 
 	var pattern []byte
@@ -143,6 +157,48 @@ func (o *PatternsEntity) getFromFile(pathStr string) (pattern *Pattern, err erro
 		Pattern: string(content),
 	}
 	return
+}
+
+// GetNames overrides StorageEntity.GetNames to include custom patterns directory
+func (o *PatternsEntity) GetNames() (ret []string, err error) {
+	// Get names from main patterns directory
+	mainNames, err := o.StorageEntity.GetNames()
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a map to track unique pattern names (custom patterns override main ones)
+	nameMap := make(map[string]bool)
+	for _, name := range mainNames {
+		nameMap[name] = true
+	}
+
+	// Get names from custom patterns directory if it exists
+	if o.CustomPatternsDir != "" {
+		// Create a temporary StorageEntity for the custom directory
+		customStorage := &StorageEntity{
+			Dir:           o.CustomPatternsDir,
+			ItemIsDir:     o.StorageEntity.ItemIsDir,
+			FileExtension: o.StorageEntity.FileExtension,
+		}
+
+		customNames, customErr := customStorage.GetNames()
+		if customErr == nil {
+			// Add custom patterns, they will override main patterns with same name
+			for _, name := range customNames {
+				nameMap[name] = true
+			}
+		}
+		// Ignore errors from custom directory (it might not exist)
+	}
+
+	// Convert map keys back to slice
+	ret = make([]string, 0, len(nameMap))
+	for name := range nameMap {
+		ret = append(ret, name)
+	}
+
+	return ret, nil
 }
 
 // Get required for Storage interface
