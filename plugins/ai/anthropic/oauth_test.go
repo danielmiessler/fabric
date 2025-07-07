@@ -257,7 +257,7 @@ func TestOAuthTransport_RoundTrip(t *testing.T) {
 
 	// Create a valid token
 	validToken := createTestToken("valid_access_token", "refresh_token", 3600)
-	tokenPath := filepath.Join(configDir, fmt.Sprintf(".%s_oauth", "claude"))
+	tokenPath := filepath.Join(configDir, fmt.Sprintf(".%s_oauth", authTokenIdentifier))
 	data, _ := json.MarshalIndent(validToken, "", "  ")
 	os.WriteFile(tokenPath, data, 0600)
 
