@@ -37,7 +37,7 @@ func (t *OAuthTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	newReq := req.Clone(req.Context())
 
 	// Get current token (may refresh if needed)
-	token, err := t.getValidToken()
+	token, err := t.getValidToken(authTokenIdentifier)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get valid OAuth token: %w", err)
 	}
@@ -58,21 +58,21 @@ func (t *OAuthTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 }
 
 // getValidToken returns a valid access token, refreshing if necessary
-func (t *OAuthTransport) getValidToken() (string, error) {
+func (t *OAuthTransport) getValidToken(tokenIdentifier string) (string, error) {
 	storage, err := common.NewOAuthStorage()
 	if err != nil {
 		return "", fmt.Errorf("failed to create OAuth storage: %w", err)
 	}
 
 	// Load stored token
-	token, err := storage.LoadToken("claude")
+	token, err := storage.LoadToken(tokenIdentifier)
 	if err != nil {
 		return "", fmt.Errorf("failed to load stored token: %w", err)
 	}
 	// If no token exists, run OAuth flow
 	if token == nil {
 		fmt.Println("No OAuth token found, initiating authentication...")
-		newAccessToken, err := RunOAuthFlow()
+		newAccessToken, err := RunOAuthFlow(tokenIdentifier)
 		if err != nil {
 			return "", fmt.Errorf("failed to authenticate: %w", err)
 		}
@@ -82,11 +82,11 @@ func (t *OAuthTransport) getValidToken() (string, error) {
 	// Check if token needs refresh (5 minute buffer)
 	if token.IsExpired(5) {
 		fmt.Println("OAuth token expired, refreshing...")
-		newAccessToken, err := RefreshToken()
+		newAccessToken, err := RefreshToken(tokenIdentifier)
 		if err != nil {
 			// If refresh fails, try re-authentication
 			fmt.Println("Token refresh failed, re-authenticating...")
-			newAccessToken, err = RunOAuthFlow()
+			newAccessToken, err = RunOAuthFlow(tokenIdentifier)
 			if err != nil {
 				return "", fmt.Errorf("failed to refresh or re-authenticate: %w", err)
 			}
@@ -129,7 +129,28 @@ func openBrowser(url string) {
 }
 
 // RunOAuthFlow executes the complete OAuth authorization flow
-func RunOAuthFlow() (token string, err error) {
+func RunOAuthFlow(tokenIdentifier string) (token string, err error) {
+	// First check if we have an existing token that can be refreshed
+	storage, err := common.NewOAuthStorage()
+	if err == nil {
+		existingToken, err := storage.LoadToken(tokenIdentifier)
+		if err == nil && existingToken != nil {
+			// If token exists but is expired, try refreshing first
+			if existingToken.IsExpired(5) {
+				fmt.Println("Found expired OAuth token, attempting refresh...")
+				refreshedToken, refreshErr := RefreshToken(token)
+				if refreshErr == nil {
+					fmt.Println("Token refresh successful")
+					return refreshedToken, nil
+				}
+				fmt.Printf("Token refresh failed (%v), proceeding with full OAuth flow...\n", refreshErr)
+			} else {
+				// Token exists and is still valid
+				return existingToken.AccessToken, nil
+			}
+		}
+	}
+
 	verifier, challenge, err := generatePKCE()
 	if err != nil {
 		return
@@ -171,12 +192,12 @@ func RunOAuthFlow() (token string, err error) {
 		"code_verifier": verifier,
 	}
 
-	token, err = exchangeToken(tokenReq)
+	token, err = exchangeToken(tokenIdentifier, tokenReq)
 	return
 }
 
 // exchangeToken exchanges authorization code for access token
-func exchangeToken(params map[string]string) (token string, err error) {
+func exchangeToken(tokenIdentifier string, params map[string]string) (token string, err error) {
 	reqBody, err := json.Marshal(params)
 	if err != nil {
 		return
@@ -219,7 +240,7 @@ func exchangeToken(params map[string]string) (token string, err error) {
 		Scope:        result.Scope,
 	}
 
-	if err = storage.SaveToken("claude", oauthToken); err != nil {
+	if err = storage.SaveToken(tokenIdentifier, oauthToken); err != nil {
 		return result.AccessToken, fmt.Errorf("failed to save OAuth token: %w", err)
 	}
 
@@ -228,14 +249,14 @@ func exchangeToken(params map[string]string) (token string, err error) {
 }
 
 // RefreshToken refreshes an expired OAuth token using the refresh token
-func RefreshToken() (string, error) {
+func RefreshToken(tokenIdentifier string) (string, error) {
 	storage, err := common.NewOAuthStorage()
 	if err != nil {
 		return "", fmt.Errorf("failed to create OAuth storage: %w", err)
 	}
 
 	// Load existing token
-	token, err := storage.LoadToken("claude")
+	token, err := storage.LoadToken(tokenIdentifier)
 	if err != nil {
 		return "", fmt.Errorf("failed to load stored token: %w", err)
 	}
@@ -292,7 +313,7 @@ func RefreshToken() (string, error) {
 		newToken.RefreshToken = token.RefreshToken
 	}
 
-	if err = storage.SaveToken("claude", newToken); err != nil {
+	if err = storage.SaveToken(tokenIdentifier, newToken); err != nil {
 		return "", fmt.Errorf("failed to save refreshed token: %w", err)
 	}
 

@@ -19,7 +19,7 @@ const webSearchToolName = "web_search"
 const webSearchToolType = "web_search_20250305"
 const sourcesHeader = "## Sources"
 
-const vendorTokenIdentifier = "claude"
+const authTokenIdentifier = "claude"
 
 func NewClient() (ret *Client) {
 	vendorName := "Anthropic"
@@ -65,15 +65,15 @@ func (an *Client) IsConfigured() bool {
 		}
 
 		// If no valid token exists, automatically run OAuth flow
-		if !storage.HasValidToken(vendorTokenIdentifier, 5) {
+		if !storage.HasValidToken(authTokenIdentifier, 5) {
 			fmt.Println("OAuth enabled but no valid token found. Starting authentication...")
-			_, err := RunOAuthFlow()
+			_, err := RunOAuthFlow(authTokenIdentifier)
 			if err != nil {
 				fmt.Printf("OAuth authentication failed: %v\n", err)
 				return false
 			}
 			// After successful OAuth flow, check again
-			return storage.HasValidToken("claude", 5)
+			return storage.HasValidToken(authTokenIdentifier, 5)
 		}
 
 		return true
@@ -107,9 +107,9 @@ func (an *Client) Setup() (err error) {
 			return err
 		}
 
-		if !storage.HasValidToken("claude", 5) {
+		if !storage.HasValidToken(authTokenIdentifier, 5) {
 			// No valid token, run OAuth flow
-			if _, err = RunOAuthFlow(); err != nil {
+			if _, err = RunOAuthFlow(authTokenIdentifier); err != nil {
 				return err
 			}
 		}
