@@ -68,9 +68,10 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	if o.Stream {
 		channel := make(chan string)
 		errChan := make(chan error, 1)
+		done := make(chan struct{})
 
 		go func() {
-			defer close(errChan)
+			defer close(done)
 			if streamErr := o.vendor.SendStream(session.GetVendorMessages(), opts, channel); streamErr != nil {
 				errChan <- streamErr
 			}
@@ -80,7 +81,8 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 			select {
 			case response, ok := <-channel:
 				if !ok {
-					// Channel is closed, exit the loop
+					// Channel is closed, wait for goroutine to finish
+					<-done
 					return
 				}
 				message += response
@@ -88,6 +90,8 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 			case streamErr := <-errChan:
 				if streamErr != nil {
 					err = streamErr
+					// Wait for goroutine to finish before returning
+					<-done
 					return
 				}
 			}
