@@ -19,6 +19,8 @@ const webSearchToolName = "web_search"
 const webSearchToolType = "web_search_20250305"
 const sourcesHeader = "## Sources"
 
+const vendorTokenIdentifier = "claude"
+
 func NewClient() (ret *Client) {
 	vendorName := "Anthropic"
 	ret = &Client{}
@@ -50,9 +52,6 @@ func NewClient() (ret *Client) {
 
 // IsConfigured returns true if either the API key or OAuth is configured
 func (an *Client) IsConfigured() bool {
-	// First configure to load values from environment variables
-	an.Configure()
-
 	// Check if API key is configured
 	if an.ApiKey.Value != "" {
 		return true
@@ -66,7 +65,7 @@ func (an *Client) IsConfigured() bool {
 		}
 
 		// If no valid token exists, automatically run OAuth flow
-		if !storage.HasValidToken("claude", 5) {
+		if !storage.HasValidToken(vendorTokenIdentifier, 5) {
 			fmt.Println("OAuth enabled but no valid token found. Starting authentication...")
 			_, err := RunOAuthFlow()
 			if err != nil {
