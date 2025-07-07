@@ -68,10 +68,10 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	if o.Stream {
 		responseChan := make(chan string)
 		errChan := make(chan error, 1)
-		done := make(chan struct{})
+		doneChan := make(chan struct{})
 
 		go func() {
-			defer close(done)
+			defer close(doneChan)
 			defer close(responseChan)
 			if streamErr := o.vendor.SendStream(session.GetVendorMessages(), opts, responseChan); streamErr != nil {
 				errChan <- streamErr
@@ -84,7 +84,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 		}
 
 		// Wait for goroutine to finish
-		<-done
+		<-doneChan
 
 		// Check for errors in errChan
 		select {
