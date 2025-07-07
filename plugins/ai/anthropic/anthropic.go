@@ -19,6 +19,8 @@ const webSearchToolName = "web_search"
 const webSearchToolType = "web_search_20250305"
 const sourcesHeader = "## Sources"
 
+const vendorTokenIdentifier = "claude"
+
 func NewClient() (ret *Client) {
 	vendorName := "Anthropic"
 	ret = &Client{}
@@ -32,11 +34,7 @@ func NewClient() (ret *Client) {
 	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", false)
 	ret.ApiBaseURL.Value = defaultBaseUrl
 	ret.UseOAuth = ret.AddSetupQuestionBool("Use OAuth login", false)
-	if plugins.ParseBoolElseFalse(ret.UseOAuth.Value) {
-		ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", false)
-	} else {
-		ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", true)
-	}
+	ret.ApiKey = ret.PluginBase.AddSetupQuestion("API key", false)
 
 	ret.maxTokens = 4096
 	ret.defaultRequiredUserMessage = "Hi"
@@ -50,6 +48,38 @@ func NewClient() (ret *Client) {
 	}
 
 	return
+}
+
+// IsConfigured returns true if either the API key or OAuth is configured
+func (an *Client) IsConfigured() bool {
+	// Check if API key is configured
+	if an.ApiKey.Value != "" {
+		return true
+	}
+
+	// Check if OAuth is enabled and has a valid token
+	if plugins.ParseBoolElseFalse(an.UseOAuth.Value) {
+		storage, err := common.NewOAuthStorage()
+		if err != nil {
+			return false
+		}
+
+		// If no valid token exists, automatically run OAuth flow
+		if !storage.HasValidToken(vendorTokenIdentifier, 5) {
+			fmt.Println("OAuth enabled but no valid token found. Starting authentication...")
+			_, err := RunOAuthFlow()
+			if err != nil {
+				fmt.Printf("OAuth authentication failed: %v\n", err)
+				return false
+			}
+			// After successful OAuth flow, check again
+			return storage.HasValidToken("claude", 5)
+		}
+
+		return true
+	}
+
+	return false
 }
 
 type Client struct {
