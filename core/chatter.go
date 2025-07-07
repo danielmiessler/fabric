@@ -82,14 +82,9 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 		}
 
 		// Check for any errors after the channel is closed
-		select {
-		case streamErr := <-errChan:
-			if streamErr != nil {
-				err = streamErr
-				return
-			}
-		default:
-			// No error
+		if streamErr := <-errChan; streamErr != nil {
+			err = streamErr
+			return
 		}
 	} else {
 		if message, err = o.vendor.Send(context.Background(), session.GetVendorMessages(), opts); err != nil {
