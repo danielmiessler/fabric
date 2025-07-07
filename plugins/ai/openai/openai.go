@@ -221,7 +221,9 @@ func (o *Client) buildResponseParams(
 
 	if !opts.Raw {
 		ret.Temperature = openai.Float(opts.Temperature)
-		ret.TopP = openai.Float(opts.TopP)
+		if opts.TopP != 0 {
+			ret.TopP = openai.Float(opts.TopP)
+		}
 		if opts.MaxTokens != 0 {
 			ret.MaxOutputTokens = openai.Int(int64(opts.MaxTokens))
 		}
