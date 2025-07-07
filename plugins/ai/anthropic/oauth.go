@@ -138,7 +138,7 @@ func RunOAuthFlow(tokenIdentifier string) (token string, err error) {
 			// If token exists but is expired, try refreshing first
 			if existingToken.IsExpired(5) {
 				fmt.Println("Found expired OAuth token, attempting refresh...")
-				refreshedToken, refreshErr := RefreshToken(token)
+				refreshedToken, refreshErr := RefreshToken(tokenIdentifier)
 				if refreshErr == nil {
 					fmt.Println("Token refresh successful")
 					return refreshedToken, nil
