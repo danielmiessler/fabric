@@ -66,19 +66,19 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	message := ""
 
 	if o.Stream {
-		channel := make(chan string)
+		responseChan := make(chan string)
 		errChan := make(chan error, 1)
 		done := make(chan struct{})
 
 		go func() {
 			defer close(done)
-			defer close(channel)
-			if streamErr := o.vendor.SendStream(session.GetVendorMessages(), opts, channel); streamErr != nil {
+			defer close(responseChan)
+			if streamErr := o.vendor.SendStream(session.GetVendorMessages(), opts, responseChan); streamErr != nil {
 				errChan <- streamErr
 			}
 		}()
 
-		for response := range channel {
+		for response := range responseChan {
 			message += response
 			fmt.Print(response)
 		}
