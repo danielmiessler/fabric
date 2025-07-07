@@ -104,8 +104,8 @@ func TestChatter_Send_StreamingErrorPropagation(t *testing.T) {
 		t.Fatal("Expected error to be returned, but got nil")
 	}
 
-	if err.Error() != expectedError.Error() {
-		t.Errorf("Expected error %q, but got %q", expectedError.Error(), err.Error())
+	if !errors.Is(err, expectedError) {
+		t.Errorf("Expected error %q, but got %q", expectedError, err)
 	}
 
 	// Session should still be returned (it was built successfully before the streaming error)
