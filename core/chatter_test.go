@@ -51,7 +51,8 @@ func (m *mockVendor) SendStream(messages []*chat.ChatCompletionMessage, opts *co
 			responseChan <- chunk
 		}
 	}
-	// Don't close the channel here - let the goroutine in Send method handle it
+	// Close the channel like real vendors do
+	close(responseChan)
 	return m.sendStreamError
 }
 

@@ -72,7 +72,6 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 
 		go func() {
 			defer close(done)
-			defer close(responseChan)
 			if streamErr := o.vendor.SendStream(session.GetVendorMessages(), opts, responseChan); streamErr != nil {
 				errChan <- streamErr
 			}
