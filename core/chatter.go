@@ -77,24 +77,23 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 			}
 		}()
 
-		for {
-			select {
-			case response, ok := <-channel:
-				if !ok {
-					// Channel is closed, wait for goroutine to finish
-					<-done
-					return
-				}
-				message += response
-				fmt.Print(response)
-			case streamErr := <-errChan:
-				if streamErr != nil {
-					err = streamErr
-					// Wait for goroutine to finish before returning
-					<-done
-					return
-				}
+		for response := range channel {
+			message += response
+			fmt.Print(response)
+		}
+
+		// Wait for goroutine to finish
+		<-done
+
+		// Check for errors in errChan
+		select {
+		case streamErr := <-errChan:
+			if streamErr != nil {
+				err = streamErr
+				return
 			}
+		default:
+			// No errors, continue
 		}
 	} else {
 		if message, err = o.vendor.Send(context.Background(), session.GetVendorMessages(), opts); err != nil {
