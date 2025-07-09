@@ -55,7 +55,8 @@ type PatternsLoader struct {
 
 func (o *PatternsLoader) configure() (err error) {
 	o.pathPatternsPrefix = fmt.Sprintf("%v/", o.DefaultFolder.Value)
-	o.tempPatternsFolder = filepath.Join(os.TempDir(), o.DefaultFolder.Value)
+	// Use a consistent temp folder name regardless of the source path structure
+	o.tempPatternsFolder = filepath.Join(os.TempDir(), "fabric-patterns")
 
 	return
 }
@@ -85,18 +86,34 @@ func (o *PatternsLoader) Setup() (err error) {
 func (o *PatternsLoader) PopulateDB() (err error) {
 	fmt.Printf("Downloading patterns and Populating %s...\n", o.Patterns.Dir)
 	fmt.Println()
+
+	originalPath := o.DefaultFolder.Value
 	if err = o.gitCloneAndCopy(); err != nil {
-		return
+		return fmt.Errorf("failed to download patterns from git repository: %w", err)
+	}
+
+	// If the path was migrated during gitCloneAndCopy, we need to save the updated configuration
+	if o.DefaultFolder.Value != originalPath {
+		fmt.Printf("💾 Saving updated configuration (path changed from '%s' to '%s')...\n", originalPath, o.DefaultFolder.Value)
+		// The configuration will be saved by the calling code after this returns successfully
 	}
 
 	if err = o.movePatterns(); err != nil {
-		return
+		return fmt.Errorf("failed to move patterns to config directory: %w", err)
 	}
+
+	fmt.Printf("✅ Successfully downloaded and installed patterns to %s\n", o.Patterns.Dir)
 	return
 }
 
 // PersistPatterns copies custom patterns to the updated patterns directory
 func (o *PatternsLoader) PersistPatterns() (err error) {
+	// Check if patterns directory exists, if not, nothing to persist
+	if _, err = os.Stat(o.Patterns.Dir); os.IsNotExist(err) {
+		// No existing patterns directory, nothing to persist
+		return nil
+	}
+
 	var currentPatterns []os.DirEntry
 	if currentPatterns, err = os.ReadDir(o.Patterns.Dir); err != nil {
 		return
@@ -108,15 +125,28 @@ func (o *PatternsLoader) PersistPatterns() (err error) {
 		return
 	}
 
-	for _, currentPattern := range currentPatterns {
-		for _, newPattern := range newPatterns {
-			if currentPattern.Name() == newPattern.Name() {
-				break
-			}
-			err = copy.Copy(filepath.Join(o.Patterns.Dir, newPattern.Name()), filepath.Join(newPatternsFolder, newPattern.Name()))
+	// Create a map of new patterns for faster lookup
+	newPatternNames := make(map[string]bool)
+	for _, newPattern := range newPatterns {
+		if newPattern.IsDir() {
+			newPatternNames[newPattern.Name()] = true
 		}
 	}
-	return
+
+	// Copy custom patterns that don't exist in the new download
+	for _, currentPattern := range currentPatterns {
+		if currentPattern.IsDir() && !newPatternNames[currentPattern.Name()] {
+			// This is a custom pattern, preserve it
+			src := filepath.Join(o.Patterns.Dir, currentPattern.Name())
+			dst := filepath.Join(newPatternsFolder, currentPattern.Name())
+			if copyErr := copy.Copy(src, dst); copyErr != nil {
+				fmt.Printf("Warning: failed to preserve custom pattern '%s': %v\n", currentPattern.Name(), copyErr)
+			} else {
+				fmt.Printf("Preserved custom pattern: %s\n", currentPattern.Name())
+			}
+		}
+	}
+	return nil
 }
 
 // movePatterns copies the new patterns into the config directory
@@ -134,8 +164,29 @@ func (o *PatternsLoader) movePatterns() (err error) {
 		return
 	}
 
+	// Verify that patterns were actually copied before creating the loaded marker
+	var entries []os.DirEntry
+	if entries, err = os.ReadDir(o.Patterns.Dir); err != nil {
+		return
+	}
+
+	// Count actual pattern directories (exclude the loaded file itself)
+	patternCount := 0
+	for _, entry := range entries {
+		if entry.IsDir() {
+			patternCount++
+		}
+	}
+
+	if patternCount == 0 {
+		err = fmt.Errorf("no patterns were successfully copied to %s", o.Patterns.Dir)
+		return
+	}
+
 	//create an empty file to indicate that the patterns have been updated if not exists
-	_, _ = os.Create(o.loadedFilePath)
+	if _, err = os.Create(o.loadedFilePath); err != nil {
+		return
+	}
 
 	err = os.RemoveAll(patternsDir)
 	return
@@ -147,15 +198,96 @@ func (o *PatternsLoader) gitCloneAndCopy() (err error) {
 		return fmt.Errorf("failed to create temp directory: %w", err)
 	}
 
-	// Use the helper to fetch files
+	fmt.Printf("Cloning repository %s (path: %s)...\n", o.DefaultGitRepoUrl.Value, o.DefaultFolder.Value)
+
+	// Try to fetch files with the current path
 	err = githelper.FetchFilesFromRepo(githelper.FetchOptions{
 		RepoURL:    o.DefaultGitRepoUrl.Value,
 		PathPrefix: o.DefaultFolder.Value,
 		DestDir:    o.tempPatternsFolder,
 	})
 	if err != nil {
-		return fmt.Errorf("failed to download patterns: %w", err)
+		return fmt.Errorf("failed to download patterns from %s: %w", o.DefaultGitRepoUrl.Value, err)
+	}
+
+	// Check if patterns were downloaded
+	if patternCount, checkErr := o.countPatternsInDirectory(o.tempPatternsFolder); checkErr != nil {
+		return fmt.Errorf("failed to read temp patterns directory: %w", checkErr)
+	} else if patternCount == 0 {
+		// No patterns found with current path, try automatic migration
+		if migrationErr := o.tryPathMigration(); migrationErr != nil {
+			return fmt.Errorf("no patterns found in repository at path %s and migration failed: %w", o.DefaultFolder.Value, migrationErr)
+		}
+		// Migration successful, try downloading again
+		return o.gitCloneAndCopy()
+	} else {
+		fmt.Printf("Downloaded %d patterns to temporary directory\n", patternCount)
 	}
 
 	return nil
+}
+
+// tryPathMigration attempts to migrate from old pattern paths to new restructured paths
+func (o *PatternsLoader) tryPathMigration() (err error) {
+	// Check if current path is the old "patterns" path
+	if o.DefaultFolder.Value == "patterns" {
+		fmt.Println("🔄 Detected old pattern path 'patterns', trying migration to 'data/patterns'...")
+
+		// Try the new restructured path
+		newPath := "data/patterns"
+		testTempFolder := filepath.Join(os.TempDir(), "fabric-patterns-test")
+
+		// Clean up any existing test temp folder
+		os.RemoveAll(testTempFolder)
+
+		// Test if the new path works
+		testErr := githelper.FetchFilesFromRepo(githelper.FetchOptions{
+			RepoURL:    o.DefaultGitRepoUrl.Value,
+			PathPrefix: newPath,
+			DestDir:    testTempFolder,
+		})
+
+		if testErr == nil {
+			// Check if patterns exist in the new path
+			if patternCount, countErr := o.countPatternsInDirectory(testTempFolder); countErr == nil && patternCount > 0 {
+				fmt.Printf("✅ Found %d patterns at new path '%s', updating configuration...\n", patternCount, newPath)
+
+				// Update the configuration
+				o.DefaultFolder.Value = newPath
+				// Clean up the main temp folder and replace it with the test one
+				os.RemoveAll(o.tempPatternsFolder)
+				if renameErr := os.Rename(testTempFolder, o.tempPatternsFolder); renameErr != nil {
+					// If rename fails, try copy
+					if copyErr := copy.Copy(testTempFolder, o.tempPatternsFolder); copyErr != nil {
+						return fmt.Errorf("failed to move test patterns to temp folder: %w", copyErr)
+					}
+					os.RemoveAll(testTempFolder)
+				}
+
+				return nil
+			}
+		}
+
+		// Clean up test folder
+		os.RemoveAll(testTempFolder)
+	}
+
+	return fmt.Errorf("unable to find patterns at current path '%s' or migrate to new structure", o.DefaultFolder.Value)
+}
+
+// countPatternsInDirectory counts the number of pattern directories in a given directory
+func (o *PatternsLoader) countPatternsInDirectory(dir string) (int, error) {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return 0, err
+	}
+
+	patternCount := 0
+	for _, entry := range entries {
+		if entry.IsDir() {
+			patternCount++
+		}
+	}
+
+	return patternCount, nil
 }
