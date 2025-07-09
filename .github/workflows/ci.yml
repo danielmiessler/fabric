@@ -4,13 +4,13 @@ on:
   push:
     branches: ["main"]
     paths-ignore:
-      - 'patterns/**'
-      - '**/*.md'
+      - "data/patterns/**"
+      - "**/*.md"
   pull_request:
     branches: ["main"]
     paths-ignore:
-      - 'patterns/**'
-      - '**/*.md'
+      - "data/patterns/**"
+      - "**/*.md"
 
 jobs:
   test:
