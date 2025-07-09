@@ -25,7 +25,7 @@ func handleToolProcessing(currentFlags *Flags, registry *core.PluginRegistry) (m
 			} else {
 				var videos []*youtube.VideoMeta
 				if videos, err = registry.YouTube.FetchPlaylistVideos(playlistId); err != nil {
-					err = fmt.Errorf("error fetching playlist videos: %v", err)
+					err = fmt.Errorf("error fetching playlist videos: %w", err)
 					return
 				}
 

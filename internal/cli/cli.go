@@ -29,6 +29,10 @@ func Cli(version string) (err error) {
 			println(err2.Error())
 			currentFlags.Setup = true
 		}
+		// Return early if registry is nil to prevent panics in subsequent handlers
+		if registry == nil {
+			return err2
+		}
 	}
 
 	// Handle setup and server commands
@@ -60,7 +64,7 @@ func Cli(version string) (err error) {
 	// Process HTML readability if needed
 	if currentFlags.HtmlReadability {
 		if msg, cleanErr := converter.HtmlReadability(currentFlags.Message); cleanErr != nil {
-			fmt.Println("use original input, because can't apply html readability", err)
+			fmt.Println("use original input, because can't apply html readability", cleanErr)
 		} else {
 			currentFlags.Message = msg
 		}
@@ -70,6 +74,11 @@ func Cli(version string) (err error) {
 	var messageTools string
 	if messageTools, err = handleToolProcessing(currentFlags, registry); err != nil {
 		return
+	}
+
+	// Return early for non-chat tool operations
+	if messageTools != "" && !currentFlags.IsChatRequest() {
+		return nil
 	}
 
 	// Handle chat processing

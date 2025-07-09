@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/danielmiessler/fabric/internal/plugins"
 	"github.com/danielmiessler/fabric/internal/plugins/db/fsdb"
@@ -56,7 +57,7 @@ type PatternsLoader struct {
 func (o *PatternsLoader) configure() (err error) {
 	o.pathPatternsPrefix = fmt.Sprintf("%v/", o.DefaultFolder.Value)
 	// Use a consistent temp folder name regardless of the source path structure
-	o.tempPatternsFolder = filepath.Join(os.TempDir(), "fabric-patterns")
+	o.tempPatternsFolder = filepath.Join(os.TempDir(), fmt.Sprintf("fabric-patterns-%d", time.Now().UnixNano()))
 
 	return
 }
@@ -109,9 +110,13 @@ func (o *PatternsLoader) PopulateDB() (err error) {
 // PersistPatterns copies custom patterns to the updated patterns directory
 func (o *PatternsLoader) PersistPatterns() (err error) {
 	// Check if patterns directory exists, if not, nothing to persist
-	if _, err = os.Stat(o.Patterns.Dir); os.IsNotExist(err) {
-		// No existing patterns directory, nothing to persist
-		return nil
+	if _, err = os.Stat(o.Patterns.Dir); err != nil {
+		if os.IsNotExist(err) {
+			// No existing patterns directory, nothing to persist
+			return nil
+		}
+		// Return unexpected errors (e.g., permission issues)
+		return fmt.Errorf("failed to access patterns directory '%s': %w", o.Patterns.Dir, err)
 	}
 
 	var currentPatterns []os.DirEntry
