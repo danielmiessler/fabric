@@ -32,27 +32,28 @@ func Cli(version string) (err error) {
 	}
 
 	// Handle setup and server commands
-	if err = handleSetupAndServerCommands(currentFlags, registry, version); err != nil {
+	var handled bool
+	if handled, err = handleSetupAndServerCommands(currentFlags, registry, version); err != nil || handled {
 		return
 	}
 
 	// Handle configuration commands
-	if err = handleConfigurationCommands(currentFlags, registry); err != nil {
+	if handled, err = handleConfigurationCommands(currentFlags, registry); err != nil || handled {
 		return
 	}
 
 	// Handle listing commands
-	if err = handleListingCommands(currentFlags, registry.Db, registry); err != nil {
+	if handled, err = handleListingCommands(currentFlags, registry.Db, registry); err != nil || handled {
 		return
 	}
 
 	// Handle management commands
-	if err = handleManagementCommands(currentFlags, registry.Db); err != nil {
+	if handled, err = handleManagementCommands(currentFlags, registry.Db); err != nil || handled {
 		return
 	}
 
 	// Handle extension commands
-	if err = handleExtensionCommands(currentFlags, registry); err != nil {
+	if handled, err = handleExtensionCommands(currentFlags, registry); err != nil || handled {
 		return
 	}
 

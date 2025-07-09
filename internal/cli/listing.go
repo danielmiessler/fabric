@@ -10,52 +10,53 @@ import (
 )
 
 // handleListingCommands handles listing-related commands
-func handleListingCommands(currentFlags *Flags, fabricDb *fsdb.Db, registry *core.PluginRegistry) (err error) {
+// Returns (handled, error) where handled indicates if a command was processed and should exit
+func handleListingCommands(currentFlags *Flags, fabricDb *fsdb.Db, registry *core.PluginRegistry) (handled bool, err error) {
 	if currentFlags.LatestPatterns != "0" {
 		var parsedToInt int
 		if parsedToInt, err = strconv.Atoi(currentFlags.LatestPatterns); err != nil {
-			return
+			return true, err
 		}
 
 		if err = fabricDb.Patterns.PrintLatestPatterns(parsedToInt); err != nil {
-			return
+			return true, err
 		}
-		return
+		return true, nil
 	}
 
 	if currentFlags.ListPatterns {
 		err = fabricDb.Patterns.ListNames(currentFlags.ShellCompleteOutput)
-		return
+		return true, err
 	}
 
 	if currentFlags.ListAllModels {
 		var models *ai.VendorsModels
 		if models, err = registry.VendorManager.GetModels(); err != nil {
-			return
+			return true, err
 		}
 		models.Print(currentFlags.ShellCompleteOutput)
-		return
+		return true, nil
 	}
 
 	if currentFlags.ListAllContexts {
 		err = fabricDb.Contexts.ListNames(currentFlags.ShellCompleteOutput)
-		return
+		return true, err
 	}
 
 	if currentFlags.ListAllSessions {
 		err = fabricDb.Sessions.ListNames(currentFlags.ShellCompleteOutput)
-		return
+		return true, err
 	}
 
 	if currentFlags.ListStrategies {
 		err = registry.Strategies.ListStrategies(currentFlags.ShellCompleteOutput)
-		return
+		return true, err
 	}
 
 	if currentFlags.ListVendors {
 		err = registry.ListVendors(os.Stdout)
-		return
+		return true, err
 	}
 
-	return nil
+	return false, nil
 }

@@ -5,21 +5,22 @@ import (
 )
 
 // handleExtensionCommands handles extension-related commands
-func handleExtensionCommands(currentFlags *Flags, registry *core.PluginRegistry) (err error) {
+// Returns (handled, error) where handled indicates if a command was processed and should exit
+func handleExtensionCommands(currentFlags *Flags, registry *core.PluginRegistry) (handled bool, err error) {
 	if currentFlags.ListExtensions {
 		err = registry.TemplateExtensions.ListExtensions()
-		return
+		return true, err
 	}
 
 	if currentFlags.AddExtension != "" {
 		err = registry.TemplateExtensions.RegisterExtension(currentFlags.AddExtension)
-		return
+		return true, err
 	}
 
 	if currentFlags.RemoveExtension != "" {
 		err = registry.TemplateExtensions.RemoveExtension(currentFlags.RemoveExtension)
-		return
+		return true, err
 	}
 
-	return nil
+	return false, nil
 }

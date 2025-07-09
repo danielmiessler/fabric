@@ -5,26 +5,27 @@ import (
 )
 
 // handleManagementCommands handles management-related commands (delete, print, etc.)
-func handleManagementCommands(currentFlags *Flags, fabricDb *fsdb.Db) (err error) {
+// Returns (handled, error) where handled indicates if a command was processed and should exit
+func handleManagementCommands(currentFlags *Flags, fabricDb *fsdb.Db) (handled bool, err error) {
 	if currentFlags.WipeContext != "" {
 		err = fabricDb.Contexts.Delete(currentFlags.WipeContext)
-		return
+		return true, err
 	}
 
 	if currentFlags.WipeSession != "" {
 		err = fabricDb.Sessions.Delete(currentFlags.WipeSession)
-		return
+		return true, err
 	}
 
 	if currentFlags.PrintSession != "" {
 		err = fabricDb.Sessions.PrintSession(currentFlags.PrintSession)
-		return
+		return true, err
 	}
 
 	if currentFlags.PrintContext != "" {
 		err = fabricDb.Contexts.PrintContext(currentFlags.PrintContext)
-		return
+		return true, err
 	}
 
-	return nil
+	return false, nil
 }

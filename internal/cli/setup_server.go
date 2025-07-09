@@ -6,24 +6,25 @@ import (
 )
 
 // handleSetupAndServerCommands handles setup and server-related commands
-func handleSetupAndServerCommands(currentFlags *Flags, registry *core.PluginRegistry, version string) (err error) {
+// Returns (handled, error) where handled indicates if a command was processed and should exit
+func handleSetupAndServerCommands(currentFlags *Flags, registry *core.PluginRegistry, version string) (handled bool, err error) {
 	// if the setup flag is set, run the setup function
 	if currentFlags.Setup {
 		err = registry.Setup()
-		return
+		return true, err
 	}
 
 	if currentFlags.Serve {
 		registry.ConfigureVendors()
 		err = restapi.Serve(registry, currentFlags.ServeAddress, currentFlags.ServeAPIKey)
-		return
+		return true, err
 	}
 
 	if currentFlags.ServeOllama {
 		registry.ConfigureVendors()
 		err = restapi.ServeOllama(registry, currentFlags.ServeAddress, version)
-		return
+		return true, err
 	}
 
-	return nil
+	return false, nil
 }
