@@ -97,7 +97,7 @@ def extract_pattern_info():
 def update_web_static(descriptions_path):
     """Copy pattern descriptions to web static directory"""
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    static_dir = os.path.join(script_dir, "..", "web", "static", "data")
+    static_dir = os.path.join(script_dir, "..", "..", "web", "static", "data")
     os.makedirs(static_dir, exist_ok=True)
     static_path = os.path.join(static_dir, "pattern_descriptions.json")
     shutil.copy2(descriptions_path, static_path)

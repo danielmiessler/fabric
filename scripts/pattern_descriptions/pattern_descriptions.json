@@ -1844,6 +1844,23 @@
         "REVIEW",
         "SECURITY"
       ]
+    },
+    {
+      "patternName": "apply_ul_tags",
+      "description": "Apply standardized content tags to categorize topics like AI, cybersecurity, politics, and culture.",
+      "tags": [
+        "ANALYSIS",
+        "CLASSIFICATION"
+      ]
+    },
+    {
+      "patternName": "t_check_dunning_kruger",
+      "description": "Analyze cognitive biases to identify overconfidence and underestimation of abilities using Dunning-Kruger principles.",
+      "tags": [
+        "ANALYSIS",
+        "CR THINKING",
+        "SELF"
+      ]
     }
   ]
 }
