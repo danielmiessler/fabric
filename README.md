@@ -29,7 +29,7 @@ Fabric is graciously supported by…
 [Helper Apps](#helper-apps) •
 [Meta](#meta)
 
-![Screenshot of fabric](images/fabric-summarize.png)
+![Screenshot of fabric](./docs/images/fabric-summarize.png)
 
 </div>
 
