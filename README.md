@@ -218,7 +218,7 @@ To install Fabric, [make sure Go is installed](https://go.dev/doc/install), and 
 
 ```bash
 # Install Fabric directly from the repo
-go install github.com/danielmiessler/fabric@latest
+go install github.com/danielmiessler/fabric/cmd/fabric@latest
 ```
 
 ### Environment Variables
@@ -428,7 +428,7 @@ pipx uninstall fabric
 # Clear any old Fabric aliases
 (check your .bashrc, .zshrc, etc.)
 # Install the Go version
-go install github.com/danielmiessler/fabric@latest
+go install github.com/danielmiessler/fabric/cmd/fabric@latest
 # Run setup for the new version. Important because things have changed
 fabric --setup
 ```
@@ -440,7 +440,7 @@ Then [set your environmental variables](#environment-variables) as shown above.
 The great thing about Go is that it's super easy to upgrade. Just run the same command you used to install it in the first place and you'll always get the latest version.
 
 ```bash
-go install github.com/danielmiessler/fabric@latest
+go install github.com/danielmiessler/fabric/cmd/fabric@latest
 ```
 
 ### Shell Completions
@@ -725,7 +725,7 @@ This will create a PDF file named `output.pdf` in the current directory.
 To install `to_pdf`, install it the same way as you install Fabric, just with a different repo name.
 
 ```bash
-go install github.com/danielmiessler/fabric/plugins/tools/to_pdf@latest
+go install github.com/danielmiessler/fabric/cmd/to_pdf@latest
 ```
 
 Make sure you have a LaTeX distribution (like TeX Live or MiKTeX) installed on your system, as `to_pdf` requires `pdflatex` to be available in your system's PATH.
@@ -741,7 +741,7 @@ See [the Create Coding Feature Pattern README](./patterns/create_coding_feature/
 Install it first using:
 
 ```bash
-go install github.com/danielmiessler/fabric/plugins/tools/code_helper@latest
+go install github.com/danielmiessler/fabric/cmd/code_helper@latest
 ```
 
 ## pbpaste
