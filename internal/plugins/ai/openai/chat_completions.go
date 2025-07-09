@@ -9,13 +9,13 @@ import (
 	"strings"
 
 	"github.com/danielmiessler/fabric/internal/chat"
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	openai "github.com/openai/openai-go"
 	"github.com/openai/openai-go/shared"
 )
 
 // sendChatCompletions sends a request using the Chat Completions API
-func (o *Client) sendChatCompletions(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) sendChatCompletions(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (ret string, err error) {
 	req := o.buildChatCompletionParams(msgs, opts)
 
 	var resp *openai.ChatCompletion
@@ -30,7 +30,7 @@ func (o *Client) sendChatCompletions(ctx context.Context, msgs []*chat.ChatCompl
 
 // sendStreamChatCompletions sends a streaming request using the Chat Completions API
 func (o *Client) sendStreamChatCompletions(
-	msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
+	msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string,
 ) (err error) {
 	defer close(channel)
 
@@ -50,7 +50,7 @@ func (o *Client) sendStreamChatCompletions(
 
 // buildChatCompletionParams builds parameters for the Chat Completions API
 func (o *Client) buildChatCompletionParams(
-	inputMsgs []*chat.ChatCompletionMessage, opts *common.ChatOptions,
+	inputMsgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions,
 ) (ret openai.ChatCompletionNewParams) {
 
 	messages := make([]openai.ChatCompletionMessageParamUnion, len(inputMsgs))

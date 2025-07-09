@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/util"
 	"golang.org/x/oauth2"
 )
 
@@ -59,7 +59,7 @@ func (t *OAuthTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 // getValidToken returns a valid access token, refreshing if necessary
 func (t *OAuthTransport) getValidToken(tokenIdentifier string) (string, error) {
-	storage, err := common.NewOAuthStorage()
+	storage, err := util.NewOAuthStorage()
 	if err != nil {
 		return "", fmt.Errorf("failed to create OAuth storage: %w", err)
 	}
@@ -131,7 +131,7 @@ func openBrowser(url string) {
 // RunOAuthFlow executes the complete OAuth authorization flow
 func RunOAuthFlow(tokenIdentifier string) (token string, err error) {
 	// First check if we have an existing token that can be refreshed
-	storage, err := common.NewOAuthStorage()
+	storage, err := util.NewOAuthStorage()
 	if err == nil {
 		existingToken, err := storage.LoadToken(tokenIdentifier)
 		if err == nil && existingToken != nil {
@@ -227,12 +227,12 @@ func exchangeToken(tokenIdentifier string, params map[string]string) (token stri
 	}
 
 	// Save the complete token information
-	storage, err := common.NewOAuthStorage()
+	storage, err := util.NewOAuthStorage()
 	if err != nil {
 		return result.AccessToken, fmt.Errorf("failed to create OAuth storage: %w", err)
 	}
 
-	oauthToken := &common.OAuthToken{
+	oauthToken := &util.OAuthToken{
 		AccessToken:  result.AccessToken,
 		RefreshToken: result.RefreshToken,
 		ExpiresAt:    time.Now().Unix() + int64(result.ExpiresIn),
@@ -250,7 +250,7 @@ func exchangeToken(tokenIdentifier string, params map[string]string) (token stri
 
 // RefreshToken refreshes an expired OAuth token using the refresh token
 func RefreshToken(tokenIdentifier string) (string, error) {
-	storage, err := common.NewOAuthStorage()
+	storage, err := util.NewOAuthStorage()
 	if err != nil {
 		return "", fmt.Errorf("failed to create OAuth storage: %w", err)
 	}
@@ -300,7 +300,7 @@ func RefreshToken(tokenIdentifier string) (string, error) {
 	}
 
 	// Update stored token
-	newToken := &common.OAuthToken{
+	newToken := &util.OAuthToken{
 		AccessToken:  result.AccessToken,
 		RefreshToken: result.RefreshToken,
 		ExpiresAt:    time.Now().Unix() + int64(result.ExpiresIn),

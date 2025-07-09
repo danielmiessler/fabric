@@ -12,7 +12,8 @@ import (
 	"strings"
 
 	"github.com/danielmiessler/fabric/internal/chat"
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
+	"github.com/danielmiessler/fabric/internal/util"
 	"github.com/jessevdk/go-flags"
 	"golang.org/x/text/language"
 	"gopkg.in/yaml.v3"
@@ -218,7 +219,7 @@ func assignWithConversion(targetField, sourceField reflect.Value) error {
 }
 
 func loadYAMLConfig(configPath string) (*Flags, error) {
-	absPath, err := common.GetAbsolutePath(configPath)
+	absPath, err := util.GetAbsolutePath(configPath)
 	if err != nil {
 		return nil, fmt.Errorf("invalid config path: %w", err)
 	}
@@ -364,7 +365,7 @@ func validateImageParameters(imagePath, size, quality, background string, compre
 	return nil
 }
 
-func (o *Flags) BuildChatOptions() (ret *common.ChatOptions, err error) {
+func (o *Flags) BuildChatOptions() (ret *domain.ChatOptions, err error) {
 	// Validate image file if specified
 	if err = validateImageFile(o.ImageFile); err != nil {
 		return nil, err
@@ -375,7 +376,7 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions, err error) {
 		return nil, err
 	}
 
-	ret = &common.ChatOptions{
+	ret = &domain.ChatOptions{
 		Model:              o.Model,
 		Temperature:        o.Temperature,
 		TopP:               o.TopP,
@@ -395,8 +396,8 @@ func (o *Flags) BuildChatOptions() (ret *common.ChatOptions, err error) {
 	return
 }
 
-func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err error) {
-	ret = &common.ChatRequest{
+func (o *Flags) BuildChatRequest(Meta string) (ret *domain.ChatRequest, err error) {
+	ret = &domain.ChatRequest{
 		ContextName:      o.Context,
 		SessionName:      o.Session,
 		PatternName:      o.Pattern,
@@ -420,8 +421,8 @@ func (o *Flags) BuildChatRequest(Meta string) (ret *common.ChatRequest, err erro
 		}
 
 		for _, attachmentValue := range o.Attachments {
-			var attachment *common.Attachment
-			if attachment, err = common.NewAttachment(attachmentValue); err != nil {
+			var attachment *domain.Attachment
+			if attachment, err = domain.NewAttachment(attachmentValue); err != nil {
 				return
 			}
 			url := attachment.URL

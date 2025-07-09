@@ -8,7 +8,7 @@ import (
 
 	"github.com/danielmiessler/fabric/internal/chat"
 
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/danielmiessler/fabric/internal/plugins"
 )
 
@@ -64,7 +64,7 @@ func (c *Client) formatMessages(msgs []*chat.ChatCompletionMessage) string {
 	return builder.String()
 }
 
-func (c *Client) formatOptions(opts *common.ChatOptions) string {
+func (c *Client) formatOptions(opts *domain.ChatOptions) string {
 	var builder strings.Builder
 
 	builder.WriteString("Options:\n")
@@ -89,7 +89,7 @@ func (c *Client) formatOptions(opts *common.ChatOptions) string {
 	return builder.String()
 }
 
-func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) error {
+func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string) error {
 	var builder strings.Builder
 	builder.WriteString("Dry run: Would send the following request:\n\n")
 	builder.WriteString(c.formatMessages(msgs))
@@ -100,7 +100,7 @@ func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.Cha
 	return nil
 }
 
-func (c *Client) Send(_ context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (string, error) {
+func (c *Client) Send(_ context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (string, error) {
 	fmt.Println("Dry run: Would send the following request:")
 	fmt.Print(c.formatMessages(msgs))
 	fmt.Print(c.formatOptions(opts))

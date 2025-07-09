@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/danielmiessler/fabric/internal/chat"
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	openai "github.com/openai/openai-go"
 	"github.com/openai/openai-go/responses"
 	"github.com/openai/openai-go/shared"
@@ -23,7 +23,7 @@ func TestBuildResponseRequestWithMaxTokens(t *testing.T) {
 		})
 	}
 
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Temperature: 0.8,
 		TopP:        0.9,
 		Raw:         false,
@@ -49,7 +49,7 @@ func TestBuildResponseRequestNoMaxTokens(t *testing.T) {
 		})
 	}
 
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Temperature: 0.8,
 		TopP:        0.9,
 		Raw:         false,
@@ -65,7 +65,7 @@ func TestBuildResponseRequestNoMaxTokens(t *testing.T) {
 
 func TestBuildResponseParams_WithoutSearch(t *testing.T) {
 	client := NewClient()
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model:       "gpt-4o",
 		Temperature: 0.7,
 		Search:      false,
@@ -84,7 +84,7 @@ func TestBuildResponseParams_WithoutSearch(t *testing.T) {
 
 func TestBuildResponseParams_WithSearch(t *testing.T) {
 	client := NewClient()
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model:       "gpt-4o",
 		Temperature: 0.7,
 		Search:      true,
@@ -106,7 +106,7 @@ func TestBuildResponseParams_WithSearch(t *testing.T) {
 
 func TestBuildResponseParams_WithSearchAndLocation(t *testing.T) {
 	client := NewClient()
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model:          "gpt-4o",
 		Temperature:    0.7,
 		Search:         true,

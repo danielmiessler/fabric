@@ -10,24 +10,23 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/danielmiessler/fabric/internal/plugins/ai/bedrock"
-	"github.com/danielmiessler/fabric/internal/plugins/ai/exolab"
-	"github.com/danielmiessler/fabric/internal/plugins/ai/perplexity" // Added Perplexity plugin
-	"github.com/danielmiessler/fabric/internal/plugins/strategy"
-
-	"github.com/samber/lo"
-
-	"github.com/danielmiessler/fabric/internal/common"
-	"github.com/danielmiessler/fabric/internal/plugins"
-	"github.com/danielmiessler/fabric/internal/plugins/ai"
 	"github.com/danielmiessler/fabric/internal/plugins/ai/anthropic"
 	"github.com/danielmiessler/fabric/internal/plugins/ai/azure"
+	"github.com/danielmiessler/fabric/internal/plugins/ai/bedrock"
 	"github.com/danielmiessler/fabric/internal/plugins/ai/dryrun"
+	"github.com/danielmiessler/fabric/internal/plugins/ai/exolab"
 	"github.com/danielmiessler/fabric/internal/plugins/ai/gemini"
 	"github.com/danielmiessler/fabric/internal/plugins/ai/lmstudio"
 	"github.com/danielmiessler/fabric/internal/plugins/ai/ollama"
 	"github.com/danielmiessler/fabric/internal/plugins/ai/openai"
 	"github.com/danielmiessler/fabric/internal/plugins/ai/openai_compatible"
+	"github.com/danielmiessler/fabric/internal/plugins/ai/perplexity" // Added Perplexity plugin
+	"github.com/danielmiessler/fabric/internal/plugins/strategy"
+
+	"github.com/samber/lo"
+
+	"github.com/danielmiessler/fabric/internal/plugins"
+	"github.com/danielmiessler/fabric/internal/plugins/ai"
 	"github.com/danielmiessler/fabric/internal/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/internal/plugins/template"
 	"github.com/danielmiessler/fabric/internal/tools"
@@ -35,6 +34,7 @@ import (
 	"github.com/danielmiessler/fabric/internal/tools/jina"
 	"github.com/danielmiessler/fabric/internal/tools/lang"
 	"github.com/danielmiessler/fabric/internal/tools/youtube"
+	"github.com/danielmiessler/fabric/internal/util"
 )
 
 // hasAWSCredentials checks if any AWS credentials are present either in the
@@ -171,7 +171,7 @@ func (o *PluginRegistry) SaveEnvFile() (err error) {
 
 func (o *PluginRegistry) Setup() (err error) {
 	setupQuestion := plugins.NewSetupQuestion("Enter the number of the plugin to setup")
-	groupsPlugins := common.NewGroupsItemsSelector("Available plugins (please configure all required plugins):",
+	groupsPlugins := util.NewGroupsItemsSelector("Available plugins (please configure all required plugins):",
 		func(plugin plugins.Plugin) string {
 			var configuredLabel string
 			if plugin.IsConfigured() {

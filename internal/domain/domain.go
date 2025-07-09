@@ -1,4 +1,4 @@
-package common
+package domain
 
 import "github.com/danielmiessler/fabric/internal/chat"
 

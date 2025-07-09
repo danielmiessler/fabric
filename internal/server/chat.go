@@ -11,8 +11,8 @@ import (
 
 	"github.com/danielmiessler/fabric/internal/chat"
 
-	"github.com/danielmiessler/fabric/internal/common"
 	"github.com/danielmiessler/fabric/internal/core"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/danielmiessler/fabric/internal/plugins/db/fsdb"
 	"github.com/gin-gonic/gin"
 )
@@ -35,7 +35,7 @@ type PromptRequest struct {
 type ChatRequest struct {
 	Prompts            []PromptRequest `json:"prompts"`
 	Language           string          `json:"language"` // Add Language field to bind from request
-	common.ChatOptions                 // Embed the ChatOptions from common package
+	domain.ChatOptions                 // Embed the ChatOptions from common package
 }
 
 type StreamResponse struct {
@@ -112,8 +112,8 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 					return
 				}
 
-				// Pass the language received in the initial request to the common.ChatRequest
-				chatReq := &common.ChatRequest{
+				// Pass the language received in the initial request to the domain.ChatRequest
+				chatReq := &domain.ChatRequest{
 					Message: &chat.ChatCompletionMessage{
 						Role:    "user",
 						Content: p.UserInput,
@@ -124,7 +124,7 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 					Language:         request.Language, // Pass the language field
 				}
 
-				opts := &common.ChatOptions{
+				opts := &domain.ChatOptions{
 					Model:            p.Model,
 					Temperature:      request.Temperature,
 					TopP:             request.TopP,

@@ -9,7 +9,7 @@ import (
 
 	"github.com/danielmiessler/fabric/internal/chat"
 
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/danielmiessler/fabric/internal/plugins/ai"
 	"github.com/danielmiessler/fabric/internal/plugins/db/fsdb"
 	"github.com/danielmiessler/fabric/internal/plugins/strategy"
@@ -31,7 +31,7 @@ type Chatter struct {
 }
 
 // Send processes a chat request and applies file changes for create_coding_feature pattern
-func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (session *fsdb.Session, err error) {
+func (o *Chatter) Send(request *domain.ChatRequest, opts *domain.ChatOptions) (session *fsdb.Session, err error) {
 	modelToUse := opts.Model
 	if modelToUse == "" {
 		modelToUse = o.model
@@ -109,7 +109,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 
 	// Process file changes for create_coding_feature pattern
 	if request.PatternName == "create_coding_feature" {
-		summary, fileChanges, parseErr := common.ParseFileChanges(message)
+		summary, fileChanges, parseErr := domain.ParseFileChanges(message)
 		if parseErr != nil {
 			fmt.Printf("Warning: Failed to parse file changes: %v\n", parseErr)
 		} else if len(fileChanges) > 0 {
@@ -117,7 +117,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 			if err != nil {
 				fmt.Printf("Warning: Failed to get current directory: %v\n", err)
 			} else {
-				if applyErr := common.ApplyFileChanges(projectRoot, fileChanges); applyErr != nil {
+				if applyErr := domain.ApplyFileChanges(projectRoot, fileChanges); applyErr != nil {
 					fmt.Printf("Warning: Failed to apply file changes: %v\n", applyErr)
 				} else {
 					fmt.Println("Successfully applied file changes.")
@@ -136,7 +136,7 @@ func (o *Chatter) Send(request *common.ChatRequest, opts *common.ChatOptions) (s
 	return
 }
 
-func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *fsdb.Session, err error) {
+func (o *Chatter) BuildSession(request *domain.ChatRequest, raw bool) (session *fsdb.Session, err error) {
 	if request.SessionName != "" {
 		var sess *fsdb.Session
 		if sess, err = o.db.Sessions.Get(request.SessionName); err != nil {
@@ -149,7 +149,7 @@ func (o *Chatter) BuildSession(request *common.ChatRequest, raw bool) (session *
 	}
 
 	if request.Meta != "" {
-		session.Append(&chat.ChatCompletionMessage{Role: common.ChatMessageRoleMeta, Content: request.Meta})
+		session.Append(&chat.ChatCompletionMessage{Role: domain.ChatMessageRoleMeta, Content: request.Meta})
 	}
 
 	// if a context name is provided, retrieve it from the database

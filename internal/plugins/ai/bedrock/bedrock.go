@@ -9,7 +9,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/danielmiessler/fabric/internal/plugins"
 	"github.com/danielmiessler/fabric/internal/plugins/ai"
 
@@ -154,7 +154,7 @@ func (c *BedrockClient) ListModels() ([]string, error) {
 }
 
 // SendStream sends the messages to the the Bedrock ConverseStream API
-func (c *BedrockClient) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
+func (c *BedrockClient) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string) (err error) {
 	// Ensure channel is closed on all exit paths to prevent goroutine leaks
 	defer func() {
 		if r := recover(); r != nil {
@@ -208,7 +208,7 @@ func (c *BedrockClient) SendStream(msgs []*chat.ChatCompletionMessage, opts *com
 }
 
 // Send sends the messages the Bedrock Converse API
-func (c *BedrockClient) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+func (c *BedrockClient) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (ret string, err error) {
 
 	messages := c.toMessages(msgs)
 

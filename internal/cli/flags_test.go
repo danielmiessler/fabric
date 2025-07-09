@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -57,7 +57,7 @@ func TestBuildChatOptions(t *testing.T) {
 		Seed:             1,
 	}
 
-	expectedOptions := &common.ChatOptions{
+	expectedOptions := &domain.ChatOptions{
 		Temperature:      0.8,
 		TopP:             0.9,
 		PresencePenalty:  0.1,
@@ -78,7 +78,7 @@ func TestBuildChatOptionsDefaultSeed(t *testing.T) {
 		FrequencyPenalty: 0.2,
 	}
 
-	expectedOptions := &common.ChatOptions{
+	expectedOptions := &domain.ChatOptions{
 		Temperature:      0.8,
 		TopP:             0.9,
 		PresencePenalty:  0.1,

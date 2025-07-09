@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/openai/openai-go/packages/param"
 	"github.com/openai/openai-go/responses"
 )
@@ -61,7 +61,7 @@ func getOutputFormatFromExtension(imagePath string) string {
 }
 
 // addImageGenerationTool adds the image generation tool to the request if needed
-func (o *Client) addImageGenerationTool(opts *common.ChatOptions, tools []responses.ToolUnionParam) []responses.ToolUnionParam {
+func (o *Client) addImageGenerationTool(opts *domain.ChatOptions, tools []responses.ToolUnionParam) []responses.ToolUnionParam {
 	// Check if the request seems to be asking for image generation
 	if o.shouldUseImageGeneration(opts) {
 		outputFormat := getOutputFormatFromExtension(opts.ImageFile)
@@ -102,12 +102,12 @@ func (o *Client) addImageGenerationTool(opts *common.ChatOptions, tools []respon
 
 // shouldUseImageGeneration determines if image generation should be enabled
 // This is a heuristic based on the presence of --image-file flag
-func (o *Client) shouldUseImageGeneration(opts *common.ChatOptions) bool {
+func (o *Client) shouldUseImageGeneration(opts *domain.ChatOptions) bool {
 	return opts.ImageFile != ""
 }
 
 // extractAndSaveImages extracts generated images from the response and saves them
-func (o *Client) extractAndSaveImages(resp *responses.Response, opts *common.ChatOptions) error {
+func (o *Client) extractAndSaveImages(resp *responses.Response, opts *domain.ChatOptions) error {
 	if opts.ImageFile == "" {
 		return nil // No image file specified, skip saving
 	}

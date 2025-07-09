@@ -11,7 +11,7 @@ import (
 
 	"github.com/danielmiessler/fabric/internal/chat"
 
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/danielmiessler/fabric/internal/plugins"
 )
 
@@ -87,7 +87,7 @@ func (c *Client) ListModels() ([]string, error) {
 	return models, nil
 }
 
-func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
+func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string) (err error) {
 	url := fmt.Sprintf("%s/chat/completions", c.ApiUrl.Value)
 
 	payload := map[string]interface{}{
@@ -173,7 +173,7 @@ func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.Cha
 	return
 }
 
-func (c *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (content string, err error) {
+func (c *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (content string, err error) {
 	url := fmt.Sprintf("%s/chat/completions", c.ApiUrl.Value)
 
 	payload := map[string]interface{}{
@@ -235,7 +235,7 @@ func (c *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, o
 	return
 }
 
-func (c *Client) Complete(ctx context.Context, prompt string, opts *common.ChatOptions) (text string, err error) {
+func (c *Client) Complete(ctx context.Context, prompt string, opts *domain.ChatOptions) (text string, err error) {
 	url := fmt.Sprintf("%s/completions", c.ApiUrl.Value)
 
 	payload := map[string]interface{}{
@@ -291,7 +291,7 @@ func (c *Client) Complete(ctx context.Context, prompt string, opts *common.ChatO
 	return
 }
 
-func (c *Client) GetEmbeddings(ctx context.Context, input string, opts *common.ChatOptions) (embeddings []float64, err error) {
+func (c *Client) GetEmbeddings(ctx context.Context, input string, opts *domain.ChatOptions) (embeddings []float64, err error) {
 	url := fmt.Sprintf("%s/embeddings", c.ApiUrl.Value)
 
 	payload := map[string]interface{}{

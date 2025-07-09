@@ -12,7 +12,7 @@ import (
 	ollamaapi "github.com/ollama/ollama/api"
 	"github.com/samber/lo"
 
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/danielmiessler/fabric/internal/plugins"
 )
 
@@ -97,7 +97,7 @@ func (o *Client) ListModels() (ret []string, err error) {
 	return
 }
 
-func (o *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string) (err error) {
+func (o *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string) (err error) {
 	req := o.createChatRequest(msgs, opts)
 
 	respFunc := func(resp ollamaapi.ChatResponse) (streamErr error) {
@@ -115,7 +115,7 @@ func (o *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *common.Cha
 	return
 }
 
-func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (ret string, err error) {
 	bf := false
 
 	req := o.createChatRequest(msgs, opts)
@@ -132,7 +132,7 @@ func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, o
 	return
 }
 
-func (o *Client) createChatRequest(msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret ollamaapi.ChatRequest) {
+func (o *Client) createChatRequest(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (ret ollamaapi.ChatRequest) {
 	messages := lo.Map(msgs, func(message *chat.ChatCompletionMessage, _ int) (ret ollamaapi.Message) {
 		return ollamaapi.Message{Role: message.Role, Content: message.Content}
 	})

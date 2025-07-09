@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/util"
 )
 
 type StorageEntity struct {
@@ -27,7 +27,7 @@ func (o *StorageEntity) Configure() (err error) {
 // GetNames finds all patterns in the patterns directory and enters the id, name, and pattern into a slice of Entry structs. it returns these entries or an error
 func (o *StorageEntity) GetNames() (ret []string, err error) {
 	// Resolve the directory path to an absolute path
-	absDir, err := common.GetAbsolutePath(o.Dir)
+	absDir, err := util.GetAbsolutePath(o.Dir)
 	if err != nil {
 		return nil, fmt.Errorf("could not resolve directory path: %v", err)
 	}
@@ -50,7 +50,7 @@ func (o *StorageEntity) GetNames() (ret []string, err error) {
 		// Determine if the entry should be included
 		if o.ItemIsDir {
 			// Include directories or symlinks to directories
-			if fileInfo.IsDir() || (fileInfo.Mode()&os.ModeSymlink != 0 && common.IsSymlinkToDir(entryPath)) {
+			if fileInfo.IsDir() || (fileInfo.Mode()&os.ModeSymlink != 0 && util.IsSymlinkToDir(entryPath)) {
 				ret = append(ret, entry.Name())
 			}
 		} else {

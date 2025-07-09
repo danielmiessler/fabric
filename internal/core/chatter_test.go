@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/danielmiessler/fabric/internal/chat"
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/danielmiessler/fabric/internal/plugins/db/fsdb"
 )
 
@@ -44,7 +44,7 @@ func (m *mockVendor) ListModels() ([]string, error) {
 	return []string{"test-model"}, nil
 }
 
-func (m *mockVendor) SendStream(messages []*chat.ChatCompletionMessage, opts *common.ChatOptions, responseChan chan string) error {
+func (m *mockVendor) SendStream(messages []*chat.ChatCompletionMessage, opts *domain.ChatOptions, responseChan chan string) error {
 	// Send chunks if provided (for successful streaming test)
 	if m.streamChunks != nil {
 		for _, chunk := range m.streamChunks {
@@ -56,7 +56,7 @@ func (m *mockVendor) SendStream(messages []*chat.ChatCompletionMessage, opts *co
 	return m.sendStreamError
 }
 
-func (m *mockVendor) Send(ctx context.Context, messages []*chat.ChatCompletionMessage, opts *common.ChatOptions) (string, error) {
+func (m *mockVendor) Send(ctx context.Context, messages []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (string, error) {
 	return "test response", nil
 }
 
@@ -84,7 +84,7 @@ func TestChatter_Send_StreamingErrorPropagation(t *testing.T) {
 	}
 
 	// Create a test request
-	request := &common.ChatRequest{
+	request := &domain.ChatRequest{
 		Message: &chat.ChatCompletionMessage{
 			Role:    chat.ChatMessageRoleUser,
 			Content: "test message",
@@ -92,7 +92,7 @@ func TestChatter_Send_StreamingErrorPropagation(t *testing.T) {
 	}
 
 	// Create test options
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model: "test-model",
 	}
 
@@ -138,7 +138,7 @@ func TestChatter_Send_StreamingSuccessfulAggregation(t *testing.T) {
 	}
 
 	// Create a test request
-	request := &common.ChatRequest{
+	request := &domain.ChatRequest{
 		Message: &chat.ChatCompletionMessage{
 			Role:    chat.ChatMessageRoleUser,
 			Content: "test message",
@@ -146,7 +146,7 @@ func TestChatter_Send_StreamingSuccessfulAggregation(t *testing.T) {
 	}
 
 	// Create test options
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model: "test-model",
 	}
 

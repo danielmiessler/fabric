@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/danielmiessler/fabric/internal/common"
 	"github.com/danielmiessler/fabric/internal/plugins/template"
+	"github.com/danielmiessler/fabric/internal/util"
 )
 
 const inputSentinel = "__FABRIC_INPUT_SENTINEL_TOKEN__"
@@ -39,7 +39,7 @@ func (o *PatternsEntity) GetApplyVariables(
 
 	if isFilePath {
 		// Resolve the file path using GetAbsolutePath
-		absPath, err := common.GetAbsolutePath(source)
+		absPath, err := util.GetAbsolutePath(source)
 		if err != nil {
 			return nil, fmt.Errorf("could not resolve file path: %v", err)
 		}

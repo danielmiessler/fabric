@@ -9,8 +9,9 @@ import (
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
 	"github.com/danielmiessler/fabric/internal/chat"
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/danielmiessler/fabric/internal/plugins"
+	"github.com/danielmiessler/fabric/internal/util"
 )
 
 const defaultBaseUrl = "https://api.anthropic.com/"
@@ -59,7 +60,7 @@ func (an *Client) IsConfigured() bool {
 
 	// Check if OAuth is enabled and has a valid token
 	if plugins.ParseBoolElseFalse(an.UseOAuth.Value) {
-		storage, err := common.NewOAuthStorage()
+		storage, err := util.NewOAuthStorage()
 		if err != nil {
 			return false
 		}
@@ -102,7 +103,7 @@ func (an *Client) Setup() (err error) {
 
 	if plugins.ParseBoolElseFalse(an.UseOAuth.Value) {
 		// Check if we have a valid stored token
-		storage, err := common.NewOAuthStorage()
+		storage, err := util.NewOAuthStorage()
 		if err != nil {
 			return err
 		}
@@ -147,7 +148,7 @@ func (an *Client) ListModels() (ret []string, err error) {
 }
 
 func (an *Client) SendStream(
-	msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
+	msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string,
 ) (err error) {
 	messages := an.toMessages(msgs)
 	if len(messages) == 0 {
@@ -176,7 +177,7 @@ func (an *Client) SendStream(
 	return
 }
 
-func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *common.ChatOptions) (
+func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *domain.ChatOptions) (
 	params anthropic.MessageNewParams) {
 
 	params = anthropic.MessageNewParams{
@@ -219,7 +220,7 @@ func (an *Client) buildMessageParams(msgs []anthropic.MessageParam, opts *common
 	return
 }
 
-func (an *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (
+func (an *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (
 	ret string, err error) {
 
 	messages := an.toMessages(msgs)

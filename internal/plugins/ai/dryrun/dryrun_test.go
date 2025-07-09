@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/danielmiessler/fabric/internal/chat"
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 )
 
 // Test generated using Keploy
@@ -36,7 +36,7 @@ func TestSendStream_SendsMessages(t *testing.T) {
 	msgs := []*chat.ChatCompletionMessage{
 		{Role: "user", Content: "Test message"},
 	}
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model: "dry-run-model",
 	}
 	channel := make(chan string)

@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/danielmiessler/fabric/internal/chat"
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/danielmiessler/fabric/internal/plugins"
 	openai "github.com/openai/openai-go"
 	"github.com/openai/openai-go/option"
@@ -88,7 +88,7 @@ func (o *Client) ListModels() (ret []string, err error) {
 }
 
 func (o *Client) SendStream(
-	msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
+	msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string,
 ) (err error) {
 	// Use Responses API for OpenAI, Chat Completions API for other providers
 	if o.supportsResponsesAPI() {
@@ -98,7 +98,7 @@ func (o *Client) SendStream(
 }
 
 func (o *Client) sendStreamResponses(
-	msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions, channel chan string,
+	msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string,
 ) (err error) {
 	defer close(channel)
 
@@ -119,7 +119,7 @@ func (o *Client) sendStreamResponses(
 	return stream.Err()
 }
 
-func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (ret string, err error) {
 	// Use Responses API for OpenAI, Chat Completions API for other providers
 	if o.supportsResponsesAPI() {
 		return o.sendResponses(ctx, msgs, opts)
@@ -127,7 +127,7 @@ func (o *Client) Send(ctx context.Context, msgs []*chat.ChatCompletionMessage, o
 	return o.sendChatCompletions(ctx, msgs, opts)
 }
 
-func (o *Client) sendResponses(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *common.ChatOptions) (ret string, err error) {
+func (o *Client) sendResponses(ctx context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (ret string, err error) {
 	// Validate model supports image generation if image file is specified
 	if opts.ImageFile != "" && !supportsImageGeneration(opts.Model) {
 		return "", fmt.Errorf("model '%s' does not support image generation. Supported models: %s", opts.Model, strings.Join(ImageGenerationSupportedModels, ", "))
@@ -175,7 +175,7 @@ func (o *Client) NeedsRawMode(modelName string) bool {
 }
 
 func (o *Client) buildResponseParams(
-	inputMsgs []*chat.ChatCompletionMessage, opts *common.ChatOptions,
+	inputMsgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions,
 ) (ret responses.ResponseNewParams) {
 
 	items := make([]responses.ResponseInputItemUnionParam, len(inputMsgs))

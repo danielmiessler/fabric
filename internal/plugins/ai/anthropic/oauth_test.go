@@ -26,12 +26,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/util"
 )
 
 // createTestToken creates a test OAuth token
-func createTestToken(accessToken, refreshToken string, expiresIn int64) *common.OAuthToken {
-	return &common.OAuthToken{
+func createTestToken(accessToken, refreshToken string, expiresIn int64) *util.OAuthToken {
+	return &util.OAuthToken{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		ExpiresAt:    time.Now().Unix() + expiresIn,
@@ -41,8 +41,8 @@ func createTestToken(accessToken, refreshToken string, expiresIn int64) *common.
 }
 
 // createExpiredToken creates an expired test token
-func createExpiredToken(accessToken, refreshToken string) *common.OAuthToken {
-	return &common.OAuthToken{
+func createExpiredToken(accessToken, refreshToken string) *util.OAuthToken {
+	return &util.OAuthToken{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		ExpiresAt:    time.Now().Unix() - 3600, // Expired 1 hour ago
@@ -188,7 +188,7 @@ func TestRefreshToken_NoRefreshToken(t *testing.T) {
 	os.Setenv("HOME", fakeHome)
 
 	// Create a token without refresh token
-	tokenWithoutRefresh := &common.OAuthToken{
+	tokenWithoutRefresh := &util.OAuthToken{
 		AccessToken:  "access_token",
 		RefreshToken: "", // No refresh token
 		ExpiresAt:    time.Now().Unix() - 3600,

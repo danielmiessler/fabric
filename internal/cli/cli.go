@@ -10,8 +10,8 @@ import (
 
 	"github.com/danielmiessler/fabric/internal/tools/youtube"
 
-	"github.com/danielmiessler/fabric/internal/common"
 	"github.com/danielmiessler/fabric/internal/core"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/danielmiessler/fabric/internal/plugins/ai"
 	"github.com/danielmiessler/fabric/internal/plugins/db/fsdb"
 	restapi "github.com/danielmiessler/fabric/internal/server"
@@ -262,7 +262,7 @@ func Cli(version string) (err error) {
 	}
 
 	var session *fsdb.Session
-	var chatReq *common.ChatRequest
+	var chatReq *domain.ChatRequest
 	if chatReq, err = currentFlags.BuildChatRequest(strings.Join(os.Args[1:], " ")); err != nil {
 		return
 	}
@@ -270,7 +270,7 @@ func Cli(version string) (err error) {
 	if chatReq.Language == "" {
 		chatReq.Language = registry.Language.DefaultLanguage.Value
 	}
-	var chatOptions *common.ChatOptions
+	var chatOptions *domain.ChatOptions
 	if chatOptions, err = currentFlags.BuildChatOptions(); err != nil {
 		return
 	}

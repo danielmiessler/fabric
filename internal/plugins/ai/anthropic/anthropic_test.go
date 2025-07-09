@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/anthropics/anthropic-sdk-go"
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 )
 
 // Test generated using Keploy
@@ -70,7 +70,7 @@ func TestClient_ListModels_ReturnsCorrectModels(t *testing.T) {
 
 func TestBuildMessageParams_WithoutSearch(t *testing.T) {
 	client := NewClient()
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model:       "claude-3-5-sonnet-latest",
 		Temperature: 0.7,
 		Search:      false,
@@ -97,7 +97,7 @@ func TestBuildMessageParams_WithoutSearch(t *testing.T) {
 
 func TestBuildMessageParams_WithSearch(t *testing.T) {
 	client := NewClient()
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model:       "claude-3-5-sonnet-latest",
 		Temperature: 0.7,
 		Search:      true,
@@ -133,7 +133,7 @@ func TestBuildMessageParams_WithSearch(t *testing.T) {
 
 func TestBuildMessageParams_WithSearchAndLocation(t *testing.T) {
 	client := NewClient()
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model:          "claude-3-5-sonnet-latest",
 		Temperature:    0.7,
 		Search:         true,

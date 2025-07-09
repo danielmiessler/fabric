@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/danielmiessler/fabric/internal/chat"
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 )
 
 type SessionsEntity struct {
@@ -69,7 +69,7 @@ func (o *Session) GetVendorMessages() (ret []*chat.ChatCompletionMessage) {
 }
 
 func (o *Session) appendVendorMessage(message *chat.ChatCompletionMessage) {
-	if message.Role != common.ChatMessageRoleMeta {
+	if message.Role != domain.ChatMessageRoleMeta {
 		o.vendorMessages = append(o.vendorMessages, message)
 	}
 }

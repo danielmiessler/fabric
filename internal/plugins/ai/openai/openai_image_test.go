@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/danielmiessler/fabric/internal/chat"
-	"github.com/danielmiessler/fabric/internal/common"
+	"github.com/danielmiessler/fabric/internal/domain"
 	"github.com/openai/openai-go/responses"
 	"github.com/stretchr/testify/assert"
 )
@@ -15,13 +15,13 @@ func TestShouldUseImageGeneration(t *testing.T) {
 	client := NewClient()
 
 	// Test with image file specified
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		ImageFile: "output.png",
 	}
 	assert.True(t, client.shouldUseImageGeneration(opts), "Should use image generation when image file is specified")
 
 	// Test without image file
-	opts = &common.ChatOptions{
+	opts = &domain.ChatOptions{
 		ImageFile: "",
 	}
 	assert.False(t, client.shouldUseImageGeneration(opts), "Should not use image generation when no image file is specified")
@@ -31,7 +31,7 @@ func TestAddImageGenerationTool(t *testing.T) {
 	client := NewClient()
 
 	// Test with image generation enabled
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		ImageFile: "output.png",
 	}
 	tools := []responses.ToolUnionParam{}
@@ -44,7 +44,7 @@ func TestAddImageGenerationTool(t *testing.T) {
 	assert.Equal(t, "png", result[0].OfImageGeneration.OutputFormat)
 
 	// Test without image generation
-	opts = &common.ChatOptions{
+	opts = &domain.ChatOptions{
 		ImageFile: "",
 	}
 	tools = []responses.ToolUnionParam{}
@@ -55,7 +55,7 @@ func TestAddImageGenerationTool(t *testing.T) {
 
 func TestBuildResponseParams_WithImageGeneration(t *testing.T) {
 	client := NewClient()
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model:     "gpt-image-1",
 		ImageFile: "output.png",
 	}
@@ -83,7 +83,7 @@ func TestBuildResponseParams_WithImageGeneration(t *testing.T) {
 
 func TestBuildResponseParams_WithBothSearchAndImage(t *testing.T) {
 	client := NewClient()
-	opts := &common.ChatOptions{
+	opts := &domain.ChatOptions{
 		Model:          "gpt-image-1",
 		Search:         true,
 		SearchLocation: "America/Los_Angeles",
@@ -208,7 +208,7 @@ func TestAddImageGenerationToolWithDynamicFormat(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			opts := &common.ChatOptions{
+			opts := &domain.ChatOptions{
 				ImageFile: tt.imageFile,
 			}
 
@@ -299,7 +299,7 @@ func TestSupportsImageGeneration(t *testing.T) {
 
 func TestModelValidationLogic(t *testing.T) {
 	t.Run("Unsupported model with image file should return validation error", func(t *testing.T) {
-		opts := &common.ChatOptions{
+		opts := &domain.ChatOptions{
 			Model:     "o1-mini",
 			ImageFile: "/tmp/output.png",
 		}
@@ -317,7 +317,7 @@ func TestModelValidationLogic(t *testing.T) {
 	})
 
 	t.Run("Supported model with image file should not trigger validation", func(t *testing.T) {
-		opts := &common.ChatOptions{
+		opts := &domain.ChatOptions{
 			Model:     "gpt-4o",
 			ImageFile: "/tmp/output.png",
 		}
@@ -328,7 +328,7 @@ func TestModelValidationLogic(t *testing.T) {
 	})
 
 	t.Run("Unsupported model without image file should not trigger validation", func(t *testing.T) {
-		opts := &common.ChatOptions{
+		opts := &domain.ChatOptions{
 			Model:     "o1-mini",
 			ImageFile: "", // No image file
 		}
@@ -344,12 +344,12 @@ func TestAddImageGenerationToolWithUserParameters(t *testing.T) {
 
 	tests := []struct {
 		name     string
-		opts     *common.ChatOptions
+		opts     *domain.ChatOptions
 		expected map[string]interface{}
 	}{
 		{
 			name: "All parameters specified",
-			opts: &common.ChatOptions{
+			opts: &domain.ChatOptions{
 				ImageFile:        "/tmp/test.png",
 				ImageSize:        "1536x1024",
 				ImageQuality:     "high",
@@ -365,7 +365,7 @@ func TestAddImageGenerationToolWithUserParameters(t *testing.T) {
 		},
 		{
 			name: "JPEG with compression",
-			opts: &common.ChatOptions{
+			opts: &domain.ChatOptions{
 				ImageFile:        "/tmp/test.jpg",
 				ImageSize:        "1024x1024",
 				ImageQuality:     "medium",
@@ -382,7 +382,7 @@ func TestAddImageGenerationToolWithUserParameters(t *testing.T) {
 		},
 		{
 			name: "Only some parameters specified",
-			opts: &common.ChatOptions{
+			opts: &domain.ChatOptions{
 				ImageFile:    "/tmp/test.webp",
 				ImageQuality: "low",
 			},
@@ -393,7 +393,7 @@ func TestAddImageGenerationToolWithUserParameters(t *testing.T) {
 		},
 		{
 			name: "No parameters specified (defaults)",
-			opts: &common.ChatOptions{
+			opts: &domain.ChatOptions{
 				ImageFile: "/tmp/test.png",
 			},
 			expected: map[string]interface{}{
