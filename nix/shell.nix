@@ -24,7 +24,7 @@
     ];
 
     shellHook = ''
-      echo -e "\033[0;32;4mHeper commands:\033[0m"
+      echo -e "\033[0;32;4mHelper commands:\033[0m"
       echo "'update-mod' instead of 'go get -u && go mod tidy && gomod2nix generate --outdir nix/pkgs/fabric'"
     '';
   };
