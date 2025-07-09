@@ -3,7 +3,7 @@ Fabric is graciously supported by…
 
 [![Github Repo Tagline](https://github.com/user-attachments/assets/96ab3d81-9b13-4df4-ba09-75dee7a5c3d2)](https://warp.dev/fabric)
 
-<img src="./images/fabric-logo-gif.gif" alt="fabriclogo" width="400" height="400"/>
+<img src="./docs/images/fabric-logo-gif.gif" alt="fabriclogo" width="400" height="400"/>
 
 # `fabric`
 
@@ -628,7 +628,7 @@ Now let's look at some things you can do with Fabric.
 <br />
 <br />
 
-If you're not looking to do anything fancy, and you just want a lot of great prompts, you can navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/patterns) directory and start exploring!
+If you're not looking to do anything fancy, and you just want a lot of great prompts, you can navigate to the [`/patterns`](https://github.com/danielmiessler/fabric/tree/main/data/patterns) directory and start exploring!
 
 We hope that if you used nothing else from Fabric, the Patterns by themselves will make the project useful.
 
@@ -644,7 +644,7 @@ be used in addition to the basic patterns.
 See the [Thinking Faster by Writing Less](https://arxiv.org/pdf/2502.18600) paper and
 the [Thought Generation section of Learn Prompting](https://learnprompting.org/docs/advanced/thought_generation/introduction) for examples of prompt strategies.
 
-Each strategy is available as a small `json` file in the [`/strategies`](https://github.com/danielmiessler/fabric/tree/main/strategies) directory.
+Each strategy is available as a small `json` file in the [`/strategies`](https://github.com/danielmiessler/fabric/tree/main/data/strategies) directory.
 
 The prompt modification of the strategy is applied to the system prompt and passed on to the
 LLM in the chat session.
@@ -736,7 +736,7 @@ Make sure you have a LaTeX distribution (like TeX Live or MiKTeX) installed on y
 It generates a `json` representation of a directory of code that can be fed into an AI model
 with instructions to create a new feature or edit the code in a specified way.
 
-See [the Create Coding Feature Pattern README](./patterns/create_coding_feature/README.md) for details.
+See [the Create Coding Feature Pattern README](./data/patterns/create_coding_feature/README.md) for details.
 
 Install it first using:
 
