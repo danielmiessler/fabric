@@ -19,13 +19,13 @@
       (pkgs.writeShellScriptBin "update-mod" ''
         go get -u
         go mod tidy
-        gomod2nix generate
+        gomod2nix generate --outdir nix/pkgs/fabric
       '')
     ];
 
     shellHook = ''
       echo -e "\033[0;32;4mHeper commands:\033[0m"
-      echo "'update-mod' instead of 'go get -u && go mod tidy'"
+      echo "'update-mod' instead of 'go get -u && go mod tidy && gomod2nix generate --outdir nix/pkgs/fabric'"
     '';
   };
 }
