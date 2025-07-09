@@ -178,7 +178,7 @@ This is the high-level view of the proposed structure. It incorporates the core 
 
 ### **Required Homebrew Formula Update**
 
-WE have a draft PR ready here: <https://github.com/Homebrew/homebrew-core/pull/229472>
+I have a draft PR ready here: <https://github.com/Homebrew/homebrew-core/pull/229472>
 
 The current Homebrew formula at `https://raw.githubusercontent.com/ksylvan/homebrew-core/refs/heads/main/Formula/f/fabric-ai.rb` will need to be updated to work with the new project structure:
 
