@@ -7,7 +7,7 @@ Generate code changes to an existing coding project using AI.
 After installing the `code_helper` binary:
 
 ```bash
-go install github.com/danielmiessler/fabric/plugins/tools/code_helper@latest
+go install github.com/danielmiessler/fabric/cmd/code_helper@latest
 ```
 
 ## Usage
