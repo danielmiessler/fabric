@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/danielmiessler/fabric/internal/plugins"
 	"github.com/danielmiessler/fabric/internal/plugins/db/fsdb"
@@ -57,7 +56,11 @@ type PatternsLoader struct {
 func (o *PatternsLoader) configure() (err error) {
 	o.pathPatternsPrefix = fmt.Sprintf("%v/", o.DefaultFolder.Value)
 	// Use a consistent temp folder name regardless of the source path structure
-	o.tempPatternsFolder = filepath.Join(os.TempDir(), fmt.Sprintf("fabric-patterns-%d", time.Now().UnixNano()))
+	tempDir, err := os.MkdirTemp("", "fabric-patterns-")
+	if err != nil {
+		return fmt.Errorf("failed to create temporary patterns folder: %w", err)
+	}
+	o.tempPatternsFolder = tempDir
 
 	return
 }
@@ -190,7 +193,7 @@ func (o *PatternsLoader) movePatterns() (err error) {
 
 	//create an empty file to indicate that the patterns have been updated if not exists
 	if _, err = os.Create(o.loadedFilePath); err != nil {
-		return
+		return fmt.Errorf("failed to create loaded marker file '%s': %w", o.loadedFilePath, err)
 	}
 
 	err = os.RemoveAll(patternsDir)
@@ -243,7 +246,9 @@ func (o *PatternsLoader) tryPathMigration() (err error) {
 		testTempFolder := filepath.Join(os.TempDir(), "fabric-patterns-test")
 
 		// Clean up any existing test temp folder
-		os.RemoveAll(testTempFolder)
+		if err := os.RemoveAll(testTempFolder); err != nil {
+			fmt.Printf("Warning: failed to remove test temporary folder '%s': %v\n", testTempFolder, err)
+		}
 
 		// Test if the new path works
 		testErr := githelper.FetchFilesFromRepo(githelper.FetchOptions{

@@ -3,6 +3,7 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/danielmiessler/fabric/internal/core"
@@ -26,7 +27,7 @@ func Cli(version string) (err error) {
 	var registry, err2 = initializeFabric()
 	if err2 != nil {
 		if !currentFlags.Setup {
-			println(err2.Error())
+			fmt.Fprintln(os.Stderr, err2.Error())
 			currentFlags.Setup = true
 		}
 		// Return early if registry is nil to prevent panics in subsequent handlers
