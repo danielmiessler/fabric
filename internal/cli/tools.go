@@ -56,7 +56,11 @@ func handleToolProcessing(currentFlags *Flags, registry *core.PluginRegistry) (m
 		}
 	}
 
-	if (currentFlags.ScrapeURL != "" || currentFlags.ScrapeQuestion != "") && registry.Jina.IsConfigured() {
+	if currentFlags.ScrapeURL != "" || currentFlags.ScrapeQuestion != "" {
+		if !registry.Jina.IsConfigured() {
+			err = fmt.Errorf("scraping functionality is not configured. Please set up Jina to enable scraping")
+			return
+		}
 		// Check if the scrape_url flag is set and call ScrapeURL
 		if currentFlags.ScrapeURL != "" {
 			var website string
