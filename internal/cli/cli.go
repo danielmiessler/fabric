@@ -14,8 +14,8 @@ import (
 	"github.com/danielmiessler/fabric/internal/core"
 	"github.com/danielmiessler/fabric/internal/plugins/ai"
 	"github.com/danielmiessler/fabric/internal/plugins/db/fsdb"
+	restapi "github.com/danielmiessler/fabric/internal/server"
 	"github.com/danielmiessler/fabric/internal/tools/converter"
-	"github.com/danielmiessler/fabric/internal/server"
 )
 
 // Cli Controls the cli. It takes in the flags and runs the appropriate functions
