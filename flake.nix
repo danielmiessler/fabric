@@ -71,6 +71,7 @@
           default = self.packages.${system}.fabric;
           fabric = pkgs.callPackage ./nix/pkgs/fabric {
             go = goVersion;
+            inherit self;
             inherit (gomod2nix.legacyPackages.${system}) buildGoApplication;
           };
           inherit (gomod2nix.legacyPackages.${system}) gomod2nix;

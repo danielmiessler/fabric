@@ -1,4 +1,5 @@
 {
+  self,
   lib,
   buildGoApplication,
   go,
@@ -8,8 +9,8 @@
 buildGoApplication {
   pname = "fabric-ai";
   version = import ./version.nix;
-  src = ../../../.;
-  pwd = ../../../.;
+  src = self;
+  pwd = self;
   modules = ./gomod2nix.toml;
 
   doCheck = false;
