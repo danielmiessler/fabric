@@ -16,7 +16,7 @@
       gomod2nix
       goEnv
 
-      (pkgs.writeShellScriptBin "update" ''
+      (pkgs.writeShellScriptBin "update-mod" ''
         go get -u
         go mod tidy
         gomod2nix generate
@@ -25,7 +25,7 @@
 
     shellHook = ''
       echo -e "\033[0;32;4mHeper commands:\033[0m"
-      echo "'update' instead of 'go get -u && go mod tidy'"
+      echo "'update-mod' instead of 'go get -u && go mod tidy'"
     '';
   };
 }
