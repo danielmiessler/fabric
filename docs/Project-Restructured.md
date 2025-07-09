@@ -151,7 +151,7 @@ This is the high-level view of the proposed structure. It incorporates the core 
     * ✅ Run `go build ./cmd/to_pdf` to ensure the PDF tool compiles correctly.
     * ✅ Execute the full test suite with `go test ./...`.
     * ✅ Run all applications and manually test the CLI, API, pattern loading, and helper tools to confirm all functionality is intact.
-    * ⚠️ Verify that external packaging and distribution methods, such as the Homebrew package, continue to build correctly after the reorganization.
+    * ⚠️ Verify that external packaging and distribution methods, such as the Homebrew package, continue to build correctly after the reorganization. **Note:** The Homebrew formula will need to be updated to build from `./cmd/fabric` instead of the root directory.
     * ⚠️ Test that `go install github.com/danielmiessler/fabric/cmd/fabric@latest` works for all three tools.
 
 ---
@@ -175,5 +175,45 @@ This is the high-level view of the proposed structure. It incorporates the core 
 
 * External packaging verification (Homebrew, etc.) - requires separate testing
 * `go install` command verification - requires publishing/tagging
+
+### **Required Homebrew Formula Update**
+
+WE have a draft PR ready here: <https://github.com/Homebrew/homebrew-core/pull/229472>
+
+The current Homebrew formula at `https://raw.githubusercontent.com/ksylvan/homebrew-core/refs/heads/main/Formula/f/fabric-ai.rb` will need to be updated to work with the new project structure:
+
+**Current formula build command:**
+
+```ruby
+def install
+  system "go", "build", *std_go_args(ldflags: "-s -w")
+end
+```
+
+**Required update for new structure:**
+
+```ruby
+def install
+  system "go", "build", *std_go_args(ldflags: "-s -w"), "./cmd/fabric"
+end
+```
+
+**Additional considerations:**
+
+* The formula currently builds from the root `main.go` (which no longer exists)
+* After restructuring, it needs to build from `./cmd/fabric`
+* The binary name and test commands should remain the same
+* All three tools (`fabric`, `code_helper`, `to_pdf`) could potentially be packaged, but the main `fabric` binary is the primary target
+
+**`go install` commands for new structure:**
+
+```bash
+# Main fabric tool
+go install github.com/danielmiessler/fabric/cmd/fabric@latest
+
+# Additional tools (if desired)
+go install github.com/danielmiessler/fabric/cmd/code_helper@latest
+go install github.com/danielmiessler/fabric/cmd/to_pdf@latest
+```
 
 The project now follows standard Go conventions and is ready for review and merge.
