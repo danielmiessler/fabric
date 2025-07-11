@@ -26,7 +26,7 @@ func (c *Client) DirectlyGetModels(ctx context.Context) ([]string, error) {
 	}
 	baseURL := c.ApiBaseURL.Value
 	if baseURL == "" {
-		return nil, fmt.Errorf("API base URL not configured")
+		return nil, fmt.Errorf("API base URL not configured for provider %s", c.GetName())
 	}
 
 	// Build the /models endpoint URL
