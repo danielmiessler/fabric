@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
+	"net/url"
 	"time"
 )
 
@@ -19,20 +19,18 @@ type Model struct {
 // when the standard OpenAI SDK method fails due to a nonstandard format.
 // This is useful for providers like Together that return a direct array of models.
 func (c *Client) DirectlyGetModels() ([]string, error) {
-	url := c.ApiBaseURL.Value
-	if url == "" {
+	baseURL := c.ApiBaseURL.Value
+	if baseURL == "" {
 		return nil, fmt.Errorf("API base URL not configured")
 	}
 
-	// Ensure URL ends with /models
-	if !strings.HasSuffix(url, "/models") {
-		if !strings.HasSuffix(url, "/") {
-			url += "/"
-		}
-		url += "models"
+	// Build the /models endpoint URL
+	fullURL, err := url.JoinPath(baseURL, "models")
+	if err != nil {
+		return nil, fmt.Errorf("failed to create models URL: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(context.Background(), "GET", url, nil)
+	req, err := http.NewRequestWithContext(context.Background(), "GET", fullURL, nil)
 	if err != nil {
 		return nil, err
 	} else {
