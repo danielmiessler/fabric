@@ -7,7 +7,13 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
+
+// Model represents a model returned by the API
+type Model struct {
+	ID string `json:"id"`
+}
 
 // DirectlyGetModels is used to fetch models directly from the API
 // when the standard OpenAI SDK method fails due to a nonstandard format.
@@ -29,12 +35,14 @@ func (c *Client) DirectlyGetModels() ([]string, error) {
 	req, err := http.NewRequestWithContext(context.Background(), "GET", url, nil)
 	if err != nil {
 		return nil, err
+	} else {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.ApiKey.Value))
+		req.Header.Set("Accept", "application/json")
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.ApiKey.Value))
-	req.Header.Set("Accept", "application/json")
-
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -60,32 +68,25 @@ func (c *Client) DirectlyGetModels() ([]string, error) {
 
 	// Try to parse as an object with data field (OpenAI format)
 	var openAIFormat struct {
-		Data []struct {
-			ID string `json:"id"`
-		} `json:"data"`
+		Data []Model `json:"data"`
 	}
 	// Try to parse as a direct array (Together format)
-	var directArray []struct {
-		ID string `json:"id"`
-	}
+	var directArray []Model
 
 	if err := json.Unmarshal(body, &openAIFormat); err == nil && len(openAIFormat.Data) > 0 {
-		var modelIDs []string
-		return extractModelIDs(openAIFormat.Data, modelIDs)
+		return extractModelIDs(openAIFormat.Data)
 	}
 
 	if err := json.Unmarshal(body, &directArray); err == nil && len(directArray) > 0 {
-		var modelIDs []string
-		return extractModelIDs(directArray, modelIDs)
+		return extractModelIDs(directArray)
 	}
 
 	return nil, fmt.Errorf("unable to parse models response; raw response: %s", string(body))
 }
 
-func extractModelIDs(directArray []struct {
-	ID string "json:\"id\""
-}, modelIDs []string) ([]string, error) {
-	for _, model := range directArray {
+func extractModelIDs(models []Model) ([]string, error) {
+	var modelIDs []string
+	for _, model := range models {
 		modelIDs = append(modelIDs, model.ID)
 	}
 	return modelIDs, nil
