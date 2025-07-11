@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -71,7 +72,7 @@ func (t *OAuthTransport) getValidToken(tokenIdentifier string) (string, error) {
 	}
 	// If no token exists, run OAuth flow
 	if token == nil {
-		fmt.Println("No OAuth token found, initiating authentication...")
+		fmt.Fprintln(os.Stderr, "No OAuth token found, initiating authentication...")
 		newAccessToken, err := RunOAuthFlow(tokenIdentifier)
 		if err != nil {
 			return "", fmt.Errorf("failed to authenticate: %w", err)
@@ -81,11 +82,11 @@ func (t *OAuthTransport) getValidToken(tokenIdentifier string) (string, error) {
 
 	// Check if token needs refresh (5 minute buffer)
 	if token.IsExpired(5) {
-		fmt.Println("OAuth token expired, refreshing...")
+		fmt.Fprintln(os.Stderr, "OAuth token expired, refreshing...")
 		newAccessToken, err := RefreshToken(tokenIdentifier)
 		if err != nil {
 			// If refresh fails, try re-authentication
-			fmt.Println("Token refresh failed, re-authenticating...")
+			fmt.Fprintln(os.Stderr, "Token refresh failed, re-authenticating...")
 			newAccessToken, err = RunOAuthFlow(tokenIdentifier)
 			if err != nil {
 				return "", fmt.Errorf("failed to refresh or re-authenticate: %w", err)
@@ -137,13 +138,13 @@ func RunOAuthFlow(tokenIdentifier string) (token string, err error) {
 		if err == nil && existingToken != nil {
 			// If token exists but is expired, try refreshing first
 			if existingToken.IsExpired(5) {
-				fmt.Println("Found expired OAuth token, attempting refresh...")
+				fmt.Fprintln(os.Stderr, "Found expired OAuth token, attempting refresh...")
 				refreshedToken, refreshErr := RefreshToken(tokenIdentifier)
 				if refreshErr == nil {
-					fmt.Println("Token refresh successful")
+					fmt.Fprintln(os.Stderr, "Token refresh successful")
 					return refreshedToken, nil
 				}
-				fmt.Printf("Token refresh failed (%v), proceeding with full OAuth flow...\n", refreshErr)
+				fmt.Fprintf(os.Stderr, "Token refresh failed (%v), proceeding with full OAuth flow...\n", refreshErr)
 			} else {
 				// Token exists and is still valid
 				return existingToken.AccessToken, nil
@@ -170,10 +171,10 @@ func RunOAuthFlow(tokenIdentifier string) (token string, err error) {
 		oauth2.SetAuthURLParam("state", verifier),
 	)
 
-	fmt.Println("Open the following URL in your browser. Fabric would like to authorize:")
-	fmt.Println(authURL)
+	fmt.Fprintln(os.Stderr, "Open the following URL in your browser. Fabric would like to authorize:")
+	fmt.Fprintln(os.Stderr, authURL)
 	openBrowser(authURL)
-	fmt.Print("Paste the authorization code here: ")
+	fmt.Fprint(os.Stderr, "Paste the authorization code here: ")
 	var code string
 	fmt.Scanln(&code)
 	parts := strings.SplitN(code, "#", 2)
