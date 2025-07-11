@@ -39,10 +39,12 @@ func (c *Client) DirectlyGetModels(ctx context.Context) ([]string, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", fullURL, nil)
 	if err != nil {
 		return nil, err
-	} else {
-		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.ApiKey.Value))
-		req.Header.Set("Accept", "application/json")
 	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.ApiKey.Value))
+	req.Header.Set("Accept", "application/json")
+
+	// TODO: Consider reusing a single http.Client instance (e.g., as a field on Client) instead of allocating a new one for each request.
 
 	client := &http.Client{
 		Timeout: 10 * time.Second,
@@ -86,7 +88,7 @@ func (c *Client) DirectlyGetModels(ctx context.Context) ([]string, error) {
 		return extractModelIDs(directArray), nil
 	}
 
-	return nil, fmt.Errorf("unable to parse models response; raw response: %s", string(bodyBytes))
+	return nil, fmt.Errorf("unable to parse models response; raw response: %s", string(bodyBytes)[:errorResponseLimit])
 }
 
 func extractModelIDs(models []Model) []string {
