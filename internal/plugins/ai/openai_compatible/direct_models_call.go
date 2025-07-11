@@ -65,8 +65,9 @@ func (c *Client) DirectlyGetModels(ctx context.Context) ([]string, error) {
 	}
 
 	// Read the response body
-	var body json.RawMessage
-	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
+	// Read the response body once
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
 		return nil, err
 	}
 
@@ -77,15 +78,15 @@ func (c *Client) DirectlyGetModels(ctx context.Context) ([]string, error) {
 	// Try to parse as a direct array (Together format)
 	var directArray []Model
 
-	if err := json.Unmarshal(body, &openAIFormat); err == nil && len(openAIFormat.Data) > 0 {
+	if err := json.Unmarshal(bodyBytes, &openAIFormat); err == nil && len(openAIFormat.Data) > 0 {
 		return extractModelIDs(openAIFormat.Data), nil
 	}
 
-	if err := json.Unmarshal(body, &directArray); err == nil && len(directArray) > 0 {
+	if err := json.Unmarshal(bodyBytes, &directArray); err == nil && len(directArray) > 0 {
 		return extractModelIDs(directArray), nil
 	}
 
-	return nil, fmt.Errorf("unable to parse models response; raw response: %s", string(body))
+	return nil, fmt.Errorf("unable to parse models response; raw response: %s", string(bodyBytes))
 }
 
 func extractModelIDs(models []Model) []string {
