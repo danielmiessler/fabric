@@ -15,7 +15,8 @@ type Model struct {
 	ID string `json:"id"`
 }
 
-const errorResponseLimit = 500
+// ErrorResponseLimit defines the maximum length of error response bodies for truncation.
+const errorResponseLimit = 1024 // Limit for error response body size
 
 // DirectlyGetModels is used to fetch models directly from the API
 // when the standard OpenAI SDK method fails due to a nonstandard format.
@@ -77,20 +78,20 @@ func (c *Client) DirectlyGetModels(ctx context.Context) ([]string, error) {
 	var directArray []Model
 
 	if err := json.Unmarshal(body, &openAIFormat); err == nil && len(openAIFormat.Data) > 0 {
-		return extractModelIDs(openAIFormat.Data)
+		return extractModelIDs(openAIFormat.Data), nil
 	}
 
 	if err := json.Unmarshal(body, &directArray); err == nil && len(directArray) > 0 {
-		return extractModelIDs(directArray)
+		return extractModelIDs(directArray), nil
 	}
 
 	return nil, fmt.Errorf("unable to parse models response; raw response: %s", string(body))
 }
 
-func extractModelIDs(models []Model) ([]string, error) {
+func extractModelIDs(models []Model) []string {
 	var modelIDs []string
 	for _, model := range models {
 		modelIDs = append(modelIDs, model.ID)
 	}
-	return modelIDs, nil
+	return modelIDs
 }

@@ -40,6 +40,8 @@ func (c *Client) ListModels() ([]string, error) {
 		return models, nil
 	}
 
+	// TODO: Handle context properly in Fabric by accepting and propagating a context.Context
+	// instead of creating a new one here.
 	return c.DirectlyGetModels(context.Background())
 }
 
