@@ -1,6 +1,7 @@
 package openai_compatible
 
 import (
+	"context"
 	"os"
 	"strings"
 
@@ -39,7 +40,7 @@ func (c *Client) ListModels() ([]string, error) {
 		return models, nil
 	}
 
-	return c.DirectlyGetModels()
+	return c.DirectlyGetModels(context.Background())
 }
 
 // ProviderMap is a map of provider name to ProviderConfig for O(1) lookup
