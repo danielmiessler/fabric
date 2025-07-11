@@ -66,7 +66,6 @@ func (c *Client) DirectlyGetModels(ctx context.Context) ([]string, error) {
 			resp.StatusCode, c.GetName(), bodyString)
 	}
 
-	// Read the response body
 	// Read the response body once
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -98,7 +97,7 @@ func (c *Client) DirectlyGetModels(ctx context.Context) ([]string, error) {
 }
 
 func extractModelIDs(models []Model) []string {
-	var modelIDs []string
+	modelIDs := make([]string, 0, len(models))
 	for _, model := range models {
 		modelIDs = append(modelIDs, model.ID)
 	}
