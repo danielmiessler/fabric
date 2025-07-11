@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -41,7 +42,14 @@ func (c *Client) DirectlyGetModels() ([]string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		// Read the response body for debugging
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		bodyString := string(bodyBytes)
+		if len(bodyString) > 500 { // Truncate if too large
+			bodyString = bodyString[:500] + "..."
+		}
+		return nil, fmt.Errorf("unexpected status code: %d from provider %s, response body: %s",
+			resp.StatusCode, c.GetName(), bodyString)
 	}
 
 	// Read the response body
@@ -78,5 +86,5 @@ func (c *Client) DirectlyGetModels() ([]string, error) {
 		return modelIDs, nil
 	}
 
-	return nil, fmt.Errorf("unable to parse models response")
+	return nil, fmt.Errorf("unable to parse models response; raw response: %s", string(body))
 }
