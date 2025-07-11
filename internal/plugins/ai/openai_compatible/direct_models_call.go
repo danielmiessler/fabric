@@ -88,7 +88,13 @@ func (c *Client) DirectlyGetModels(ctx context.Context) ([]string, error) {
 		return extractModelIDs(directArray), nil
 	}
 
-	return nil, fmt.Errorf("unable to parse models response; raw response: %s", string(bodyBytes)[:errorResponseLimit])
+	var truncatedBody string
+	if len(bodyBytes) > errorResponseLimit {
+		truncatedBody = string(bodyBytes[:errorResponseLimit]) + "..."
+	} else {
+		truncatedBody = string(bodyBytes)
+	}
+	return nil, fmt.Errorf("unable to parse models response; raw response: %s", truncatedBody)
 }
 
 func extractModelIDs(models []Model) []string {
