@@ -64,27 +64,29 @@ func (c *Client) DirectlyGetModels() ([]string, error) {
 			ID string `json:"id"`
 		} `json:"data"`
 	}
-
-	if err := json.Unmarshal(body, &openAIFormat); err == nil && len(openAIFormat.Data) > 0 {
-		var modelIDs []string
-		for _, model := range openAIFormat.Data {
-			modelIDs = append(modelIDs, model.ID)
-		}
-		return modelIDs, nil
-	}
-
 	// Try to parse as a direct array (Together format)
 	var directArray []struct {
 		ID string `json:"id"`
 	}
 
-	if err := json.Unmarshal(body, &directArray); err == nil {
+	if err := json.Unmarshal(body, &openAIFormat); err == nil && len(openAIFormat.Data) > 0 {
 		var modelIDs []string
-		for _, model := range directArray {
-			modelIDs = append(modelIDs, model.ID)
-		}
-		return modelIDs, nil
+		return extractModelIDs(openAIFormat.Data, modelIDs)
+	}
+
+	if err := json.Unmarshal(body, &directArray); err == nil && len(directArray) > 0 {
+		var modelIDs []string
+		return extractModelIDs(directArray, modelIDs)
 	}
 
 	return nil, fmt.Errorf("unable to parse models response; raw response: %s", string(body))
+}
+
+func extractModelIDs(directArray []struct {
+	ID string "json:\"id\""
+}, modelIDs []string) ([]string, error) {
+	for _, model := range directArray {
+		modelIDs = append(modelIDs, model.ID)
+	}
+	return modelIDs, nil
 }
