@@ -1,6 +1,7 @@
 package openai_compatible
 
 import (
+	"context"
 	"os"
 	"strings"
 
@@ -29,6 +30,19 @@ func NewClient(providerConfig ProviderConfig) *Client {
 		nil,
 	)
 	return client
+}
+
+// ListModels overrides the default ListModels to handle different response formats
+func (c *Client) ListModels() ([]string, error) {
+	// First try the standard OpenAI SDK approach
+	models, err := c.Client.ListModels()
+	if err == nil && len(models) > 0 { // only return if OpenAI SDK returns models
+		return models, nil
+	}
+
+	// TODO: Handle context properly in Fabric by accepting and propagating a context.Context
+	// instead of creating a new one here.
+	return c.DirectlyGetModels(context.Background())
 }
 
 // ProviderMap is a map of provider name to ProviderConfig for O(1) lookup
@@ -81,6 +95,11 @@ var ProviderMap = map[string]ProviderConfig{
 	"SiliconCloud": {
 		Name:                "SiliconCloud",
 		BaseURL:             "https://api.siliconflow.cn/v1",
+		ImplementsResponses: false,
+	},
+	"Together": {
+		Name:                "Together",
+		BaseURL:             "https://api.together.xyz/v1",
 		ImplementsResponses: false,
 	},
 }
