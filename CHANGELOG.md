@@ -2,13 +2,13 @@
 
 ## v1.4.246 (2025-07-13)
 
-### Direct commits
+### PR [#1603](https://github.com/danielmiessler/Fabric/pull/1611) by [ksylvan](https://github.com/ksylvan): Changelog Generator: AI-Powered Automation for Fabric Project
 
 - Add AI-powered changelog generation with high-performance Go tool and comprehensive caching
-- Implement high-performance Go changelog generator with GraphQL and SQLite-based persistent caching for incremental updates
-- Add one-pass git history walking algorithm with concurrent GitHub API processing and batching
-- Create comprehensive CLI with cobra framework integration and tag-based caching for unreleased content detection
-- Add content hashing for change detection optimization and AI summarization using Fabric CLI integration
+- Add high-performance Go changelog generator with GraphQL integration
+- Implement SQLite-based persistent caching for incremental updates
+- Create one-pass git history walking algorithm with concurrent processing
+- Add comprehensive CLI with cobra framework and tag-based caching
 
 ## v1.4.245 (2025-07-11)
 
