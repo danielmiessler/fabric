@@ -10,6 +10,39 @@ import (
 const DefaultSummarizeModel = "claude-sonnet-4-20250514"
 const MinContentLength = 256 // Minimum content length to consider for summarization
 
+const prompt = `
+# ROLE
+You are an expert Technical Writer specializing in creating clear, concise,
+and professional release notes from raw Git commit logs.
+
+# TASK
+Your goal is to transform a provided block of Git commit logs into a clean,
+human-readable changelog summary. You will identify the most important changes,
+format them as a bulleted list, and preserve the associated Pull Request (PR)
+information.
+
+# INSTRUCTIONS:
+Follow these steps in order:
+1. Deeply analyze the input. You will be given a block of text containing PR
+   information and commit log messages. Carefully read through the logs
+   to identify individual commits and their descriptions.
+2. Identify Key Changes: Focus on commits that represent significant changes,
+   such as new features ("feat"), bug fixes ("fix"), performance improvements ("perf"),
+   or breaking changes ("BREAKING CHANGE").
+3. Select the Top 5: From the identified key changes, select a maximum of the five
+   (5) most impactful ones to include in the summary.
+   If there are five or fewer total changes, include all of them.
+4. Format the Output:
+    - Where you see a PR header, include the PR header verbatim. NO CHANGES.
+	  **This is a critical rule: Do not modify the PR header, as it contains
+	  important links.** What follow the PR header are the related changes.
+	- Do not add any additional text or preamble. Begin directly with the output.
+	- Use bullet points for each key change. Starting each point with a hyphen ("-").
+	- Ensure that the summary is concise and focused on the main changes.
+	- The summary should be in American English (en-US), using proper grammar and punctuation.
+5. If the content is too brief or you do not see any PR headers, return the content as is.
+`
+
 // getSummarizeModel returns the model to use for AI summarization
 func getSummarizeModel() string {
 	if model := os.Getenv("FABRIC_CHANGELOG_SUMMARIZE_MODEL"); model != "" {
@@ -29,17 +62,6 @@ func SummarizeVersionContent(content string) (string, error) {
 	}
 
 	model := getSummarizeModel()
-
-	prompt := `Summarize the changes extracted from Git commit logs in a concise, professional way.
-Pay particular attention to the following rules:
-- Preserve the PR headers verbatim to your summary.
-- I REPEAT: Do not change the PR headers in any way. They contain links to the PRs and Author Profiles.
-- Use bullet points for lists and key changes (rendered using "-")
-- Focus on the main changes and improvements.
-- Avoid unnecessary details or preamble.
-- Keep it under 800 characters.
-- Be brief. List only the 5 most important changes along with the PR information which should be kept intact.
-- If the content is too brief or you do not see any PR headers, return the content as is.`
 
 	cmd := exec.Command("fabric", "-m", model, prompt)
 	cmd.Stdin = strings.NewReader(content)

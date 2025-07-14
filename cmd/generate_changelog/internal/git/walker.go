@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -278,6 +279,97 @@ func parseGitHubURL(url string) (owner, repo string) {
 	}
 
 	return "", ""
+}
+
+// WalkHistorySinceTag walks git history from HEAD down to (but not including) the specified tag
+// and returns any version commits found along the way
+func (w *Walker) WalkHistorySinceTag(sinceTag string) (map[string]*Version, error) {
+	// Get the commit SHA for the sinceTag
+	tagRef, err := w.repo.Tag(sinceTag)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get tag %s: %w", sinceTag, err)
+	}
+
+	tagCommit, err := w.repo.CommitObject(tagRef.Hash())
+	if err != nil {
+		return nil, fmt.Errorf("failed to get commit for tag %s: %w", sinceTag, err)
+	}
+
+	// Get HEAD reference
+	ref, err := w.repo.Head()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get HEAD: %w", err)
+	}
+
+	// Walk from HEAD down to the tag commit (excluding it)
+	commitIter, err := w.repo.Log(&git.LogOptions{
+		From:  ref.Hash(),
+		Order: git.LogOrderCommitterTime,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to create commit iterator: %w", err)
+	}
+	defer commitIter.Close()
+
+	versions := make(map[string]*Version)
+	currentVersion := "Unreleased"
+
+	err = commitIter.ForEach(func(c *object.Commit) error {
+		// Stop when we reach the tag commit
+		if c.Hash == tagCommit.Hash {
+			return nil
+		}
+
+		commit := &Commit{
+			SHA:     c.Hash.String(),
+			Message: strings.TrimSpace(c.Message),
+			Author:  c.Author.Name,
+			Email:   c.Author.Email,
+			Date:    c.Author.When,
+			IsMerge: len(c.ParentHashes) > 1,
+		}
+
+		// Check for version pattern
+		if matches := versionPattern.FindStringSubmatch(commit.Message); len(matches) > 1 {
+			commit.IsVersion = true
+			commit.Version = matches[1]
+			currentVersion = commit.Version
+
+			if _, exists := versions[currentVersion]; !exists {
+				versions[currentVersion] = &Version{
+					Name:      currentVersion,
+					Date:      commit.Date,
+					CommitSHA: commit.SHA,
+					Commits:   []*Commit{},
+				}
+			}
+			return nil
+		}
+
+		// Check for PR merge pattern
+		if commit.IsMerge {
+			if matches := prPattern.FindStringSubmatch(commit.Message); len(matches) > 1 {
+				if prNumber, err := strconv.Atoi(matches[1]); err == nil {
+					commit.PRNumber = prNumber
+				}
+			}
+		}
+
+		// Add commit to current version
+		if _, exists := versions[currentVersion]; !exists {
+			versions[currentVersion] = &Version{
+				Name:      currentVersion,
+				Date:      time.Time{}, // Zero value, will be set by version commit
+				CommitSHA: "",
+				Commits:   []*Commit{},
+			}
+		}
+
+		versions[currentVersion].Commits = append(versions[currentVersion].Commits, commit)
+		return nil
+	})
+
+	return versions, err
 }
 
 func dedupInts(ints []int) []int {

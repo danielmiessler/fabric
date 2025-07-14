@@ -86,9 +86,10 @@ func (o *Session) String() (ret string) {
 		ret += fmt.Sprintf("\n--- \n[%v]\n%v", message.Role, message.Content)
 		if message.MultiContent != nil {
 			for _, part := range message.MultiContent {
-				if part.Type == chat.ChatMessagePartTypeImageURL {
+				switch part.Type {
+				case chat.ChatMessagePartTypeImageURL:
 					ret += fmt.Sprintf("\n%v: %v", part.Type, *part.ImageURL)
-				} else if part.Type == chat.ChatMessagePartTypeText {
+				case chat.ChatMessagePartTypeText:
 					ret += fmt.Sprintf("\n%v: %v", part.Type, part.Text)
 				}
 			}

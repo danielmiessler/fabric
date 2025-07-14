@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
+	"strings"
 
 	"github.com/danielmiessler/fabric/internal/plugins"
 	"github.com/danielmiessler/fabric/internal/plugins/db/fsdb"
@@ -107,6 +109,12 @@ func (o *PatternsLoader) PopulateDB() (err error) {
 	}
 
 	fmt.Printf("✅ Successfully downloaded and installed patterns to %s\n", o.Patterns.Dir)
+
+	// Create the unique patterns file after patterns are successfully moved
+	if err = o.createUniquePatternsFile(); err != nil {
+		return fmt.Errorf("failed to create unique patterns file: %w", err)
+	}
+
 	return
 }
 
@@ -300,4 +308,58 @@ func (o *PatternsLoader) countPatternsInDirectory(dir string) (int, error) {
 	}
 
 	return patternCount, nil
+}
+
+// createUniquePatternsFile creates the unique_patterns.txt file with all pattern names
+func (o *PatternsLoader) createUniquePatternsFile() (err error) {
+	// Read patterns from the main patterns directory
+	entries, err := os.ReadDir(o.Patterns.Dir)
+	if err != nil {
+		return fmt.Errorf("failed to read patterns directory: %w", err)
+	}
+
+	patternNamesMap := make(map[string]bool) // Use map to avoid duplicates
+
+	// Add patterns from main directory
+	for _, entry := range entries {
+		if entry.IsDir() {
+			patternNamesMap[entry.Name()] = true
+		}
+	}
+
+	// Add patterns from custom patterns directory if it exists
+	if o.Patterns.CustomPatternsDir != "" {
+		if customEntries, customErr := os.ReadDir(o.Patterns.CustomPatternsDir); customErr == nil {
+			for _, entry := range customEntries {
+				if entry.IsDir() {
+					patternNamesMap[entry.Name()] = true
+				}
+			}
+			fmt.Printf("📂 Also included patterns from custom directory: %s\n", o.Patterns.CustomPatternsDir)
+		} else {
+			fmt.Printf("Warning: Could not read custom patterns directory %s: %v\n", o.Patterns.CustomPatternsDir, customErr)
+		}
+	}
+
+	if len(patternNamesMap) == 0 {
+		return fmt.Errorf("no patterns found in directory %s", o.Patterns.Dir)
+	}
+
+	// Convert map to sorted slice
+	var patternNames []string
+	for name := range patternNamesMap {
+		patternNames = append(patternNames, name)
+	}
+
+	// Sort patterns alphabetically for consistent output
+	sort.Strings(patternNames)
+
+	// Join pattern names with newlines
+	content := strings.Join(patternNames, "\n") + "\n"
+	if err = os.WriteFile(o.Patterns.UniquePatternsFilePath, []byte(content), 0644); err != nil {
+		return fmt.Errorf("failed to write unique patterns file: %w", err)
+	}
+
+	fmt.Printf("📝 Created unique patterns file with %d patterns\n", len(patternNames))
+	return nil
 }

@@ -1,14 +1,24 @@
 # Changelog
 
-## v1.4.246 (2025-07-13)
+## Unreleased
 
-### PR [#1603](https://github.com/danielmiessler/Fabric/pull/1611) by [ksylvan](https://github.com/ksylvan): Changelog Generator: AI-Powered Automation for Fabric Project
+### Direct commits
+
+- Update README for GraphQL optimization and AI summary features
+- Detail GraphQL API usage for faster PR fetching
+- Introduce AI-powered summaries via Fabric integration
+- Document support for loading secrets from .env files
+- Clarify project license is The MIT License
+
+## v1.4.246 (2025-07-14)
+
+### PR [#1611](https://github.com/danielmiessler/Fabric/pull/1611) by [ksylvan](https://github.com/ksylvan): Changelog Generator: AI-Powered Automation for Fabric Project
 
 - Add AI-powered changelog generation with high-performance Go tool and comprehensive caching
-- Add high-performance Go changelog generator with GraphQL integration
-- Implement SQLite-based persistent caching for incremental updates
-- Create one-pass git history walking algorithm with concurrent processing
-- Add comprehensive CLI with cobra framework and tag-based caching
+- Implement SQLite-based persistent caching for incremental updates with one-pass git history walking
+- Create comprehensive CLI with cobra framework and tag-based caching optimization
+- Integrate AI summarization using Fabric CLI with batch PR fetching via GitHub Search API
+- Add extensive documentation, VSCode configuration, and commit-PR mapping for enhanced performance
 
 ## v1.4.245 (2025-07-11)
 
@@ -18,7 +28,7 @@
 - Add `DirectlyGetModels` function to handle non-standard API responses
 - Implement fallback to direct model fetching when standard method fails
 - Enhance error messages in OpenAI compatible models endpoint with response body details
-- Add context support to DirectlyGetModels method
+- Extract model ID parsing logic into reusable helper function
 
 ### PR [#1599](https://github.com/danielmiessler/Fabric/pull/1599) by [ksylvan](https://github.com/ksylvan): Update file paths to reflect new data directory structure
 
@@ -36,10 +46,10 @@
 
 ### PR [#1598](https://github.com/danielmiessler/Fabric/pull/1598) by [jaredmontoya](https://github.com/jaredmontoya): flake: fixes and enhancements
 
-- Updated Nix package to use self reference for better dependency management
-- Renamed shell command for improved clarity
-- Fixed generation path in update-mod functionality
-- Corrected typo in shell configuration
+- Nix:pkgs:fabric: use self reference
+- Shell: rename command
+- Update-mod: fix generation path
+- Shell: fix typo
 
 ## v1.4.243 (2025-07-09)
 
@@ -70,25 +80,25 @@
 
 ### PR [#1595](https://github.com/danielmiessler/Fabric/pull/1595) by [ksylvan](https://github.com/ksylvan): Restructure project to align with standard Go layout
 
-- Restructured project to follow standard Go layout with `cmd` directory for binaries
-- Moved all Go packages into `internal` directory and renamed `restapi` to `server`
-- Consolidated patterns/strategies into `data` directory and scripts into `scripts` directory
+- Restructured project to standard Go layout with `cmd` directory for binaries
+- Moved Go packages to `internal` directory and renamed `restapi` to `server`
+- Consolidated patterns/strategies into `data` directory and scripts into `scripts`
 - Updated all import paths and CI/CD workflows for new structure
 - Added new patterns for content tagging and cognitive bias analysis
 
 ### PR [#1594](https://github.com/danielmiessler/Fabric/pull/1594) by [amancioandre](https://github.com/amancioandre): Adds check Dunning-Kruger Telos self-evaluation pattern
 
-- Added pattern for Dunning-Kruger cognitive bias evaluation
+- Added pattern for Dunning-Kruger cognitive bias detection and self-evaluation
 
 ## v1.4.240 (2025-07-07)
 
 ### PR [#1593](https://github.com/danielmiessler/Fabric/pull/1593) by [ksylvan](https://github.com/ksylvan): Refactor: Generalize OAuth flow for improved token handling
 
-- Replace hardcoded "claude" with configurable `authTokenIdentifier` parameter for better flexibility
-- Update `RunOAuthFlow`, `RefreshToken`, and `exchangeToken` functions to accept token identifier parameter
-- Add token refresh attempt before full OAuth flow and improve existing token validation
-- Create comprehensive OAuth testing suite with 434 lines coverage including mock token server
-- Implement PKCE generation, token expiration logic, and performance benchmark tests
+- Replace hardcoded "claude" with configurable `authTokenIdentifier` parameter across OAuth functions
+- Update `RunOAuthFlow`, `RefreshToken`, and `exchangeToken` to accept token identifier parameter
+- Add token refresh attempt before full OAuth flow with existing token validation
+- Add comprehensive OAuth testing suite with 434 lines coverage including mock server and PKCE tests
+- Implement performance benchmarks and error path testing scenarios
 
 ## v1.4.239 (2025-07-07)
 
@@ -96,8 +106,8 @@
 
 - Improve error handling in streaming chat functionality with dedicated error channel
 - Add proper goroutine synchronization using `done` channel for completion tracking
-- Rename variables (`channel` to `responseChan`, `doneChan` to `done`) for better clarity
-- Implement comprehensive testing with mock vendor for error propagation validation
+- Rename channels (`channel` to `responseChan`, `doneChan` to `done`) for better clarity
+- Implement comprehensive testing with mockVendor for error propagation validation
 - Streamline response aggregation and ensure proper resource cleanup in streaming operations
 
 ## v1.4.238 (2025-07-07)
@@ -181,7 +191,7 @@
 - Implement automatic OAuth token refresh and persistent storage for seamless authentication
 - Support both API key and OAuth authentication methods with fallback re-authentication
 - Extract OAuth functionality to separate module for cleaner code organization
-- Standardize all API calls to use v2 endpoint and simplify base URL configuration
+- Standardize all API calls to use v2 endpoint and simplify client configuration
 
 ## v1.4.230 (2025-07-05)
 
@@ -201,7 +211,7 @@
 - Add model field to `BuildChatOptions` method for proper CLI flag mapping
 - Extract supported models list to shared constant `ImageGenerationSupportedModels` for reusability
 - Implement validation in `sendResponses` to ensure model supports image generation
-- Add comprehensive tests for model validation logic in `TestModelValidationLogic`
+- Add comprehensive tests for model validation logic and consolidate duplicate validation code
 
 ## v1.4.228 (2025-07-05)
 
@@ -239,19 +249,19 @@
 
 - Add web search tool support for OpenAI models with citation formatting
 - Enable web search tool for OpenAI models with location parameter support
-- Extract and format citations from search responses with deduplication
-- Implement comprehensive test coverage for search functionality
-- Update CLI flag description and README with new web search feature details
+- Extract and format citations from search responses as markdown links
+- Implement citation deduplication to avoid duplicates
+- Add comprehensive test coverage for search functionality
 
 ## v1.4.225 (2025-07-04)
 
 ### PR [#1568](https://github.com/danielmiessler/Fabric/pull/1568) by [ksylvan](https://github.com/ksylvan): Runtime Web Search Control via Command-Line Flag
 
 - Add web search tool support for Anthropic models with --search flag
-- Add --search-location for timezone-based results through ChatOptions struct
+- Add --search-location for timezone-based results via ChatOptions struct
 - Implement web search tool in Anthropic client with formatted citations
 - Add comprehensive tests and remove plugin-level web search configuration
-- Extract web search tool constants and optimize string building with sources header
+- Extract web search tool constants and optimize string building with sources
 
 ### Direct commits
 
@@ -264,11 +274,11 @@
 
 ### PR [#1564](https://github.com/danielmiessler/Fabric/pull/1564) by [ksylvan](https://github.com/ksylvan): Add code_review pattern and updates in Pattern_Descriptions
 
-- Add comprehensive code review pattern with systematic analysis framework and principal engineer reviewer role
-- Add new patterns: `review_code`, `extract_alpha`, and `extract_mcp_servers` for enhanced functionality
-- Refactor pattern extraction script with improved error handling and docstrings for better clarity
-- Add JSONDecodeError handling in `load_existing_file` with graceful fallback to empty list
-- Fix typo in `analyze_bill_short` pattern description and improve formatting in pattern management README
+- Add comprehensive code review pattern with systematic analysis framework
+- Add new patterns: `review_code`, `extract_alpha`, and `extract_mcp_servers`
+- Define principal engineer reviewer role with markdown output format
+- Include security, performance, and readability coverage with error handling guidelines
+- Improve pattern extraction script with docstrings and JSONDecodeError handling
 
 ## v1.4.223 (2025-07-01)
 
@@ -282,17 +292,16 @@
 
 ### PR [#1559](https://github.com/danielmiessler/Fabric/pull/1559) by [ksylvan](https://github.com/ksylvan): OpenAI Plugin Migrates to New Responses API
 
-- Migrate OpenAI plugin to use new responses API instead of chat completions
-- Add chat completions API fallback for non-Responses API providers
-- Implement `sendChatCompletions` and `sendStreamChatCompletions` methods
-- Add `ImplementsResponses` flag to track provider API capabilities
-- Extract common message conversion logic to reduce duplication
+- Migrate OpenAI plugin from chat completions to new responses API with fallback support
+- Add multi-content message support for text and image URLs in user messages
+- Implement streaming event handling and remove deprecated frequency/presence penalty parameters
+- Extract common message conversion logic to reduce code duplication between APIs
+- Improve error handling with deferred channel closing to prevent potential leaks
 
 ### Direct commits
 
-- Updated alpha post
-- Updated extract alpha
-- Added extract_alpha as kind of an experiment
+- Updated alpha post and extract alpha functionality
+- Added extract_alpha as experimental feature
 
 ## v1.4.221 (2025-06-28)
 
@@ -359,10 +368,10 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### PR [#1545](https://github.com/danielmiessler/Fabric/pull/1545) by [ksylvan](https://github.com/ksylvan): Update Message Handling for Attachments and Multi-Modal content
 
 - Allow combining user messages and attachments with patterns
-- Refactor chat request builder for improved clarity and enhanced dryrun client to display multi-content user messages
-- Handle multi-content messages for user role and display image URLs from user messages in output
-- Fix duplicate user message issue when applying patterns and ensure multi-part content is always included in session
-- Extract message and option formatting logic into reusable methods to reduce code duplication and improve maintainability
+- Refactor chat request builder for improved clarity and multi-content support
+- Enhance dryrun client to display multi-content user messages and image URLs
+- Fix duplicate user message issue when applying patterns
+- Extract message and option formatting logic into reusable methods for better maintainability
 
 ## v1.4.215 (2025-06-25)
 
@@ -379,9 +388,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 - Refactor ProviderMap for dynamic URL template handling with environment variables
 - Add new patterns: `analyze_terraform_plan`, `write_essay_by_author`, `summarize_board_meeting`, `create_mnemonic_phrases`
-- Rename `write_essay` to `write_essay_pg` for Paul Graham style specificity
-- Update pattern metadata files with tags and descriptions for new analytical patterns
-- Sort pattern explanations alphabetically and clean up duplicate entries
+- Rename `write_essay` to `write_essay_pg` for Paul Graham style and `write_essay_by_author` to `write_essay`
+- Update pattern metadata files with tags and descriptions for new creative/analytical patterns
+- Sort pattern explanations alphabetically and fix duplicate entries
 
 ## v1.4.213 (2025-06-23)
 
@@ -390,8 +399,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - Updated hasAWSCredentials to check for AWS_DEFAULT_REGION when access keys are configured
 - Fixed bedrock region handling with correct pointer reference and region value setting
 - Refactored Bedrock client with improved error handling and ai.Vendor interface compliance
-- Added AWS region validation logic and enhanced resource cleanup in SendStream
-- Improved code documentation and added user agent constants with proper context usage
+- Enhanced AWS region validation logic and resource cleanup in SendStream
+- Added nil checks for response parsing and updated context usage to Background()
 
 ## v1.4.212 (2025-06-23)
 
@@ -401,14 +410,14 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - Add `os` and `strings` packages to imports for template processing
 - Implement dynamic URL handling using environment variables or default values
 - Reorder providers for consistent key order in ProviderMap
-- Extract and parse template variables from BaseURL
+- Extract and parse template variables from BaseURL configurations
 
 ### Direct commits
 
 - Refactor Bedrock client with improved error handling and interface compliance
 - Add AWS region validation logic and fix resource cleanup in SendStream
 - Enhanced code documentation and user agent constants
-- Fixed Bedrock region handling with proper pointer reference resolution
+- Fixed Bedrock region handling with proper pointer references
 - Updated paper analyzer functionality
 
 ## v1.4.211 (2025-06-19)
@@ -416,10 +425,10 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### PR [#1533](https://github.com/danielmiessler/Fabric/pull/1533) by [ksylvan](https://github.com/ksylvan): REST API and Web UI Now Support Dynamic Pattern Variables
 
 - Add pattern variables support to REST API chat endpoint with Variables field in PromptRequest struct
-- Add pattern variables UI in web interface with JSON textarea for variable input
-- Add `ApplyPattern` route for applying patterns with variables via POST /patterns/:name/apply
-- Refactor ChatService to clean up message stream and pattern output methods
-- Remove unnecessary raycast scripts directory from patterns/ folder
+- Add pattern variables UI in web interface with JSON textarea for variable input and dedicated store
+- Create `ApplyPattern` route for POST /patterns/:name/apply with `PatternApplyRequest` struct
+- Refactor pattern operations to use `StorageHandler` and merge query parameters with request body variables
+- Clean up message stream processing and pattern output methods for improved readability
 
 ### Direct commits
 
@@ -496,7 +505,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### Direct commits
 
 - Updated markdown sanitizer
-- Updated markdown cleaner
+- Updated markdown cleaner (multiple updates)
 
 ## v1.4.204 (2025-06-15)
 
@@ -515,7 +524,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ### PR [#1513](https://github.com/danielmiessler/Fabric/pull/1513) by [marcas756](https://github.com/marcas756): feat: create mnemonic phrase pattern
 
-- Create mnemonic phrase pattern for generating phrases from diceware words
+- Create new pattern for generating mnemonic phrases from diceware words
 - Add markdown files with user guide and system implementation details
 
 ### PR [#1516](https://github.com/danielmiessler/Fabric/pull/1516) by [ksylvan](https://github.com/ksylvan): Fix REST API pattern creation
@@ -529,7 +538,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### PR [#1510](https://github.com/danielmiessler/Fabric/pull/1510) by [ksylvan](https://github.com/ksylvan): Cross-Platform fix for Youtube Transcript extraction
 
 - Replace hardcoded `/tmp` with `os.TempDir()` for cross-platform compatibility
-- Use `filepath.Join()` instead of string concatenation for proper path handling
+- Use `filepath.Join()` instead of string concatenation for path handling
 - Remove Unix `find` command dependency completely
 - Add new `findVTTFiles()` method using `filepath.Walk()` for Windows support
 - Improve error handling for file operations while maintaining backward compatibility
@@ -539,7 +548,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### PR [#1503](https://github.com/danielmiessler/Fabric/pull/1503) by [dependabot[bot]](https://github.com/apps/dependabot): chore(deps): bump brace-expansion from 1.1.11 to 1.1.12 in /web in the npm_and_yarn group across 1 directory
 
 - Updated brace-expansion dependency from 1.1.11 to 1.1.12 in /web directory
-- Indirect dependency update in npm_and_yarn group
+- Automated dependency update in npm_and_yarn group
 
 ### PR [#1508](https://github.com/danielmiessler/Fabric/pull/1508) by [ksylvan](https://github.com/ksylvan): feat: cleanup after `yt-dlp` addition
 
@@ -553,9 +562,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 - Replace web scraping with yt-dlp for YouTube transcript extraction
 - Remove unreliable YouTube API scraping methods
-- Add yt-dlp integration for transcript extraction
-- Implement VTT subtitle parsing functionality
-- Add timestamp preservation for transcripts
+- Add VTT subtitle parsing functionality
+- Implement timestamp preservation for transcripts
+- Support multiple subtitle format fallbacks
 
 ## v1.4.199 (2025-06-11)
 
@@ -570,7 +579,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - Added configurable HTTP timeout for Ollama client
 - Introduced new setup question to configure timeout duration for Ollama requests
 - Set default timeout value to 20 minutes
-- Improved request handling reliability for Ollama integration
+- Improved client reliability for long-running requests
+- Enhanced user control over connection timeout settings
 
 ## v1.4.197 (2025-06-11)
 
@@ -581,17 +591,17 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ### PR [#1499](https://github.com/danielmiessler/Fabric/pull/1499) by [noamsiegel](https://github.com/noamsiegel): feat: Enhance the PRD Generator's identity and purpose
 
-- Enhanced PRD Generator identity and purpose for better clarity
-- Added structured output format with Markdown, sections, and bullet points
-- Defined key PRD sections: Overview, Objectives, Features, User Stories, Requirements
-- Improved instructions for highlighting priorities and MVP features
+- Enhanced PRD Generator identity and purpose definition
+- Added structured sections: Overview, Objectives, Target Audience, Features, User Stories
+- Improved output format with Markdown, labeled sections, bullet points, tables
+- Added priority highlighting and MVP feature identification
 
 ### PR [#1497](https://github.com/danielmiessler/Fabric/pull/1497) by [ksylvan](https://github.com/ksylvan): feat: add Terraform plan analyzer pattern for infrastructure changes
 
 - Added Terraform plan analyzer pattern for infrastructure change assessment
 - Included security, cost, and compliance focus areas
-- Created structured output with summaries, critical changes, and key takeaways
-- Required numbered lists and specific word limits for sections
+- Added three output sections with specific formatting requirements
+- Specified 20-word summary and 10 critical changes with word limits
 
 ### Direct commits
 
@@ -606,7 +616,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - Set AIML base URL to api.aimlapi.com/v1
 - Expand supported OpenAI compatible providers list
 - Enable AIML API integration support
-- Added simpler paper analyzer with updated output
+- Added simpler paper analyzer
 
 ## v1.4.195 (2025-05-24)
 
@@ -634,9 +644,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 - Reorganize web documentation and add installation scripts
 - Update all package dependencies to latest versions
-- Add PDF-to-Markdown installation steps to README
-- Move legacy documentation files to web/legacy/
 - Add convenience scripts for npm and pnpm installation
+- Move legacy documentation files to web/legacy/
+- Add PDF-to-Markdown installation steps to README
 
 ### PR [#1481](https://github.com/danielmiessler/Fabric/pull/1481) by [skibum1869](https://github.com/skibum1869): Add board meeting summary pattern template
 
@@ -647,20 +657,18 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### Direct commits
 
 - Add centralized environment configuration for Fabric base URL
-- Create getFabricBaseUrl() function with server/client support
+- Create environment config module with getFabricBaseUrl() function
 - Configure Vite to inject FABRIC_BASE_URL client-side
-- Support FABRIC_BASE_URL env var with fallback
-- Add TypeScript definitions for window config
 
 ## v1.4.192 (2025-05-23)
 
 ### PR [#1480](https://github.com/danielmiessler/Fabric/pull/1480) by [ksylvan](https://github.com/ksylvan): Automatic setting of "raw mode" for some models
 
 - Add NeedsRawMode method to AI vendor interface for automatic raw mode detection
-- Implement NeedsRawMode in all AI clients with model-specific detection logic
+- Implement NeedsRawMode in all AI clients with model-specific logic
 - Enable automatic raw mode for Ollama llama2/llama3 models and OpenAI o1/o3/o4 models
-- Auto-enable raw mode when vendor requires it based on model configuration
-- Import strings package for prefix matching functionality
+- Auto-enable raw mode when vendor requires it based on model detection
+- Support future raw mode requirements through vendor interface extension
 
 ## v1.4.191 (2025-05-22)
 
@@ -676,11 +684,11 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ### PR [#1475](https://github.com/danielmiessler/Fabric/pull/1475) by [ksylvan](https://github.com/ksylvan): refactor: improve raw mode handling in BuildSession
 
-- Improved raw mode handling in BuildSession with better system message processing
-- Fixed duplicate inputs when using patterns in raw mode
-- Added conditional logic to distinguish between pattern and non-pattern scenarios
-- Simplified message construction with clearer variable names
-- Enhanced code comments for better readability
+- Improved raw mode handling in BuildSession for better pattern processing
+- Fixed system message handling with patterns in raw mode to prevent conflicts
+- Prevented duplicate inputs when using patterns through conditional logic
+- Added clearer variable names and improved code comments for better readability
+- Simplified message construction with enhanced pattern vs non-pattern scenario handling
 
 ## v1.4.189 (2025-05-19)
 
@@ -712,7 +720,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - Consolidated repetitive sentences and enhanced text coherence
 - Adjusted bullet points and numbering for consistency
 - Enhanced visual distinction of key concepts
-- Ensured clear articulation of important information
+- Ensured clearer articulation of main ideas
 
 ### Direct commits
 
@@ -739,7 +747,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### PR [#1453](https://github.com/danielmiessler/Fabric/pull/1453) by [ksylvan](https://github.com/ksylvan): Fix for default model setting
 
 - Introduce `getSortedGroupsItems` for consistent sorting logic
-- Add centralized sorting method for groups and items (alphabetical, case-insensitive)
+- Add centralized sorting method for groups and items alphabetically, case-insensitive
 - Replace inline sorting in `Print` with new method
 - Update `GetGroupAndItemByItemNumber` to use sorted data
 - Ensure original `GroupsItems` remains unmodified
@@ -748,7 +756,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ### PR [#1447](https://github.com/danielmiessler/Fabric/pull/1447) by [ksylvan](https://github.com/ksylvan): More shell completion scripts: Zsh, Bash, and Fish
 
-- Add shell completion scripts for Zsh, Bash, and Fish
+- Add shell completion scripts for Zsh, Bash, and Fish shells
 - Create standardized completion scripts in completions/ directory
 - Add --shell-complete-list flag for machine-readable output
 - Update Print() methods to support plain output format
@@ -830,7 +838,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - Imported `sort` and `strings` packages for sorting functionality
 - Implemented case-insensitive sorting for both groups and items
 - Created stable copies of groups and items before sorting
-- Enhanced display iteration to use sorted collections
+- Enhanced display iteration to use sorted groups and items
 
 ## v1.4.176 (2025-04-21)
 
@@ -839,7 +847,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - Add `Prompt` field to `StrategyMeta` struct for storing JSON prompt data
 - Implement dynamic strategy naming using filename with `strings.TrimSuffix`
 - Add alphabetical sorting to groups and items in Print method with case-insensitive ordering
-- Introduce `--listvendors` command to display all AI vendors with consistent output
+- Introduce `--listvendors` command to display all AI vendors with sorting
 - Refactor OpenAI-compatible providers into unified configuration, removing individual vendor packages
 
 ## v1.4.175 (2025-04-19)
@@ -847,10 +855,10 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### PR [#1418](https://github.com/danielmiessler/Fabric/pull/1418) by [dependabot[bot]](https://github.com/apps/dependabot): chore(deps): bump golang.org/x/net from 0.36.0 to 0.38.0 in the go_modules group across 1 directory
 
 - Updated golang.org/x/net dependency from version 0.36.0 to 0.38.0
-- Dependency update applied to go_modules group in root directory
-- Indirect dependency type update managed by dependabot
-- Security and performance improvements included in newer version
-- Automated dependency maintenance to keep project current
+- Dependency type: indirect
+- Dependency group: go_modules
+- Automated dependency update via dependabot
+- Security and bug fixes included in the version bump
 
 ## v1.4.174 (2025-04-19)
 
@@ -918,9 +926,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 - Integrated strategy flag enhancement from fabric CLI into web UI
 - Updated strategies.json configuration
-- Added new excalidraw pattern for visual documentation
-- Implemented bill analyzer functionality with shorter version
-- Enhanced analyze bill pattern for improved processing
+- Added new excalidraw pattern for diagram creation
+- Implemented bill analyzer with shorter version for analyze bill functionality
+- Updated ed component with improvements
 
 ## v1.4.168 (2025-04-02)
 
@@ -954,16 +962,11 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ### PR [#1389](https://github.com/danielmiessler/Fabric/pull/1389) by [ksylvan](https://github.com/ksylvan): Create Coding Feature
 
-- Add `code_helper` tool (renamed from `fabric_code`) for AI-driven codebase modifications
-- Implement `create_coding_feature` pattern with file management API for code changes
-- Add secure file parsing and validation system with JSON escape sequence handling
-- Update README with installation instructions and usage examples
-- Replace deprecated io/ioutil with modern alternatives and improve error handling
-
-### Direct commits
-
-- Improve README link
-- Fix broken what-and-why link reference
+- Add `code_helper` tool (renamed from `fabric_code`) and `create_coding_feature` pattern for AI-driven codebase modifications
+- Implement file management system with JSON representation, parsing, and secure application of code changes
+- Replace deprecated io/ioutil with modern alternatives and improve JSON parsing with escape sequence handling
+- Add file change validation system with FileChangesMarker constant and comprehensive error handling
+- Update documentation and README with installation instructions, usage examples, and new marker syntax
 
 ## v1.4.164 (2025-03-22)
 
@@ -980,7 +983,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 - Improve README formatting and add clipboard support section
 - Fix broken installation link reference and environment variables link
-- Replace code tags with backticks and improve code block formatting
+- Improve code block formatting with indentation
 
 ### PR [#1376](https://github.com/danielmiessler/Fabric/pull/1376) by [vaygr](https://github.com/vaygr): Add installation instructions for OS package managers
 
@@ -989,23 +992,24 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### Direct commits
 
 - Added find_female_life_partner pattern
-- Updated find prompt multiple times
 
 ## v1.4.163 (2025-03-19)
 
 ### PR [#1362](https://github.com/danielmiessler/Fabric/pull/1362) by [dependabot[bot]](https://github.com/apps/dependabot): Bump golang.org/x/net from 0.35.0 to 0.36.0 in the go_modules group across 1 directory
 
 - Updated golang.org/x/net dependency from version 0.35.0 to 0.36.0
+- Automated dependency update in go_modules group
 
 ### PR [#1372](https://github.com/danielmiessler/Fabric/pull/1372) by [rube-de](https://github.com/rube-de): fix: set percentEncoded to false
 
 - Fixed YouTube link encoding issue by setting percentEncoded to false
-- Prevents URL encoding errors when using YouTube links like youtu.be/sHIlFKKaq0A
+- Prevents URL encoding errors when processing YouTube links
 
 ### PR [#1373](https://github.com/danielmiessler/Fabric/pull/1373) by [ksylvan](https://github.com/ksylvan): Remove unnecessary `system.md` file at top level
 
-- Removed redundant system.md file from top-level directory
-- File was an RPG session summarization prompt superseded by create_rpg_summary and summarize_rpg_session patterns
+- Removed redundant system.md file from repository root
+- File was duplicate RPG session summarization prompt
+- Two other RPG summary patterns already exist: create_rpg_summary and summarize_rpg_session
 
 ## v1.4.162 (2025-03-19)
 
@@ -1019,9 +1023,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### Direct commits
 
 - Remove redundant file system.md at top level
-- Set percentEncoded to false for YouTube links to prevent encoding errors
-- Removed RPG session summarization prompt (system.md) - replaced by create_rpg_summary and summarize_rpg_session patterns
-- Fix YouTube link processing to avoid URL encoding issues that caused fabric errors
+- Fix YouTube link encoding issue by setting percentEncoded to false
 
 ## v1.4.161 (2025-03-17)
 
@@ -1033,13 +1035,13 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ### PR [#1368](https://github.com/danielmiessler/Fabric/pull/1368) by [vaygr](https://github.com/vaygr): Standardize sections for no repeat guidelines
 
-- Standardize sections for no repeat guidelines
+- Standardized sections for no repeat guidelines
 
 ### Direct commits
 
 - Moved system file to proper directory
 - Added activity extractor
-- Merge branch 'main' of github.com:danielmiessler/fabric
+- Merged main branch updates
 
 ## v1.4.159 (2025-03-16)
 
@@ -1135,9 +1137,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 - Update YouTube regex to support live URLs and timestamped transcripts
 - Add argument validation and -t flag for transcript with timestamps
-- Refactor PowerShell yt function with parameter switch
 - Introduce youtube_summary pattern with documentation
-- Update README to dynamically select transcript option
+- Refactor PowerShell yt function with parameter switch
+- Update README with dynamic transcript option selection
 
 ### PR [#1338](https://github.com/danielmiessler/Fabric/pull/1338) by [jmd1010](https://github.com/jmd1010): Update Web V2 Install Guide layout
 
@@ -1146,6 +1148,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### PR [#1330](https://github.com/danielmiessler/Fabric/pull/1330) by [jmd1010](https://github.com/jmd1010): Fixed ALL CAP DIR as requested and processed minor updates to documentation
 
 - Reorganize documentation with consistent directory naming
+- Update Web V2 Install Guide with improved instructions
 
 ### PR [#1333](https://github.com/danielmiessler/Fabric/pull/1333) by [asasidh](https://github.com/asasidh): Update QUOTES section to include speaker names for clarity
 
@@ -1174,8 +1177,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - Continue fetching models even if some vendors fail
 - Remove cancellation of remaining goroutines when vendor collection fails
 - Ensure other vendor collections continue even if one fails
-- Fix model listing via `fabric -L` when localhost models are down
-- Fix using non-default models via `fabric -m custom_model`
+- Fix `fabric -L` model listing when localhost models are down
+- Fix `fabric -m custom_model` usage when Ollama/LM Studio are shut down
 
 ### PR [#1329](https://github.com/danielmiessler/Fabric/pull/1329) by [jmd1010](https://github.com/jmd1010): Svelte Web V2 Installation Guide
 
@@ -1232,9 +1235,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### PR [#1313](https://github.com/danielmiessler/Fabric/pull/1313) by [cx-ken-swain](https://github.com/cx-ken-swain): Updated ollama.go to fix a couple of potential DoS issues
 
 - Fixed security vulnerabilities in ollama.go to prevent potential DoS attacks
-- Resolved multiple medium-severity vulnerabilities
+- Resolved additional medium-severity vulnerabilities
 - Updated application version to v..1
-- Removed version.nix and version.go files
+- Removed version-related files (version.go, pkgs/fabric/version.nix)
 - Merged changes from main branch
 
 ## v1.4.139 (2025-02-25)
@@ -1243,9 +1246,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 - Updated demo video link in PR-1284 documentation
 - Added complete PDF to Markdown conversion functionality
-- Implemented Svelte integration files for PDF processing
+- Integrated PDF processing into Svelte web chat interface
 - Added comprehensive PDF to Markdown documentation
-- Enhanced web Svelte chat interface with PDF conversion capabilities
+- Updated version and cleaned up version-related files
 
 ## v1.4.138 (2025-02-24)
 
@@ -1267,15 +1270,12 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ### PR [#1257](https://github.com/danielmiessler/Fabric/pull/1257) by [jessefmoore](https://github.com/jessefmoore): Create analyze_threat_report_cmds
 
-- Create system.md
-Create pattern to extract commands from videos and threat reports to obtain commands so pentesters or red teams or Threat hunters can use to either threat hunt or simulate the threat actor.
+- Create pattern to extract commands from videos and threat reports for pentesters, red teams, and threat hunters
 
 ### PR [#1256](https://github.com/danielmiessler/Fabric/pull/1256) by [JOduMonT](https://github.com/JOduMonT): Update README.md
 
-- Update README.md
-
-1. Windows Command: Because actually curl does not exist natively on Windows
-2. Syntax: Because like this; it makes the "click, cut and paste" easier
+- Update Windows Command documentation (curl doesn't exist natively on Windows)
+- Improve syntax for easier "click, cut and paste" usage
 
 ### PR [#1247](https://github.com/danielmiessler/Fabric/pull/1247) by [kevnk](https://github.com/kevnk): Update suggest_pattern: refine summaries and add recently added patterns
 
@@ -1283,19 +1283,11 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ### PR [#1252](https://github.com/danielmiessler/Fabric/pull/1252) by [jeffmcjunkin](https://github.com/jeffmcjunkin): Update README.md: Add PowerShell aliases
 
-- Update README.md: Add PowerShell aliases
+- Add PowerShell aliases to README documentation
 
 ### PR [#1253](https://github.com/danielmiessler/Fabric/pull/1253) by [abassel](https://github.com/abassel): Fixed few typos that I could find
 
-- Fixed few typos that I could find
-
-**Key Changes:**
-
-- Added threat analysis pattern for extracting commands from security reports
-- Improved Windows compatibility with PowerShell aliases and curl alternatives
-- Enhanced pattern suggestions with updated summaries
-- Added markdown callout pattern and prediction generator
-- Implemented multi-model support with image attachments
+- Fixed various typos throughout the codebase
 
 ## v1.4.137 (2025-02-24)
 
@@ -1309,7 +1301,9 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ## v1.4.136 (2025-02-24)
 
-### Direct commits
+## Summary of Changes
+
+**Direct commits:**
 
 - Update to upload-artifact@v4 because upload-artifact@v3 is deprecated
 - Merge branch 'danielmiessler:main' into main
@@ -1321,36 +1315,35 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ### PR [#1309](https://github.com/danielmiessler/Fabric/pull/1309) by [jmd1010](https://github.com/jmd1010): Feature/Web Svelte GUI Enhancements: Pattern Descriptions, Tags, Favorites, Search Bar, Language Integration, PDF file conversion, etc
 
-- Enhanced Web UI with pattern descriptions, tags, favorites, and search functionality
-- Improved chat interface and pattern handling capabilities
-- Updated dependencies and backup configuration
-- Cleaned up sensitive files and improved .gitignore structure
+- Enhanced pattern handling and chat interface improvements
+- Updated .gitignore to exclude sensitive and generated files
+- Setup backup configuration and updated dependencies
 
 ### PR [#1312](https://github.com/danielmiessler/Fabric/pull/1312) by [junaid18183](https://github.com/junaid18183): Added Create LOE Document Prompt
 
-- Added create_loe_document prompt for Level of Effort documentation
+- Added create_loe_document prompt
 
 ### PR [#1302](https://github.com/danielmiessler/Fabric/pull/1302) by [verebes1](https://github.com/verebes1): feat: Add LM Studio compatibility
 
-- Added LM Studio as new plugin with base URL configuration
-- Updated plugin registry to include LM Studio integration
+- Added LM Studio as a new plugin for Fabric compatibility
+- Updated plugin registry and configuration with required base URL
 
 ### PR [#1297](https://github.com/danielmiessler/Fabric/pull/1297) by [Perchycs](https://github.com/Perchycs): Create pattern_explanations.md
 
-- Created comprehensive pattern explanations with one-line summaries
+- Created pattern_explanations.md with one-line summaries for each prompt
 
 ### Direct commits
 
-- Fixed security vulnerabilities in ollama.go and updated version to v1.1
-- Added and updated extract_domains functionality
+- Resolved medium security vulnerabilities and updated ollama.go
+- Added extract_domains functionality
 
 ## v1.4.134 (2025-02-11)
 
 ### PR [#1289](https://github.com/danielmiessler/Fabric/pull/1289) by [thevops](https://github.com/thevops): Add the ability to grab YouTube video transcript with timestamps
 
-- Added new `--transcript-with-timestamps` flag for YouTube video processing
+- Added `--transcript-with-timestamps` flag for YouTube video transcripts
 - Timestamps formatted as HH:MM:SS and prepended to each transcript line
-- Enables quick navigation to specific video segments in summaries
+- Enables quick navigation to specific video sections in summaries
 - Similar functionality to existing `--transcript` flag but with time markers
 - Useful for creating timestamped video summaries and references
 
@@ -1359,7 +1352,7 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 ### PR [#1294](https://github.com/danielmiessler/Fabric/pull/1294) by [TvisharajiK](https://github.com/TvisharajiK): Improved unit-test coverage from 0 to 100 (AI module) using Keploy's agent
 
 - Increased unit test coverage from 0 to 100% in the AI module using Keploy's Agent
-- Added YouTube video transcript with timestamps feature via `--transcript-with-timestamps` flag
+- Added YouTube transcript extraction with timestamps via `--transcript-with-timestamps` flag
 - Bumped github.com/go-git/go-git/v5 from 5.12.0 to 5.13.0
 - Added multiple new TELOS patterns and challenge handling pattern
 - Added panel topic extractor and intro sentences pattern
@@ -1371,8 +1364,8 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 - Enable custom API base URL configuration for Anthropic integration
 - Add proper handling of v1 endpoint for UUID-containing URLs
 - Implement URL formatting logic for consistent endpoint structure
-- Clean up commented code and improve configuration flow
-- Enhance API flexibility for different deployment environments
+- Improve configuration flow and error handling
+- Clean up commented code and streamline implementation
 
 ## v1.4.131 (2025-01-30)
 
@@ -1397,11 +1390,11 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ### PR [#1240](https://github.com/danielmiessler/Fabric/pull/1240) by [johnconnor-sec](https://github.com/johnconnor-sec): Updates: ./web
 
-- Moved pattern loader to ModelConfig and added page fly transitions
-- Updated UI components and improved responsive layout for chat interface
+- Moved pattern loader to ModelConfig and added page fly transitions with UI component updates
+- Improved responsive layout with reordered columns and updated Header buttons
 - Added NotesDrawer component that saves notes to lib/content/inbox
-- Centered chat and NotesDrawer in viewport for better user experience
-- Restructured project organization: moved types to lib/interfaces and lib/api
+- Centered chat and NotesDrawer in viewport with major styling improvements
+- Reorganized file structure: moved types to lib/interfaces and lib/api, renamed stores for consistency
 
 ## v1.4.129 (2025-01-03)
 
@@ -1416,25 +1409,25 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ### Direct commits
 
-- Chat and NotesDrawer now centered in viewport
+- Chat and NoteDrawer now centered in viewport
 - Enhanced enrich pattern and added enrich_blog_post
-- Major file reorganization: moved types to lib/interfaces, components restructured
+- Major file restructuring: moved types to lib/interfaces, components reorganized
 - Updated Post page styling and NotesDrawer saves to lib/content/inbox
-- Version updates to v..1 with corresponding .nix and .go files
+- Multiple version updates and README improvements
 
 ## v1.4.128 (2024-12-26)
 
 ### PR [#1227](https://github.com/danielmiessler/Fabric/pull/1227) by [mattjoyce](https://github.com/mattjoyce): Feature/template extensions
 
-- Implemented stdout template extensions with path-based registry storage and hash verification
-- Added file-based output handling with proper cleanup of temporary files for local and remote operations
+- Implemented stdout template extensions with path-based registry storage
+- Added proper hash verification for both configs and executables with clean registry format
+- Implemented file-based output handling with temporary file cleanup for local/remote operations
 - Fixed pattern file usage without stdin by initializing empty message for template processing
-- Added extension manager tests, registration, execution validation, and example files with tutorial
-- Enhanced extension listing with better error messages when hash verification fails
+- Added extension manager tests, registration/execution validation, and example files with tutorial
 
 ### Direct commits
 
-- Updated story format to shorter bullets and improved notes drawer with rocket theme
+- Updated story formatting to shorter bullets and improved Notes Drawer with rocket theme
 - Updated POSTS for main 24-12-08 release and fixed import statements
 
 ## v1.4.127 (2024-12-23)
@@ -1442,10 +1435,10 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 ### PR [#1218](https://github.com/danielmiessler/Fabric/pull/1218) by [sosacrazy126](https://github.com/sosacrazy126): streamlit ui
 
 - Added comprehensive Streamlit application for managing and executing patterns
-- Implemented pattern creation, execution, and analysis with advanced UI components
-- Enhanced logging configuration with color-coded console and detailed file handlers
+- Implemented pattern creation, execution, and analysis with advanced editing options
+- Enhanced logging configuration with color-coded console and detailed file logging
 - Added pattern chain execution functionality for sequential pattern processing
-- Integrated output management with starring/favoriting and persistent storage features
+- Integrated output management with starring/favoriting and persistent storage capabilities
 
 ### PR [#1225](https://github.com/danielmiessler/Fabric/pull/1225) by [wmahfoudh](https://github.com/wmahfoudh): Added Humanize Pattern
 
@@ -1459,7 +1452,7 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 - Ingested 8 key documents including Plato's Apology, Phaedrus, Symposium, and Republic
 - Added Xenophon's works: The Economist, Memorabilia, Memorable Thoughts, and Symposium
 - Enhanced with specific steps for research, analysis, and code reviews
-- Version updates and branch merging activities
+- Version updates and branch merging completed
 
 ## v1.4.125 (2024-12-22)
 
@@ -1493,8 +1486,8 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ### Direct commits
 
-- Enhanced pattern management with improved creation, editing, and deletion
-- Improved logging configuration and error handling for better debugging
+- Delete patternstudio.py
+- Refactor pattern management and enhance error handling with improved logging, validation, and UI components
 
 ## v1.4.123 (2024-12-20)
 
@@ -1506,9 +1499,9 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 - Added Streamlit application for pattern management and execution with logging, session state, and UI components
 - Added Ollama chat endpoints for Open WebUI integration
-- Fixed multiple spelling errors across patterns and documentation
+- Fixed typos and spelling errors across patterns and documentation
 - Updated version to v1.1 with significant research and analysis workflow improvements
-- Major Socrates pattern rewrite incorporating Plato and Xenophon source materials from Project Gutenberg
+- Major Socrates pattern rewrite incorporating Plato and Xenophon texts from Project Gutenberg
 
 ## v1.4.122 (2024-12-14)
 
@@ -1542,7 +1535,7 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ### PR [#1182](https://github.com/danielmiessler/Fabric/pull/1182) by [jessefmoore](https://github.com/jessefmoore): analyze_risk pattern
 
-- Created analyze_risk pattern for 3rd party vendor risk analysis
+- Created analyze_risk pattern for analyzing 3rd party vendor risk
 
 ## v1.4.119 (2024-12-07)
 
@@ -1563,10 +1556,11 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ### PR [#1174](https://github.com/danielmiessler/Fabric/pull/1174) by [mattjoyce](https://github.com/mattjoyce): Curly brace templates
 
-- Fixed pattern file usage without stdin to prevent segfault by initializing empty message
+- Fixed pattern file usage without stdin to prevent segfault
+- Added empty message initialization when Message is nil
 - Removed redundant template processing of message content
 - Simplified template processing flow for both stdin and non-stdin use cases
-- Added proper handling for patterns with variables but no stdin input
+- Reverted and re-implemented fix for proper template variable handling
 
 ### PR [#1179](https://github.com/danielmiessler/Fabric/pull/1179) by [sluosapher](https://github.com/sluosapher): added a new pattern create_newsletter_entry
 
@@ -1589,10 +1583,10 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 ### PR [#1168](https://github.com/danielmiessler/Fabric/pull/1168) by [johnconnor-sec](https://github.com/johnconnor-sec): Update README.md
 
 - Updated README.md documentation
-- Cleaned up code styling
-- Enhanced message handling to use custom messages with piped input
-- Improved overall project documentation and formatting
-- Streamlined user experience with better message processing
+- Cleaned up code style formatting
+- Improved message handling to use custom message followed by piped input
+- Enhanced overall project documentation structure
+- Streamlined codebase with style improvements
 
 ## v1.4.114 (2024-11-26)
 
@@ -1604,11 +1598,11 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ### PR [#1166](https://github.com/danielmiessler/Fabric/pull/1166) by [dependabot[bot]](https://github.com/apps/dependabot): build(deps-dev): bump @sveltejs/kit from 2.6.1 to 2.8.4 in /web in the npm_and_yarn group across 1 directory
 
-- Updated @sveltejs/kit from version 2.6.1 to 2.8.4 in the /web directory
-- Dependency update in the npm_and_yarn group for development dependencies
-- Automated security and maintenance update by dependabot
-- Direct development dependency type update
-- Includes release notes and changelog references for the SvelteKit framework
+- Updated @sveltejs/kit from version 2.6.1 to 2.8.4
+- Development dependency upgrade in /web directory
+- Part of npm_and_yarn dependency group update
+- Automated dependency maintenance by dependabot
+- Includes release notes and changelog references
 
 ## v1.4.112 (2024-11-26)
 
@@ -1644,8 +1638,8 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 - Process template variables ({{var}}) consistently in both pattern files and raw input messages
 - Add template variable processing for raw input in BuildSession with explicit messageContent initialization
 - Remove errantly committed build artifact (fabric binary)
-- Fix template.go to handle missing variables in stdin input with proper error messages
-- Fix raw mode doubling user input by streamlining context staging
+- Fix template.go to handle missing variables in stdin input with proper error messaging
+- Fix raw mode doubling user input issue by streamlining context staging
 
 ### Direct commits
 
@@ -1658,8 +1652,8 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 - Introduced template package for variable substitution with {{variable}} syntax
 - Moved substitution logic from patterns to centralized template system
 - Updated patterns.go and chatter.go to use new template package
-- Added support for special {{input}} handling and nested variables
 - Implemented core plugin system with utility plugins (datetime, fetch, file, sys, text)
+- Added support for nested variables with multiple passes and error reporting for missing variables
 
 ## v1.4.107 (2024-11-19)
 
@@ -1689,17 +1683,14 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 - Add summarize_meeting pattern for creating meeting summaries from audio transcripts
 - Outputs Key Points, Tasks, Decisions, and Next Steps sections
-- Provides structured format for meeting documentation
-- Supports audio transcript processing
-- Enables organized meeting follow-up workflow
+- Designed for processing meeting transcripts effectively
 
 ### Direct commits
 
 - Introduce template package for variable substitution with {{variable}} syntax
 - Move substitution logic from patterns to centralized template system
-- Support special {{input}} handling for pattern content
-- Enable multiple passes to handle nested variables
-- Report errors for missing required variables
+- Support special {{input}} handling and nested variables
+- Enable multiple passes for variable processing with error reporting
 
 ## v1.4.104 (2024-11-18)
 
@@ -1709,7 +1700,7 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 - Supports relative paths (./pattern.txt), home directory expansion (~/patterns/test.txt), and absolute paths
 - Maintains backwards compatibility with named patterns
 - Requires explicit path markers to distinguish from pattern names
-- Example usage: `fabric --pattern ./draft-pattern.txt` or `fabric --pattern ~/patterns/my-pattern.txt`
+- Example usage: `fabric --pattern ./draft-pattern.txt`
 
 ### Direct commits
 
@@ -1733,11 +1724,11 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ### Direct commits
 
-- Add file-based pattern support for loading patterns directly from files using explicit path prefixes
+- Add file-based pattern support for loading patterns directly from files
 - Support relative paths (./pattern.txt, ../pattern.txt)
 - Support home directory expansion (~/patterns/test.txt)
-- Support absolute paths with backwards compatibility for named patterns
-- Require explicit path markers to distinguish from pattern names
+- Support absolute paths with explicit path markers
+- Maintain backwards compatibility with named patterns
 
 ## v1.4.101 (2024-11-15)
 
@@ -1793,12 +1784,12 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 ### PR [#1123](https://github.com/danielmiessler/Fabric/pull/1123) by [polyglotdev](https://github.com/polyglotdev): :sparkles: Added unaliasing to pattern setup
 
 - Added unaliasing step to pattern setup process
-- Prevents conflicts between dynamically defined functions and existing aliases
+- Prevents conflicts between dynamically defined functions and pre-existing aliases
 
 ### PR [#1119](https://github.com/danielmiessler/Fabric/pull/1119) by [verebes1](https://github.com/verebes1): Add auto save functionality
 
 - Added auto save functionality to aliases
-- Updated README with autogenerating aliases information for Obsidian integration
+- Updated README with autogenerating aliases information for Obsidian-like tools
 - Updated table of contents
 
 ### Direct commits
@@ -1815,10 +1806,10 @@ Create pattern to extract commands from videos and threat reports to obtain comm
 
 ### PR [#1117](https://github.com/danielmiessler/Fabric/pull/1117) by [verebes1](https://github.com/verebes1): Add alias generation information
 
-- Added alias generation documentation to README
+- Added alias generation information to README
+- Updated documentation with prompt alias generation instructions
+- Included YouTube transcript alias examples
 - Updated table of contents
-- Included information about generating aliases for prompts including YouTube transcripts
-- Merged branch 'main' into add-aliases-for-patterns
 
 ### PR [#1115](https://github.com/danielmiessler/Fabric/pull/1115) by [ignacio-arce](https://github.com/ignacio-arce): Added create_diy
 
@@ -1927,11 +1918,11 @@ Add a pattern that can convert text into an appropriate markdown callout
 
 ### PR [#1073](https://github.com/danielmiessler/Fabric/pull/1073) by [mattjoyce](https://github.com/mattjoyce): Five patterns to explore a project, opportunity or brief
 
-- Added five new DSRP patterns for project exploration and strategic analysis
-- Enhanced prompts to increase divergent thinking capabilities
-- Implemented identify_job_stories pattern for user story identification
-- Created S7 Strategy profiling with headwinds and tailwinds analysis
-- Added comprehensive metadata and style guide documentation
+- Added initial DSRP prompts with improved divergent thinking capabilities
+- Implemented identify_job_stories pattern for project analysis
+- Created S7 Strategy profiling with headwinds and tailwinds assessment
+- Enhanced prompt structure with metadata and styleguide integration
+- Fixed system configuration mix-up in pattern implementation
 
 ### Direct commits
 
@@ -1973,7 +1964,7 @@ Add a pattern that can convert text into an appropriate markdown callout
 - Added structure to prompt
 - Added headwinds and tailwinds
 - Initial draft of s7 Strategy profiling
-- Merge operations from main branch
+- Merge operations from main branches
 
 ## v1.4.72 (2024-10-25)
 
@@ -2093,14 +2084,14 @@ Add a pattern that can convert text into an appropriate markdown callout
 ### PR [#1039](https://github.com/danielmiessler/Fabric/pull/1039) by [hallelujah-shih](https://github.com/hallelujah-shih): Feature/set default lang
 
 - Support set default output language
-- Updated cli/cli.go
-- Modified core/fabric.go with formatting changes
+- Updated cli/cli.go for language configuration
+- Modified core/fabric.go with formatting improvements
 
 ### Direct commits
 
 - Updated all dsrp prompts to increase divergent thinking
-- Fixed mix up with system
-- Initial dsrp prompts
+- Fixed mix up with system configuration
+- Added initial dsrp prompts
 
 ## v1.4.55 (2024-10-09)
 
@@ -2112,7 +2103,7 @@ Add a pattern that can convert text into an appropriate markdown callout
 
 ### PR [#1021](https://github.com/danielmiessler/Fabric/pull/1021) by [joshuafuller](https://github.com/joshuafuller): Corrected spelling and grammatical errors for consistency and clarity for transcribe_minutes
 
-- Fixed grammatical accuracy: "agreed within" → "agreed upon within"
+- Fixed grammatical accuracy: "agreed within" → "agreed upon within the meeting"
 - Added missing periods for consistency across list items
 - Corrected spelling: "highliting" → "highlighting"
 - Fixed spelling: "exxactly" → "exactly"
@@ -2132,13 +2123,10 @@ Add a pattern that can convert text into an appropriate markdown callout
 - Added extract_core_message functionality
 - Extensive work on Rest API development and implementation
 - Corrected spelling and grammatical errors for consistency and clarity:
-- Fixed "agreed within" to "agreed upon within"
-- Added missing periods for consistency
-- Corrected "highliting" to "highlighting"
-- Fixed "exxactly" to "exactly"
-- Updated "Write NEXT STEPS a 2-3 sentences" to "Write NEXT STEPS as 2-3 sentences"
-
-These changes improve document readability and API functionality.
+- Fixed "agreed within" to "agreed upon within the meeting"
+- Added missing periods for list consistency
+- Corrected "highliting" to "highlighting" and "exxactly" to "exactly"
+- Updated phrasing for grammatical correctness in instructions
 
 ## v1.4.51 (2024-10-05)
 
@@ -2278,11 +2266,11 @@ These changes improve document readability and API functionality.
 
 ### PR [#962](https://github.com/danielmiessler/Fabric/pull/962) by [alucarded](https://github.com/alucarded): Update prompt in agility_story
 
-- Updated agility_story pattern to make topic more logical
+- Updated agility_story pattern to ensure topic makes sense
 
 ### PR [#994](https://github.com/danielmiessler/Fabric/pull/994) by [OddDuck11](https://github.com/OddDuck11): Add pattern analyze_military_strategy
 
-- Added new pattern for analyzing historic or fictional battle strategies
+- Added new pattern for analyzing historic or fictional battle strategy
 
 ### PR [#1008](https://github.com/danielmiessler/Fabric/pull/1008) by [MattBash17](https://github.com/MattBash17): Update system.md in transcribe_minutes
 
@@ -2332,7 +2320,6 @@ These changes improve document readability and API functionality.
 
 - Add ScrapeURL flag for CLI to scrape website URL to markdown using Jina AI
 - Add Jina AI integration for web scraping and question search
-- Made jina api key optional
 
 ### PR [#970](https://github.com/danielmiessler/Fabric/pull/970) by [mark-kazakov](https://github.com/mark-kazakov): add mistral vendor
 

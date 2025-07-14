@@ -260,6 +260,19 @@ func (o *PluginRegistry) Configure() (err error) {
 	o.ConfigureVendors()
 	_ = o.Defaults.Configure()
 	_ = o.PatternsLoader.Configure()
+	_ = o.CustomPatterns.Configure()
+
+	// Refresh the database custom patterns directory after custom patterns plugin is configured
+	customPatternsDir := os.Getenv("CUSTOM_PATTERNS_DIRECTORY")
+	if customPatternsDir != "" {
+		// Expand home directory if needed
+		if strings.HasPrefix(customPatternsDir, "~/") {
+			if homeDir, err := os.UserHomeDir(); err == nil {
+				customPatternsDir = filepath.Join(homeDir, customPatternsDir[2:])
+			}
+		}
+		o.Db.Patterns.CustomPatternsDir = customPatternsDir
+	}
 
 	//YouTube and Jina are not mandatory, so ignore not configured error
 	_ = o.YouTube.Configure()
