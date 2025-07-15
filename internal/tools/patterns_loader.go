@@ -342,6 +342,9 @@ func (o *PatternsLoader) createUniquePatternsFile() (err error) {
 	}
 
 	if len(patternNamesMap) == 0 {
+		if o.Patterns.CustomPatternsDir != "" {
+			return fmt.Errorf("no patterns found in directories %s and %s", o.Patterns.Dir, o.Patterns.CustomPatternsDir)
+		}
 		return fmt.Errorf("no patterns found in directory %s", o.Patterns.Dir)
 	}
 

@@ -10,8 +10,7 @@ import (
 const DefaultSummarizeModel = "claude-sonnet-4-20250514"
 const MinContentLength = 256 // Minimum content length to consider for summarization
 
-const prompt = `
-# ROLE
+const prompt = `# ROLE
 You are an expert Technical Writer specializing in creating clear, concise,
 and professional release notes from raw Git commit logs.
 

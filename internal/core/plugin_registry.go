@@ -259,7 +259,9 @@ func (o *PluginRegistry) GetModels() (ret *ai.VendorsModels, err error) {
 func (o *PluginRegistry) Configure() (err error) {
 	o.ConfigureVendors()
 	_ = o.Defaults.Configure()
-	_ = o.CustomPatterns.Configure()
+	if err := o.CustomPatterns.Configure(); err != nil {
+		fmt.Printf("Error configuring CustomPatterns: %v\n", err)
+	}
 	_ = o.PatternsLoader.Configure()
 
 	// Refresh the database custom patterns directory after custom patterns plugin is configured
