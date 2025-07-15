@@ -107,8 +107,13 @@ func (g *Generator) collectData() error {
 							// Merge new versions into cached versions (only add if not already cached)
 							for name, version := range newVersions {
 								if name != "Unreleased" { // Handle Unreleased separately
-									if _, exists := g.versions[name]; !exists {
+									if existingVersion, exists := g.versions[name]; !exists {
 										g.versions[name] = version
+									} else {
+										// Update existing version with new PR numbers if they're missing
+										if len(existingVersion.PRNumbers) == 0 && len(version.PRNumbers) > 0 {
+											existingVersion.PRNumbers = version.PRNumbers
+										}
 									}
 								}
 							}

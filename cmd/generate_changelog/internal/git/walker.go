@@ -314,6 +314,7 @@ func (w *Walker) WalkHistorySinceTag(sinceTag string) (map[string]*Version, erro
 
 	versions := make(map[string]*Version)
 	currentVersion := "Unreleased"
+	prNumbers := make(map[string][]int)
 
 	err = commitIter.ForEach(func(c *object.Commit) error {
 		// Stop iteration when the hash of the current commit matches the hash of the specified sinceTag commit
@@ -348,12 +349,12 @@ func (w *Walker) WalkHistorySinceTag(sinceTag string) (map[string]*Version, erro
 		}
 
 		// Check for PR merge pattern
-		if commit.IsMerge {
-			if matches := prPattern.FindStringSubmatch(commit.Message); len(matches) > 1 {
-				if prNumber, err := strconv.Atoi(matches[1]); err == nil {
-					commit.PRNumber = prNumber
-				}
-			}
+		if matches := prPattern.FindStringSubmatch(commit.Message); len(matches) > 1 {
+			prNumber := 0
+			fmt.Sscanf(matches[1], "%d", &prNumber)
+			commit.PRNumber = prNumber
+
+			prNumbers[currentVersion] = append(prNumbers[currentVersion], prNumber)
 		}
 
 		// Add commit to current version
@@ -373,6 +374,11 @@ func (w *Walker) WalkHistorySinceTag(sinceTag string) (map[string]*Version, erro
 	// Handle the stop condition - storer.ErrStop is expected
 	if err == storer.ErrStop {
 		err = nil
+	}
+
+	// Assign collected PR numbers to each version
+	for version, prs := range prNumbers {
+		versions[version].PRNumbers = dedupInts(prs)
 	}
 
 	return versions, err
