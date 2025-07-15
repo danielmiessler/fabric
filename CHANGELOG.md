@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.4.247 (2025-07-15)
+
+### PR [#1613](https://github.com/danielmiessler/Fabric/pull/1613) by [ksylvan](https://github.com/ksylvan): Improve AI Summarization for Consistent Professional Changelog Entries
+
+- Feat: enhance changelog generation with incremental caching and improved AI summarization
+- Add incremental processing for new Git tags since cache
+- Implement `WalkHistorySinceTag` method for efficient history traversal
+- Add custom patterns directory support to plugin registry
+- Feat: improve error handling in `plugin_registry` and `patterns_loader`
+
+### Direct commits
+
+- Docs: update README for GraphQL optimization and AI summary features
+
 ## v1.4.246 (2025-07-14)
 
 ### PR [#1611](https://github.com/danielmiessler/Fabric/pull/1611) by [ksylvan](https://github.com/ksylvan): Changelog Generator: AI-Powered Automation for Fabric Project
