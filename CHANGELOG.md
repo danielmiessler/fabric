@@ -1,15 +1,5 @@
 # Changelog
 
-## Unreleased
-
-### Direct commits
-
-- Update README for GraphQL optimization and AI summary features
-- Detail GraphQL API usage for faster PR fetching
-- Introduce AI-powered summaries via Fabric integration
-- Document support for loading secrets from .env files
-- Clarify project license is The MIT License
-
 ## v1.4.246 (2025-07-14)
 
 ### PR [#1611](https://github.com/danielmiessler/Fabric/pull/1611) by [ksylvan](https://github.com/ksylvan): Changelog Generator: AI-Powered Automation for Fabric Project

@@ -58,6 +58,7 @@ func SummarizeVersionContent(content string) (string, error) {
 	}
 	if len(content) < MinContentLength {
 		// If content is too brief, return it as is
+		fmt.Fprintln(os.Stderr, "Content is too short for summarization, returning original content.")
 		return content, nil
 	}
 
