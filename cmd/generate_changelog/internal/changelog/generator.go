@@ -82,8 +82,8 @@ func (g *Generator) collectData() error {
 		if cachedTag != "" {
 			// Get the current latest tag from git
 			currentTag, err := g.gitWalker.GetLatestTag()
-			if err == nil && currentTag == cachedTag {
-				// Same tag - load cached data and walk commits since tag for "Unreleased"
+			if err == nil {
+				// Load cached data - we can use it even if there are new tags
 				cachedVersions, err := g.cache.GetVersions()
 				if err == nil && len(cachedVersions) > 0 {
 					g.versions = cachedVersions
@@ -97,7 +97,25 @@ func (g *Generator) collectData() error {
 						}
 					}
 
-					// Walk commits since the latest tag to get new unreleased commits
+					// If we have new tags since cache, process the new versions only
+					if currentTag != cachedTag {
+						fmt.Fprintf(os.Stderr, "Processing new versions since %s...\n", cachedTag)
+						newVersions, err := g.gitWalker.WalkHistorySinceTag(cachedTag)
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "Warning: Failed to walk history since tag %s: %v\n", cachedTag, err)
+						} else {
+							// Merge new versions into cached versions (only add if not already cached)
+							for name, version := range newVersions {
+								if name != "Unreleased" { // Handle Unreleased separately
+									if _, exists := g.versions[name]; !exists {
+										g.versions[name] = version
+									}
+								}
+							}
+						}
+					}
+
+					// Always update Unreleased section with latest commits
 					unreleasedVersion, err := g.gitWalker.WalkCommitsSinceTag(currentTag)
 					if err != nil {
 						fmt.Fprintf(os.Stderr, "Warning: Failed to walk commits since tag %s: %v\n", currentTag, err)
@@ -108,6 +126,29 @@ func (g *Generator) collectData() error {
 						}
 						// Replace or add the unreleased version
 						g.versions["Unreleased"] = unreleasedVersion
+					}
+
+					// Save any new versions to cache (after potential AI processing)
+					if currentTag != cachedTag {
+						for _, version := range g.versions {
+							// Skip versions that were already cached and Unreleased
+							if version.Name != "Unreleased" {
+								if err := g.cache.SaveVersion(version); err != nil {
+									fmt.Fprintf(os.Stderr, "Warning: Failed to save version to cache: %v\n", err)
+								}
+
+								for _, commit := range version.Commits {
+									if err := g.cache.SaveCommit(commit, version.Name); err != nil {
+										fmt.Fprintf(os.Stderr, "Warning: Failed to save commit to cache: %v\n", err)
+									}
+								}
+							}
+						}
+
+						// Update the last processed tag
+						if err := g.cache.SetLastProcessedTag(currentTag); err != nil {
+							fmt.Fprintf(os.Stderr, "Warning: Failed to update last processed tag: %v\n", err)
+						}
 					}
 
 					return nil
@@ -298,6 +339,7 @@ func (g *Generator) formatVersion(version *git.Version) string {
 			}
 		}
 
+		// For released versions, if we have cached AI summary, use it!
 		if version.Name != "Unreleased" && version.AISummary != "" {
 			fmt.Fprintf(os.Stderr, "✅ %s already summarized (skipping)\n", version.Name)
 			sb.WriteString(version.AISummary)
@@ -529,8 +571,6 @@ func normalizeLineEndings(content string) string {
 }
 
 func (g *Generator) formatCommitMessage(message string) string {
-	prefixes := []string{"fix:", "feat:", "docs:", "style:", "refactor:",
-		"test:", "chore:", "perf:", "ci:", "build:", "revert:", "# docs:"}
 	strings_to_remove := []string{
 		"### CHANGES\n", "## CHANGES\n", "# CHANGES\n",
 		"...\n", "---\n", "## Changes\n", "## Change",
@@ -542,13 +582,6 @@ func (g *Generator) formatCommitMessage(message string) string {
 	message = normalizeLineEndings(message)
 	// No hard tabs
 	message = strings.ReplaceAll(message, "\t", " ")
-
-	for _, prefix := range prefixes {
-		if strings.HasPrefix(strings.ToLower(message), prefix) {
-			message = strings.TrimSpace(message[len(prefix):])
-			break
-		}
-	}
 
 	if len(message) > 0 {
 		message = strings.ToUpper(message[:1]) + message[1:]
