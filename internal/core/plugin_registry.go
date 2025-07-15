@@ -274,6 +274,7 @@ func (o *PluginRegistry) Configure() (err error) {
 			}
 		}
 		o.Db.Patterns.CustomPatternsDir = customPatternsDir
+		o.PatternsLoader.Patterns.CustomPatternsDir = customPatternsDir
 	}
 
 	//YouTube and Jina are not mandatory, so ignore not configured error
