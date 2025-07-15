@@ -260,7 +260,7 @@ func (o *PluginRegistry) Configure() (err error) {
 	o.ConfigureVendors()
 	_ = o.Defaults.Configure()
 	if err := o.CustomPatterns.Configure(); err != nil {
-		fmt.Printf("Error configuring CustomPatterns: %v\n", err)
+		return fmt.Errorf("error configuring CustomPatterns: %w", err)
 	}
 	_ = o.PatternsLoader.Configure()
 
