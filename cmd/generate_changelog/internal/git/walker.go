@@ -10,6 +10,7 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
+	"github.com/go-git/go-git/v5/plumbing/storer"
 )
 
 var (
@@ -317,7 +318,7 @@ func (w *Walker) WalkHistorySinceTag(sinceTag string) (map[string]*Version, erro
 	err = commitIter.ForEach(func(c *object.Commit) error {
 		// Stop when we reach the tag commit
 		if c.Hash == tagCommit.Hash {
-			return nil
+			return storer.ErrStop
 		}
 
 		commit := &Commit{
@@ -368,6 +369,11 @@ func (w *Walker) WalkHistorySinceTag(sinceTag string) (map[string]*Version, erro
 		versions[currentVersion].Commits = append(versions[currentVersion].Commits, commit)
 		return nil
 	})
+
+	// Handle the stop condition - storer.ErrStop is expected
+	if err == storer.ErrStop {
+		err = nil
+	}
 
 	return versions, err
 }

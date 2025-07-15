@@ -131,7 +131,7 @@ func (g *Generator) collectData() error {
 					// Save any new versions to cache (after potential AI processing)
 					if currentTag != cachedTag {
 						for _, version := range g.versions {
-							// Skip versions that were already cached
+							// Skip versions that were already cached and Unreleased
 							if version.Name != "Unreleased" {
 								if err := g.cache.SaveVersion(version); err != nil {
 									fmt.Fprintf(os.Stderr, "Warning: Failed to save version to cache: %v\n", err)

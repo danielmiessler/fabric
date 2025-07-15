@@ -337,7 +337,7 @@ func (o *PatternsLoader) createUniquePatternsFile() (err error) {
 			}
 			fmt.Printf("📂 Also included patterns from custom directory: %s\n", o.Patterns.CustomPatternsDir)
 		} else {
-			fmt.Printf("Warning: Could not read custom patterns directory %s: %v\n", o.Patterns.CustomPatternsDir, customErr)
+			fmt.Fprintf(os.Stderr, "Warning: Could not read custom patterns directory %s: %v\n", o.Patterns.CustomPatternsDir, customErr)
 		}
 	}
 
