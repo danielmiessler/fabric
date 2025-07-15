@@ -316,7 +316,7 @@ func (w *Walker) WalkHistorySinceTag(sinceTag string) (map[string]*Version, erro
 	currentVersion := "Unreleased"
 
 	err = commitIter.ForEach(func(c *object.Commit) error {
-		// Stop when we reach the tag commit
+		// Stop iteration when the hash of the current commit matches the hash of the specified sinceTag commit
 		if c.Hash == tagCommit.Hash {
 			return storer.ErrStop
 		}
