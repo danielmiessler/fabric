@@ -110,6 +110,9 @@ _fabric() {
     '(--liststrategies)--liststrategies[List all strategies]' \
     '(--listvendors)--listvendors[List all vendors]' \
     '(--shell-complete-list)--shell-complete-list[Output raw list without headers/formatting (for shell completion)]' \
+    '(--suppress-think)--suppress-think[Suppress text enclosed in thinking tags]' \
+    '(--think-start-tag)--think-start-tag[Start tag for thinking sections (default: <think>)]:start tag:' \
+    '(--think-end-tag)--think-end-tag[End tag for thinking sections (default: </think>)]:end tag:' \
     '(-h --help)'{-h,--help}'[Show this help message]' \
     '*:arguments:'
 }

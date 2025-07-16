@@ -113,30 +113,9 @@ Keep in mind that many of these were recorded when Fabric was Python-based, so r
 
 ## Updates
 
-> [!NOTE]
->
-> July 4, 2025
->
-> - **Web Search**: Fabric now supports web search for Anthropic and OpenAI models using the `--search` and `--search-location` flags. This replaces the previous plugin-based search, so you may want to remove the old `ANTHROPIC_WEB_SEARCH_TOOL_*` variables from your `~/.config/fabric/.env` file.
-> - **Image Generation**: Fabric now has powerful image generation capabilities with OpenAI.
->   - Generate images from text prompts and save them using `--image-file`.
->   - Edit existing images by providing an input image with `--attachment`.
->   - Control image `size`, `quality`, `compression`, and `background` with the new `--image-*` flags.
->
->June 17, 2025
->
->- Fabric now supports Perplexity AI. Configure it by using `fabric -S` to add your Perplexity AI API Key,
->   and then try:
->
->   ```bash
->   fabric -m sonar-pro "What is the latest world news?"
->   ```
->
->June 11, 2025
->
->- Fabric's YouTube transcription now needs `yt-dlp` to be installed. Make sure to install the latest
-> version (2025.06.09 as of this note). The YouTube API key is only needed for comments (the `--comments` flag)
-> and metadata extraction (the `--metadata` flag).
+Fabric is evolving rapidly.
+
+Stay current with the latest features by reviewing the [CHANGELOG](./CHANGELOG.md) for all recent changes.
 
 ## Philosophy
 
