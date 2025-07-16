@@ -224,6 +224,9 @@ func (g *Generator) fetchPRs() error {
 		}
 	}
 
+	if missingPRs {
+		fmt.Fprintf(os.Stderr, "Full sync triggered due to missing PRs in cache.\n")
+	}
 	// If we have never synced or it's been more than 24 hours, do a full sync
 	// Also sync if we have versions with PR numbers that aren't cached
 	needsSync := lastSync.IsZero() || time.Since(lastSync) > 24*time.Hour || g.cfg.ForcePRSync || missingPRs
