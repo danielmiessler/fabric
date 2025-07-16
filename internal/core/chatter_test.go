@@ -15,6 +15,7 @@ import (
 type mockVendor struct {
 	sendStreamError error
 	streamChunks    []string
+	sendFunc        func(context.Context, []*chat.ChatCompletionMessage, *domain.ChatOptions) (string, error)
 }
 
 func (m *mockVendor) GetName() string {
@@ -57,11 +58,59 @@ func (m *mockVendor) SendStream(messages []*chat.ChatCompletionMessage, opts *do
 }
 
 func (m *mockVendor) Send(ctx context.Context, messages []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (string, error) {
+	if m.sendFunc != nil {
+		return m.sendFunc(ctx, messages, opts)
+	}
 	return "test response", nil
 }
 
 func (m *mockVendor) NeedsRawMode(modelName string) bool {
 	return false
+}
+
+func TestChatter_Send_SuppressThink(t *testing.T) {
+	tempDir := t.TempDir()
+	db := fsdb.NewDb(tempDir)
+
+	mockVendor := &mockVendor{}
+
+	chatter := &Chatter{
+		db:     db,
+		Stream: false,
+		vendor: mockVendor,
+		model:  "test-model",
+	}
+
+	request := &domain.ChatRequest{
+		Message: &chat.ChatCompletionMessage{
+			Role:    chat.ChatMessageRoleUser,
+			Content: "test",
+		},
+	}
+
+	opts := &domain.ChatOptions{
+		Model:         "test-model",
+		SuppressThink: true,
+		ThinkStartTag: "<think>",
+		ThinkEndTag:   "</think>",
+	}
+
+	// custom send function returning a message with think tags
+	mockVendor.sendFunc = func(ctx context.Context, msgs []*chat.ChatCompletionMessage, o *domain.ChatOptions) (string, error) {
+		return "<think>hidden</think> visible", nil
+	}
+
+	session, err := chatter.Send(request, opts)
+	if err != nil {
+		t.Fatalf("Send returned error: %v", err)
+	}
+	if session == nil {
+		t.Fatal("expected session")
+	}
+	last := session.GetLastMessage()
+	if last.Content != "visible" {
+		t.Errorf("expected filtered content 'visible', got %q", last.Content)
+	}
 }
 
 func TestChatter_Send_StreamingErrorPropagation(t *testing.T) {

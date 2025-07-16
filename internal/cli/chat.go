@@ -41,8 +41,8 @@ func handleChatProcessing(currentFlags *Flags, registry *core.PluginRegistry, me
 
 	result := session.GetLastMessage().Content
 
-	if !currentFlags.Stream {
-		// print the result if it was not streamed already
+	if !currentFlags.Stream || currentFlags.SuppressThink {
+		// print the result if it was not streamed already or suppress-think disabled streaming output
 		fmt.Println(result)
 	}
 

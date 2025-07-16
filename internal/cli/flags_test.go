@@ -64,6 +64,9 @@ func TestBuildChatOptions(t *testing.T) {
 		FrequencyPenalty: 0.2,
 		Raw:              false,
 		Seed:             1,
+		SuppressThink:    false,
+		ThinkStartTag:    "<think>",
+		ThinkEndTag:      "</think>",
 	}
 	options, err := flags.BuildChatOptions()
 	assert.NoError(t, err)
@@ -85,10 +88,27 @@ func TestBuildChatOptionsDefaultSeed(t *testing.T) {
 		FrequencyPenalty: 0.2,
 		Raw:              false,
 		Seed:             0,
+		SuppressThink:    false,
+		ThinkStartTag:    "<think>",
+		ThinkEndTag:      "</think>",
 	}
 	options, err := flags.BuildChatOptions()
 	assert.NoError(t, err)
 	assert.Equal(t, expectedOptions, options)
+}
+
+func TestBuildChatOptionsSuppressThink(t *testing.T) {
+	flags := &Flags{
+		SuppressThink: true,
+		ThinkStartTag: "[[t]]",
+		ThinkEndTag:   "[[/t]]",
+	}
+
+	options, err := flags.BuildChatOptions()
+	assert.NoError(t, err)
+	assert.True(t, options.SuppressThink)
+	assert.Equal(t, "[[t]]", options.ThinkStartTag)
+	assert.Equal(t, "[[/t]]", options.ThinkEndTag)
 }
 
 func TestInitWithYAMLConfig(t *testing.T) {

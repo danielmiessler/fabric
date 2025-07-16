@@ -19,3 +19,8 @@ seed: 42
 
 stream: true
 raw: false
+
+# suppress vendor thinking output
+suppressThink: false
+thinkStartTag: "<think>"
+thinkEndTag: "</think>"

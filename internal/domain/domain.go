@@ -33,6 +33,9 @@ type ChatOptions struct {
 	ImageQuality       string
 	ImageCompression   int
 	ImageBackground    string
+	SuppressThink      bool
+	ThinkStartTag      string
+	ThinkEndTag        string
 }
 
 // NormalizeMessages remove empty messages and ensure messages order user-assist-user
