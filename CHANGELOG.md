@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.4.255 (2025-07-16)
+
+### Direct commits
+
+- Merge branch 'danielmiessler:main' into main
+- Chore: add more paths to update-version-andcreate-tag workflow to reduce unnecessary tagging
+
+## v1.4.254 (2025-07-16)
+
+### PR [#1621](https://github.com/danielmiessler/Fabric/pull/1621) by [robertocarvajal](https://github.com/robertocarvajal): Adds generate code rules pattern
+
+- Adds generate code rules pattern
+
+### Direct commits
+
+- Docs: Update CHANGELOG after v1.4.253
+
 ## v1.4.253 (2025-07-16)
 
 ### PR [#1620](https://github.com/danielmiessler/Fabric/pull/1620) by [ksylvan](https://github.com/ksylvan): Update Shell Completions for New Think-Block Suppression Options
