@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.4.253 (2025-07-16)
+
+### PR [#1620](https://github.com/danielmiessler/Fabric/pull/1620) by [ksylvan](https://github.com/ksylvan): Update Shell Completions for New Think-Block Suppression Options
+
+- Add `--suppress-think` option to suppress 'think' tags
+- Introduce `--think-start-tag` and `--think-end-tag` options for text suppression and completion
+- Update bash completion with 'think' tag options
+- Update fish completion with 'think' tag options
+- Update CHANGELOG after v.1.4.252
+
 ## v1.4.252 (2025-07-16)
 
 ### PR [#1619](https://github.com/danielmiessler/Fabric/pull/1619) by [ksylvan](https://github.com/ksylvan): Feature: Optional Hiding of Model Thinking Process with Configurable Tags
