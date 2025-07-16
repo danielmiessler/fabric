@@ -1,6 +1,18 @@
 # Changelog
 
-## Unreleased
+## v1.4.248 (2025-07-16)
+
+### PR [#1616](https://github.com/danielmiessler/Fabric/pull/1616) by [ksylvan](https://github.com/ksylvan): Preserve PR Numbers During Version Cache Merges
+
+- Feat: enhance changelog to correctly associate PR numbers with version tags
+- Fix: improve PR number parsing with proper error handling
+- Collect all PR numbers for commits between version tags
+- Associate aggregated PR numbers with each version entry
+- Update cached versions with newly found PR numbers
+
+### Direct commits
+
+- Docs: reorganize v1.4.247 changelog to attribute changes to PR #1613
 
 ## v1.4.247 (2025-07-15)
 
