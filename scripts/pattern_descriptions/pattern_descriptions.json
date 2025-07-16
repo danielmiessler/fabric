@@ -1861,6 +1861,16 @@
         "CR THINKING",
         "SELF"
       ]
+    },
+    {
+      "patternName": "generate_code_rules",
+      "description": "Extracts a list of best practices rules for AI coding assisted tools.",
+      "tags": [
+        "ANALYSIS",
+        "EXTRACT",
+        "DEVELOPMENT",
+        "AI"
+      ]
     }
   ]
 }
