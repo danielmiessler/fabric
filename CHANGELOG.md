@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.4.249 (2025-07-16)
+
+### PR [#1617](https://github.com/danielmiessler/Fabric/pull/1617) by [ksylvan](https://github.com/ksylvan): Improve PR Sync Logic for Changelog Generator
+
+- Preserve PR numbers during version cache merges
+- Enhance changelog to associate PR numbers with version tags
+- Improve PR number parsing with proper error handling
+- Collect all PR numbers for commits between version tags
+- Associate aggregated PR numbers with each version entry
+
 ## v1.4.248 (2025-07-16)
 
 ### PR [#1616](https://github.com/danielmiessler/Fabric/pull/1616) by [ksylvan](https://github.com/ksylvan): Preserve PR Numbers During Version Cache Merges
