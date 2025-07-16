@@ -210,8 +210,26 @@ func (g *Generator) fetchPRs() error {
 		lastSync, _ = g.cache.GetLastPRSync()
 	}
 
+	// Check if we need to sync for missing PRs
+	missingPRs := false
+	for _, version := range g.versions {
+		for _, prNum := range version.PRNumbers {
+			if _, exists := g.prs[prNum]; !exists {
+				missingPRs = true
+				break
+			}
+		}
+		if missingPRs {
+			break
+		}
+	}
+
+	if missingPRs {
+		fmt.Fprintf(os.Stderr, "Full sync triggered due to missing PRs in cache.\n")
+	}
 	// If we have never synced or it's been more than 24 hours, do a full sync
-	needsSync := lastSync.IsZero() || time.Since(lastSync) > 24*time.Hour || g.cfg.ForcePRSync
+	// Also sync if we have versions with PR numbers that aren't cached
+	needsSync := lastSync.IsZero() || time.Since(lastSync) > 24*time.Hour || g.cfg.ForcePRSync || missingPRs
 
 	if !needsSync {
 		fmt.Fprintf(os.Stderr, "Using cached PR data (last sync: %s)\n", lastSync.Format("2006-01-02 15:04:05"))
