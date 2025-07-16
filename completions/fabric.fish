@@ -69,6 +69,8 @@ complete -c fabric -l image-background -d "Background type: opaque, transparent 
 complete -c fabric -l addextension -d "Register a new extension from config file path" -r -a "*.yaml *.yml"
 complete -c fabric -l rmextension -d "Remove a registered extension by name" -a "(__fabric_get_extensions)"
 complete -c fabric -l strategy -d "Choose a strategy from the available strategies" -a "(__fabric_get_strategies)"
+complete -c fabric -l think-start-tag -d "Start tag for thinking sections (default: <think>)"
+complete -c fabric -l think-end-tag -d "End tag for thinking sections (default: </think>)"
 
 # Boolean flags (no arguments)
 complete -c fabric -s S -l setup -d "Run setup for all reconfigurable parts of fabric"
@@ -98,4 +100,5 @@ complete -c fabric -l listextensions -d "List all registered extensions"
 complete -c fabric -l liststrategies -d "List all strategies"
 complete -c fabric -l listvendors -d "List all vendors"
 complete -c fabric -l shell-complete-list -d "Output raw list without headers/formatting (for shell completion)"
+complete -c fabric -l suppress-think -d "Suppress text enclosed in thinking tags"
 complete -c fabric -s h -l help -d "Show this help message"

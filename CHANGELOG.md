@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.4.252 (2025-07-16)
+
+### PR [#1619](https://github.com/danielmiessler/Fabric/pull/1619) by [ksylvan](https://github.com/ksylvan): Feature: Optional Hiding of Model Thinking Process with Configurable Tags
+
+- Add suppress-think flag to hide thinking blocks from AI reasoning output
+- Configure customizable start and end thinking tags for content filtering
+- Update streaming logic to respect suppress-think setting with YAML configuration support
+- Implement StripThinkBlocks utility function with comprehensive testing for thinking suppression
+- Performance improvement: add regex caching to StripThinkBlocks function
+
+### Direct commits
+
+- Update CHANGELOG after v1.4.251
+
 ## v1.4.251 (2025-07-16)
 
 ### PR [#1618](https://github.com/danielmiessler/Fabric/pull/1618) by [ksylvan](https://github.com/ksylvan): Update GitHub Workflow to Ignore Additional File Paths
