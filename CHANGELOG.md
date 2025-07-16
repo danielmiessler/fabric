@@ -1,5 +1,7 @@
 # Changelog
 
+## Unreleased
+
 ## v1.4.247 (2025-07-15)
 
 ### PR [#1613](https://github.com/danielmiessler/Fabric/pull/1613) by [ksylvan](https://github.com/ksylvan): Improve AI Summarization for Consistent Professional Changelog Entries
