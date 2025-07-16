@@ -79,7 +79,9 @@ func (o *Chatter) Send(request *domain.ChatRequest, opts *domain.ChatOptions) (s
 
 		for response := range responseChan {
 			message += response
-			fmt.Print(response)
+			if !opts.SuppressThink {
+				fmt.Print(response)
+			}
 		}
 
 		// Wait for goroutine to finish
@@ -99,6 +101,10 @@ func (o *Chatter) Send(request *domain.ChatRequest, opts *domain.ChatOptions) (s
 		if message, err = o.vendor.Send(context.Background(), session.GetVendorMessages(), opts); err != nil {
 			return
 		}
+	}
+
+	if opts.SuppressThink {
+		message = domain.StripThinkBlocks(message, opts.ThinkStartTag, opts.ThinkEndTag)
 	}
 
 	if message == "" {

@@ -83,6 +83,9 @@ type Flags struct {
 	ImageQuality                    string            `long:"image-quality" description:"Image quality: low, medium, high, auto (default: auto)"`
 	ImageCompression                int               `long:"image-compression" description:"Compression level 0-100 for JPEG/WebP formats (default: not set)"`
 	ImageBackground                 string            `long:"image-background" description:"Background type: opaque, transparent (default: opaque, only for PNG/WebP)"`
+	SuppressThink                   bool              `long:"suppress-think" yaml:"suppressThink" description:"Suppress text enclosed in thinking tags"`
+	ThinkStartTag                   string            `long:"think-start-tag" yaml:"thinkStartTag" description:"Start tag for thinking sections" default:"<think>"`
+	ThinkEndTag                     string            `long:"think-end-tag" yaml:"thinkEndTag" description:"End tag for thinking sections" default:"</think>"`
 }
 
 var debug = false
@@ -376,6 +379,15 @@ func (o *Flags) BuildChatOptions() (ret *domain.ChatOptions, err error) {
 		return nil, err
 	}
 
+	startTag := o.ThinkStartTag
+	if startTag == "" {
+		startTag = "<think>"
+	}
+	endTag := o.ThinkEndTag
+	if endTag == "" {
+		endTag = "</think>"
+	}
+
 	ret = &domain.ChatOptions{
 		Model:              o.Model,
 		Temperature:        o.Temperature,
@@ -392,6 +404,9 @@ func (o *Flags) BuildChatOptions() (ret *domain.ChatOptions, err error) {
 		ImageQuality:       o.ImageQuality,
 		ImageCompression:   o.ImageCompression,
 		ImageBackground:    o.ImageBackground,
+		SuppressThink:      o.SuppressThink,
+		ThinkStartTag:      startTag,
+		ThinkEndTag:        endTag,
 	}
 	return
 }
