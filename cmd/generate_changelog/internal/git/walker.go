@@ -350,8 +350,11 @@ func (w *Walker) WalkHistorySinceTag(sinceTag string) (map[string]*Version, erro
 
 		// Check for PR merge pattern
 		if matches := prPattern.FindStringSubmatch(commit.Message); len(matches) > 1 {
-			prNumber := 0
-			fmt.Sscanf(matches[1], "%d", &prNumber)
+			prNumber, err := strconv.Atoi(matches[1])
+			if err != nil {
+				// Handle parsing error (e.g., log it or skip processing)
+				return fmt.Errorf("failed to parse PR number: %v", err)
+			}
 			commit.PRNumber = prNumber
 
 			prNumbers[currentVersion] = append(prNumbers[currentVersion], prNumber)
