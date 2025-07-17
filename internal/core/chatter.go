@@ -103,7 +103,7 @@ func (o *Chatter) Send(request *domain.ChatRequest, opts *domain.ChatOptions) (s
 		}
 	}
 
-	if opts.SuppressThink {
+	if opts.SuppressThink && !o.DryRun {
 		message = domain.StripThinkBlocks(message, opts.ThinkStartTag, opts.ThinkEndTag)
 	}
 

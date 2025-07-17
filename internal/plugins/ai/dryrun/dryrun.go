@@ -12,6 +12,8 @@ import (
 	"github.com/danielmiessler/fabric/internal/plugins"
 )
 
+const DryRunResponse = "Dry run: Fake response sent by DryRun plugin\n"
+
 type Client struct {
 	*plugins.PluginBase
 }
@@ -85,27 +87,37 @@ func (c *Client) formatOptions(opts *domain.ChatOptions) string {
 	if opts.ImageFile != "" {
 		builder.WriteString(fmt.Sprintf("ImageFile: %s\n", opts.ImageFile))
 	}
+	if opts.SuppressThink {
+		builder.WriteString("SuppressThink: enabled\n")
+		builder.WriteString(fmt.Sprintf("Thinking Start Tag: %s\n", opts.ThinkStartTag))
+		builder.WriteString(fmt.Sprintf("Thinking End Tag: %s\n", opts.ThinkEndTag))
+	}
 
 	return builder.String()
 }
 
-func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string) error {
+func (c *Client) constructRequest(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) string {
 	var builder strings.Builder
 	builder.WriteString("Dry run: Would send the following request:\n\n")
 	builder.WriteString(c.formatMessages(msgs))
 	builder.WriteString(c.formatOptions(opts))
 
-	channel <- builder.String()
-	close(channel)
+	return builder.String()
+}
+
+func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string) error {
+	defer close(channel)
+	request := c.constructRequest(msgs, opts)
+	channel <- request
+	channel <- "\n"
+	channel <- DryRunResponse
 	return nil
 }
 
 func (c *Client) Send(_ context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (string, error) {
-	fmt.Println("Dry run: Would send the following request:")
-	fmt.Print(c.formatMessages(msgs))
-	fmt.Print(c.formatOptions(opts))
+	request := c.constructRequest(msgs, opts)
 
-	return "", nil
+	return request + "\n" + DryRunResponse, nil
 }
 
 func (c *Client) Setup() error {
