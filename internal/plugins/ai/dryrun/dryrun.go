@@ -96,7 +96,7 @@ func (c *Client) formatOptions(opts *domain.ChatOptions) string {
 	return builder.String()
 }
 
-func (c *Client) _ConstructRequest(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) string {
+func (c *Client) constructRequest(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) string {
 	var builder strings.Builder
 	builder.WriteString("Dry run: Would send the following request:\n\n")
 	builder.WriteString(c.formatMessages(msgs))
@@ -106,7 +106,7 @@ func (c *Client) _ConstructRequest(msgs []*chat.ChatCompletionMessage, opts *dom
 }
 
 func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string) error {
-	request := c._ConstructRequest(msgs, opts)
+	request := c.constructRequest(msgs, opts)
 	channel <- request
 	channel <- DryRunResponse
 	close(channel)
@@ -114,7 +114,7 @@ func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.Cha
 }
 
 func (c *Client) Send(_ context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (string, error) {
-	request := c._ConstructRequest(msgs, opts)
+	request := c.constructRequest(msgs, opts)
 
 	return request + DryRunResponse, nil
 }
