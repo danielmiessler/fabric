@@ -113,6 +113,7 @@ _fabric() {
     '(--suppress-think)--suppress-think[Suppress text enclosed in thinking tags]' \
     '(--think-start-tag)--think-start-tag[Start tag for thinking sections (default: <think>)]:start tag:' \
     '(--think-end-tag)--think-end-tag[End tag for thinking sections (default: </think>)]:end tag:' \
+    '(--disable-responses-api)--disable-responses-api[Disable OpenAI Responses API (default: false)]' \
     '(-h --help)'{-h,--help}'[Show this help message]' \
     '*:arguments:'
 }
