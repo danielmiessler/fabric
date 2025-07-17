@@ -114,9 +114,9 @@ func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.Cha
 }
 
 func (c *Client) Send(_ context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (string, error) {
-	fmt.Print(c._ConstructRequest(msgs, opts))
+	request := (c._ConstructRequest(msgs, opts))
 
-	return DryRunResponse, nil
+	return request + DryRunResponse, nil
 }
 
 func (c *Client) Setup() error {
