@@ -102,26 +102,45 @@ func Init() (ret *Flags, err error) {
 	usedFlags := make(map[string]bool)
 	yamlArgsScan := os.Args[1:]
 
-	// Get list of fields that have yaml tags, could be in yaml config
-	yamlFields := make(map[string]bool)
+	// Create mapping from flag names (both short and long) to yaml tag names
+	flagToYamlTag := make(map[string]string)
 	t := reflect.TypeOf(Flags{})
 	for i := 0; i < t.NumField(); i++ {
-		if yamlTag := t.Field(i).Tag.Get("yaml"); yamlTag != "" {
-			yamlFields[yamlTag] = true
-			//Debugf("Found yaml-configured field: %s\n", yamlTag)
+		field := t.Field(i)
+		yamlTag := field.Tag.Get("yaml")
+		if yamlTag != "" {
+			longTag := field.Tag.Get("long")
+			shortTag := field.Tag.Get("short")
+			if longTag != "" {
+				flagToYamlTag[longTag] = yamlTag
+				Debugf("Mapped long flag %s to yaml tag %s\n", longTag, yamlTag)
+			}
+			if shortTag != "" {
+				flagToYamlTag[shortTag] = yamlTag
+				Debugf("Mapped short flag %s to yaml tag %s\n", shortTag, yamlTag)
+			}
 		}
 	}
 
 	// Scan args for that are provided by cli and might be in yaml
 	for _, arg := range yamlArgsScan {
+		var flag string
 		if strings.HasPrefix(arg, "--") {
-			flag := strings.TrimPrefix(arg, "--")
+			flag = strings.TrimPrefix(arg, "--")
 			if i := strings.Index(flag, "="); i > 0 {
 				flag = flag[:i]
 			}
-			if yamlFields[flag] {
-				usedFlags[flag] = true
-				Debugf("CLI flag used: %s\n", flag)
+		} else if strings.HasPrefix(arg, "-") && len(arg) > 1 {
+			flag = strings.TrimPrefix(arg, "-")
+			if i := strings.Index(flag, "="); i > 0 {
+				flag = flag[:i]
+			}
+		}
+
+		if flag != "" {
+			if yamlTag, exists := flagToYamlTag[flag]; exists {
+				usedFlags[yamlTag] = true
+				Debugf("CLI flag used: %s (yaml: %s)\n", flag, yamlTag)
 			}
 		}
 	}
@@ -132,6 +151,14 @@ func Init() (ret *Flags, err error) {
 	var args []string
 	if args, err = parser.Parse(); err != nil {
 		return
+	}
+
+	// Check to see if a ~/.fabric.yaml config file exists (only when user didn't specify a config)
+	if ret.Config == "" {
+		// Default to ~/.fabric.yaml if no config specified
+		if defaultConfigPath := util.GetDefaultConfigPath(); defaultConfigPath != "" {
+			ret.Config = defaultConfigPath
+		}
 	}
 
 	// If config specified, load and apply YAML for unused flags
@@ -168,7 +195,6 @@ func Init() (ret *Flags, err error) {
 		}
 	}
 
-	// Handle stdin and messages
 	// Handle stdin and messages
 	info, _ := os.Stdin.Stat()
 	pipedToStdin := (info.Mode() & os.ModeCharDevice) == 0
