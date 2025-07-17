@@ -86,6 +86,7 @@ type Flags struct {
 	SuppressThink                   bool              `long:"suppress-think" yaml:"suppressThink" description:"Suppress text enclosed in thinking tags"`
 	ThinkStartTag                   string            `long:"think-start-tag" yaml:"thinkStartTag" description:"Start tag for thinking sections" default:"<think>"`
 	ThinkEndTag                     string            `long:"think-end-tag" yaml:"thinkEndTag" description:"End tag for thinking sections" default:"</think>"`
+	DisableResponsesAPI             bool              `long:"disable-responses-api" yaml:"disableResponsesAPI" description:"Disable OpenAI Responses API (default: false)"`
 }
 
 var debug = false
@@ -142,9 +143,9 @@ func Init() (ret *Flags, err error) {
 		return
 	}
 
-	// Check to see if a ~/.fabric.yaml config file exists (only when user didn't specify a config)
+	// Check to see if a ~/.config/fabric/config.yaml config file exists (only when user didn't specify a config)
 	if ret.Config == "" {
-		// Default to ~/.fabric.yaml if no config specified
+		// Default to ~/.config/fabric/config.yaml if no config specified
 		if defaultConfigPath, err := util.GetDefaultConfigPath(); err == nil && defaultConfigPath != "" {
 			ret.Config = defaultConfigPath
 		} else if err != nil {

@@ -80,7 +80,7 @@ func GetDefaultConfigPath() (string, error) {
 		return "", fmt.Errorf("could not determine user home directory: %w", err)
 	}
 
-	defaultConfigPath := filepath.Join(homeDir, ".fabric.yaml")
+	defaultConfigPath := filepath.Join(homeDir, ".config", "fabric", "config.yaml")
 	if _, err := os.Stat(defaultConfigPath); err != nil {
 		if os.IsNotExist(err) {
 			return "", nil // Return no error for non-existent config path
