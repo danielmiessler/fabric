@@ -38,7 +38,10 @@ func ensureEnvFile() (err error) {
 	configDir := filepath.Join(homedir, ".config", "fabric")
 	envPath := filepath.Join(configDir, ".env")
 
-	if _, statErr := os.Stat(envPath); os.IsNotExist(statErr) {
+	if _, statErr := os.Stat(envPath); statErr != nil {
+		if !os.IsNotExist(statErr) {
+			return fmt.Errorf("could not stat .env file: %w", statErr)
+		}
 		if err = os.MkdirAll(configDir, 0755); err != nil {
 			return fmt.Errorf("could not create config directory: %w", err)
 		}
