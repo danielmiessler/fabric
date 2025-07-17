@@ -544,10 +544,13 @@ Application Options:
       --image-compression=          Compression level 0-100 for JPEG/WebP formats (default: not set)
       --image-background=           Background type: opaque, transparent (default: opaque, only for
                                     PNG/WebP)
+      --suppress-think              Suppress text enclosed in thinking tags
+      --think-start-tag=            Start tag for thinking sections (default: <think>)
+      --think-end-tag=              End tag for thinking sections (default: </think>)
+      --disable-responses-api       Disable OpenAI Responses API (default: false)
 
 Help Options:
   -h, --help                        Show this help message
-
 ```
 
 ## Our approach to prompting

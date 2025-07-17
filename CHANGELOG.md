@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.4.257 (2025-07-17)
+
+### PR [#1628](https://github.com/danielmiessler/Fabric/pull/1628) by [ksylvan](https://github.com/ksylvan): Introduce CLI Flag to Disable OpenAI Responses API
+
+- Add `--disable-responses-api` CLI flag for OpenAI control and llama-server compatibility
+- Implement `SetResponsesAPIEnabled` method in OpenAI client with configuration control
+- Update default config path to `~/.config/fabric/config.yaml`
+- Add CLI completions for new API flag across zsh, bash, and fish shells
+- Update CHANGELOG after v1.4.256 release
+
 ## v1.4.256 (2025-07-17)
 
 ### PR [#1624](https://github.com/danielmiessler/Fabric/pull/1624) by [ksylvan](https://github.com/ksylvan): Feature: Add Automatic ~/.fabric.yaml Config Detection
