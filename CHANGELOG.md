@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.4.258 (2025-07-17)
+
+### PR [#1629](https://github.com/danielmiessler/Fabric/pull/1629) by [ksylvan](https://github.com/ksylvan): Create Default (empty) .env in ~/.config/fabric on Demand
+
+- Add startup check to initialize config and .env file automatically
+- Introduce ensureEnvFile function to create ~/.config/fabric/.env if missing
+- Add directory creation for config path in ensureEnvFile
+- Integrate setup flag in CLI to call ensureEnvFile on demand
+- Improve error handling and permissions in ensureEnvFile function
+
+### Direct commits
+
+- Update README and CHANGELOG after v1.4.257
+
 ## v1.4.257 (2025-07-17)
 
 ### PR [#1628](https://github.com/danielmiessler/Fabric/pull/1628) by [ksylvan](https://github.com/ksylvan): Introduce CLI Flag to Disable OpenAI Responses API
