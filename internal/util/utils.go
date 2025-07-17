@@ -74,19 +74,18 @@ func IsSymlinkToDir(path string) bool {
 
 // GetDefaultConfigPath returns the default path for the configuration file
 // if it exists, otherwise returns an empty string.
-func GetDefaultConfigPath() string {
+func GetDefaultConfigPath() (string, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return ""
+		return "", fmt.Errorf("could not determine user home directory: %w", err)
 	}
 
 	defaultConfigPath := filepath.Join(homeDir, ".fabric.yaml")
 	if _, err := os.Stat(defaultConfigPath); err != nil {
 		if os.IsNotExist(err) {
-			return ""
+			return "", nil // Return no error for non-existent config path
 		}
-		fmt.Fprintf(os.Stderr, "Error accessing default config path: %v\n", err)
-		return ""
+		return "", fmt.Errorf("error accessing default config path: %w", err)
 	}
-	return defaultConfigPath
+	return defaultConfigPath, nil
 }

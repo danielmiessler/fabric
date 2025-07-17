@@ -156,8 +156,10 @@ func Init() (ret *Flags, err error) {
 	// Check to see if a ~/.fabric.yaml config file exists (only when user didn't specify a config)
 	if ret.Config == "" {
 		// Default to ~/.fabric.yaml if no config specified
-		if defaultConfigPath := util.GetDefaultConfigPath(); defaultConfigPath != "" {
+		if defaultConfigPath, err := util.GetDefaultConfigPath(); err == nil && defaultConfigPath != "" {
 			ret.Config = defaultConfigPath
+		} else if err != nil {
+			Debugf("Could not determine default config path: %v\n", err)
 		}
 	}
 

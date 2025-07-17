@@ -106,11 +106,11 @@ func (c *Client) constructRequest(msgs []*chat.ChatCompletionMessage, opts *doma
 }
 
 func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string) error {
+	defer close(channel)
 	request := c.constructRequest(msgs, opts)
 	channel <- request
 	channel <- "\n"
 	channel <- DryRunResponse
-	close(channel)
 	return nil
 }
 
