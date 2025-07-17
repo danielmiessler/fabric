@@ -124,18 +124,7 @@ func Init() (ret *Flags, err error) {
 
 	// Scan args for that are provided by cli and might be in yaml
 	for _, arg := range yamlArgsScan {
-		var flag string
-		if strings.HasPrefix(arg, "--") {
-			flag = strings.TrimPrefix(arg, "--")
-			if i := strings.Index(flag, "="); i > 0 {
-				flag = flag[:i]
-			}
-		} else if strings.HasPrefix(arg, "-") && len(arg) > 1 {
-			flag = strings.TrimPrefix(arg, "-")
-			if i := strings.Index(flag, "="); i > 0 {
-				flag = flag[:i]
-			}
-		}
+		flag := extractFlag(arg)
 
 		if flag != "" {
 			if yamlTag, exists := flagToYamlTag[flag]; exists {
@@ -214,6 +203,22 @@ func Init() (ret *Flags, err error) {
 		ret.Message = AppendMessage(ret.Message, pipedMessage)
 	}
 	return
+}
+
+func extractFlag(arg string) string {
+	var flag string
+	if strings.HasPrefix(arg, "--") {
+		flag = strings.TrimPrefix(arg, "--")
+		if i := strings.Index(flag, "="); i > 0 {
+			flag = flag[:i]
+		}
+	} else if strings.HasPrefix(arg, "-") && len(arg) > 1 {
+		flag = strings.TrimPrefix(arg, "-")
+		if i := strings.Index(flag, "="); i > 0 {
+			flag = flag[:i]
+		}
+	}
+	return flag
 }
 
 func assignWithConversion(targetField, sourceField reflect.Value) error {
