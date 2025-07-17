@@ -66,6 +66,11 @@ type Client struct {
 	ImplementsResponses bool // Whether this provider supports the Responses API
 }
 
+// SetResponsesAPIEnabled configures whether to use the Responses API
+func (o *Client) SetResponsesAPIEnabled(enabled bool) {
+	o.ImplementsResponses = enabled
+}
+
 func (o *Client) configure() (ret error) {
 	opts := []option.RequestOption{option.WithAPIKey(o.ApiKey.Value)}
 	if o.ApiBaseURL.Value != "" {

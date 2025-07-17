@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/danielmiessler/fabric/internal/core"
+	"github.com/danielmiessler/fabric/internal/plugins/ai/openai"
 	"github.com/danielmiessler/fabric/internal/tools/converter"
 	"github.com/danielmiessler/fabric/internal/tools/youtube"
 )
@@ -34,6 +35,11 @@ func Cli(version string) (err error) {
 		if registry == nil {
 			return err2
 		}
+	}
+
+	// Configure OpenAI Responses API setting based on CLI flag
+	if registry != nil {
+		configureOpenAIResponsesAPI(registry, currentFlags.DisableResponsesAPI)
 	}
 
 	// Handle setup and server commands
@@ -141,4 +147,22 @@ func WriteOutput(message string, outputFile string) (err error) {
 		err = CreateOutputFile(message, outputFile)
 	}
 	return
+}
+
+// configureOpenAIResponsesAPI configures the OpenAI client's Responses API setting based on the CLI flag
+func configureOpenAIResponsesAPI(registry *core.PluginRegistry, disableResponsesAPI bool) {
+	// Find the OpenAI vendor in the registry
+	if registry != nil && registry.VendorsAll != nil {
+		for _, vendor := range registry.VendorsAll.Vendors {
+			if vendor.GetName() == "OpenAI" {
+				// Type assertion to access the OpenAI-specific method
+				if openaiClient, ok := vendor.(*openai.Client); ok {
+					// Invert the disable flag to get the enable flag
+					enableResponsesAPI := !disableResponsesAPI
+					openaiClient.SetResponsesAPIEnabled(enableResponsesAPI)
+				}
+				break
+			}
+		}
+	}
 }
