@@ -12,7 +12,7 @@ import (
 	"github.com/danielmiessler/fabric/internal/plugins"
 )
 
-const DryRunResponse = "\nDry run: Fake response sent by DryRun plugin\n"
+const DryRunResponse = "Dry run: Fake response sent by DryRun plugin\n"
 
 type Client struct {
 	*plugins.PluginBase
@@ -108,6 +108,7 @@ func (c *Client) constructRequest(msgs []*chat.ChatCompletionMessage, opts *doma
 func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions, channel chan string) error {
 	request := c.constructRequest(msgs, opts)
 	channel <- request
+	channel <- "\n"
 	channel <- DryRunResponse
 	close(channel)
 	return nil
@@ -116,7 +117,7 @@ func (c *Client) SendStream(msgs []*chat.ChatCompletionMessage, opts *domain.Cha
 func (c *Client) Send(_ context.Context, msgs []*chat.ChatCompletionMessage, opts *domain.ChatOptions) (string, error) {
 	request := c.constructRequest(msgs, opts)
 
-	return request + DryRunResponse, nil
+	return request + "\n" + DryRunResponse, nil
 }
 
 func (c *Client) Setup() error {

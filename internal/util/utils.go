@@ -81,9 +81,12 @@ func GetDefaultConfigPath() string {
 	}
 
 	defaultConfigPath := filepath.Join(homeDir, ".fabric.yaml")
-	if _, err := os.Stat(defaultConfigPath); err == nil {
-		return defaultConfigPath
+	if _, err := os.Stat(defaultConfigPath); err != nil {
+		if os.IsNotExist(err) {
+			return ""
+		}
+		fmt.Fprintf(os.Stderr, "Error accessing default config path: %v\n", err)
+		return ""
 	}
-
-	return ""
+	return defaultConfigPath
 }
