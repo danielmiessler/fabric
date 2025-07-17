@@ -19,6 +19,12 @@ func Cli(version string) (err error) {
 		return
 	}
 
+	if currentFlags.Setup {
+		if err = ensureEnvFile(); err != nil {
+			return
+		}
+	}
+
 	if currentFlags.Version {
 		fmt.Println(version)
 		return
