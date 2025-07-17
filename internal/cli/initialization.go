@@ -39,10 +39,12 @@ func ensureEnvFile() (err error) {
 	envPath := filepath.Join(configDir, ".env")
 
 	if _, statErr := os.Stat(envPath); os.IsNotExist(statErr) {
-		if err = os.MkdirAll(configDir, os.ModePerm); err != nil {
+		if err = os.MkdirAll(configDir, 0755); err != nil {
 			return fmt.Errorf("could not create config directory: %w", err)
 		}
-		err = os.WriteFile(envPath, []byte{}, 0644)
+		if err = os.WriteFile(envPath, []byte{}, 0644); err != nil {
+			return fmt.Errorf("could not create .env file: %w", err)
+		}
 	}
 	return
 }
