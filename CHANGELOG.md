@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.4.256 (2025-07-17)
+
+### PR [#1624](https://github.com/danielmiessler/Fabric/pull/1624) by [ksylvan](https://github.com/ksylvan): Feature: Add Automatic ~/.fabric.yaml Config Detection
+
+- Implement default ~/.fabric.yaml config file detection
+- Add support for short flag parsing with dashes
+- Improve dry run output formatting and config path error handling
+- Refactor dry run response construction into helper method
+- Extract flag parsing logic into separate extractFlag function
+
+### Direct commits
+
+- Docs: Update CHANGELOG after v1.4.255
+
 ## v1.4.255 (2025-07-16)
 
 ### Direct commits
