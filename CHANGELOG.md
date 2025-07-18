@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.4.260 (2025-07-18)
+
+### PR [#1634](https://github.com/danielmiessler/Fabric/pull/1634) by [ksylvan](https://github.com/ksylvan): Fix abort in Exo-Labs provider plugin; with credit to @sakithahSenid
+
+- Fix abort issue in Exo-Labs provider plugin
+- Add API key setup question to Exolab AI plugin configuration
+- Include API key setup question in Exolab client with required field validation
+- Add "openaiapi" to VSCode spell check dictionary
+- Maintain existing API base URL configuration order
+
+### Direct commits
+
+- Update CHANGELOG after v1.4.259
+
 ## v1.4.259 (2025-07-18)
 
 ### PR [#1633](https://github.com/danielmiessler/Fabric/pull/1633) by [ksylvan](https://github.com/ksylvan): YouTube VTT Processing Enhancement
