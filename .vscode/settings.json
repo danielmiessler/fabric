@@ -53,6 +53,7 @@
 		"hasura",
 		"hormozi",
 		"Hormozi's",
+		"horts",
 		"HTMLURL",
 		"jaredmontoya",
 		"jessevdk",
@@ -74,6 +75,7 @@
 		"markmap",
 		"matplotlib",
 		"mattn",
+		"mbed",
 		"Miessler",
 		"nometa",
 		"numpy",
@@ -114,11 +116,13 @@
 		"updatepatterns",
 		"videoid",
 		"webp",
+		"WEBVTT",
 		"wipecontext",
 		"wipesession",
 		"writeups",
 		"xclip",
-		"yourpatternname"
+		"yourpatternname",
+		"youtu"
 	],
 	"cSpell.ignorePaths": ["go.mod", ".gitignore", "CHANGELOG.md"],
 	"markdownlint.config": {
