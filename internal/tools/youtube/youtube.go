@@ -30,7 +30,7 @@ import (
 )
 
 // Match timestamps like "00:00:01.234" or just numbers or sequence numbers
-var timestampRegex = regexp.MustCompile(`^\d+$|^\d{1,2}:\d{2}:\d{2}|^\d{2}:\d{2}\.\d{3}|^\d{1,2}:\d{2}:\d{2}\.\d{3}`)
+var timestampRegex = regexp.MustCompile(`^\d+$|^\d{1,2}:\d{2}(:\d{2})?(\\.\d{3})?$`)
 
 func NewYouTube() (ret *YouTube) {
 
@@ -183,7 +183,7 @@ func (o *YouTube) readAndCleanVTTFile(filename string) (ret string, err error) {
 	// Convert VTT to plain text
 	lines := strings.Split(string(content), "\n")
 	var textBuilder strings.Builder
-	seenSegments := make(map[string]bool)
+	seenSegments := make(map[string]struct{})
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -197,10 +197,10 @@ func (o *YouTube) readAndCleanVTTFile(filename string) (ret string, err error) {
 		// Remove VTT formatting tags
 		line = removeVTTTags(line)
 		if line != "" {
-			if !seenSegments[line] {
+			if _, exists := seenSegments[line]; !exists {
 				textBuilder.WriteString(line)
 				textBuilder.WriteString(" ")
-				seenSegments[line] = true
+				seenSegments[line] = struct{}{}
 			}
 		}
 	}
@@ -222,7 +222,7 @@ func (o *YouTube) readAndFormatVTTWithTimestamps(filename string) (ret string, e
 	lines := strings.Split(string(content), "\n")
 	var textBuilder strings.Builder
 	var currentTimestamp string
-	seenSegments := make(map[string]bool)
+	seenSegments := make(map[string]struct{})
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -255,10 +255,10 @@ func (o *YouTube) readAndFormatVTTWithTimestamps(filename string) (ret string, e
 			cleanText := removeVTTTags(line)
 			if cleanText != "" && currentTimestamp != "" {
 				// Use just the clean text as the key to avoid duplicates across different timestamps
-				if !seenSegments[cleanText] {
+				if _, exists := seenSegments[cleanText]; !exists {
 					timestampedLine := fmt.Sprintf("[%s] %s", currentTimestamp, cleanText)
 					textBuilder.WriteString(timestampedLine + "\n")
-					seenSegments[cleanText] = true
+					seenSegments[cleanText] = struct{}{}
 				}
 			}
 		}
