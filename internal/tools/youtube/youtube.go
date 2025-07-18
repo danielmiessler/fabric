@@ -180,6 +180,7 @@ func (o *YouTube) readAndCleanVTTFile(filename string) (ret string, err error) {
 	// Convert VTT to plain text
 	lines := strings.Split(string(content), "\n")
 	var textBuilder strings.Builder
+	seenSegments := make(map[string]bool)
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -193,8 +194,11 @@ func (o *YouTube) readAndCleanVTTFile(filename string) (ret string, err error) {
 		// Remove VTT formatting tags
 		line = removeVTTTags(line)
 		if line != "" {
-			textBuilder.WriteString(line)
-			textBuilder.WriteString(" ")
+			if !seenSegments[line] {
+				textBuilder.WriteString(line)
+				textBuilder.WriteString(" ")
+				seenSegments[line] = true
+			}
 		}
 	}
 
@@ -215,6 +219,7 @@ func (o *YouTube) readAndFormatVTTWithTimestamps(filename string) (ret string, e
 	lines := strings.Split(string(content), "\n")
 	var textBuilder strings.Builder
 	var currentTimestamp string
+	seenSegments := make(map[string]bool)
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -246,7 +251,12 @@ func (o *YouTube) readAndFormatVTTWithTimestamps(filename string) (ret string, e
 			// Remove VTT formatting tags
 			cleanText := removeVTTTags(line)
 			if cleanText != "" && currentTimestamp != "" {
-				textBuilder.WriteString(fmt.Sprintf("[%s] %s\n", currentTimestamp, cleanText))
+				// Use just the clean text as the key to avoid duplicates across different timestamps
+				if !seenSegments[cleanText] {
+					timestampedLine := fmt.Sprintf("[%s] %s", currentTimestamp, cleanText)
+					textBuilder.WriteString(timestampedLine + "\n")
+					seenSegments[cleanText] = true
+				}
 			}
 		}
 	}
@@ -268,8 +278,8 @@ func formatVTTTimestamp(vttTime string) string {
 }
 
 func isTimeStamp(s string) bool {
-	// Match timestamps like "00:00:01.234" or just numbers
-	timestampRegex := regexp.MustCompile(`^\d+$|^\d{2}:\d{2}:\d{2}`)
+	// Match timestamps like "00:00:01.234" or just numbers or sequence numbers
+	timestampRegex := regexp.MustCompile(`^\d+$|^\d{1,2}:\d{2}:\d{2}|^\d{2}:\d{2}\.\d{3}|^\d{1,2}:\d{2}:\d{2}\.\d{3}`)
 	return timestampRegex.MatchString(s)
 }
 
