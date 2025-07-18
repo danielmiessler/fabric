@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.4.259 (2025-07-18)
+
+### PR [#1633](https://github.com/danielmiessler/Fabric/pull/1633) by [ksylvan](https://github.com/ksylvan): YouTube VTT Processing Enhancement
+
+- Fix: prevent duplicate segments in VTT file processing by adding deduplication map to track seen segments
+- Feat: enhance VTT duplicate filtering to allow legitimate repeated content with configurable time gap detection
+- Feat: improve timestamp parsing to handle fractional seconds and optional seconds/milliseconds formats
+- Chore: refactor timestamp regex to global scope and improve performance by avoiding repeated compilation
+- Fix: Youtube VTT parsing gap test and extract seconds parsing logic into reusable function
+
+### Direct commits
+
+- Docs: Update CHANGELOG after v1.4.258
+
 ## v1.4.258 (2025-07-17)
 
 ### PR [#1629](https://github.com/danielmiessler/Fabric/pull/1629) by [ksylvan](https://github.com/ksylvan): Create Default (empty) .env in ~/.config/fabric on Demand
