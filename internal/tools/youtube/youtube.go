@@ -29,10 +29,14 @@ import (
 	"google.golang.org/api/youtube/v3"
 )
 
-// Match timestamps like "00:00:01.234" or just numbers or sequence numbers
-var timestampRegex = regexp.MustCompile(`^\d+$|^\d{1,2}:\d{2}(:\d{2})?(\.\d{3})?$`)
+var timestampRegex *regexp.Regexp
 
 const TimeGapForRepeats = 10 // seconds
+
+func init() {
+	// Match timestamps like "00:00:01.234" or just numbers or sequence numbers
+	timestampRegex = regexp.MustCompile(`^\d+$|^\d{1,2}:\d{2}(:\d{2})?(\.\d{3})?$`)
+}
 
 func NewYouTube() (ret *YouTube) {
 
@@ -340,7 +344,7 @@ func parseTimestampToSeconds(timestamp string) (int, error) {
 		if minutes, err = strconv.Atoi(parts[1]); err != nil {
 			return 0, err
 		}
-		if seconds, err = strconv.Atoi(parts[2]); err != nil {
+		if seconds, err = parseSeconds(parts[2]); err != nil {
 			return 0, err
 		}
 	} else {
@@ -348,12 +352,29 @@ func parseTimestampToSeconds(timestamp string) (int, error) {
 		if minutes, err = strconv.Atoi(parts[0]); err != nil {
 			return 0, err
 		}
-		if seconds, err = strconv.Atoi(parts[1]); err != nil {
+		if seconds, err = parseSeconds(parts[1]); err != nil {
 			return 0, err
 		}
 	}
 
 	return hours*3600 + minutes*60 + seconds, nil
+}
+
+func parseSeconds(seconds_str string) (int, error) {
+	var seconds int
+	var err error
+	if strings.Contains(seconds_str, ".") {
+		// Handle fractional seconds
+		second_parts := strings.Split(seconds_str, ".")
+		if seconds, err = strconv.Atoi(second_parts[0]); err != nil {
+			return 0, err
+		}
+	} else {
+		if seconds, err = strconv.Atoi(seconds_str); err != nil {
+			return 0, err
+		}
+	}
+	return seconds, nil
 }
 
 func (o *YouTube) GrabComments(videoId string) (ret []string, err error) {
