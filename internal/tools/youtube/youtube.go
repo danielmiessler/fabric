@@ -29,6 +29,9 @@ import (
 	"google.golang.org/api/youtube/v3"
 )
 
+// Match timestamps like "00:00:01.234" or just numbers or sequence numbers
+var timestampRegex = regexp.MustCompile(`^\d+$|^\d{1,2}:\d{2}:\d{2}|^\d{2}:\d{2}\.\d{3}|^\d{1,2}:\d{2}:\d{2}\.\d{3}`)
+
 func NewYouTube() (ret *YouTube) {
 
 	label := "YouTube"
@@ -278,8 +281,6 @@ func formatVTTTimestamp(vttTime string) string {
 }
 
 func isTimeStamp(s string) bool {
-	// Match timestamps like "00:00:01.234" or just numbers or sequence numbers
-	timestampRegex := regexp.MustCompile(`^\d+$|^\d{1,2}:\d{2}:\d{2}|^\d{2}:\d{2}\.\d{3}|^\d{1,2}:\d{2}:\d{2}\.\d{3}`)
 	return timestampRegex.MatchString(s)
 }
 
