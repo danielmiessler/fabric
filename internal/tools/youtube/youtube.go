@@ -30,7 +30,9 @@ import (
 )
 
 // Match timestamps like "00:00:01.234" or just numbers or sequence numbers
-var timestampRegex = regexp.MustCompile(`^\d+$|^\d{1,2}:\d{2}(:\d{2})?(\\.\d{3})?$`)
+var timestampRegex = regexp.MustCompile(`^\d+$|^\d{1,2}:\d{2}(:\d{2})?(\.\d{3})?$`)
+
+const TimeGapForRepeats = 10 // seconds
 
 func NewYouTube() (ret *YouTube) {
 
@@ -222,7 +224,10 @@ func (o *YouTube) readAndFormatVTTWithTimestamps(filename string) (ret string, e
 	lines := strings.Split(string(content), "\n")
 	var textBuilder strings.Builder
 	var currentTimestamp string
-	seenSegments := make(map[string]struct{})
+	// Track content with timestamps to allow repeats after significant time gaps
+	// This preserves legitimate repeated content (choruses, recurring phrases, etc.)
+	// while still filtering out immediate duplicates from VTT formatting issues
+	seenSegments := make(map[string]string) // text -> last timestamp seen
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -254,11 +259,19 @@ func (o *YouTube) readAndFormatVTTWithTimestamps(filename string) (ret string, e
 			// Remove VTT formatting tags
 			cleanText := removeVTTTags(line)
 			if cleanText != "" && currentTimestamp != "" {
-				// Use just the clean text as the key to avoid duplicates across different timestamps
-				if _, exists := seenSegments[cleanText]; !exists {
+				// Check if we should include this segment
+				shouldInclude := true
+				if lastTimestamp, exists := seenSegments[cleanText]; exists {
+					// Calculate time difference to determine if this is a legitimate repeat
+					if !shouldIncludeRepeat(lastTimestamp, currentTimestamp) {
+						shouldInclude = false
+					}
+				}
+
+				if shouldInclude {
 					timestampedLine := fmt.Sprintf("[%s] %s", currentTimestamp, cleanText)
 					textBuilder.WriteString(timestampedLine + "\n")
-					seenSegments[cleanText] = struct{}{}
+					seenSegments[cleanText] = currentTimestamp
 				}
 			}
 		}
@@ -288,6 +301,59 @@ func removeVTTTags(s string) string {
 	// Remove VTT tags like <c.colorE5E5E5>, </c>, etc.
 	tagRegex := regexp.MustCompile(`<[^>]*>`)
 	return tagRegex.ReplaceAllString(s, "")
+}
+
+// shouldIncludeRepeat determines if repeated content should be included based on time gap
+func shouldIncludeRepeat(lastTimestamp, currentTimestamp string) bool {
+	// Parse timestamps to calculate time difference
+	lastSeconds, err1 := parseTimestampToSeconds(lastTimestamp)
+	currentSeconds, err2 := parseTimestampToSeconds(currentTimestamp)
+
+	if err1 != nil || err2 != nil {
+		// If we can't parse timestamps, err on the side of inclusion
+		return true
+	}
+
+	// Allow repeats if there's at least a TimeGapForRepeats gap
+	// This threshold can be adjusted based on use case:
+	// - 10 seconds works well for most content
+	// - Could be made configurable in the future
+	timeDiffSeconds := currentSeconds - lastSeconds
+	return timeDiffSeconds >= TimeGapForRepeats
+}
+
+// parseTimestampToSeconds converts timestamp string (HH:MM:SS or MM:SS) to total seconds
+func parseTimestampToSeconds(timestamp string) (int, error) {
+	parts := strings.Split(timestamp, ":")
+	if len(parts) < 2 || len(parts) > 3 {
+		return 0, fmt.Errorf("invalid timestamp format: %s", timestamp)
+	}
+
+	var hours, minutes, seconds int
+	var err error
+
+	if len(parts) == 3 {
+		// HH:MM:SS format
+		if hours, err = strconv.Atoi(parts[0]); err != nil {
+			return 0, err
+		}
+		if minutes, err = strconv.Atoi(parts[1]); err != nil {
+			return 0, err
+		}
+		if seconds, err = strconv.Atoi(parts[2]); err != nil {
+			return 0, err
+		}
+	} else {
+		// MM:SS format
+		if minutes, err = strconv.Atoi(parts[0]); err != nil {
+			return 0, err
+		}
+		if seconds, err = strconv.Atoi(parts[1]); err != nil {
+			return 0, err
+		}
+	}
+
+	return hours*3600 + minutes*60 + seconds, nil
 }
 
 func (o *YouTube) GrabComments(videoId string) (ret []string, err error) {
