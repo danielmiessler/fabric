@@ -44,9 +44,10 @@ func TestShouldIncludeRepeat(t *testing.T) {
 		description      string
 	}{
 		{"00:30", "01:30", true, "60 second gap should allow repeat"},
-		{"00:30", "00:45", false, "15 second gap should not allow repeat"},
-		{"01:00", "01:30", true, "30 second gap should allow repeat (boundary case)"},
-		{"01:00", "01:29", false, "29 second gap should not allow repeat"},
+		{"00:30", "00:45", true, "15 second gap should allow repeat"},
+		{"01:00", "01:10", true, "10 second gap should allow repeat (boundary case)"},
+		{"01:00", "01:09", false, "9 second gap should not allow repeat"},
+		{"00:30", "00:35", false, "5 second gap should not allow repeat"},
 		{"invalid", "01:30", true, "invalid timestamp should err on side of inclusion"},
 		{"01:30", "invalid", true, "invalid timestamp should err on side of inclusion"},
 	}
