@@ -13,6 +13,7 @@ func NewClient() (ret *Client) {
 	ret = &Client{}
 	ret.Client = openai.NewClientCompatibleNoSetupQuestions("Exolab", ret.configure)
 
+	ret.ApiKey = ret.AddSetupQuestion("API Key", false)
 	ret.ApiBaseURL = ret.AddSetupQuestion("API Base URL", true)
 	ret.ApiBaseURL.Value = "http://localhost:52415"
 

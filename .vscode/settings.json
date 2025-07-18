@@ -80,6 +80,7 @@
 		"nometa",
 		"numpy",
 		"ollama",
+		"openaiapi",
 		"opencode",
 		"openrouter",
 		"otiai",
