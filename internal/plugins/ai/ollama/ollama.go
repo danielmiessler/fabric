@@ -160,6 +160,7 @@ func (o *Client) NeedsRawMode(modelName string) bool {
 	ollamaPrefixes := []string{
 		"llama3",
 		"llama2",
+		"mistral",
 	}
 	for _, prefix := range ollamaPrefixes {
 		if strings.HasPrefix(modelName, prefix) {
