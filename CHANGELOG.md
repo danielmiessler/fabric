@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.4.261 (2025-07-19)
+
+### PR [#1637](https://github.com/danielmiessler/Fabric/pull/1637) by [ksylvan](https://github.com/ksylvan): chore: update `NeedsRawMode` to include `mistral` prefix for Ollama
+
+- Updated `NeedsRawMode` to include `mistral` prefix for Ollama compatibility
+- Added `mistral` to `ollamaPrefixes` list for improved model support
+
+### Direct commits
+
+- Updated CHANGELOG after v1.4.260 release
+
 ## v1.4.260 (2025-07-18)
 
 ### PR [#1634](https://github.com/danielmiessler/Fabric/pull/1634) by [ksylvan](https://github.com/ksylvan): Fix abort in Exo-Labs provider plugin; with credit to @sakithahSenid
